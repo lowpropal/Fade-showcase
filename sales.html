@@ -1147,11 +1147,18 @@
 
       var session = FADE_STORE.getActiveSession();
       if (!session) {
-        window.location.replace('index.html');
-        return;
+        if (urlParams.get('demo') === '1' || urlParams.get('role') === 'sales') {
+          session = { role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' };
+          FADE_STORE.setActiveSession(session);
+        } else {
+          var targetLogin = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'index.html' : './';
+          window.location.replace(targetLogin);
+          return;
+        }
       }
       if (session.role !== 'sales') {
-        window.location.replace('admin.html' + (window.location.hash || '#dashboard'));
+        var targetAdmin = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'admin.html' : 'admin';
+        window.location.replace(targetAdmin + (window.location.hash || '#dashboard'));
         return;
       }
 

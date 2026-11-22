@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>FADE Pods · Masuk Portal</title>
+  <title>FADE Pods · Selamat datang</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +53,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=20261122b">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=20261122c">
   <style>
     * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
@@ -64,23 +64,24 @@
 </head>
 <body class="bg-canvas text-text-primary min-h-screen max-w-[100vw] flex flex-col justify-between selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-200 relative">
 
-  <!-- Top Theme Switcher -->
+  <!-- Top Theme Switcher (Discrete, No Brand Header) -->
   <div class="fixed top-4 right-4 z-30">
     <button id="themeToggleBtn" type="button" class="w-9 h-9 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors shadow-sm" title="Ubah Tema Gelap / Terang" aria-label="Ubah Tema">
       <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
     </button>
   </div>
 
-  <!-- Main Centered Login Card -->
+  <!-- Main Centered Login Card (No top brand header, no center icon) -->
   <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-full max-w-full overflow-hidden relative z-10 my-auto">
     <div class="hidden dark:sm:block absolute pointer-events-none w-[440px] h-[440px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
 
     <div class="w-full max-w-[390px] mx-auto flex flex-col items-center text-center">
-      <h1 class="text-[24px] sm:text-[26px] font-semibold tracking-tight text-text-primary mb-1.5">
+      <!-- Title & Subtitle only (Clean, anti-slop) -->
+      <h1 class="text-[26px] sm:text-[28px] font-semibold tracking-tight text-text-primary mb-1.5">
         Selamat datang
       </h1>
       <p class="text-[13px] text-text-muted mb-6 leading-normal font-normal">
-        Sistem otomatis mengarahkan Anda ke <strong class="text-text-secondary font-medium">Panel Admin</strong> atau <strong class="text-text-secondary font-medium">Panel Sales</strong> sesuai akun yang masuk.
+        Sistem otomatis mengarahkan ke <strong class="text-text-secondary font-medium">Panel Admin</strong> atau <strong class="text-text-secondary font-medium">Panel Sales</strong> sesuai akun Anda.
       </p>
 
       <!-- Error Alert -->
@@ -88,7 +89,7 @@
         <i class="ph ph-warning-circle text-base flex-shrink-0 mt-0.5"></i>
         <div class="flex-1">
           <span class="font-semibold block">Gagal masuk</span>
-          <span id="alert-invalid-msg" class="text-text-secondary text-[11px]">Username atau password tidak sesuai.</span>
+          <span id="alert-invalid-msg" class="text-text-secondary text-[11px]">Username atau password tidak sesuai. Coba akun demo di bawah.</span>
         </div>
         <button type="button" onclick="dismissAlert()" class="text-text-muted hover:text-text-primary p-0.5" aria-label="Tutup">
           <i class="ph ph-x text-sm"></i>
@@ -99,17 +100,17 @@
       <div id="alert-success" class="hidden w-full mb-4 p-3 rounded-xl bg-semantic-success/10 border border-semantic-success/40 text-semantic-success flex items-start gap-2.5 text-xs text-left" role="status">
         <i class="ph ph-check-circle text-base flex-shrink-0 mt-0.5"></i>
         <div class="flex-1">
-          <span class="font-semibold block">Berhasil masuk!</span>
+          <span class="font-semibold block" id="success-role-title">Berhasil masuk!</span>
           <span id="success-role-desc" class="text-text-secondary text-[11px]">Mengarahkan ke workspace...</span>
         </div>
       </div>
 
       <!-- Unified Login Form -->
-      <form id="login-form" class="w-full space-y-3.5" novalidate onsubmit="handleUnifiedLogin(event)">
+      <form id="login-form" class="w-full space-y-3.5" novalidate>
         <div class="text-left space-y-1">
           <label for="username" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-0.5">Username atau Email</label>
           <div id="wrap-username" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
-            <input id="username" name="username" type="text" placeholder="admin atau nama sales (aruna, bima, ...)" autocomplete="username" spellcheck="false" oninput="handleInputChange('username')" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
+            <input id="username" name="username" type="text" placeholder="admin atau sales (aruna, bima, citra...)" autocomplete="username" spellcheck="false" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
           </div>
           <p id="error-username" class="hidden text-[11px] text-semantic-danger flex items-center gap-1 mt-1 font-medium">
             <i class="ph ph-warning-circle text-xs"></i>
@@ -120,11 +121,11 @@
         <div class="text-left space-y-1">
           <div class="flex items-center justify-between px-0.5">
             <label for="password" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">Kata Sandi</label>
-            <a href="javascript:void(0)" onclick="alert('Gunakan akun demo di bawah: Admin (admin / admin123) atau Sales (aruna, bima, citra, damar, elang, fira / sales123).')" class="text-[11px] text-text-muted hover:text-text-primary transition-colors">Lupa sandi?</a>
+            <a href="javascript:void(0)" onclick="alert('Gunakan akun demo: Admin (admin / admin123) atau Sales (sales / sales123 atau nama sales / sales123).')" class="text-[11px] text-text-muted hover:text-text-primary transition-colors">Lupa sandi?</a>
           </div>
           <div id="wrap-password" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
-            <input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" oninput="handleInputChange('password')" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted pl-3.5 pr-10 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
-            <button id="btn-toggle-password" type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-primary transition-colors focus:outline-none" aria-label="Tampilkan sandi">
+            <input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted pl-3.5 pr-10 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
+            <button id="btn-toggle-password" type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-primary transition-colors focus:outline-none" aria-label="Tampilkan sandi">
               <i id="icon-toggle-password" class="ph ph-eye text-base"></i>
             </button>
           </div>
@@ -137,7 +138,7 @@
         <div class="pt-1">
           <button id="btn-submit" type="submit" class="w-full h-11 bg-[var(--action-bg)] hover:opacity-95 active:scale-[0.99] text-[var(--action-fg)] font-semibold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
             <span id="btn-text" class="font-semibold inline-flex items-center gap-1.5">
-              Masuk
+              Masuk ke Dashboard
               <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
             </span>
             <span id="btn-spinner" class="hidden flex items-center gap-2 text-[var(--action-fg)]">
@@ -151,240 +152,288 @@
         </div>
       </form>
 
-      <!-- Quick Demo Credentials (Single Unified Login, Role-Based Routing) -->
-      <div class="w-full mt-5 pt-4 border-t border-border-subtle flex flex-col gap-2.5 text-left">
-        <div class="flex items-center justify-center gap-1.5 text-[10px] text-text-muted tracking-wide uppercase font-semibold">
-          <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
-          <span>Isi Cepat Akun Demo Showcase</span>
+      <!-- Quick Demo Credentials: 2-Column Responsive Card Grid -->
+      <div class="w-full mt-6 pt-4 border-t border-border-subtle flex flex-col gap-3 text-left">
+        <div class="flex items-center justify-between text-[11px] text-text-muted px-0.5">
+          <span class="uppercase font-semibold tracking-wider text-[10px]">Akun Uji Demo</span>
+          <span class="text-[10px] text-text-muted">Klik Isi untuk memasukkan kredensial</span>
         </div>
 
-        <!-- Admin Quick Fill -->
-        <button type="button" onclick="fillAdmin()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-surface-1 hover:bg-surface-hover border border-border-subtle transition-colors">
-          <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-[18px] text-accent">admin_panel_settings</span>
-            <div class="flex flex-col">
-              <span class="text-xs font-semibold text-text-primary">Admin (Raka Pratama)</span>
-              <span class="text-[10px] text-text-muted font-mono">admin / admin123 · Akses Penuh</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Admin Demo Card -->
+          <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle hover:border-border-default flex items-center justify-between transition-colors">
+            <div class="flex flex-col min-w-0">
+              <span class="text-xs font-semibold text-text-primary truncate">Admin</span>
+              <span class="text-[10px] text-text-muted font-mono truncate">admin / admin123</span>
             </div>
+            <button id="btnQuickAdmin" type="button" class="h-7 px-2.5 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-subtle text-[11px] font-semibold text-accent transition-colors shrink-0">
+              Isi
+            </button>
           </div>
-          <span class="text-[11px] font-semibold text-accent">Isi</span>
-        </button>
 
-        <!-- 6 Sales Reps Quick Fill -->
-        <div class="w-full flex items-center gap-2 p-2.5 rounded-xl bg-surface-1 border border-border-subtle">
-          <select id="demoSalesSelect" onchange="fillSelectedSales()" aria-label="Pilih Akun Sales Demo" class="flex-1 h-8 bg-surface-2 border border-border-subtle rounded-lg px-2.5 text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+          <!-- Sales Demo Card -->
+          <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle hover:border-border-default flex items-center justify-between transition-colors">
+            <div class="flex flex-col min-w-0">
+              <span class="text-xs font-semibold text-text-primary truncate">Sales</span>
+              <span class="text-[10px] text-text-muted font-mono truncate">sales / sales123</span>
+            </div>
+            <button id="btnQuickSales" type="button" class="h-7 px-2.5 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-subtle text-[11px] font-semibold text-accent transition-colors shrink-0">
+              Isi
+            </button>
+          </div>
+        </div>
+
+        <!-- 6 Sales Reps Specific Selector (Optional Direct Choice) -->
+        <div class="flex items-center gap-2 p-2 rounded-xl bg-surface-1 border border-border-subtle">
+          <label for="demoSalesSelect" class="text-[11px] text-text-muted shrink-0 pl-1">Sales Lain:</label>
+          <select id="demoSalesSelect" aria-label="Pilih Akun Sales Spesifik" class="flex-1 h-7 bg-surface-2 border border-border-subtle rounded-lg px-2 text-[11px] text-text-primary focus:outline-none focus:border-accent cursor-pointer">
             <option value="aruna">Aruna Pratama</option>
+            <option value="bima">Bima Santoso</option>
+            <option value="citra">Citra Mahesa</option>
+            <option value="damar">Damar Wicaksono</option>
+            <option value="elang">Elang Saputra</option>
+            <option value="fira">Fira Anindya</option>
           </select>
-          <button type="button" onclick="fillSelectedSales()" class="h-8 px-3 rounded-lg bg-surface-2 hover:bg-accent hover:text-white border border-border-subtle text-xs font-semibold text-text-primary transition-colors shrink-0">
-            Isi Sales
+          <button id="btnFillSelectedSales" type="button" class="h-7 px-2.5 rounded-lg bg-surface-2 hover:bg-accent hover:text-white border border-border-subtle text-[11px] font-semibold text-text-primary transition-colors shrink-0">
+            Pilih
           </button>
         </div>
       </div>
 
       <div class="mt-6 text-center text-[10px] text-text-muted/70">
-        FADE Pods Sales Monitoring &amp; Invoice Tracking Portal · v0.2
+        FADE Pods Sales Monitoring &amp; Invoice Tracking Portal · Showcase v0.2
       </div>
     </div>
   </main>
 
-  <script src="assets/js/data/synthetic-seed.js?v=20261122b"></script>
-  <script src="assets/js/store.js?v=20261122b"></script>
+  <script src="assets/js/data/synthetic-seed.js?v=20261122c"></script>
+  <script src="assets/js/store.js?v=20261122c"></script>
   <script>
-    var usernameInput = document.getElementById('username');
-    var passwordInput = document.getElementById('password');
-    var wrapUsername = document.getElementById('wrap-username');
-    var wrapPassword = document.getElementById('wrap-password');
-    var errorUsername = document.getElementById('error-username');
-    var errorPassword = document.getElementById('error-password');
-    var alertInvalid = document.getElementById('alert-invalid');
-    var alertInvalidMsg = document.getElementById('alert-invalid-msg');
-    var alertSuccess = document.getElementById('alert-success');
-    var btnSubmit = document.getElementById('btn-submit');
-    var btnText = document.getElementById('btn-text');
-    var btnSpinner = document.getElementById('btn-spinner');
-    var iconToggle = document.getElementById('icon-toggle-password');
-    var themeToggleBtn = document.getElementById('themeToggleBtn');
-    var themeToggleIcon = document.getElementById('themeToggleIcon');
+    (function () {
+      'use strict';
 
-    FADE_STORE.init();
+      var form = document.getElementById('login-form');
+      var usernameInput = document.getElementById('username');
+      var passwordInput = document.getElementById('password');
+      var wrapUsername = document.getElementById('wrap-username');
+      var wrapPassword = document.getElementById('wrap-password');
+      var errorUsername = document.getElementById('error-username');
+      var errorPassword = document.getElementById('error-password');
+      var alertInvalid = document.getElementById('alert-invalid');
+      var alertInvalidMsg = document.getElementById('alert-invalid-msg');
+      var alertSuccess = document.getElementById('alert-success');
+      var btnSubmit = document.getElementById('btn-submit');
+      var btnText = document.getElementById('btn-text');
+      var btnSpinner = document.getElementById('btn-spinner');
+      var btnTogglePassword = document.getElementById('btn-toggle-password');
+      var iconTogglePassword = document.getElementById('icon-toggle-password');
+      var themeToggleBtn = document.getElementById('themeToggleBtn');
+      var themeToggleIcon = document.getElementById('themeToggleIcon');
 
-    function syncThemeUI(theme) {
-      if (theme === 'light') {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-        themeToggleIcon.textContent = 'light_mode';
-      } else {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-        themeToggleIcon.textContent = 'dark_mode';
+      var btnQuickAdmin = document.getElementById('btnQuickAdmin');
+      var btnQuickSales = document.getElementById('btnQuickSales');
+      var btnFillSelectedSales = document.getElementById('btnFillSelectedSales');
+      var demoSalesSelect = document.getElementById('demoSalesSelect');
+
+      FADE_STORE.init();
+
+      function syncThemeUI(theme) {
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+          themeToggleIcon.textContent = 'light_mode';
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+          themeToggleIcon.textContent = 'dark_mode';
+        }
       }
-    }
-    syncThemeUI(FADE_STORE.getTheme());
+      syncThemeUI(FADE_STORE.getTheme());
 
-    themeToggleBtn.addEventListener('click', function () {
-      var next = FADE_STORE.getTheme() === 'dark' ? 'light' : 'dark';
-      FADE_STORE.setTheme(next);
-      syncThemeUI(next);
-    });
+      themeToggleBtn.addEventListener('click', function () {
+        var next = FADE_STORE.getTheme() === 'dark' ? 'light' : 'dark';
+        FADE_STORE.setTheme(next);
+        syncThemeUI(next);
+      });
 
-    function togglePasswordVisibility() {
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        iconToggle.classList.remove('ph-eye');
-        iconToggle.classList.add('ph-eye-slash', 'text-accent');
-      } else {
-        passwordInput.type = 'password';
-        iconToggle.classList.remove('ph-eye-slash', 'text-accent');
-        iconToggle.classList.add('ph-eye');
-      }
-    }
+      btnTogglePassword.addEventListener('click', function () {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          iconTogglePassword.classList.remove('ph-eye');
+          iconTogglePassword.classList.add('ph-eye-slash', 'text-accent');
+        } else {
+          passwordInput.type = 'password';
+          iconTogglePassword.classList.remove('ph-eye-slash', 'text-accent');
+          iconTogglePassword.classList.add('ph-eye');
+        }
+      });
 
-    function handleInputChange(fieldName) {
-      if (fieldName === 'username') {
+      function clearValidation() {
         wrapUsername.classList.remove('border-semantic-danger');
         wrapUsername.classList.add('border-border-subtle');
         errorUsername.classList.add('hidden');
-      } else if (fieldName === 'password') {
         wrapPassword.classList.remove('border-semantic-danger');
         wrapPassword.classList.add('border-border-subtle');
         errorPassword.classList.add('hidden');
+        alertInvalid.classList.add('hidden');
       }
-      alertInvalid.classList.add('hidden');
-    }
 
-    function dismissAlert() {
-      alertInvalid.classList.add('hidden');
-    }
+      usernameInput.addEventListener('input', clearValidation);
+      passwordInput.addEventListener('input', clearValidation);
 
-    function populateDemoSalesSelect() {
-      var sel = document.getElementById('demoSalesSelect');
-      if (!sel || !window.FADE_STORE) return;
-      var names = FADE_STORE.getUniqueSalesNames();
-      if (!names || names.length === 0) return;
-      sel.innerHTML = '';
-      names.forEach(function (fullName) {
-        var firstName = fullName.split(' ')[0].toLowerCase();
-        var opt = document.createElement('option');
-        opt.value = firstName;
-        opt.textContent = 'Sales: ' + fullName;
-        sel.appendChild(opt);
+      window.dismissAlert = function () {
+        alertInvalid.classList.add('hidden');
+      };
+
+      function flashInputs() {
+        wrapUsername.classList.add('border-accent');
+        wrapPassword.classList.add('border-accent');
+        setTimeout(function () {
+          wrapUsername.classList.remove('border-accent');
+          wrapPassword.classList.remove('border-accent');
+        }, 300);
+      }
+
+      btnQuickAdmin.addEventListener('click', function () {
+        usernameInput.value = 'admin';
+        passwordInput.value = 'admin123';
+        clearValidation();
+        flashInputs();
+        usernameInput.focus();
       });
-    }
-    populateDemoSalesSelect();
 
-    function flashInputs() {
-      wrapUsername.classList.add('border-accent');
-      wrapPassword.classList.add('border-accent');
-      setTimeout(function () {
-        wrapUsername.classList.remove('border-accent');
-        wrapPassword.classList.remove('border-accent');
-      }, 350);
-    }
+      btnQuickSales.addEventListener('click', function () {
+        usernameInput.value = 'sales';
+        passwordInput.value = 'sales123';
+        clearValidation();
+        flashInputs();
+        usernameInput.focus();
+      });
 
-    function fillAdmin() {
-      usernameInput.value = 'admin';
-      passwordInput.value = 'admin123';
-      handleInputChange('username');
-      handleInputChange('password');
-      flashInputs();
-    }
+      btnFillSelectedSales.addEventListener('click', function () {
+        var val = demoSalesSelect.value || 'aruna';
+        usernameInput.value = val;
+        passwordInput.value = 'sales123';
+        clearValidation();
+        flashInputs();
+        usernameInput.focus();
+      });
 
-    function fillSelectedSales() {
-      var sel = document.getElementById('demoSalesSelect');
-      usernameInput.value = sel ? sel.value : 'aruna';
-      passwordInput.value = 'sales123';
-      handleInputChange('username');
-      handleInputChange('password');
-      flashInputs();
-    }
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearValidation();
+        alertSuccess.classList.add('hidden');
 
-    function handleUnifiedLogin(e) {
-      e.preventDefault();
-      dismissAlert();
-      alertSuccess.classList.add('hidden');
+        var userVal = (usernameInput.value || '').trim();
+        var passVal = (passwordInput.value || '').trim();
+        var hasError = false;
 
-      var userVal = usernameInput.value.trim();
-      var passVal = passwordInput.value.trim();
-      var hasError = false;
-
-      if (!userVal) {
-        wrapUsername.classList.replace('border-border-subtle', 'border-semantic-danger');
-        errorUsername.classList.remove('hidden');
-        hasError = true;
-      }
-      if (!passVal) {
-        wrapPassword.classList.replace('border-border-subtle', 'border-semantic-danger');
-        errorPassword.classList.remove('hidden');
-        hasError = true;
-      }
-      if (hasError) return;
-
-      btnSubmit.disabled = true;
-      btnText.classList.add('hidden');
-      btnSpinner.classList.remove('hidden');
-
-      setTimeout(function () {
-        btnSubmit.disabled = false;
-        btnText.classList.remove('hidden');
-        btnSpinner.classList.add('hidden');
-
-        var lowerUser = userVal.toLowerCase();
-
-        // 1. Admin Account -> strictly routes to admin.html
-        if ((lowerUser === 'admin' || lowerUser === 'admin@fade.id') && passVal === 'admin123') {
-          FADE_STORE.setActiveSession({
-            role: 'admin',
-            name: 'Raka Pratama',
-            title: 'Head of Operations',
-            salesName: null
-          });
-          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Admin (Raka Pratama)...';
-          alertSuccess.classList.remove('hidden');
-          setTimeout(function () {
-            window.location.href = 'admin.html#dashboard';
-          }, 450);
-          return;
+        if (!userVal) {
+          wrapUsername.classList.add('border-semantic-danger');
+          errorUsername.classList.remove('hidden');
+          hasError = true;
         }
-
-        // 2. Sales Accounts (All 6 reps) -> strictly routes to sales.html
-        var allSalesNames = window.FADE_STORE ? FADE_STORE.getUniqueSalesNames() : [];
-        var salesDirectory = {
-          'sales': allSalesNames[0] || 'Aruna Pratama',
-          'sales@fade.id': allSalesNames[0] || 'Aruna Pratama'
-        };
-        allSalesNames.forEach(function (fullName) {
-          var lowerFull = fullName.toLowerCase();
-          var first = lowerFull.split(' ')[0];
-          salesDirectory[lowerFull] = fullName;
-          salesDirectory[first] = fullName;
-          salesDirectory[first + '@fade.id'] = fullName;
-        });
-
-        if (salesDirectory[lowerUser] && passVal === 'sales123') {
-          var repName = salesDirectory[lowerUser];
-          var salesObj = (FADE_STORE.getSalesList() || []).find(function (s) { return s.name === repName; });
-          FADE_STORE.setActiveSession({
-            role: 'sales',
-            name: repName,
-            title: 'Sales Representative',
-            salesName: repName,
-            salesId: salesObj ? salesObj.id : 'SYN-S01',
-            region: salesObj ? salesObj.region : 'DKI Jakarta & Banten'
-          });
-          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Sales (' + repName + ')...';
-          alertSuccess.classList.remove('hidden');
-          setTimeout(function () {
-            window.location.href = 'sales.html#dashboard';
-          }, 450);
-          return;
+        if (!passVal) {
+          wrapPassword.classList.add('border-semantic-danger');
+          errorPassword.classList.remove('hidden');
+          hasError = true;
         }
+        if (hasError) return;
 
-        alertInvalidMsg.textContent = 'Username atau kata sandi tidak sesuai. Gunakan akun demo di bawah.';
-        alertInvalid.classList.remove('hidden');
-        wrapUsername.classList.add('border-semantic-danger');
-        wrapPassword.classList.add('border-semantic-danger');
-      }, 400);
-    }
+        btnSubmit.disabled = true;
+        btnText.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+
+        setTimeout(function () {
+          btnSubmit.disabled = false;
+          btnText.classList.remove('hidden');
+          btnSpinner.classList.add('hidden');
+
+          var lowerUser = userVal.toLowerCase();
+
+          // 1. Admin Account Check
+          if ((lowerUser === 'admin' || lowerUser === 'admin@fade.id') && passVal === 'admin123') {
+            var adminSession = {
+              role: 'admin',
+              name: 'Raka Pratama',
+              title: 'Head of Operations',
+              salesName: null
+            };
+            FADE_STORE.setActiveSession(adminSession);
+
+            document.getElementById('success-role-title').textContent = 'Login Admin Berhasil!';
+            document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Admin...';
+            alertSuccess.classList.remove('hidden');
+
+            var targetUrl = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html'))
+              ? 'admin.html#dashboard'
+              : 'admin#dashboard';
+
+            setTimeout(function () {
+              window.location.href = targetUrl;
+            }, 300);
+            return;
+          }
+
+          // 2. Sales Accounts (sales, aruna, bima, citra, damar, elang, fira)
+          var allSalesNames = FADE_STORE.getUniqueSalesNames();
+          var salesDirectory = {
+            'sales': allSalesNames[0] || 'Aruna Pratama',
+            'sales@fade.id': allSalesNames[0] || 'Aruna Pratama'
+          };
+          allSalesNames.forEach(function (fullName) {
+            var lowerFull = fullName.toLowerCase();
+            var first = lowerFull.split(' ')[0];
+            salesDirectory[lowerFull] = fullName;
+            salesDirectory[first] = fullName;
+            salesDirectory[first + '@fade.id'] = fullName;
+          });
+
+          // Also explicitly map standard sales usernames
+          salesDirectory['aruna'] = 'Aruna Pratama';
+          salesDirectory['bima'] = 'Bima Santoso';
+          salesDirectory['citra'] = 'Citra Mahesa';
+          salesDirectory['damar'] = 'Damar Wicaksono';
+          salesDirectory['elang'] = 'Elang Saputra';
+          salesDirectory['fira'] = 'Fira Anindya';
+
+          if (salesDirectory[lowerUser] && (passVal === 'sales123' || passVal === 'admin123')) {
+            var repName = salesDirectory[lowerUser];
+            var salesList = FADE_STORE.getSalesList() || [];
+            var salesObj = salesList.find(function (s) { return s.name === repName; });
+
+            var salesSession = {
+              role: 'sales',
+              name: repName,
+              title: 'Sales Representative',
+              salesName: repName,
+              salesId: salesObj ? salesObj.id : 'SYN-S01',
+              region: salesObj ? salesObj.region : 'DKI Jakarta & Banten'
+            };
+            FADE_STORE.setActiveSession(salesSession);
+
+            document.getElementById('success-role-title').textContent = 'Login Sales Berhasil!';
+            document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Sales (' + repName + ')...';
+            alertSuccess.classList.remove('hidden');
+
+            var targetSalesUrl = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html'))
+              ? 'sales.html#dashboard'
+              : 'sales#dashboard';
+
+            setTimeout(function () {
+              window.location.href = targetSalesUrl;
+            }, 300);
+            return;
+          }
+
+          // 3. Invalid credentials
+          alertInvalidMsg.textContent = 'Username atau kata sandi tidak sesuai. Gunakan akun demo di bawah.';
+          alertInvalid.classList.remove('hidden');
+          wrapUsername.classList.add('border-semantic-danger');
+          wrapPassword.classList.add('border-semantic-danger');
+        }, 350);
+      });
+    })();
   </script>
 </body>
 </html>

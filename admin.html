@@ -880,11 +880,18 @@
 
       var session = FADE_STORE.getActiveSession();
       if (!session) {
-        window.location.replace('index.html');
-        return;
+        if (urlParams.get('demo') === '1' || urlParams.get('role') === 'admin') {
+          session = { role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null };
+          FADE_STORE.setActiveSession(session);
+        } else {
+          var targetLogin = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'index.html' : './';
+          window.location.replace(targetLogin);
+          return;
+        }
       }
       if (session.role !== 'admin') {
-        window.location.replace('sales.html' + (window.location.hash || '#dashboard'));
+        var targetSales = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'sales.html' : 'sales';
+        window.location.replace(targetSales + (window.location.hash || '#dashboard'));
         return;
       }
 
