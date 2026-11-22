@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>FADE Pods Showcase v0.2 · Panel Sales</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23F28C45%22/><text y=%22.9em%22 font-size=%2290%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 x=%2250%22>F</text></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=20261122b">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261122d">
   <style>
     @media print {
       aside, header, nav, #toastContainer, .no-print { display: none !important; }
@@ -1132,10 +1133,10 @@
   <!-- ==================================================================== -->
   <!-- 7. ENGINE & SALES CONTROLLER                                         -->
   <!-- ==================================================================== -->
-  <script src="assets/js/engine/business-engine.js?v=20261122b"></script>
-  <script src="assets/js/data/synthetic-seed.js?v=20261122b"></script>
-  <script src="assets/js/store.js?v=20261122b"></script>
-  <script src="assets/js/components/trend-chart.js?v=20261122b"></script>
+  <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
+  <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
+  <script src="./assets/js/store.js?v=20261122d"></script>
+  <script src="./assets/js/components/trend-chart.js?v=20261122d"></script>
   <script>
     (function () {
       'use strict';
@@ -1151,14 +1152,12 @@
           session = { role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' };
           FADE_STORE.setActiveSession(session);
         } else {
-          var targetLogin = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'index.html' : './';
-          window.location.replace(targetLogin);
+          window.location.replace('./index.html');
           return;
         }
       }
       if (session.role !== 'sales') {
-        var targetAdmin = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html')) ? 'admin.html' : 'admin';
-        window.location.replace(targetAdmin + (window.location.hash || '#dashboard'));
+        window.location.replace('./admin.html' + (window.location.hash || '#dashboard'));
         return;
       }
 
@@ -2129,7 +2128,7 @@
       window.closeAccountModal = closeAccountModal;
       window.confirmSalesLogout = function () {
         FADE_STORE.clearSession();
-        window.location.href = 'index.html';
+        window.location.href = './index.html';
       };
 
       function triggerLogoutModal() {

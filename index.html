@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>FADE Pods · Selamat datang</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23F28C45%22/><text y=%22.9em%22 font-size=%2290%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 x=%2250%22>F</text></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +54,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="assets/css/tokens.css?v=20261122c">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261122d">
   <style>
     * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
@@ -206,8 +207,8 @@
     </div>
   </main>
 
-  <script src="assets/js/data/synthetic-seed.js?v=20261122c"></script>
-  <script src="assets/js/store.js?v=20261122c"></script>
+  <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
+  <script src="./assets/js/store.js?v=20261122d"></script>
   <script>
     (function () {
       'use strict';
@@ -365,9 +366,7 @@
             document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Admin...';
             alertSuccess.classList.remove('hidden');
 
-            var targetUrl = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html'))
-              ? 'admin.html#dashboard'
-              : 'admin#dashboard';
+            var targetUrl = './admin.html#dashboard';
 
             setTimeout(function () {
               window.location.href = targetUrl;
@@ -416,9 +415,7 @@
             document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Sales (' + repName + ')...';
             alertSuccess.classList.remove('hidden');
 
-            var targetSalesUrl = (window.location.protocol === 'file:' || window.location.pathname.endsWith('.html'))
-              ? 'sales.html#dashboard'
-              : 'sales#dashboard';
+            var targetSalesUrl = './sales.html#dashboard';
 
             setTimeout(function () {
               window.location.href = targetSalesUrl;
