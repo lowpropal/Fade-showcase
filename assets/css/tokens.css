@@ -1,0 +1,101 @@
+/**
+ * FADE Pods Showcase v0.2 · Design Tokens & System Styles
+ * Standardized against Master Design & Design System Phase 03.3
+ */
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Accent Colors */
+  --color-accent: #F28C45;
+  --color-accent-hover: #FF9E5C;
+  --color-accent-wash: rgba(242, 140, 69, 0.12);
+
+  /* Status Colors */
+  --status-success: #63C995;
+  --status-warning: #F2BD4B;
+  --status-danger: #F07878;
+  --status-neutral: #B8B8BB;
+
+  /* Dark Theme (Default) */
+  --bg-canvas: #0D0D0E;
+  --bg-sidebar: #131314;
+  --bg-surface-1: #19191B;
+  --bg-surface-2: #202022;
+  --bg-surface-hover: #29292C;
+
+  --border-subtle: #2B2B2E;
+  --border-default: #39393D;
+  --border-strong: #55555A;
+
+  --text-primary: #F5F5F3;
+  --text-secondary: #B8B8BB;
+  --text-muted: #8F8F93;
+  --text-inverse: #111112;
+}
+
+html.light {
+  /* Light Theme Overrides */
+  --bg-canvas: #F8F9FA;
+  --bg-sidebar: #FFFFFF;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #F1F3F5;
+  --bg-surface-hover: #E9ECEF;
+
+  --border-subtle: #E5E7EB;
+  --border-default: #D1D5DB;
+  --border-strong: #9CA3AF;
+
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --text-inverse: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Safe areas for mobile devices */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+.pt-safe {
+  padding-top: max(1rem, env(safe-area-inset-top, 0px));
+}
+
+/* Tab active indicator */
+.tab-active-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+  border-radius: 9999px;
+}
