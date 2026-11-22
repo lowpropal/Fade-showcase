@@ -80,49 +80,24 @@
     }
   </style>
 </head>
-<body class="bg-canvas text-text-primary min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-200">
+<body class="bg-canvas text-text-primary min-h-screen max-w-[100vw] flex flex-col justify-between selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-200 relative">
+
+  <!-- Floating Minimalist Theme Switcher (Top Right Corner) -->
+  <button id="themeToggleBtn" type="button" class="fixed top-4 right-4 z-30 w-8 h-8 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors shadow-sm" title="Ubah Tema" aria-label="Ubah Tema">
+    <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
+  </button>
 
   <!-- ==================================================================== -->
-  <!-- 1. TOP HEADER BAR                                                    -->
+  <!-- MAIN AUTHENTICATION CONTAINER (Center Form with Radial Glow)         -->
   <!-- ==================================================================== -->
-  <header class="w-full border-b border-border-subtle bg-surface-1/70 backdrop-blur-md px-4 sm:px-6 py-3.5 flex items-center justify-between z-20">
-    <div class="flex items-center gap-2.5">
-      <!-- Brand Logo / Emblem -->
-      <div class="w-7 h-7 rounded-lg bg-surface-2 border border-border-default flex items-center justify-center text-accent">
-        <span class="material-symbols-outlined text-[16px]">all_inclusive</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
-        <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-semibold">v0.2</span>
-      </div>
-    </div>
-    <div class="flex items-center gap-3">
-      <span class="hidden sm:inline-flex items-center gap-1.5 text-xs text-text-muted">
-        <span class="w-2 h-2 rounded-full bg-semantic-success animate-pulse"></span>
-        Runtime: Showcase Static
-      </span>
-      <button id="themeToggleBtn" type="button" class="w-8 h-8 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" title="Ubah Tema" aria-label="Ubah Tema">
-        <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ==================================================================== -->
-  <!-- 2. MAIN AUTHENTICATION CONTAINER (Center Form with Radial Glow)     -->
-  <!-- ==================================================================== -->
-  <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-full relative z-10">
+  <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-full max-w-full overflow-hidden relative z-10 my-auto">
     
     <!-- Subtle Ambient Radial Glow -->
-    <div class="absolute pointer-events-none w-[500px] h-[500px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
+    <div class="hidden sm:block absolute pointer-events-none w-[420px] h-[420px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
 
     <div class="w-full max-w-[380px] mx-auto flex flex-col items-center text-center">
-      
-      <!-- Brand Emblem / Aperture Sunburst -->
-      <div class="w-12 h-12 rounded-2xl bg-surface-2 border border-border-default flex items-center justify-center text-accent mb-4 shadow-md">
-        <span class="material-symbols-outlined text-[24px]">lens_blur</span>
-      </div>
 
-      <!-- Headline & Subtitle -->
+      <!-- Headline & Subtitle (Clean Title without center icon) -->
       <h1 class="text-[24px] sm:text-[26px] font-semibold tracking-tight text-text-primary mb-1">
         Selamat datang kembali!
       </h1>

@@ -282,7 +282,171 @@
 
         </div>
 
-        <!-- Section 2: Sales Comparison Table (Admin Only) -->
+        <!-- ============================================================ -->
+        <!-- SECTION 2: CHARTS (2-COLUMN: TREN PENJUALAN & STATUS BAYAR) -->
+        <!-- Locked Master Design (04_UI:UX Design/01_Master design)      -->
+        <!-- ============================================================ -->
+        <div id="adminAnalyticsSection" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <!-- Left: Tren Penjualan Bulanan (Spline Area Curve) -->
+          <div class="lg:col-span-7 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <!-- Card Header & Summary -->
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-3">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
+                  <span id="chartPeriodLabel" class="text-xs text-text-muted">01 – 22 Nov 2026</span>
+                </div>
+                <div class="flex items-baseline gap-2.5 mt-0.5">
+                  <span id="chartMonthlyRevenue" class="text-[24px] leading-7 font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
+                  <span class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
+                    <span class="material-symbols-outlined text-[15px]">trending_up</span>
+                    +8,7% vs bulan lalu
+                  </span>
+                </div>
+              </div>
+              <!-- Timeframe Selector -->
+              <div class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                <button type="button" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors">7D</button>
+                <button type="button" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors">30D</button>
+                <button type="button" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors">90D</button>
+              </div>
+            </div>
+
+            <!-- Sleek Modern Spline Area Chart (SVG) -->
+            <div class="relative w-full h-64 pt-2 pb-1">
+              <svg aria-label="Grafik Tren Penjualan Bulanan" class="w-full h-full overflow-visible" viewBox="0 0 640 210">
+                <defs>
+                  <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#F28C45" stop-opacity="0.22"></stop>
+                    <stop offset="75%" stop-color="#F28C45" stop-opacity="0.04"></stop>
+                    <stop offset="100%" stop-color="#F28C45" stop-opacity="0.00"></stop>
+                  </linearGradient>
+                </defs>
+
+                <!-- Horizontal Dotted Grid Lines -->
+                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="20" y2="20"></line>
+                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="60" y2="60"></line>
+                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="100" y2="100"></line>
+                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="140" y2="140"></line>
+                <line stroke="#39393D" stroke-width="1" x1="46" x2="625" y1="175" y2="175"></line>
+
+                <!-- Y-Axis Labels -->
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="24">80jt</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="64">60jt</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="104">40jt</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="144">20jt</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="179">0</text>
+
+                <!-- Smooth Spline Area Gradient Fill -->
+                <path d="M 55 145 C 110 140, 140 120, 185 106 C 230 92, 255 104, 295 90 C 335 76, 365 65, 405 74 C 445 83, 480 60, 520 46 C 548 36, 568 39, 585 26 L 585 175 L 55 175 Z" fill="url(#fadeChartGrad)"></path>
+
+                <!-- Smooth Spline Stroke Curve -->
+                <path d="M 55 145 C 110 140, 140 120, 185 106 C 230 92, 255 104, 295 90 C 335 76, 365 65, 405 74 C 445 83, 480 60, 520 46 C 548 36, 568 39, 585 26" fill="none" stroke="#F28C45" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+
+                <!-- Milestone Data Nodes -->
+                <circle cx="55" cy="145" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+                <circle cx="185" cy="106" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+                <circle cx="295" cy="90" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+                <circle cx="405" cy="74" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+                <circle cx="520" cy="46" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+
+                <!-- Active Point Vertical Guide Line -->
+                <line stroke="#55555A" stroke-dasharray="3 3" stroke-width="1.25" x1="585" x2="585" y1="26" y2="175"></line>
+
+                <!-- Active Highlighted Node -->
+                <circle cx="585" cy="26" fill="#19191B" r="5.5" stroke="#F28C45" stroke-width="2.5"></circle>
+                <circle cx="585" cy="26" fill="#F28C45" r="2"></circle>
+
+                <!-- Floating Tooltip Pill -->
+                <g transform="translate(450, 6)">
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="34" rx="6" stroke="#39393D" stroke-width="1" width="128"></rect>
+                  <polygon fill="#39393D" points="128,17 134,17 128,22"></polygon>
+                  <polygon fill="#202022" points="127,17 132,17 127,21"></polygon>
+                  <circle cx="14" cy="17" fill="#F28C45" r="3"></circle>
+                  <text fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
+                  <text fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="65" y="16">Rp 68,4 jt</text>
+                  <text fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="27">Hari ini (+14%)</text>
+                </g>
+
+                <!-- X-Axis Labels -->
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="55" y="196">01 Nov</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="185" y="196">05 Nov</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="295" y="196">10 Nov</text>
+                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="405" y="196">15 Nov</text>
+                <text fill="#F28C45" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="585" y="196">19 Nov</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Right: Status Pembayaran (4 Distribution Progress Bars) -->
+          <div class="lg:col-span-5 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h2 class="text-base font-semibold text-text-primary tracking-tight">Status Pembayaran</h2>
+                <p id="chartStatusSub" class="text-xs text-text-muted mt-0.5">Distribusi dari total 25 invoice (Rp 826,5 jt)</p>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4 my-auto">
+              <!-- Bar 1: Lunas -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
+                    <span class="w-2 h-2 rounded-full bg-status-success"></span>
+                    Lunas
+                  </span>
+                  <span id="chartPayLunasText" class="text-text-secondary tabular-nums font-semibold">Rp 528,0 jt <span class="text-text-muted font-normal">(63,9%)</span></span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                  <div id="chartPayLunasBar" class="h-full rounded-full bg-status-success transition-all duration-500" style="width: 63.9%;"></div>
+                </div>
+              </div>
+
+              <!-- Bar 2: Sebagian -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
+                    <span class="w-2 h-2 rounded-full bg-status-warning"></span>
+                    Sebagian
+                  </span>
+                  <span id="chartPaySebagianText" class="text-text-secondary tabular-nums font-semibold">Rp 84,0 jt <span class="text-text-muted font-normal">(10,2%)</span></span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                  <div id="chartPaySebagianBar" class="h-full rounded-full bg-status-warning transition-all duration-500" style="width: 10.2%;"></div>
+                </div>
+              </div>
+
+              <!-- Bar 3: Terlambat -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
+                    <span class="w-2 h-2 rounded-full bg-status-danger"></span>
+                    Terlambat
+                  </span>
+                  <span id="chartPayTerlambatText" class="text-text-secondary tabular-nums font-semibold">Rp 142,0 jt <span class="text-text-muted font-normal">(17,2%)</span></span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                  <div id="chartPayTerlambatBar" class="h-full rounded-full bg-status-danger transition-all duration-500" style="width: 17.2%;"></div>
+                </div>
+              </div>
+
+              <!-- Bar 4: Belum Jatuh Tempo -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
+                    <span class="w-2 h-2 rounded-full bg-status-neutral"></span>
+                    Belum jatuh tempo
+                  </span>
+                  <span id="chartPayTempoText" class="text-text-secondary tabular-nums font-semibold">Rp 72,5 jt <span class="text-text-muted font-normal">(8,7%)</span></span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                  <div id="chartPayTempoBar" class="h-full rounded-full bg-status-neutral transition-all duration-500" style="width: 8.7%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Sales Comparison Table (Admin Only) -->
         <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -668,8 +832,10 @@
 
         // Header Sales Scope Control
         salesScopeContainer.innerHTML = '';
+        var adminAnalytics = document.getElementById('adminAnalyticsSection');
         if (session.role === 'admin') {
           pageTitle.textContent = 'Dashboard Admin';
+          if (adminAnalytics) adminAnalytics.classList.remove('hidden');
           salesComparisonSection.classList.remove('hidden');
 
           var sel = document.createElement('select');
@@ -707,6 +873,7 @@
         } else {
           // Strict Sales Scope UI
           pageTitle.textContent = 'Dashboard Sales · ' + session.name;
+          if (adminAnalytics) adminAnalytics.classList.add('hidden');
           salesComparisonSection.classList.add('hidden');
 
           salesScopeContainer.innerHTML =
@@ -780,8 +947,53 @@
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
 
         if (session.role === 'admin') {
+          renderAdminAnalytics(summary);
           renderComparison(invoices, targets);
         }
+      }
+
+      function renderAdminAnalytics(summary) {
+        var elMonthlyRevenue = document.getElementById('chartMonthlyRevenue');
+        var elPeriodLabel = document.getElementById('chartPeriodLabel');
+        var elStatusSub = document.getElementById('chartStatusSub');
+
+        var revJt = (summary.revenue / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+        if (elMonthlyRevenue) elMonthlyRevenue.textContent = 'Rp ' + revJt;
+        if (elPeriodLabel) elPeriodLabel.textContent = currentMode === 'ytd' ? '01 Jan – 22 Nov 2026 (YTD)' : '01 – 22 Nov 2026';
+        if (elStatusSub) {
+          elStatusSub.textContent = 'Distribusi dari total ' + summary.totalDataTerinput + ' invoice (Rp ' + revJt + ')';
+        }
+
+        var totalRev = summary.revenue || 1;
+        var lunasVal = summary.pembayaranMasuk || 0;
+        var terlambatVal = summary.bisaDitagihkan || 0;
+        var tempoVal = summary.belumJatuhTempo || 0;
+        var sebagianVal = Math.max(0, summary.revenue - lunasVal - terlambatVal - tempoVal);
+
+        var lunasPct = ((lunasVal / totalRev) * 100).toFixed(1);
+        var sebagianPct = ((sebagianVal / totalRev) * 100).toFixed(1);
+        var terlambatPct = ((terlambatVal / totalRev) * 100).toFixed(1);
+        var tempoPct = ((tempoVal / totalRev) * 100).toFixed(1);
+
+        var lunasText = document.getElementById('chartPayLunasText');
+        var lunasBar = document.getElementById('chartPayLunasBar');
+        if (lunasText) lunasText.innerHTML = 'Rp ' + (lunasVal / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt <span class="text-text-muted font-normal">(' + lunasPct.replace('.', ',') + '%)</span>';
+        if (lunasBar) lunasBar.style.width = Math.min(100, Math.max(2, lunasPct)) + '%';
+
+        var sebagianText = document.getElementById('chartPaySebagianText');
+        var sebagianBar = document.getElementById('chartPaySebagianBar');
+        if (sebagianText) sebagianText.innerHTML = 'Rp ' + (sebagianVal / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt <span class="text-text-muted font-normal">(' + sebagianPct.replace('.', ',') + '%)</span>';
+        if (sebagianBar) sebagianBar.style.width = Math.min(100, Math.max(2, sebagianPct)) + '%';
+
+        var terlambatText = document.getElementById('chartPayTerlambatText');
+        var terlambatBar = document.getElementById('chartPayTerlambatBar');
+        if (terlambatText) terlambatText.innerHTML = 'Rp ' + (terlambatVal / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt <span class="text-text-muted font-normal">(' + terlambatPct.replace('.', ',') + '%)</span>';
+        if (terlambatBar) terlambatBar.style.width = Math.min(100, Math.max(2, terlambatPct)) + '%';
+
+        var tempoText = document.getElementById('chartPayTempoText');
+        var tempoBar = document.getElementById('chartPayTempoBar');
+        if (tempoText) tempoText.innerHTML = 'Rp ' + (tempoVal / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt <span class="text-text-muted font-normal">(' + tempoPct.replace('.', ',') + '%)</span>';
+        if (tempoBar) tempoBar.style.width = Math.min(100, Math.max(2, tempoPct)) + '%';
       }
 
       function renderComparison(invoices, targets) {
