@@ -111,7 +111,7 @@
         <div class="text-left space-y-1">
           <label for="username" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-0.5">Username atau Email</label>
           <div id="wrap-username" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
-            <input id="username" name="username" type="text" placeholder="admin atau sales (aruna, bima, citra...)" autocomplete="username" spellcheck="false" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
+            <input id="username" name="username" type="text" placeholder="admin atau sales (aru, nurdin, niko...)" autocomplete="username" spellcheck="false" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
           </div>
           <p id="error-username" class="hidden text-[11px] text-semantic-danger flex items-center gap-1 mt-1 font-medium">
             <i class="ph ph-warning-circle text-xs"></i>
@@ -175,8 +175,8 @@
           <!-- Sales Demo Card -->
           <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle hover:border-border-default flex items-center justify-between transition-colors">
             <div class="flex flex-col min-w-0">
-              <span class="text-xs font-semibold text-text-primary truncate">Sales</span>
-              <span class="text-[10px] text-text-muted font-mono truncate">sales / sales123</span>
+              <span class="text-xs font-semibold text-text-primary truncate">Sales (Aru)</span>
+              <span class="text-[10px] text-text-muted font-mono truncate">aru / sales123</span>
             </div>
             <button id="btnQuickSales" type="button" class="h-7 px-2.5 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-subtle text-[11px] font-semibold text-accent transition-colors shrink-0">
               Isi
@@ -184,16 +184,16 @@
           </div>
         </div>
 
-        <!-- 6 Sales Reps Specific Selector (Optional Direct Choice) -->
+        <!-- 6 Real Sales Reps Specific Selector -->
         <div class="flex items-center gap-2 p-2 rounded-xl bg-surface-1 border border-border-subtle">
           <label for="demoSalesSelect" class="text-[11px] text-text-muted shrink-0 pl-1">Sales Lain:</label>
           <select id="demoSalesSelect" aria-label="Pilih Akun Sales Spesifik" class="flex-1 h-7 bg-surface-2 border border-border-subtle rounded-lg px-2 text-[11px] text-text-primary focus:outline-none focus:border-accent cursor-pointer">
-            <option value="aruna">Aruna Pratama</option>
-            <option value="bima">Bima Santoso</option>
-            <option value="citra">Citra Mahesa</option>
-            <option value="damar">Damar Wicaksono</option>
-            <option value="elang">Elang Saputra</option>
-            <option value="fira">Fira Anindya</option>
+            <option value="aru">Aru</option>
+            <option value="nurdin">Nurdin</option>
+            <option value="niko">Niko</option>
+            <option value="roland">Roland</option>
+            <option value="akim">Akim</option>
+            <option value="aldy">Aldy</option>
           </select>
           <button id="btnFillSelectedSales" type="button" class="h-7 px-2.5 rounded-lg bg-surface-2 hover:bg-accent hover:text-white border border-border-subtle text-[11px] font-semibold text-text-primary transition-colors shrink-0">
             Pilih
@@ -304,7 +304,7 @@
       });
 
       btnQuickSales.addEventListener('click', function () {
-        usernameInput.value = 'sales';
+        usernameInput.value = 'aru';
         passwordInput.value = 'sales123';
         clearValidation();
         flashInputs();
@@ -312,7 +312,7 @@
       });
 
       btnFillSelectedSales.addEventListener('click', function () {
-        var val = demoSalesSelect.value || 'aruna';
+        var val = demoSalesSelect.value || 'aru';
         usernameInput.value = val;
         passwordInput.value = 'sales123';
         clearValidation();
@@ -374,11 +374,11 @@
             return;
           }
 
-          // 2. Sales Accounts (sales, aruna, bima, citra, damar, elang, fira)
+          // 2. Sales Accounts (aru, nurdin, niko, roland, akim, aldy, mey)
           var allSalesNames = FADE_STORE.getUniqueSalesNames();
           var salesDirectory = {
-            'sales': allSalesNames[0] || 'Aruna Pratama',
-            'sales@fade.id': allSalesNames[0] || 'Aruna Pratama'
+            'sales': 'Aru',
+            'sales@fade.id': 'Aru'
           };
           allSalesNames.forEach(function (fullName) {
             var lowerFull = fullName.toLowerCase();
@@ -388,13 +388,14 @@
             salesDirectory[first + '@fade.id'] = fullName;
           });
 
-          // Also explicitly map standard sales usernames
-          salesDirectory['aruna'] = 'Aruna Pratama';
-          salesDirectory['bima'] = 'Bima Santoso';
-          salesDirectory['citra'] = 'Citra Mahesa';
-          salesDirectory['damar'] = 'Damar Wicaksono';
-          salesDirectory['elang'] = 'Elang Saputra';
-          salesDirectory['fira'] = 'Fira Anindya';
+          // Explicit mappings for all 6 active reps + Mey
+          salesDirectory['aru'] = 'Aru';
+          salesDirectory['nurdin'] = 'Nurdin';
+          salesDirectory['niko'] = 'Niko';
+          salesDirectory['roland'] = 'Roland';
+          salesDirectory['akim'] = 'Akim';
+          salesDirectory['aldy'] = 'Aldy';
+          salesDirectory['mey'] = 'Mey';
 
           if (salesDirectory[lowerUser] && (passVal === 'sales123' || passVal === 'admin123')) {
             var repName = salesDirectory[lowerUser];
@@ -406,8 +407,8 @@
               name: repName,
               title: 'Sales Representative',
               salesName: repName,
-              salesId: salesObj ? salesObj.id : 'SYN-S01',
-              region: salesObj ? salesObj.region : 'DKI Jakarta & Banten'
+              salesId: salesObj ? salesObj.id : ('SLS-' + repName.toUpperCase().slice(0, 3)),
+              region: 'Operasional Sales'
             };
             FADE_STORE.setActiveSession(salesSession);
 

@@ -6,19 +6,19 @@
   'use strict';
 
   var STORAGE_KEYS = {
-    INVOICES: 'fade_showcase_invoices_v02',
-    TARGETS: 'fade_showcase_targets_v02',
-    SALES: 'fade_showcase_sales_v02',
-    STORES: 'fade_showcase_stores_v02',
-    SESSION: 'fade_showcase_session_v02',
+    INVOICES: 'fade_showcase_invoices_v021',
+    TARGETS: 'fade_showcase_targets_v021',
+    SALES: 'fade_showcase_sales_v021',
+    STORES: 'fade_showcase_stores_v021',
+    SESSION: 'fade_showcase_session_v021',
     THEME: 'fade_showcase_theme_v02',
-    UPLOAD_LOG: 'fade_showcase_upload_history_v02',
-    INITIALIZED: 'fade_showcase_initialized_v02'
+    UPLOAD_LOG: 'fade_showcase_upload_history_v021',
+    INITIALIZED: 'fade_showcase_initialized_v021'
   };
 
   function getSeed() {
     return root.FADE_SYNTHETIC_SEED || {
-      meta: { isSynthetic: true },
+      meta: { isSynthetic: false },
       sales: [],
       stores: [],
       targets: {},
@@ -29,7 +29,24 @@
   function init() {
     try {
       var isInit = localStorage.getItem(STORAGE_KEYS.INITIALIZED);
-      if (!isInit || !localStorage.getItem(STORAGE_KEYS.INVOICES)) {
+      var rawInvoices = localStorage.getItem(STORAGE_KEYS.INVOICES);
+      // Auto-reset if not initialized or if legacy dummy data (QA26- prefix) detected
+      var hasDummy = false;
+      if (rawInvoices) {
+        try {
+          var parsed = JSON.parse(rawInvoices);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            var firstId = String(parsed[0].id || parsed[0].invoice_id || '');
+            if (firstId.startsWith('QA26-') || firstId.includes('SYN-')) {
+              hasDummy = true;
+            }
+          }
+        } catch (e) {
+          hasDummy = true;
+        }
+      }
+
+      if (!isInit || !rawInvoices || hasDummy) {
         resetToDefault();
       }
     } catch (e) {
@@ -46,14 +63,14 @@
       localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(seed.stores));
       localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify([
         {
-          timestamp: '2026-11-22T08:00:00Z',
-          filename: '01_Master_Import_Candidate.xlsx',
+          timestamp: '2026-11-18T17:00:00Z',
+          filename: 'FADE_Master_2_Sheet_18Nov2026.xlsx',
           rowsIngested: seed.invoices.length,
           validCount: seed.invoices.length,
           invalidCount: 0,
-          uploadedBy: 'Raka Pratama (Admin)',
+          uploadedBy: 'Administrator',
           status: 'Success',
-          notes: 'Initial synthetic showcase seed'
+          notes: 'Master Data Cut-off 18 Nov 2026 (Sheet 1: Invoice_Collection, Sheet 2: Sales_Monthly)'
         }
       ]));
       localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
@@ -85,44 +102,56 @@
     var qty = Math.max(1, Number(data.qty || 1));
     var unitPrice = Math.max(0, Number(data.unitPrice != null ? data.unitPrice : (data.unit_price_idr || 0)));
     var invoiceTotal = data.invoiceTotal != null ? Number(data.invoiceTotal) : (qty * unitPrice);
-    var otherSettlement = Math.max(0, Number(data.otherSettlement != null ? data.otherSettlement : (data.other_settlement_idr || 0)));
+    var otherSettlement = Math.max(0, Number(data.otherSettlement != null ? data.otherSettlement : (data.other_settlement_idr || data.penyelesaianLain || 0)));
     var paidTotal = Math.max(0, Math.min(invoiceTotal - otherSettlement, Number(data.paidTotal != null ? data.paidTotal : (data.paid_total_idr || 0))));
     var outstanding = Math.max(0, invoiceTotal - otherSettlement - paidTotal);
     var status = outstanding <= 0 ? 'PAID' : (paidTotal > 0 ? 'PARTIAL' : 'UNPAID');
 
+    var sName = (data.salesName || data.sales_name || data.salesKpi || '').trim();
+    var sId = data.salesId || data.sales_id || ('SLS-' + (sName ? sName.toUpperCase().slice(0, 3) : 'CUSTOM'));
+
     return {
       id: data.id || data.invoice_id || generateNextInvoiceId(),
-      date: data.date || data.invoice_date || '2026-11-22',
-      storeId: data.storeId || data.store_id || 'ST-CUSTOM',
+      date: data.date || data.invoice_date || '2026-11-18',
+      periode: data.periode || (data.date ? data.date.slice(0, 7) : '2026-11'),
+      storeId: data.storeId || data.store_id || data.clientId || 'ST-CUSTOM',
       storeName: (data.storeName || data.store_name || '').trim(),
-      salesId: data.salesId || data.sales_id || 'SYN-CUSTOM',
-      salesName: (data.salesName || data.sales_name || '').trim(),
-      productName: (data.productName || data.product_name || 'FADE Plus Pod 2ml').trim(),
+      salesId: sId,
+      salesName: sName,
+      salesHistoris: data.salesHistoris || sName,
+      salesSaatIni: data.salesSaatIni || sName,
+      salesKpi: sName,
+      productName: (data.productName || data.product_name || 'FADE Products').trim(),
       qty: qty,
+      qtyGratis: Number(data.qtyGratis || data.qty_gratis_pcs || 0),
       unitPrice: unitPrice,
       invoiceTotal: invoiceTotal,
       dueDate: data.dueDate || data.due_date || null,
       paidTotal: paidTotal,
       otherSettlement: otherSettlement,
       outstanding: outstanding,
-      lastPaymentDate: paidTotal > 0 ? (data.lastPaymentDate || data.last_payment_date || data.date || '2026-11-22') : null,
-      status: status
+      lastPaymentDate: paidTotal > 0 ? (data.lastPaymentDate || data.last_payment_date || data.date || '2026-11-18') : null,
+      status: status,
+      statusBayarRaw: data.statusBayarRaw || (status === 'PAID' ? 'Lunas' : (status === 'PARTIAL' ? 'Sebagian Terbayar' : 'Belum Bayar')),
+      jenisPartner: data.jenisPartner || data.partnerType || 'Retail',
+      statusAkun: data.statusAkun || data.accountStatus || 'Aktif',
+      rincianProduk: data.rincianProduk || data.rincian_produk || ''
     };
   }
 
   function generateNextInvoiceId() {
     var list = getInvoices();
-    var maxNum = 210;
+    var maxNum = 39;
     list.forEach(function (inv) {
       var id = String(inv.id || inv.invoice_id || '');
-      var m = id.match(/(\d+)$/);
+      var m = id.match(/SI\.2026\.11\.(\d+)/i);
       if (m) {
         var n = parseInt(m[1], 10);
         if (n > maxNum) maxNum = n;
       }
     });
     var next = maxNum + 1;
-    return 'QA26-' + String(next).padStart(4, '0');
+    return 'SI.2026.11.' + String(next).padStart(5, '0');
   }
 
   function addInvoice(data) {

@@ -35,23 +35,31 @@
     var status = 'Belum Jatuh Tempo';
     var hariTelat = 0;
     var bisaDitagihkan = false;
+    var isPartial = (paidAsOf > 0 && sisa > 0);
 
     var dueDateStr = inv.due_date || inv.dueDate || inv.jatuhTempo || inv.du;
     if (sisa <= 0) {
       status = 'Lunas';
       bisaDitagihkan = false;
+      hariTelat = 0;
     } else if (!dueDateStr) {
       status = 'Belum Jatuh Tempo';
       bisaDitagihkan = false;
+      hariTelat = null;
     } else {
       var dueDate = d(dueDateStr);
       if (dueDate > asOfDate) {
         status = 'Belum Jatuh Tempo';
         bisaDitagihkan = false;
+        hariTelat = 0;
+      } else if (dueDate.getTime() === asOfDate.getTime()) {
+        status = 'Belum Jatuh Tempo';
+        bisaDitagihkan = true;
+        hariTelat = 0;
       } else {
         bisaDitagihkan = true;
-        hariTelat = Math.max(0, Math.round((asOfDate - dueDate) / MS_PER_DAY));
-        status = hariTelat > 0 ? 'Terlambat Bayar' : 'Belum Jatuh Tempo';
+        hariTelat = Math.max(1, Math.round((asOfDate - dueDate) / MS_PER_DAY));
+        status = 'Terlambat Bayar';
       }
     }
 
@@ -61,6 +69,7 @@
       penyelesaian: settl,
       sisa: sisa,
       status: status,
+      isPartial: isPartial,
       hariTerlambat: hariTelat,
       bisaDitagihkan: bisaDitagihkan,
       dueDate: dueDateStr

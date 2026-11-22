@@ -72,8 +72,8 @@ async function runCapture() {
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -86,8 +86,8 @@ async function runCapture() {
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
-        localStorage.setItem('fade_showcase_theme_v02', 'light');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v021', 'light');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -100,8 +100,8 @@ async function runCapture() {
       height: 844,
       mobile: true,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -114,8 +114,8 @@ async function runCapture() {
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -128,8 +128,8 @@ async function runCapture() {
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'light');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'light');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -142,8 +142,8 @@ async function runCapture() {
       height: 844,
       mobile: true,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -156,8 +156,8 @@ async function runCapture() {
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -165,35 +165,30 @@ async function runCapture() {
     },
     {
       name: '10_sales_invoice_detail_1440x900.png',
-      url: 'file://' + path.join(BASE_DIR, 'sales.html#invoice-QA26-0001'),
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#invoice-SI.2026.11.00001'),
       width: 1440,
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
       }
     },
     {
-      name: '11_sales_upload_modal.png',
-      url: 'file://' + path.join(BASE_DIR, 'sales.html#dashboard'),
+      name: '11_sales_invoices_table_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#invoices'),
       width: 1440,
-      height: 900,
+      height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
-        await send('Runtime.evaluate', {
-          expression: `
-            openUploadDocModal();
-          `
-        });
-        await sleep(400);
+        await sleep(500);
       }
     },
     {
@@ -203,16 +198,10 @@ async function runCapture() {
       height: 900,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
-        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+        localStorage.setItem('fade_showcase_session_v021', JSON.stringify({ role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' }));
+        localStorage.setItem('fade_showcase_theme_v021', 'dark');
       `,
       actions: async (send) => {
-        await send('Runtime.evaluate', {
-          expression: `
-            if (typeof closeUploadDocModal === 'function') closeUploadDocModal();
-            window.location.hash = '#profile';
-          `
-        });
         await sleep(500);
       }
     }

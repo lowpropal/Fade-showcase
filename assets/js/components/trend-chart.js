@@ -7,6 +7,7 @@
   'use strict';
 
   var FADE_TREND_CHART = {
+    chartType: 'line', // 'line' | 'bar'
     activeTimeframe: '30D',
     activePointIndex: null,
     points: [],
@@ -31,9 +32,22 @@
 
     bindControls: function () {
       var self = this;
+      var btnLine = document.getElementById('chartBtnLine');
+      var btnBar = document.getElementById('chartBtnBar');
       var btn7D = document.getElementById('chartBtn7D');
       var btn30D = document.getElementById('chartBtn30D');
       var btn90D = document.getElementById('chartBtn90D');
+
+      if (btnLine) {
+        btnLine.addEventListener('click', function () {
+          self.setChartType('line');
+        });
+      }
+      if (btnBar) {
+        btnBar.addEventListener('click', function () {
+          self.setChartType('bar');
+        });
+      }
 
       if (btn7D) {
         btn7D.addEventListener('click', function () {
@@ -72,6 +86,13 @@
       }
     },
 
+    setChartType: function (type) {
+      if (this.chartType === type) return;
+      this.chartType = type;
+      this.updateButtonStyles();
+      this.render();
+    },
+
     setTimeframe: function (tf) {
       if (this.activeTimeframe === tf) return;
       this.activeTimeframe = tf;
@@ -82,6 +103,9 @@
 
     updateButtonStyles: function () {
       var tf = this.activeTimeframe;
+      var cType = this.chartType;
+      var btnLine = document.getElementById('chartBtnLine');
+      var btnBar = document.getElementById('chartBtnBar');
       var btn7D = document.getElementById('chartBtn7D');
       var btn30D = document.getElementById('chartBtn30D');
       var btn90D = document.getElementById('chartBtn90D');
@@ -93,6 +117,18 @@
 
       var activeClass = 'px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer';
       var inactiveClass = 'px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer';
+
+      var activeTypeClass = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer';
+      var inactiveTypeClass = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer';
+
+      if (btnLine) {
+        btnLine.className = cType === 'line' ? activeTypeClass : inactiveTypeClass;
+        btnLine.setAttribute('aria-pressed', cType === 'line');
+      }
+      if (btnBar) {
+        btnBar.className = cType === 'bar' ? activeTypeClass : inactiveTypeClass;
+        btnBar.setAttribute('aria-pressed', cType === 'bar');
+      }
 
       if (btn7D) {
         btn7D.className = tf === '7D' ? activeClass : inactiveClass;
@@ -313,10 +349,76 @@
       }
 
       this.renderGrid(scaleCeilingMillions);
-      this.renderSpline(plottedPoints);
-      this.renderNodes(plottedPoints);
+      if (this.chartType === 'line') {
+        this.renderSpline(plottedPoints);
+        this.renderNodes(plottedPoints);
+        var barsContainer = document.getElementById('chartBarsGroup');
+        if (barsContainer) barsContainer.innerHTML = '';
+        var activeRing = document.getElementById('chartActiveNodeRing');
+        var activePip = document.getElementById('chartActiveNodePip');
+        if (activeRing) activeRing.style.display = '';
+        if (activePip) activePip.style.display = '';
+      } else {
+        var areaEl = document.getElementById('chartSplineArea');
+        var strokeEl = document.getElementById('chartSplineStroke');
+        var nodesContainer = document.getElementById('chartNodesGroup');
+        if (areaEl) areaEl.setAttribute('d', '');
+        if (strokeEl) strokeEl.setAttribute('d', '');
+        if (nodesContainer) nodesContainer.innerHTML = '';
+        var activeRing = document.getElementById('chartActiveNodeRing');
+        var activePip = document.getElementById('chartActiveNodePip');
+        if (activeRing) activeRing.style.display = 'none';
+        if (activePip) activePip.style.display = 'none';
+        this.renderBars(plottedPoints);
+      }
       this.renderXAxis(plottedPoints);
       this.updateActivePresentation();
+    },
+
+    renderBars: function (points) {
+      var self = this;
+      var barsContainer = document.getElementById('chartBarsGroup');
+      if (!barsContainer) return;
+      barsContainer.innerHTML = '';
+
+      var count = points.length;
+      var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
+      var barW = Math.max(12, Math.min(32, Math.round((availableWidth / count) * 0.55)));
+      var activeIdx = self.activePointIndex;
+      if (activeIdx === null || activeIdx < 0 || activeIdx >= points.length) {
+        activeIdx = points.length - 1;
+      }
+
+      points.forEach(function (p, idx) {
+        var barH = Math.max(6, self.BOUNDS.yMax - p.y);
+        var barX = Math.round(p.x - (barW / 2));
+        var barY = Math.round(p.y);
+        var isHighlight = (idx === activeIdx);
+
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', barX);
+        rect.setAttribute('y', barY);
+        rect.setAttribute('width', barW);
+        rect.setAttribute('height', barH);
+        rect.setAttribute('rx', '4');
+        rect.setAttribute('fill', isHighlight ? 'url(#barGradHighlight)' : 'url(#barGradDefault)');
+        rect.setAttribute('stroke', isHighlight ? '#F28C45' : 'var(--border-default, #39393D)');
+        rect.setAttribute('stroke-width', '1');
+        rect.setAttribute('class', 'chart-bar cursor-pointer transition-all duration-150');
+        rect.setAttribute('data-index', idx);
+        rect.setAttribute('tabindex', '0');
+        rect.setAttribute('role', 'button');
+        rect.setAttribute('aria-label', p.label + ': Rp ' + (p.cumulative / 1000000).toFixed(1) + ' jt');
+
+        rect.addEventListener('click', function () {
+          self.selectPoint(idx);
+        });
+        rect.addEventListener('focus', function () {
+          self.selectPoint(idx);
+        });
+
+        barsContainer.appendChild(rect);
+      });
     },
 
     renderGrid: function (maxMillions) {
@@ -477,10 +579,33 @@
       var activeRing = document.getElementById('chartActiveNodeRing');
       var activePip = document.getElementById('chartActiveNodePip');
       if (activeRing && activePip) {
-        activeRing.setAttribute('cx', pt.x);
-        activeRing.setAttribute('cy', pt.y);
-        activePip.setAttribute('cx', pt.x);
-        activePip.setAttribute('cy', pt.y);
+        if (this.chartType === 'line') {
+          activeRing.style.display = '';
+          activePip.style.display = '';
+          activeRing.setAttribute('cx', pt.x);
+          activeRing.setAttribute('cy', pt.y);
+          activePip.setAttribute('cx', pt.x);
+          activePip.setAttribute('cy', pt.y);
+        } else {
+          activeRing.style.display = 'none';
+          activePip.style.display = 'none';
+        }
+      }
+
+      if (this.chartType === 'bar') {
+        var barsContainer = document.getElementById('chartBarsGroup');
+        if (barsContainer) {
+          var bars = barsContainer.querySelectorAll('rect');
+          bars.forEach(function (rect, bIdx) {
+            if (bIdx === idx) {
+              rect.setAttribute('fill', 'url(#barGradHighlight)');
+              rect.setAttribute('stroke', '#F28C45');
+            } else {
+              rect.setAttribute('fill', 'url(#barGradDefault)');
+              rect.setAttribute('stroke', 'var(--border-default, #39393D)');
+            }
+          });
+        }
       }
 
       var tooltipGroup = document.getElementById('chartTooltipGroup');

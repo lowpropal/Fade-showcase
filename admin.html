@@ -68,32 +68,18 @@
       <div class="px-6 mb-8 flex items-center justify-between">
         <div class="flex items-center gap-2.5">
           <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
-          <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-semibold">v0.2</span>
         </div>
       </div>
 
       <nav class="flex flex-col px-3 gap-1" id="desktopNavContainer"></nav>
     </div>
 
-    <!-- Sidebar Footer: Profile, Theme Switcher & Logout -->
-    <div class="p-4 border-t border-border-subtle flex items-center justify-between gap-2">
-      <button id="sidebarProfileBtn" type="button" class="flex items-center gap-2.5 min-w-0 text-left hover:opacity-80 transition-opacity">
-        <div class="w-8 h-8 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent">
-          <span class="material-symbols-outlined text-[16px]">person</span>
-        </div>
-        <div class="flex flex-col min-w-0">
-          <span id="sidebarUserName" class="text-xs font-semibold text-text-primary truncate">User Name</span>
-          <span id="sidebarUserRole" class="text-[10px] text-text-muted truncate">User Role</span>
-        </div>
+    <!-- Sidebar Footer: Clean Full-Width Logout -->
+    <div class="p-3 border-t border-border-subtle">
+      <button id="sidebarLogoutBtn" aria-label="Keluar dari Sistem" class="w-full h-10 px-3 rounded-lg border border-transparent text-status-danger hover:bg-status-danger/10 flex items-center gap-3 transition-colors text-sm font-medium" type="button">
+        <span class="material-symbols-outlined text-[18px]">logout</span>
+        <span>Keluar</span>
       </button>
-      <div class="flex items-center gap-1 shrink-0">
-        <button id="sidebarThemeBtn" aria-label="Ganti Tema" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" type="button" title="Ubah Tema">
-          <span id="sidebarThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
-        </button>
-        <button id="sidebarLogoutBtn" aria-label="Ganti Akun" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-status-danger hover:bg-surface-hover transition-colors" type="button" title="Keluar / Ganti Akun">
-          <span class="material-symbols-outlined text-[16px]">logout</span>
-        </button>
-      </div>
     </div>
   </aside>
 
@@ -101,17 +87,17 @@
   <!-- 2. MOBILE HEADER (Master Mobile View: Fixed Top Safe-Area)           -->
   <!-- ==================================================================== -->
   <header class="shell-mobile-header fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
-    <div class="h-14 px-4 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
+    <div class="h-16 px-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
         <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
-        <span id="mobileRoleBadge" class="px-2 py-0.5 rounded-full bg-surface-2 text-text-secondary text-[10px] font-semibold uppercase tracking-wider">ROLE</span>
+        <span id="mobileRoleBadge" class="px-2 py-0.5 rounded-full bg-surface-2 text-text-secondary text-[10px] font-semibold uppercase tracking-wider">ADMIN</span>
       </div>
       <div class="flex items-center gap-2">
-        <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
-          <span id="mobileThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
+        <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
+          <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
-        <button id="mobileLogoutBtn" aria-label="Keluar" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
-          <span class="material-symbols-outlined text-[16px]">logout</span>
+        <button id="mobileLogoutBtn" aria-label="Keluar" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
         </button>
       </div>
     </div>
@@ -123,20 +109,38 @@
   <div class="shell-main-content flex-1 flex flex-col min-h-screen min-w-0">
     <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-12 bg-canvas flex-1 flex flex-col gap-6">
 
-      <!-- Top Header & Toolbar -->
-      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 w-full min-w-0">
-        <div class="flex flex-col gap-1.5 min-w-0 w-full xl:w-auto">
-          <h1 id="pageTitle" class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight truncate">Dashboard Admin</h1>
+      <!-- Top Header Row 1: Title + Top-Right Utility Cluster -->
+      <div class="flex items-center justify-between gap-4 w-full min-w-0">
+        <div class="flex flex-col gap-1 min-w-0">
+          <h1 id="pageTitle" class="text-2xl sm:text-[26px] font-semibold text-text-primary tracking-tight truncate">Dashboard Admin</h1>
           <div class="flex items-center pt-0.5 max-w-full">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle max-w-full">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle max-w-full">
               <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0"></span>
-              <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Data per 22/11/2026</span>
+              <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Cut-off 18 Nov 2026</span>
             </span>
           </div>
         </div>
 
-        <!-- Toolbar: Period Toggle, Interactive Calendar, Sales Scope & Export -->
-        <div class="flex items-center flex-wrap gap-2 justify-start xl:justify-end w-full xl:w-auto" id="headerToolbar">
+        <!-- Top-Right Utility Cluster (36x36px Notification + Theme + Profile Chip) -->
+        <div class="hidden md:flex items-center gap-2.5 shrink-0">
+          <button id="desktopThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 rounded-lg border border-border-default bg-surface-1 hover:bg-surface-hover flex items-center justify-center text-text-muted hover:text-text-primary transition-colors shadow-sm">
+            <span id="desktopThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
+          </button>
+          <div class="flex items-center gap-2.5 pl-1 py-1 pr-2.5 rounded-lg bg-surface-1 border border-border-default shadow-sm">
+            <div class="w-7 h-7 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent">
+              <span class="material-symbols-outlined text-[16px]">person</span>
+            </div>
+            <div class="flex flex-col min-w-0 leading-tight">
+              <span id="headerUserName" class="text-xs font-semibold text-text-primary truncate">Raka Pratama</span>
+              <span id="headerUserRole" class="text-[10px] text-text-muted truncate">Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar: Period Toggle, Interactive Calendar, Sales Scope & Export -->
+      <div class="flex items-center flex-wrap gap-2 justify-between w-full min-w-0" id="headerToolbar">
+        <div class="flex items-center flex-wrap gap-2">
           <!-- Segmented Toggle: Bulanan vs YTD -->
           <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle shrink-0" role="tablist">
             <button id="tabModeBulanan" type="button" class="relative px-3 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
@@ -203,10 +207,10 @@
 
           <!-- Sales Scope Container -->
           <div id="salesScopeContainer" class="relative shrink-0"></div>
-
-          <!-- Export Recap Dropdown Container -->
-          <div id="exportActionContainer" class="relative shrink-0"></div>
         </div>
+
+        <!-- Export Recap Dropdown Container -->
+        <div id="exportActionContainer" class="relative shrink-0"></div>
       </div>
 
       <!-- Strict Admin Portal Mode (No Sales Session Mixing) -->
@@ -282,8 +286,8 @@
               <span id="kpiOutstandingVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
             </div>
             <div class="mt-3 flex items-center justify-between text-xs text-text-secondary gap-2">
-              <span id="kpiBisaDitagihSub" class="truncate">Bisa Ditagih: Rp --</span>
-              <span id="kpiBelumJatuhTempoSub" class="truncate">Tempo: Rp --</span>
+              <span id="kpiBisaDitagihSub" class="truncate hover:text-accent cursor-pointer transition-colors" title="Filter Bisa Ditagihkan">Bisa Ditagih: Rp --</span>
+              <span id="kpiBelumJatuhTempoSub" class="truncate hover:text-accent cursor-pointer transition-colors" title="Filter Belum Jatuh Tempo">Tempo: Rp --</span>
             </div>
           </div>
 
@@ -319,10 +323,24 @@
                   </span>
                 </div>
               </div>
-              <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
-                <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
-                <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
-                <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+              <div class="flex items-center flex-wrap gap-2">
+                <!-- Chart Switcher (Line vs Bar) -->
+                <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="group">
+                  <button id="chartBtnLine" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer" title="Tampilan Garis" type="button" aria-pressed="true">
+                    <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
+                    <span class="font-medium text-text-primary">Line</span>
+                  </button>
+                  <button id="chartBtnBar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer" title="Tampilan Batang" type="button" aria-pressed="false">
+                    <span class="material-symbols-outlined text-[15px]">bar_chart</span>
+                    <span class="font-medium">Bar</span>
+                  </button>
+                </div>
+                <!-- Timeframe Selector -->
+                <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                  <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
+                  <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
+                  <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+                </div>
               </div>
             </div>
 
@@ -335,9 +353,18 @@
                     <stop offset="75%" stop-color="#F28C45" stop-opacity="0.04"></stop>
                     <stop offset="100%" stop-color="#F28C45" stop-opacity="0.00"></stop>
                   </linearGradient>
+                  <linearGradient id="barGradHighlight" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#F28C45" stop-opacity="1"></stop>
+                    <stop offset="100%" stop-color="#d77028" stop-opacity="0.85"></stop>
+                  </linearGradient>
+                  <linearGradient id="barGradDefault" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#353436" stop-opacity="0.95"></stop>
+                    <stop offset="100%" stop-color="#202022" stop-opacity="0.75"></stop>
+                  </linearGradient>
                 </defs>
                 <g id="chartGridLines"></g>
                 <g id="chartYAxisLabels"></g>
+                <g id="chartBarsGroup"></g>
                 <path id="chartSplineArea" fill="url(#fadeChartGrad)"></path>
                 <path id="chartSplineStroke" fill="none" stroke="#F28C45" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
                 <g id="chartNodesGroup"></g>
@@ -370,12 +397,12 @@
             </div>
             <div class="flex flex-col gap-4 my-auto">
               <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="flex items-center gap-2 text-text-primary font-medium">
-                    <span class="w-2 h-2 rounded-full bg-status-success"></span>
-                    Pembayaran Masuk
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+                    <span class="w-2 h-2 rounded-full bg-status-success shrink-0"></span>
+                    <span class="truncate">Pembayaran Masuk</span>
                   </span>
-                  <span id="chartPayLunasText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                  <span id="chartPayLunasText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
                 </div>
                 <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayLunasBar" class="h-full rounded-full bg-status-success transition-all duration-500" style="width: 0%;"></div>
@@ -383,12 +410,12 @@
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="flex items-center gap-2 text-text-primary font-medium">
-                    <span class="w-2 h-2 rounded-full bg-status-warning"></span>
-                    Sebagian / Dalam Proses
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+                    <span class="w-2 h-2 rounded-full bg-status-warning shrink-0"></span>
+                    <span class="truncate">Sebagian / Dalam Proses</span>
                   </span>
-                  <span id="chartPaySebagianText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                  <span id="chartPaySebagianText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
                 </div>
                 <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPaySebagianBar" class="h-full rounded-full bg-status-warning transition-all duration-500" style="width: 0%;"></div>
@@ -396,12 +423,12 @@
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="flex items-center gap-2 text-text-primary font-medium">
-                    <span class="w-2 h-2 rounded-full bg-status-danger"></span>
-                    Terlambat (Bisa Ditagih)
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+                    <span class="w-2 h-2 rounded-full bg-status-danger shrink-0"></span>
+                    <span class="truncate">Terlambat (Bisa Ditagih)</span>
                   </span>
-                  <span id="chartPayTerlambatText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                  <span id="chartPayTerlambatText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
                 </div>
                 <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayTerlambatBar" class="h-full rounded-full bg-status-danger transition-all duration-500" style="width: 0%;"></div>
@@ -409,12 +436,12 @@
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="flex items-center gap-2 text-text-primary font-medium">
-                    <span class="w-2 h-2 rounded-full bg-status-neutral"></span>
-                    Belum Jatuh Tempo
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+                    <span class="w-2 h-2 rounded-full bg-status-neutral shrink-0"></span>
+                    <span class="truncate">Belum Jatuh Tempo</span>
                   </span>
-                  <span id="chartPayTempoText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                  <span id="chartPayTempoText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
                 </div>
                 <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayTempoBar" class="h-full rounded-full bg-status-neutral transition-all duration-500" style="width: 0%;"></div>
@@ -483,10 +510,11 @@
             </div>
             <select id="invoiceStatusFilter" class="h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
               <option value="all">Semua Status</option>
+              <option value="OUTSTANDING">Semua Outstanding</option>
               <option value="PAID">Lunas</option>
               <option value="PARTIAL">Sebagian</option>
-              <option value="UNPAID">Belum Bayar</option>
-              <option value="OVERDUE">Terlambat</option>
+              <option value="UNPAID">Belum Jatuh Tempo</option>
+              <option value="OVERDUE">Terlambat (Bisa Ditagih)</option>
             </select>
             <label class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-secondary cursor-pointer select-none">
               <input id="invoiceDateScopeCheckbox" type="checkbox" checked class="accent-[#F28C45] rounded">
@@ -776,7 +804,7 @@
         <input type="hidden" id="payInvoiceId">
         <div class="p-3 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-1">
           <div class="flex items-center justify-between">
-            <span id="payModalInvLabel" class="font-bold text-text-primary font-mono">QA26-XXXX</span>
+            <span id="payModalInvLabel" class="font-bold text-text-primary font-mono">SI.2026.11.00001</span>
             <span id="payModalStoreLabel" class="text-text-secondary truncate max-w-[200px]">Nama Toko</span>
           </div>
           <div class="flex items-center justify-between text-[11px] text-text-muted mt-1">
@@ -977,8 +1005,14 @@
       }
 
       function setupRoleInterface() {
-        sidebarUserName.textContent = session.name;
-        sidebarUserRole.textContent = session.title;
+        var hName = document.getElementById('headerUserName');
+        var hRole = document.getElementById('headerUserRole');
+        if (hName) hName.textContent = session.name;
+        if (hRole) hRole.textContent = session.title;
+        var sName = document.getElementById('sidebarUserName');
+        var sRole = document.getElementById('sidebarUserRole');
+        if (sName) sName.textContent = session.name;
+        if (sRole) sRole.textContent = session.title;
         mobileRoleBadge.textContent = 'ADMIN';
 
         var dNavItems = NAV_CONFIG[session.role] || NAV_CONFIG.admin;
@@ -1103,9 +1137,10 @@
           var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
           var out = evalState.sisa;
           var paid = Number(inv.paidTotal != null ? inv.paidTotal : (inv.paid_total_idr || 0));
+          if (statusFilter === 'OUTSTANDING' && out <= 0) return false;
           if (statusFilter === 'PAID' && out > 0) return false;
           if (statusFilter === 'PARTIAL' && !(out > 0 && paid > 0)) return false;
-          if (statusFilter === 'UNPAID' && !(out > 0 && paid === 0)) return false;
+          if (statusFilter === 'UNPAID' && !(out > 0 && evalState.status === 'Belum Jatuh Tempo')) return false;
           if (statusFilter === 'OVERDUE' && evalState.status !== 'Terlambat Bayar') return false;
 
           if (search) {
@@ -1422,14 +1457,15 @@
             var invId = inv.invoice_id || inv.id || '-';
 
             var statusBadge = '';
-            if (outstanding <= 0) {
+            if (evalState.status === 'Lunas') {
               statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-success/15 text-status-success">Lunas</span>';
             } else if (evalState.status === 'Terlambat Bayar') {
-              statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-danger/15 text-status-danger">Terlambat</span>';
-            } else if (paid > 0) {
-              statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-warning/15 text-status-warning">Sebagian</span>';
+              statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-danger/15 text-status-danger">Terlambat' + (evalState.hariTerlambat ? ' (' + evalState.hariTerlambat + 'h)' : '') + '</span>';
             } else {
-              statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-2 text-text-secondary border border-border-default">Belum Bayar</span>';
+              statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-2 text-text-secondary border border-border-default">Belum Jatuh Tempo</span>';
+            }
+            if (evalState.isPartial) {
+              statusBadge += ' <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-status-warning/15 text-status-warning ml-1">Sebagian</span>';
             }
 
             var actionsHtml = '';
@@ -1951,14 +1987,18 @@
       function applyTheme(theme) {
         FADE_STORE.setTheme(theme);
         var icon = theme === 'dark' ? 'dark_mode' : 'light_mode';
-        document.getElementById('sidebarThemeIcon').textContent = icon;
-        document.getElementById('mobileThemeIcon').textContent = icon;
+        var dIcon = document.getElementById('desktopThemeIcon');
+        var mIcon = document.getElementById('mobileThemeIcon');
+        if (dIcon) dIcon.textContent = icon;
+        if (mIcon) mIcon.textContent = icon;
       }
       function toggleTheme() {
         applyTheme(FADE_STORE.getTheme() === 'dark' ? 'light' : 'dark');
       }
-      document.getElementById('sidebarThemeBtn').addEventListener('click', toggleTheme);
-      document.getElementById('mobileThemeBtn').addEventListener('click', toggleTheme);
+      var dThemeBtn = document.getElementById('desktopThemeBtn');
+      var mThemeBtn = document.getElementById('mobileThemeBtn');
+      if (dThemeBtn) dThemeBtn.addEventListener('click', toggleTheme);
+      if (mThemeBtn) mThemeBtn.addEventListener('click', toggleTheme);
 
       function logout() {
         if (confirm('Keluar dari sesi Admin dan kembali ke halaman login?')) {
@@ -2026,6 +2066,8 @@
               var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
               var card = document.createElement('div');
               card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1.5';
+              var settlHtml = st.penyelesaian > 0 ? '<div class="text-[10px] text-accent font-semibold">Penyelesaian Lain: Rp ' + st.penyelesaian.toLocaleString('id-ID') + '</div>' : '';
+              var rincianHtml = inv.rincianProduk ? '<div class="text-[10px] text-text-muted truncate mt-0.5" title="' + inv.rincianProduk + '">' + inv.rincianProduk + '</div>' : '';
               card.innerHTML =
                 '<div class="flex items-center justify-between font-semibold text-text-primary">' +
                   '<span>' + (inv.store_name || inv.storeName || '-') + '</span>' +
@@ -2033,8 +2075,8 @@
                 '</div>' +
                 '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
                   '<span>' + (inv.invoice_id || inv.id) + ' · ' + (inv.invoice_date || inv.date) + '</span>' +
-                  '<span>' + st.status + '</span>' +
-                '</div>';
+                  '<span>' + st.status + (st.isPartial ? ' (Sebagian)' : '') + '</span>' +
+                '</div>' + settlHtml + rincianHtml;
               drawerContent.appendChild(card);
             });
           }
@@ -2078,6 +2120,41 @@
       document.querySelectorAll('.kpi-card').forEach(function (card) {
         card.addEventListener('click', function () { openDrawer(card.getAttribute('data-kpi')); });
       });
+
+      var elBisaDitagih = document.getElementById('kpiBisaDitagihSub');
+      if (elBisaDitagih) {
+        elBisaDitagih.addEventListener('click', function (e) {
+          e.stopPropagation();
+          window.location.hash = '#invoices';
+          var sel = document.getElementById('invoiceStatusFilter');
+          if (sel) sel.value = 'OVERDUE';
+          invoicePage = 1;
+          renderInvoicesTable();
+        });
+      }
+      var elTempo = document.getElementById('kpiBelumJatuhTempoSub');
+      if (elTempo) {
+        elTempo.addEventListener('click', function (e) {
+          e.stopPropagation();
+          window.location.hash = '#invoices';
+          var sel = document.getElementById('invoiceStatusFilter');
+          if (sel) sel.value = 'UNPAID';
+          invoicePage = 1;
+          renderInvoicesTable();
+        });
+      }
+      var elOutVal = document.getElementById('kpiOutstandingVal');
+      if (elOutVal) {
+        elOutVal.addEventListener('click', function (e) {
+          e.stopPropagation();
+          window.location.hash = '#invoices';
+          var sel = document.getElementById('invoiceStatusFilter');
+          if (sel) sel.value = 'OUTSTANDING';
+          invoicePage = 1;
+          renderInvoicesTable();
+        });
+      }
+
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
