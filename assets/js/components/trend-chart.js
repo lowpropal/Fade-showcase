@@ -18,16 +18,24 @@
     customEnd: null,
 
     BOUNDS: {
-      viewBoxWidth: 640,
-      viewBoxHeight: 220,
-      xMin: 58,
-      xMax: 585,
-      yMin: 26,
-      yMax: 182
+      viewBoxWidth: 1000,
+      viewBoxHeight: 340,
+      xMin: 72,
+      xMax: 960,
+      yMin: 30,
+      yMax: 280
     },
 
     init: function () {
       this.bindControls();
+      var self = this;
+      window.addEventListener('resize', function () {
+        self.render();
+      });
+    },
+
+    resize: function () {
+      this.render();
     },
 
     bindControls: function () {
@@ -383,7 +391,7 @@
 
       var count = points.length;
       var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
-      var barW = Math.max(12, Math.min(32, Math.round((availableWidth / count) * 0.55)));
+      var barW = Math.max(16, Math.min(48, Math.round((availableWidth / count) * 0.45)));
       var activeIdx = self.activePointIndex;
       if (activeIdx === null || activeIdx < 0 || activeIdx >= points.length) {
         activeIdx = points.length - 1;
@@ -443,9 +451,9 @@
         var y = Math.round(l.y);
         var isBase = idx === lines.length - 1;
         if (isBase) {
-          gridHtml += '<line stroke="var(--border-default, #39393D)" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 24) + '" y1="' + y + '" y2="' + y + '"></line>';
+          gridHtml += '<line stroke="var(--border-default, #39393D)" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 16) + '" y1="' + y + '" y2="' + y + '"></line>';
         } else {
-          gridHtml += '<line stroke="var(--border-subtle, #2B2B2E)" stroke-dasharray="3 3" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 24) + '" y1="' + y + '" y2="' + y + '"></line>';
+          gridHtml += '<line stroke="var(--border-subtle, #2B2B2E)" stroke-dasharray="3 3" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 16) + '" y1="' + y + '" y2="' + y + '"></line>';
         }
 
         labelsHtml += '<text fill="var(--text-muted, #8F8F93)" font-family="\'Plus Jakarta Sans\', sans-serif" font-size="11" text-anchor="end" x="' + (b.xMin - 16) + '" y="' + (y + 4) + '">' + l.label + '</text>';
@@ -532,7 +540,7 @@
       points.forEach(function (p, idx) {
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', p.x);
-        text.setAttribute('y', '204');
+        text.setAttribute('y', '312');
         text.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
         text.setAttribute('font-size', '11');
         text.setAttribute('text-anchor', 'middle');
@@ -611,8 +619,8 @@
       var tooltipGroup = document.getElementById('chartTooltipGroup');
       if (tooltipGroup) {
         var tipWidth = 148;
-        var tipX = pt.x > 380 ? (pt.x - tipWidth - 12) : (pt.x + 12);
-        var tipY = Math.max(4, Math.min(136, pt.y - 22));
+        var tipX = pt.x > 750 ? (pt.x - tipWidth - 14) : (pt.x + 14);
+        var tipY = Math.max(10, Math.min(230, pt.y - 22));
 
         tooltipGroup.setAttribute('transform', 'translate(' + tipX + ', ' + tipY + ')');
 

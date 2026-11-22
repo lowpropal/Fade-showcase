@@ -109,9 +109,10 @@ body {
 }
 
 /* Responsive Shell Breakpoints */
-@media (min-width: 1025px) {
+@media (min-width: 768px) {
   .shell-sidebar {
     display: flex !important;
+    transition: width 200ms ease, padding 200ms ease;
   }
   .shell-mobile-header {
     display: none !important;
@@ -121,10 +122,43 @@ body {
   }
   .shell-main-content {
     padding-left: 15rem !important; /* 240px = 15rem */
+    transition: padding-left 200ms ease;
+  }
+
+  /* Collapsed Sidebar State (Desktop >= 768px) */
+  body.sidebar-collapsed .shell-sidebar {
+    width: 66px !important;
+  }
+  body.sidebar-collapsed .shell-sidebar .sidebar-brand-text,
+  body.sidebar-collapsed .shell-sidebar .nav-label,
+  body.sidebar-collapsed .shell-sidebar .logout-label {
+    display: none !important;
+  }
+  body.sidebar-collapsed .shell-sidebar .sidebar-brand-row {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    justify-content: center !important;
+  }
+  body.sidebar-collapsed .shell-sidebar .sidebar-nav-container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  body.sidebar-collapsed .shell-sidebar .nav-item {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  body.sidebar-collapsed .shell-sidebar #sidebarLogoutBtn {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  body.sidebar-collapsed .shell-main-content {
+    padding-left: 66px !important;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 767px) {
   .shell-sidebar {
     display: none !important;
   }

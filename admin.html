@@ -65,20 +65,23 @@
   <!-- ==================================================================== -->
   <aside class="shell-sidebar fixed left-0 top-0 h-full w-60 bg-sidebar border-r border-border-subtle z-40 flex flex-col justify-between">
     <div class="flex flex-col pt-6">
-      <div class="px-6 mb-8 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
+      <div class="sidebar-brand-row px-6 mb-8 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="text-xl font-bold tracking-tight text-text-primary sidebar-brand-text truncate">FADE</span>
         </div>
+        <button id="sidebarToggleBtn" type="button" aria-label="Ciutkan Sidebar" title="Ciutkan Sidebar" class="w-7 h-7 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-2 border border-border-subtle transition-colors cursor-pointer shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><line x1="9" x2="9" y1="3" y2="21"></line></svg>
+        </button>
       </div>
 
-      <nav class="flex flex-col px-3 gap-1" id="desktopNavContainer"></nav>
+      <nav class="sidebar-nav-container flex flex-col px-3 gap-1" id="desktopNavContainer"></nav>
     </div>
 
     <!-- Sidebar Footer: Clean Full-Width Logout -->
     <div class="p-3 border-t border-border-subtle">
-      <button id="sidebarLogoutBtn" aria-label="Keluar dari Sistem" class="w-full h-10 px-3 rounded-lg border border-transparent text-status-danger hover:bg-status-danger/10 flex items-center gap-3 transition-colors text-sm font-medium" type="button">
-        <span class="material-symbols-outlined text-[18px]">logout</span>
-        <span>Keluar</span>
+      <button id="sidebarLogoutBtn" aria-label="Keluar dari Sistem" title="Keluar" class="w-full h-10 px-3 rounded-lg border border-transparent text-status-danger hover:bg-status-danger/10 flex items-center gap-3 transition-colors text-sm font-medium" type="button">
+        <span class="material-symbols-outlined text-[18px] shrink-0">logout</span>
+        <span class="logout-label truncate">Keluar</span>
       </button>
     </div>
   </aside>
@@ -107,7 +110,7 @@
   <!-- 3. PAGE CONTENT CONTAINER                                            -->
   <!-- ==================================================================== -->
   <div class="shell-main-content flex-1 flex flex-col min-h-screen min-w-0">
-    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-12 bg-canvas flex-1 flex flex-col gap-6">
+    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 md:pt-6 pb-24 md:pb-12 bg-canvas flex-1 flex flex-col gap-6">
 
       <!-- Top Header Row 1: Title + Top-Right Utility Cluster -->
       <div class="flex items-center justify-between gap-4 w-full min-w-0">
@@ -122,10 +125,44 @@
         </div>
 
         <!-- Top-Right Utility Cluster (36x36px Notification + Theme + Profile Chip) -->
-        <div class="hidden md:flex items-center gap-2.5 shrink-0">
+        <div class="hidden md:flex items-center gap-2.5 shrink-0 relative">
+          <!-- Notification Button & Popover -->
+          <div class="relative" id="desktopNotifWrapper">
+            <button id="desktopNotifBtn" type="button" aria-label="Notifikasi" aria-expanded="false" class="w-9 h-9 rounded-lg border border-border-default bg-surface-1 hover:bg-surface-hover flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors shadow-sm relative cursor-pointer">
+              <span class="material-symbols-outlined text-[18px]">notifications</span>
+              <span id="desktopNotifDot" class="w-1.5 h-1.5 rounded-full bg-accent absolute top-2 right-2"></span>
+            </button>
+
+            <!-- Interactive Notification Popover -->
+            <div id="desktopNotifPopover" class="hidden absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-3">
+              <div class="flex items-center justify-between border-b border-border-subtle pb-2.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-text-primary">Notifikasi Sistem</span>
+                  <span id="notifBadgeCount" class="px-1.5 py-0.5 rounded-full bg-status-danger/15 text-status-danger text-[10px] font-semibold tabular-nums">0</span>
+                </div>
+                <button id="closeNotifPopoverBtn" type="button" aria-label="Tutup Notifikasi" class="text-text-muted hover:text-text-primary transition-colors cursor-pointer">
+                  <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              </div>
+
+              <!-- Notification Items Container -->
+              <div id="notifItemsContainer" class="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+                <!-- Dynamically populated from overdue/due invoices -->
+              </div>
+
+              <div class="border-t border-border-subtle pt-2 flex items-center justify-between text-[11px]">
+                <span class="text-text-muted">Status Tagihan Kritis</span>
+                <a href="#invoices" id="notifViewAllLink" class="text-accent hover:underline font-medium">Buka Daftar Invoice →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Theme Toggle -->
           <button id="desktopThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 rounded-lg border border-border-default bg-surface-1 hover:bg-surface-hover flex items-center justify-center text-text-muted hover:text-text-primary transition-colors shadow-sm">
             <span id="desktopThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
           </button>
+
+          <!-- User Profile Chip -->
           <div id="headerProfileChip" class="flex items-center gap-2.5 pl-1 py-1 pr-2.5 rounded-lg bg-surface-1 border border-border-default shadow-sm cursor-pointer hover:bg-surface-hover transition-colors" title="Profil Admin">
             <div class="w-7 h-7 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent">
               <span class="material-symbols-outlined text-[16px]">person</span>
@@ -305,48 +342,53 @@
           </div>
         </div>
 
-        <!-- SECTION 2: CHARTS (2-COLUMN: TREN PENJUALAN & STATUS BAYAR) -->
-        <div id="adminAnalyticsSection" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <!-- Left: Tren Penjualan -->
-          <div class="lg:col-span-7 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
-            <div class="flex flex-wrap items-start justify-between gap-4 mb-3">
-              <div class="flex flex-col gap-1">
-                <div class="flex items-center gap-2">
-                  <h2 id="chartTitleText" class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
-                  <span id="chartPeriodLabel" class="text-xs text-text-muted">01 – 22 Nov 2026</span>
-                </div>
-                <div class="flex items-baseline gap-2.5 mt-0.5">
-                  <span id="chartMonthlyRevenue" class="text-[24px] leading-7 font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
+        <!-- SECTION 2: CHARTS (1-COLUMN VERTICAL STACK: TREN PENJUALAN BULANAN -> STATUS PEMBAYARAN) -->
+        <section id="adminAnalyticsSection" aria-label="Analitik Penjualan dan Pembayaran" class="flex flex-col gap-6 w-full">
+          <!-- Card 1 (Top, Full-Width): Tren Penjualan Bulanan -->
+          <div class="w-full flex flex-col p-5 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <!-- Header: Row 1 Headline + Period; Row 2 Total Revenue (Left) + Controls (Right) -->
+            <div class="flex flex-col gap-3 mb-4">
+              <!-- Row 1: Headline + Period Badge -->
+              <div class="flex items-center gap-2">
+                <h2 id="chartTitleText" class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
+                <span id="chartPeriodLabel" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-2 text-xs text-text-muted border border-border-subtle">01 – 22 Nov 2026</span>
+              </div>
+
+              <!-- Row 2: Total Revenue (Left) & Controls (Right) -->
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-baseline gap-2.5">
+                  <span id="chartMonthlyRevenue" class="text-2xl sm:text-[28px] font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
                   <span id="chartTrendGrowth" class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
                     <span class="material-symbols-outlined text-[15px]">trending_up</span>
                     <span>Aktif (Tersinkron)</span>
                   </span>
                 </div>
-              </div>
-              <div class="flex items-center flex-wrap gap-2">
-                <!-- Chart Switcher (Line vs Bar) -->
-                <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="group">
-                  <button id="chartBtnLine" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer" title="Tampilan Garis" type="button" aria-pressed="true">
-                    <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
-                    <span class="font-medium text-text-primary">Line</span>
-                  </button>
-                  <button id="chartBtnBar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer" title="Tampilan Batang" type="button" aria-pressed="false">
-                    <span class="material-symbols-outlined text-[15px]">bar_chart</span>
-                    <span class="font-medium">Bar</span>
-                  </button>
-                </div>
-                <!-- Timeframe Selector -->
-                <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
-                  <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
-                  <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
-                  <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+
+                <div class="flex items-center flex-wrap gap-2">
+                  <!-- Chart Switcher (Line vs Bar) -->
+                  <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="group">
+                    <button id="chartBtnLine" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer" title="Tampilan Garis" type="button" aria-pressed="true">
+                      <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
+                      <span class="font-medium text-text-primary">Line</span>
+                    </button>
+                    <button id="chartBtnBar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer" title="Tampilan Batang" type="button" aria-pressed="false">
+                      <span class="material-symbols-outlined text-[15px]">bar_chart</span>
+                      <span class="font-medium">Bar</span>
+                    </button>
+                  </div>
+                  <!-- Timeframe Selector -->
+                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
+                    <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
+                    <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Larger Interactive Spline Area Chart (SVG) -->
-            <div id="chartInteractiveContainer" class="relative w-full h-72 sm:h-80 pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
-              <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 640 220">
+            <!-- Larger Interactive Spline Area Chart (SVG: 1000x340) -->
+            <div id="chartInteractiveContainer" class="relative w-full min-h-[360px] lg:h-[380px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+              <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#F28C45" stop-opacity="0.22"></stop>
@@ -373,7 +415,7 @@
                   <circle id="chartActiveNodeRing" r="5.5" fill="#19191B" stroke="#F28C45" stroke-width="2.5"></circle>
                   <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
                 </g>
-                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(450, 6)">
+                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(750, 16)">
                   <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="36" rx="6" stroke="#39393D" stroke-width="1" width="148"></rect>
                   <circle cx="14" cy="18" fill="#F28C45" r="3"></circle>
                   <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
@@ -381,75 +423,90 @@
                   <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="29">+1,9 jt periode ini</text>
                 </g>
                 <g id="chartXAxisLabels"></g>
-                <rect id="chartPointerOverlay" width="640" height="220" fill="transparent" class="cursor-crosshair" aria-label="Eksplorasi data grafik" style="touch-action: pan-y;"></rect>
+                <rect id="chartPointerOverlay" width="1000" height="340" fill="transparent" class="cursor-crosshair" aria-label="Eksplorasi data grafik" style="touch-action: pan-y;"></rect>
               </svg>
               <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
             </div>
           </div>
 
-          <!-- Right: Status Pembayaran -->
-          <div class="lg:col-span-5 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
-            <div class="flex items-start justify-between gap-4 mb-4">
+          <!-- Card 2 (Bottom, Full-Width): Status Pembayaran -->
+          <div class="w-full flex flex-col p-5 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
                 <h2 class="text-base font-semibold text-text-primary tracking-tight">Status Pembayaran</h2>
-                <p id="chartStatusSub" class="text-xs text-text-muted mt-0.5">Distribusi status tagihan</p>
+                <p id="chartStatusSub" class="text-xs text-text-muted mt-0.5">Distribusi dari total invoice periode ini</p>
+              </div>
+              <div class="flex items-center gap-4 text-xs text-text-muted">
+                <span class="tabular-nums"><span id="chartStatusTotalInv" class="text-text-primary font-medium">--</span> total invoice</span>
+                <span>·</span>
+                <span class="tabular-nums">Tingkat tertagih <span id="chartStatusCollectedRate" class="text-status-success font-medium">--%</span></span>
               </div>
             </div>
-            <div class="flex flex-col gap-4 my-auto">
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs gap-2">
-                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+
+            <!-- 4-Column Horizontal Cards for Payment Status -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- Lunas -->
+              <div class="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-2/60 border border-border-subtle hover:border-border-default transition-colors">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
                     <span class="w-2 h-2 rounded-full bg-status-success shrink-0"></span>
-                    <span class="truncate">Pembayaran Masuk</span>
+                    <span>Lunas</span>
                   </span>
-                  <span id="chartPayLunasText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
+                  <span id="chartPayLunasPct" class="text-text-muted font-medium tabular-nums">(0%)</span>
                 </div>
-                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                <div id="chartPayLunasText" class="text-base sm:text-lg font-semibold text-text-primary tabular-nums">Rp 0</div>
+                <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayLunasBar" class="h-full rounded-full bg-status-success transition-all duration-500" style="width: 0%;"></div>
                 </div>
               </div>
 
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs gap-2">
-                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+              <!-- Sebagian -->
+              <div class="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-2/60 border border-border-subtle hover:border-border-default transition-colors">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
                     <span class="w-2 h-2 rounded-full bg-status-warning shrink-0"></span>
-                    <span class="truncate">Sebagian / Dalam Proses</span>
+                    <span>Sebagian</span>
                   </span>
-                  <span id="chartPaySebagianText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
+                  <span id="chartPaySebagianPct" class="text-text-muted font-medium tabular-nums">(0%)</span>
                 </div>
-                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                <div id="chartPaySebagianText" class="text-base sm:text-lg font-semibold text-text-primary tabular-nums">Rp 0</div>
+                <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPaySebagianBar" class="h-full rounded-full bg-status-warning transition-all duration-500" style="width: 0%;"></div>
                 </div>
               </div>
 
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs gap-2">
-                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+              <!-- Terlambat -->
+              <div class="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-2/60 border border-border-subtle hover:border-border-default transition-colors">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
                     <span class="w-2 h-2 rounded-full bg-status-danger shrink-0"></span>
-                    <span class="truncate">Terlambat (Bisa Ditagih)</span>
+                    <span>Terlambat</span>
                   </span>
-                  <span id="chartPayTerlambatText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
+                  <span id="chartPayTerlambatPct" class="text-text-muted font-medium tabular-nums">(0%)</span>
                 </div>
-                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                <div id="chartPayTerlambatText" class="text-base sm:text-lg font-semibold text-text-primary tabular-nums">Rp 0</div>
+                <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayTerlambatBar" class="h-full rounded-full bg-status-danger transition-all duration-500" style="width: 0%;"></div>
                 </div>
               </div>
 
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between text-xs gap-2">
-                  <span class="flex items-center gap-2 text-text-primary font-medium min-w-0 flex-1 truncate">
+              <!-- Belum Jatuh Tempo -->
+              <div class="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-2/60 border border-border-subtle hover:border-border-default transition-colors">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium">
                     <span class="w-2 h-2 rounded-full bg-status-neutral shrink-0"></span>
-                    <span class="truncate">Belum Jatuh Tempo</span>
+                    <span>Belum jatuh tempo</span>
                   </span>
-                  <span id="chartPayTempoText" class="text-text-secondary tabular-nums font-semibold whitespace-nowrap shrink-0">Rp 0</span>
+                  <span id="chartPayTempoPct" class="text-text-muted font-medium tabular-nums">(0%)</span>
                 </div>
-                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+                <div id="chartPayTempoText" class="text-base sm:text-lg font-semibold text-text-primary tabular-nums">Rp 0</div>
+                <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                   <div id="chartPayTempoBar" class="h-full rounded-full bg-status-neutral transition-all duration-500" style="width: 0%;"></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <!-- Section 3: Sales Comparison Table (Admin Only) -->
         <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
@@ -1023,11 +1080,12 @@
           var a = document.createElement('a');
           a.href = item.href;
           a.setAttribute('data-route', item.id);
+          a.title = item.label;
           a.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden';
           a.innerHTML =
             '<span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>' +
             '<span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">' + item.icon + '</span>' +
-            '<span>' + item.label + '</span>';
+            '<span class="nav-label truncate">' + item.label + '</span>';
           desktopNavContainer.appendChild(a);
         });
 
@@ -1238,13 +1296,76 @@
       dateFilterBtn.addEventListener('click', function (e) {
         e.stopPropagation();
         dateFilterPopover.classList.toggle('hidden');
+        var notifPopover = document.getElementById('desktopNotifPopover');
+        if (notifPopover) notifPopover.classList.add('hidden');
       });
       closeDatePopoverBtn.addEventListener('click', function () {
         dateFilterPopover.classList.add('hidden');
       });
+
+      // Notification Popover Controller
+      var desktopNotifBtn = document.getElementById('desktopNotifBtn');
+      var desktopNotifPopover = document.getElementById('desktopNotifPopover');
+      var closeNotifPopoverBtn = document.getElementById('closeNotifPopoverBtn');
+      if (desktopNotifBtn && desktopNotifPopover) {
+        desktopNotifBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var isHidden = desktopNotifPopover.classList.toggle('hidden');
+          desktopNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
+        });
+      }
+      if (closeNotifPopoverBtn && desktopNotifPopover) {
+        closeNotifPopoverBtn.addEventListener('click', function () {
+          desktopNotifPopover.classList.add('hidden');
+          if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      // Sidebar Toggle Controller (Desktop >= 768px: 240px <-> 66px)
+      var sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+      var savedSidebarState = localStorage.getItem('fade_sidebar_state');
+      if (savedSidebarState === 'collapsed' && window.innerWidth >= 768) {
+        document.body.classList.add('sidebar-collapsed');
+        if (sidebarToggleBtn) {
+          sidebarToggleBtn.setAttribute('aria-label', 'Bentangkan Sidebar');
+          sidebarToggleBtn.setAttribute('title', 'Bentangkan Sidebar');
+        }
+      }
+      if (sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', function () {
+          var isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+          localStorage.setItem('fade_sidebar_state', isCollapsed ? 'collapsed' : 'expanded');
+          sidebarToggleBtn.setAttribute('aria-label', isCollapsed ? 'Bentangkan Sidebar' : 'Ciutkan Sidebar');
+          sidebarToggleBtn.setAttribute('title', isCollapsed ? 'Bentangkan Sidebar' : 'Ciutkan Sidebar');
+          setTimeout(function () {
+            if (window.FADE_TREND_CHART && typeof window.FADE_TREND_CHART.resize === 'function') {
+              window.FADE_TREND_CHART.resize();
+            }
+          }, 210);
+        });
+      }
+
+      // ResizeObserver on Chart Container for automatic full-width re-render
+      if (window.ResizeObserver) {
+        var chartContainerEl = document.getElementById('chartInteractiveContainer');
+        if (chartContainerEl) {
+          var chartRo = new ResizeObserver(function () {
+            if (window.FADE_TREND_CHART && typeof window.FADE_TREND_CHART.resize === 'function') {
+              window.FADE_TREND_CHART.resize();
+            }
+          });
+          chartRo.observe(chartContainerEl);
+        }
+      }
+
       document.addEventListener('click', function (e) {
         if (!dateFilterPopover.contains(e.target) && !dateFilterBtn.contains(e.target)) {
           dateFilterPopover.classList.add('hidden');
+        }
+        if (desktopNotifPopover && desktopNotifBtn && !desktopNotifPopover.contains(e.target) && !desktopNotifBtn.contains(e.target)) {
+          desktopNotifPopover.classList.add('hidden');
+          desktopNotifBtn.setAttribute('aria-expanded', 'false');
         }
         var expMenu = document.getElementById('exportDropdownMenu');
         var expBtn = document.getElementById('exportMenuBtn');
@@ -1367,17 +1488,92 @@
         var terlambatPct = ((terlambatVal / totalBase) * 100).toFixed(1);
         var tempoPct = ((tempoVal / totalBase) * 100).toFixed(1);
 
-        var setBar = function (textId, barId, val, pct) {
+        var setBar = function (textId, barId, pctId, val, pct) {
           var t = document.getElementById(textId);
           var b = document.getElementById(barId);
-          if (t) t.innerHTML = 'Rp ' + (val / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt <span class="text-text-muted font-normal">(' + pct.replace('.', ',') + '%)</span>';
+          var p = pctId ? document.getElementById(pctId) : null;
+          if (t) t.textContent = 'Rp ' + (val / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+          if (p) p.textContent = '(' + pct.replace('.', ',') + '%)';
           if (b) b.style.width = (val > 0 ? Math.min(100, Math.max(2, Number(pct))) : 0) + '%';
         };
 
-        setBar('chartPayLunasText', 'chartPayLunasBar', lunasVal, lunasPct);
-        setBar('chartPaySebagianText', 'chartPaySebagianBar', sebagianVal, sebagianPct);
-        setBar('chartPayTerlambatText', 'chartPayTerlambatBar', terlambatVal, terlambatPct);
-        setBar('chartPayTempoText', 'chartPayTempoBar', tempoVal, tempoPct);
+        setBar('chartPayLunasText', 'chartPayLunasBar', 'chartPayLunasPct', lunasVal, lunasPct);
+        setBar('chartPaySebagianText', 'chartPaySebagianBar', 'chartPaySebagianPct', sebagianVal, sebagianPct);
+        setBar('chartPayTerlambatText', 'chartPayTerlambatBar', 'chartPayTerlambatPct', terlambatVal, terlambatPct);
+        setBar('chartPayTempoText', 'chartPayTempoBar', 'chartPayTempoPct', tempoVal, tempoPct);
+
+        var elTotalInv = document.getElementById('chartStatusTotalInv');
+        if (elTotalInv) elTotalInv.textContent = summary.totalDataTerinput || 0;
+        var elCollectedRate = document.getElementById('chartStatusCollectedRate');
+        if (elCollectedRate) {
+          var rate = summary.revenue > 0 ? ((lunasVal / summary.revenue) * 100).toFixed(1) : '0';
+          elCollectedRate.textContent = rate.replace('.', ',') + '%';
+        }
+
+        renderNotifications(invoices);
+      }
+
+      function renderNotifications(invoices) {
+        var container = document.getElementById('notifItemsContainer');
+        var badge = document.getElementById('notifBadgeCount');
+        var dot = document.getElementById('desktopNotifDot');
+        if (!container) return;
+
+        var allInvs = invoices || FADE_STORE.getInvoices() || [];
+        var criticalList = [];
+
+        allInvs.forEach(function (inv) {
+          var st = String(inv.statusBayar || inv.status_bayar || inv.status || '').toLowerCase();
+          var sTxt = inv.salesName || inv.sales_name || 'Sales';
+          var total = Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
+          var id = inv.invoiceNumber || inv.invoice_id || inv.id || 'INV';
+          var store = inv.storeName || inv.store_name || 'Toko';
+
+          if (st.indexOf('terlambat') !== -1) {
+            criticalList.push({
+              type: 'danger',
+              title: 'Jatuh Tempo Terlewati',
+              desc: id + ' · ' + store + ' (' + sTxt + ')',
+              amount: 'Rp ' + (total / 1000000).toFixed(1) + ' jt',
+              date: inv.date || inv.invoice_date || ''
+            });
+          } else if (st.indexOf('belum') !== -1) {
+            criticalList.push({
+              type: 'warning',
+              title: 'Mendekati Jatuh Tempo',
+              desc: id + ' · ' + store + ' (' + sTxt + ')',
+              amount: 'Rp ' + (total / 1000000).toFixed(1) + ' jt',
+              date: inv.date || inv.invoice_date || ''
+            });
+          }
+        });
+
+        if (badge) badge.textContent = criticalList.length;
+        if (dot) dot.style.display = criticalList.length > 0 ? '' : 'none';
+
+        if (criticalList.length === 0) {
+          container.innerHTML = '<div class="py-6 text-center text-xs text-text-muted">Semua tagihan lunas atau dalam jadwal aman.</div>';
+          return;
+        }
+
+        container.innerHTML = '';
+        criticalList.slice(0, 6).forEach(function (item) {
+          var row = document.createElement('div');
+          row.className = 'p-2.5 rounded-lg bg-surface-2/60 border border-border-subtle flex flex-col gap-1 hover:border-border-default transition-colors';
+          row.innerHTML =
+            '<div class="flex items-center justify-between text-xs">' +
+              '<span class="font-semibold text-text-primary flex items-center gap-1.5">' +
+                '<span class="w-1.5 h-1.5 rounded-full ' + (item.type === 'danger' ? 'bg-status-danger' : 'bg-status-warning') + '"></span>' +
+                '<span class="truncate max-w-[170px]">' + item.title + '</span>' +
+              '</span>' +
+              '<span class="font-semibold tabular-nums text-text-primary text-[11px]">' + item.amount + '</span>' +
+            '</div>' +
+            '<div class="flex items-center justify-between text-[11px] text-text-muted mt-0.5">' +
+              '<span class="truncate max-w-[200px]">' + item.desc + '</span>' +
+              '<span class="tabular-nums">' + item.date + '</span>' +
+            '</div>';
+          container.appendChild(row);
+        });
       }
 
       function renderComparison(invoices, targets) {
@@ -2164,7 +2360,15 @@
 
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeDrawer();
+          var notifPopover = document.getElementById('desktopNotifPopover');
+          if (notifPopover) notifPopover.classList.add('hidden');
+          var dFilterPopover = document.getElementById('dateFilterPopover');
+          if (dFilterPopover) dFilterPopover.classList.add('hidden');
+        }
+      });
 
       if (window.FADE_TREND_CHART) window.FADE_TREND_CHART.init();
       setupRoleInterface();
