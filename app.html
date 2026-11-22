@@ -516,7 +516,29 @@
         ]
       };
 
-      // 1. Session & State
+      // 1. Session & State (Supports URL query param overrides for testing/showcase)
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('theme')) {
+        FADE_STORE.setTheme(urlParams.get('theme'));
+      }
+      if (urlParams.get('role')) {
+        var qRole = urlParams.get('role').toLowerCase();
+        if (qRole === 'sales') {
+          FADE_STORE.setActiveSession({
+            role: 'sales',
+            name: 'Aruna Pratama',
+            title: 'Sales Senior',
+            salesName: 'Aruna Pratama'
+          });
+        } else if (qRole === 'admin') {
+          FADE_STORE.setActiveSession({
+            role: 'admin',
+            name: 'Raka Pratama',
+            title: 'Head of Operations'
+          });
+        }
+      }
+
       var session = FADE_STORE.getActiveSession();
       if (!session) {
         window.location.href = 'index.html';
