@@ -126,7 +126,7 @@
           <button id="desktopThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 rounded-lg border border-border-default bg-surface-1 hover:bg-surface-hover flex items-center justify-center text-text-muted hover:text-text-primary transition-colors shadow-sm">
             <span id="desktopThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
           </button>
-          <div class="flex items-center gap-2.5 pl-1 py-1 pr-2.5 rounded-lg bg-surface-1 border border-border-default shadow-sm">
+          <div id="headerProfileChip" class="flex items-center gap-2.5 pl-1 py-1 pr-2.5 rounded-lg bg-surface-1 border border-border-default shadow-sm cursor-pointer hover:bg-surface-hover transition-colors" title="Profil Admin">
             <div class="w-7 h-7 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent">
               <span class="material-symbols-outlined text-[16px]">person</span>
             </div>
@@ -869,6 +869,8 @@
   <script>
     (function () {
       'use strict';
+
+      FADE_STORE.init();
 
       var NAV_CONFIG = {
         admin: [
@@ -2006,9 +2008,14 @@
           window.location.href = './index.html';
         }
       }
-      document.getElementById('sidebarLogoutBtn').addEventListener('click', logout);
-      document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
-      document.getElementById('sidebarProfileBtn').addEventListener('click', openProfileModal);
+      var btnSidebarLogout = document.getElementById('sidebarLogoutBtn');
+      if (btnSidebarLogout) btnSidebarLogout.addEventListener('click', logout);
+      var btnMobileLogout = document.getElementById('mobileLogoutBtn');
+      if (btnMobileLogout) btnMobileLogout.addEventListener('click', logout);
+      var btnSidebarProfile = document.getElementById('sidebarProfileBtn');
+      if (btnSidebarProfile) btnSidebarProfile.addEventListener('click', openProfileModal);
+      var btnHeaderProfile = document.getElementById('headerProfileChip');
+      if (btnHeaderProfile) btnHeaderProfile.addEventListener('click', openProfileModal);
 
       var profileModal = document.getElementById('profileModal');
       var profileModalBackdrop = document.getElementById('profileModalBackdrop');

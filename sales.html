@@ -1216,21 +1216,23 @@
         if (roPill) roPill.innerHTML = '<span class="material-symbols-outlined text-[13px]">visibility</span><span>AKSES READ-ONLY · SALES ' + session.salesName.toUpperCase() + '</span>';
 
         var storeSel = document.getElementById('docStoreSelect');
-        storeSel.innerHTML = '';
-        var ownStores = new Set();
-        FADE_STORE.getInvoices().forEach(function (i) {
-          if ((i.salesName || i.sales_name) === session.salesName) {
-            ownStores.add(i.storeName || i.store_name);
-          }
-        });
-        var storeArr = Array.from(ownStores).sort();
-        if (storeArr.length === 0) storeArr = FADE_STORE.getUniqueStoreNames();
-        storeArr.forEach(function (st) {
-          var opt = document.createElement('option');
-          opt.value = st;
-          opt.textContent = st;
-          storeSel.appendChild(opt);
-        });
+        if (storeSel) {
+          storeSel.innerHTML = '';
+          var ownStores = new Set();
+          FADE_STORE.getInvoices().forEach(function (i) {
+            if ((i.salesName || i.sales_name) === session.salesName) {
+              ownStores.add(i.storeName || i.store_name);
+            }
+          });
+          var storeArr = Array.from(ownStores).sort();
+          if (storeArr.length === 0) storeArr = FADE_STORE.getUniqueStoreNames();
+          storeArr.forEach(function (st) {
+            var opt = document.createElement('option');
+            opt.value = st;
+            opt.textContent = st;
+            storeSel.appendChild(opt);
+          });
+        }
       }
 
       function renderAll() {
@@ -1752,19 +1754,28 @@
           }).join('');
         }
 
-        document.getElementById('detUploadDocShortcut').onclick = function () {
-          openUploadDocModal(store, invoiceId);
-        };
-        document.getElementById('detEmailFinanceBtn').href = 'mailto:keuangan@fade.internal?subject=' + encodeURIComponent('Rekonsiliasi Invoice ' + invoiceId + ' - ' + store);
-        document.getElementById('detDownloadPdfBtn').onclick = function () {
-          var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;padding:20px;}table{width:100%;border-collapse:collapse;margin-top:14px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>' +
-            '<h2>INVOICE ' + invoiceId + ' · ' + store + '</h2>' +
-            '<p><strong>Sales PIC:</strong> ' + session.salesName + '<br><strong>Tanggal Terbit:</strong> ' + formatShortIdDate(inv.date || inv.invoice_date) + '<br><strong>Jatuh Tempo:</strong> ' + formatShortIdDate(inv.dueDate || inv.due_date) + '<br><strong>Status:</strong> ' + st.status + '</p>' +
-            '<table><thead><tr><th>Produk</th><th>Harga Satuan</th><th>QTY</th><th>Subtotal</th></tr></thead><tbody><tr><td>' + (inv.productName || 'FADE Pods') + '</td><td>Rp ' + unitPrice.toLocaleString('id-ID') + '</td><td>' + qty + ' pcs</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td></tr></tbody></table>' +
-            '<p><strong>Total Tagihan:</strong> Rp ' + st.revenue.toLocaleString('id-ID') + '<br><strong>Terbayar:</strong> Rp ' + paid.toLocaleString('id-ID') + '<br><strong>Sisa Outstanding:</strong> Rp ' + st.sisa.toLocaleString('id-ID') + '</p></body></html>';
-          triggerDownload(invoiceId + '_' + store.replace(/\s+/g, '_') + '.doc', docHtml, 'application/msword;charset=utf-8;');
-          showToast('Dokumen invoice ' + invoiceId + ' berhasil diunduh');
-        };
+        var uploadShortcut = document.getElementById('detUploadDocShortcut');
+        if (uploadShortcut) {
+          uploadShortcut.onclick = function () {
+            openUploadDocModal(store, invoiceId);
+          };
+        }
+        var emailBtn = document.getElementById('detEmailFinanceBtn');
+        if (emailBtn) {
+          emailBtn.href = 'mailto:keuangan@fade.internal?subject=' + encodeURIComponent('Rekonsiliasi Invoice ' + invoiceId + ' - ' + store);
+        }
+        var downloadBtn = document.getElementById('detDownloadPdfBtn');
+        if (downloadBtn) {
+          downloadBtn.onclick = function () {
+            var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;padding:20px;}table{width:100%;border-collapse:collapse;margin-top:14px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>' +
+              '<h2>INVOICE ' + invoiceId + ' · ' + store + '</h2>' +
+              '<p><strong>Sales PIC:</strong> ' + session.salesName + '<br><strong>Tanggal Terbit:</strong> ' + formatShortIdDate(inv.date || inv.invoice_date) + '<br><strong>Jatuh Tempo:</strong> ' + formatShortIdDate(inv.dueDate || inv.due_date) + '<br><strong>Status:</strong> ' + st.status + '</p>' +
+              '<table><thead><tr><th>Produk</th><th>Harga Satuan</th><th>QTY</th><th>Subtotal</th></tr></thead><tbody><tr><td>' + (inv.productName || 'FADE Pods') + '</td><td>Rp ' + unitPrice.toLocaleString('id-ID') + '</td><td>' + qty + ' pcs</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td></tr></tbody></table>' +
+              '<p><strong>Total Tagihan:</strong> Rp ' + st.revenue.toLocaleString('id-ID') + '<br><strong>Terbayar:</strong> Rp ' + paid.toLocaleString('id-ID') + '<br><strong>Sisa Outstanding:</strong> Rp ' + st.sisa.toLocaleString('id-ID') + '</p></body></html>';
+            triggerDownload(invoiceId + '_' + store.replace(/\s+/g, '_') + '.doc', docHtml, 'application/msword;charset=utf-8;');
+            showToast('Dokumen invoice ' + invoiceId + ' berhasil diunduh');
+          };
+        }
       }
 
       // MODAL UNGGAH DOKUMEN INVOICE CONTROLLER
@@ -1774,18 +1785,22 @@
 
       function openUploadDocModal(presetStore, presetRef) {
         clearSelectedDocFile();
-        if (presetStore) document.getElementById('docStoreSelect').value = presetStore;
-        document.getElementById('docRefInput').value = presetRef || '';
-        document.getElementById('docNotesInput').value = '';
-        uploadDocModalBackdrop.classList.remove('hidden');
+        var storeSelect = document.getElementById('docStoreSelect');
+        if (storeSelect && presetStore) storeSelect.value = presetStore;
+        var refInput = document.getElementById('docRefInput');
+        if (refInput) refInput.value = presetRef || '';
+        var notesInput = document.getElementById('docNotesInput');
+        if (notesInput) notesInput.value = '';
+        if (uploadDocModalBackdrop) uploadDocModalBackdrop.classList.remove('hidden');
       }
       function closeUploadDocModal() {
-        uploadDocModalBackdrop.classList.add('hidden');
+        if (uploadDocModalBackdrop) uploadDocModalBackdrop.classList.add('hidden');
       }
       function clearSelectedDocFile() {
         pendingUploadFile = null;
-        docFileInput.value = '';
-        document.getElementById('docSelectedFileCard').classList.add('hidden');
+        if (docFileInput) docFileInput.value = '';
+        var card = document.getElementById('docSelectedFileCard');
+        if (card) card.classList.add('hidden');
       }
       function setSelectedDocFile(file) {
         if (!file) return;
