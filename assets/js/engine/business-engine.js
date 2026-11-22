@@ -28,10 +28,10 @@
   // Invoice State calculation as of a specific date
   function evaluateInvoiceState(inv, asOfIso) {
     var asOfDate = d(asOfIso);
-    var rev = Number(inv.invoice_total_idr || inv.revenue || inv.r || 0);
-    var settl = Number(inv.other_settlement_idr || inv.penyelesaian || inv.o || 0);
-    var paidTotal = Number(inv.paid_total_idr || inv.terbayar || inv.p || 0);
-    var lastPayDate = inv.last_payment_date || inv.tglBayarTerakhir || inv.lp;
+    var rev = Number(inv.invoice_total_idr != null ? inv.invoice_total_idr : (inv.invoiceTotal != null ? inv.invoiceTotal : (inv.revenue || inv.r || 0)));
+    var settl = Number(inv.other_settlement_idr != null ? inv.other_settlement_idr : (inv.otherSettlement != null ? inv.otherSettlement : (inv.penyelesaian || inv.o || 0)));
+    var paidTotal = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal != null ? inv.paidTotal : (inv.terbayar || inv.p || 0)));
+    var lastPayDate = inv.last_payment_date || inv.lastPaymentDate || inv.tglBayarTerakhir || inv.lp;
 
     // Check if payment occurred on or before asOfDate
     var paidAsOf = (lastPayDate && d(lastPayDate) <= asOfDate) ? paidTotal : (asOfDate ? paidTotal : 0);
@@ -41,7 +41,7 @@
     var hariTelat = 0;
     var bisaDitagihkan = false;
 
-    var dueDateStr = inv.due_date || inv.jatuhTempo || inv.du;
+    var dueDateStr = inv.due_date || inv.dueDate || inv.jatuhTempo || inv.du;
     if (sisa <= 0) {
       status = 'Lunas';
       bisaDitagihkan = false;
@@ -108,7 +108,7 @@
     if (role === 'sales') {
       // Strict own-data scope
       return invoices.filter(function (i) {
-        var sName = i.sales_name || i.sales || i.s;
+        var sName = i.sales_name || i.salesName || i.sales || i.s;
         return sName === userSalesName;
       });
     }
@@ -117,7 +117,7 @@
       return invoices;
     }
     return invoices.filter(function (i) {
-      var sName = i.sales_name || i.sales || i.s;
+      var sName = i.sales_name || i.salesName || i.sales || i.s;
       return sName === selectedSales;
     });
   }
@@ -137,7 +137,7 @@
 
     // In-range invoices for Revenue & QTY (filtered by invoice_date)
     var inRangeInvoices = scopedInvoices.filter(function (i) {
-      var dStr = i.invoice_date || i.tanggal || i.d;
+      var dStr = i.invoice_date || i.date || i.tanggal || i.d;
       return dStr >= pContext.dari && dStr <= pContext.sampai;
     });
 
@@ -148,20 +148,20 @@
 
     inRangeInvoices.forEach(function (i) {
       var q = Number(i.qty != null ? i.qty : (i.q || 0));
-      var r = Number(i.invoice_total_idr != null ? i.invoice_total_idr : (i.revenue || i.r || 0));
-      var o = Number(i.other_settlement_idr != null ? i.other_settlement_idr : (i.penyelesaian || i.o || 0));
+      var r = Number(i.invoice_total_idr != null ? i.invoice_total_idr : (i.invoiceTotal != null ? i.invoiceTotal : (i.revenue || i.r || 0)));
+      var o = Number(i.other_settlement_idr != null ? i.other_settlement_idr : (i.otherSettlement != null ? i.otherSettlement : (i.penyelesaian || i.o || 0)));
       totalQty += q;
       totalRevenue += r;
       totalSettlement += o;
-      var store = i.store_name || i.toko || i.t;
+      var store = i.store_name || i.storeName || i.toko || i.t;
       if (store) uniqueStores.add(store);
     });
 
     // Payments attributed to period
     var totalPayments = 0;
     scopedInvoices.forEach(function (i) {
-      var lastPay = i.last_payment_date || i.tglBayarTerakhir || i.lp;
-      var paid = Number(i.paid_total_idr != null ? i.paid_total_idr : (i.terbayar || i.p || 0));
+      var lastPay = i.last_payment_date || i.lastPaymentDate || i.tglBayarTerakhir || i.lp;
+      var paid = Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal != null ? i.paidTotal : (i.terbayar || i.p || 0)));
       if (paid > 0 && lastPay && lastPay >= pContext.dari && lastPay <= pContext.sampai) {
         totalPayments += paid;
       }
@@ -174,7 +174,7 @@
     var invoiceTerlambatCount = 0;
 
     scopedInvoices.forEach(function (i) {
-      var invDate = i.invoice_date || i.tanggal || i.d;
+      var invDate = i.invoice_date || i.date || i.tanggal || i.d;
       // An invoice is considered for outstanding if it was issued on or before asOf date
       if (invDate <= pContext.asOf) {
         var st = evaluateInvoiceState(i, pContext.asOf);
@@ -315,7 +315,7 @@
     var monthly = {};
 
     scoped.forEach(function (i) {
-      var dStr = i.invoice_date || i.tanggal || i.d;
+      var dStr = i.invoice_date || i.date || i.tanggal || i.d;
       if (!dStr) return;
       var m = dStr.slice(0, 7);
       var q = Number(i.qty != null ? i.qty : (i.q || 0));
