@@ -56,7 +56,7 @@
   </script>
   <link rel="stylesheet" href="assets/css/tokens.css">
 </head>
-<body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
+<body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white overflow-x-hidden max-w-[100vw]">
 
   <!-- ==================================================================== -->
   <!-- 1. DESKTOP SIDEBAR (Master Desktop Design: 240px Fixed)               -->
@@ -122,65 +122,65 @@
   <!-- ==================================================================== -->
   <!-- 3. PAGE CONTENT CONTAINER                                            -->
   <!-- ==================================================================== -->
-  <div class="shell-main-content flex-1 flex flex-col min-h-screen">
-    <main class="w-full px-4 sm:px-6 lg:px-8 pt-18 lg:pt-6 pb-24 lg:pb-12 bg-canvas min-h-screen flex flex-col gap-6">
+  <div class="shell-main-content flex-1 flex flex-col min-h-screen overflow-x-hidden max-w-[100vw]">
+    <main class="w-full max-w-full px-4 sm:px-6 lg:px-8 pt-18 lg:pt-6 pb-24 lg:pb-12 bg-canvas min-h-screen flex flex-col gap-6 overflow-x-hidden">
 
       <!-- Top Header & Toolbar -->
-      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4">
+      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 w-full min-w-0">
         <!-- Title & Status Badge -->
-        <div class="flex flex-col gap-1.5 min-w-0">
-          <h1 id="pageTitle" class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Dashboard Admin</h1>
-          <div class="flex items-center pt-0.5">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle">
-              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
-              <span id="statusBadgeText">November 2026 · Data per 22/11/2026 (Synthetic QA)</span>
+        <div class="flex flex-col gap-1.5 min-w-0 w-full xl:w-auto">
+          <h1 id="pageTitle" class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight truncate">Dashboard Admin</h1>
+          <div class="flex items-center pt-0.5 max-w-full">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle max-w-full">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0"></span>
+              <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Data per 22/11/2026 (Synthetic QA)</span>
             </span>
           </div>
         </div>
 
         <!-- Toolbar: Period Toggle & Role-conditional controls -->
-        <div class="flex items-center flex-wrap gap-2.5 justify-start xl:justify-end" id="headerToolbar">
+        <div class="flex items-center flex-wrap gap-2 justify-start xl:justify-end w-full xl:w-auto" id="headerToolbar">
           <!-- Segmented Toggle: Bulanan vs YTD -->
-          <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle" role="tablist">
-            <button id="tabModeBulanan" type="button" class="relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+          <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle shrink-0" role="tablist">
+            <button id="tabModeBulanan" type="button" class="relative px-3 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
               <span>Bulanan</span>
               <span id="tabIndicatorBulanan" class="absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
             </button>
-            <button id="tabModeYTD" type="button" class="relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+            <button id="tabModeYTD" type="button" class="relative px-3 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
               <span>YTD</span>
               <span id="tabIndicatorYTD" class="hidden absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
             </button>
           </div>
 
           <!-- Date Filter Button -->
-          <button type="button" class="inline-flex items-center gap-2 h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm">
+          <button type="button" class="inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm shrink-0">
             <span class="material-symbols-outlined text-[16px] text-text-secondary">calendar_today</span>
             <span id="filterDateLabel">01 Nov – 22 Nov 2026</span>
           </button>
 
           <!-- Sales Scope Container (Admin has dropdown; Sales has locked badge) -->
-          <div id="salesScopeContainer" class="relative">
+          <div id="salesScopeContainer" class="relative shrink-0">
             <!-- Rendered conditionally by role -->
           </div>
 
           <!-- Export Recap Button (Admin Only - Conditionally rendered) -->
-          <div id="exportActionContainer">
+          <div id="exportActionContainer" class="shrink-0">
             <!-- Rendered conditionally by role -->
           </div>
         </div>
       </div>
 
       <!-- Quick Role Switcher Banner (For seamless demo testing between Admin and Sales) -->
-      <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-[18px] text-accent">swap_horiz</span>
-          <span class="font-medium text-text-secondary">Sesi Demo Aktif:</span>
-          <span id="demoSessionLabel" class="font-bold text-text-primary">Admin (Raka Pratama)</span>
+      <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs w-full min-w-0 overflow-hidden">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="material-symbols-outlined text-[18px] text-accent shrink-0">swap_horiz</span>
+          <span class="font-medium text-text-secondary shrink-0">Sesi Demo Aktif:</span>
+          <span id="demoSessionLabel" class="font-bold text-text-primary truncate">Admin (Raka Pratama)</span>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-text-muted">Cepat Ganti Peran:</span>
-          <button id="quickSwitchAdminBtn" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Admin</button>
-          <button id="quickSwitchSalesBtn" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Sales: Aruna Pratama</button>
+        <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+          <span class="text-text-muted text-[11px] shrink-0">Ganti Sesi:</span>
+          <button id="quickSwitchAdminBtn" type="button" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium text-[11px] transition-colors">Admin</button>
+          <button id="quickSwitchSalesBtn" type="button" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium text-[11px] transition-colors">Sales: Aruna</button>
         </div>
       </div>
 
@@ -473,6 +473,58 @@
   </aside>
 
   <!-- ==================================================================== -->
+  <!-- 5B. USER PROFILE MODAL / DRAWER (Master Design Profile Reference)     -->
+  <!-- ==================================================================== -->
+  <div id="profileModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity" onclick="closeProfileModal()"></div>
+  <aside id="profileModal" class="hidden fixed right-0 top-0 h-full w-full max-w-sm bg-surface-1 border-l border-border-subtle z-50 flex flex-col shadow-2xl transition-transform transform translate-x-full">
+    <div class="p-5 border-b border-border-subtle flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-accent text-xl">account_circle</span>
+        <h3 class="text-base font-bold text-text-primary tracking-tight">Profil Pengguna</h3>
+      </div>
+      <button onclick="closeProfileModal()" type="button" class="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" aria-label="Tutup">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+    <div class="flex-1 p-5 flex flex-col justify-between overflow-y-auto">
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3.5 p-4 rounded-xl bg-surface-2 border border-border-subtle">
+          <div class="w-12 h-12 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent text-xl font-bold shrink-0">
+            <span id="profileAvatarInitial">R</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span id="profileModalName" class="font-bold text-text-primary text-sm truncate">Raka Pratama</span>
+            <span id="profileModalRole" class="text-xs text-text-muted">Administrator</span>
+            <span id="profileModalBadge" class="mt-1 inline-flex items-center w-fit px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-accent/10 text-accent border border-accent/30">ADMIN</span>
+          </div>
+        </div>
+        <div class="space-y-2.5 text-xs">
+          <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+            <span class="text-text-muted">Status Akun</span>
+            <span class="text-status-success font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Aktif (Showcase)
+            </span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+            <span class="text-text-muted">Cakupan Data</span>
+            <span id="profileModalScope" class="text-text-primary font-medium">Semua Transaksi</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-border-subtle">
+            <span class="text-text-muted">Akses Modul</span>
+            <span id="profileModalAccess" class="text-text-primary font-medium">Dashboard, Invoices, Upload</span>
+          </div>
+        </div>
+      </div>
+      <div class="pt-5 border-t border-border-subtle flex flex-col gap-2">
+        <button onclick="logout()" type="button" class="w-full h-11 rounded-xl bg-status-danger/10 hover:bg-status-danger/20 border border-status-danger/30 text-status-danger font-semibold text-xs flex items-center justify-center gap-2 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+          <span>Keluar dari Sesi</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================================================================== -->
   <!-- 6. ENGINE & APPLICATION CONTROLLER                                   -->
   <!-- ==================================================================== -->
   <script src="assets/js/engine/validator.js"></script>
@@ -506,22 +558,24 @@
           { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'upload', label: 'Upload', icon: 'cloud_upload', href: '#upload' },
-          { id: 'logout', label: 'Keluar', icon: 'logout', href: 'index.html' }
+          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
-          { id: 'logout', label: 'Keluar', icon: 'logout', href: 'index.html' }
+          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
         ]
       };
 
-      // 1. Session & State (Supports URL query param overrides for testing/showcase)
+      // 1. Session & State Validation
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('theme')) {
         FADE_STORE.setTheme(urlParams.get('theme'));
       }
-      if (urlParams.get('role')) {
+
+      // Explicit testing demo seed ONLY with demo=1 flag
+      if (urlParams.get('demo') === '1' && urlParams.get('role')) {
         var qRole = urlParams.get('role').toLowerCase();
         if (qRole === 'sales') {
           FADE_STORE.setActiveSession({
@@ -541,7 +595,7 @@
 
       var session = FADE_STORE.getActiveSession();
       if (!session) {
-        window.location.href = 'index.html';
+        window.location.replace('index.html');
         return;
       }
 
@@ -1065,6 +1119,9 @@
         } else if (hash === 'upload') {
           viewUpload.classList.remove('hidden');
           renderUploadHistory();
+        } else if (hash === 'profile') {
+          viewDashboard.classList.remove('hidden');
+          openProfileModal();
         }
       }
 
@@ -1151,6 +1208,38 @@
       }
       document.getElementById('sidebarLogoutBtn').addEventListener('click', logout);
       document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+
+      // Profile Modal Controller (Master Design Profile Spec)
+      var profileModal = document.getElementById('profileModal');
+      var profileModalBackdrop = document.getElementById('profileModalBackdrop');
+
+      function openProfileModal() {
+        document.getElementById('profileAvatarInitial').textContent = (session.name || 'U').charAt(0);
+        document.getElementById('profileModalName').textContent = session.name;
+        document.getElementById('profileModalRole').textContent = session.title;
+        document.getElementById('profileModalBadge').textContent = session.role.toUpperCase();
+        document.getElementById('profileModalScope').textContent = session.role === 'admin' ? 'Seluruh Transaksi & Target Tim' : ('Transaksi ' + session.salesName + ' (Own Data)');
+        document.getElementById('profileModalAccess').textContent = session.role === 'admin' ? 'Dashboard, Invoices, Upload Master Excel' : 'Dashboard Bulanan & YTD, Invoices (Read-only)';
+
+        profileModalBackdrop.classList.remove('hidden');
+        profileModal.classList.remove('hidden');
+        setTimeout(function () {
+          profileModal.classList.remove('translate-x-full');
+        }, 10);
+      }
+
+      function closeProfileModal() {
+        profileModal.classList.add('translate-x-full');
+        setTimeout(function () {
+          profileModal.classList.add('hidden');
+          profileModalBackdrop.classList.add('hidden');
+          if (window.location.hash === '#profile') {
+            window.location.hash = '#dashboard';
+          }
+        }, 200);
+      }
+      window.closeProfileModal = closeProfileModal;
+      window.logout = logout;
 
       // KPI Drill-down Drawer (#dr)
       var drawer = document.getElementById('kpiDrawer');

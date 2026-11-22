@@ -110,13 +110,8 @@
       var raw = localStorage.getItem(STORAGE_KEYS.SESSION);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    // Default session: Admin
-    return {
-      role: 'admin',
-      name: 'Raka Pratama',
-      title: 'Administrator',
-      salesName: null
-    };
+    // Return null when unauthenticated to enforce login boundary
+    return null;
   }
 
   function setActiveSession(session) {

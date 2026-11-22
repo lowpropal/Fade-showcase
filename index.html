@@ -2,15 +2,18 @@
 <html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FADE Pods Showcase v0.2 — Unified Portal & Login</title>
-  
-  <!-- Fonts & Icons -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FADE Pods — Unified Login Page</title>
+
+  <!-- Plus Jakarta Sans Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons & Material Symbols CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-  
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -25,17 +28,19 @@
             canvas: '#0D0D0E',
             sidebar: '#131314',
             surface: {
+              DEFAULT: '#19191B',
               1: '#19191B',
               2: '#202022',
               hover: '#29292C'
             },
             border: {
+              DEFAULT: '#363639',
               subtle: '#2B2B2E',
-              default: '#39393D',
               strong: '#55555A'
             },
             accent: {
               DEFAULT: '#F28C45',
+              orange: '#F28C45',
               hover: '#FF9E5C',
               wash: '#30231B'
             },
@@ -44,10 +49,10 @@
               secondary: '#B8B8BB',
               muted: '#8F8F93'
             },
-            status: {
-              success: '#63C995',
+            semantic: {
+              danger: '#F07878',
               warning: '#F2BD4B',
-              danger: '#F07878'
+              success: '#63C995'
             }
           }
         }
@@ -55,190 +60,430 @@
     };
   </script>
   <link rel="stylesheet" href="assets/css/tokens.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    input:focus {
+      outline: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin-custom {
+      animation: spin 0.8s linear infinite;
+    }
+  </style>
 </head>
-<body class="bg-canvas text-text-primary min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
+<body class="bg-canvas text-text-primary min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-200">
 
-  <!-- Header Bar -->
-  <header class="w-full border-b border-border-subtle bg-surface-1/70 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
-      <span class="text-xs px-2.5 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-medium">Showcase v0.2</span>
+  <!-- ==================================================================== -->
+  <!-- 1. TOP HEADER BAR                                                    -->
+  <!-- ==================================================================== -->
+  <header class="w-full border-b border-border-subtle bg-surface-1/70 backdrop-blur-md px-4 sm:px-6 py-3.5 flex items-center justify-between z-20">
+    <div class="flex items-center gap-2.5">
+      <!-- Brand Logo / Emblem -->
+      <div class="w-7 h-7 rounded-lg bg-surface-2 border border-border-default flex items-center justify-center text-accent">
+        <span class="material-symbols-outlined text-[16px]">all_inclusive</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-semibold">v0.2</span>
+      </div>
     </div>
     <div class="flex items-center gap-3">
       <span class="hidden sm:inline-flex items-center gap-1.5 text-xs text-text-muted">
-        <span class="w-2 h-2 rounded-full bg-status-success"></span>
-        Runtime: Vercel Static Hosting Ready
+        <span class="w-2 h-2 rounded-full bg-semantic-success animate-pulse"></span>
+        Runtime: Showcase Static
       </span>
-      <button id="themeToggleBtn" type="button" class="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" title="Ubah Tema">
-        <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+      <button id="themeToggleBtn" type="button" class="w-8 h-8 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" title="Ubah Tema" aria-label="Ubah Tema">
+        <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
       </button>
     </div>
   </header>
 
-  <!-- Login Card Container -->
-  <main class="flex-1 flex items-center justify-center p-4 sm:p-6">
-    <div class="w-full max-w-md bg-surface-1 border border-border-default rounded-2xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6">
+  <!-- ==================================================================== -->
+  <!-- 2. MAIN AUTHENTICATION CONTAINER (Center Form with Radial Glow)     -->
+  <!-- ==================================================================== -->
+  <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-full relative z-10">
+    
+    <!-- Subtle Ambient Radial Glow -->
+    <div class="absolute pointer-events-none w-[500px] h-[500px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
+
+    <div class="w-full max-w-[380px] mx-auto flex flex-col items-center text-center">
       
-      <!-- Title & Description -->
-      <div class="flex flex-col gap-1.5 text-center">
-        <h1 class="text-2xl font-bold text-text-primary tracking-tight">Portal Masuk</h1>
-        <p class="text-sm text-text-secondary">Pilih peran akun untuk menjelajahi prototipe FADE Pods</p>
+      <!-- Brand Emblem / Aperture Sunburst -->
+      <div class="w-12 h-12 rounded-2xl bg-surface-2 border border-border-default flex items-center justify-center text-accent mb-4 shadow-md">
+        <span class="material-symbols-outlined text-[24px]">lens_blur</span>
       </div>
 
-      <!-- Role Selector Tabs -->
-      <div class="grid grid-cols-2 p-1 bg-surface-2 rounded-xl border border-border-subtle gap-1" role="tablist">
-        <button id="roleTabAdmin" type="button" class="py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 bg-surface-1 text-text-primary shadow-sm border border-border-subtle">
-          <span class="material-symbols-outlined text-[18px] text-accent">admin_panel_settings</span>
-          <span>Admin</span>
+      <!-- Headline & Subtitle -->
+      <h1 class="text-[24px] sm:text-[26px] font-semibold tracking-tight text-text-primary mb-1">
+        Selamat datang kembali!
+      </h1>
+      <p class="text-[13px] text-text-muted mb-6 leading-normal font-normal">
+        Pertama kali di sini? <a class="text-text-primary hover:text-accent font-medium hover:underline transition-colors" href="javascript:void(0)" onclick="alert('Fitur pendaftaran akun baru akan tersedia pada rilis produksi.')">Daftar akun baru</a>
+      </p>
+
+      <!-- Alert Notification: Invalid Credentials -->
+      <div id="alert-invalid" class="hidden w-full mb-4 p-3 rounded-xl bg-[#271717] border border-semantic-danger/40 text-semantic-danger flex items-start gap-2.5 text-xs text-left" role="alert">
+        <i class="ph ph-warning-circle text-base flex-shrink-0 mt-0.5"></i>
+        <div class="flex-1">
+          <span class="font-semibold block">Gagal masuk</span>
+          <span class="text-text-secondary text-[11px]">Username atau password tidak sesuai. Coba akun demo di bawah.</span>
+        </div>
+        <button type="button" onclick="dismissAlert()" class="text-text-muted hover:text-text-primary p-0.5" aria-label="Tutup">
+          <i class="ph ph-x text-sm"></i>
         </button>
-        <button id="roleTabSales" type="button" class="py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 text-text-muted hover:text-text-primary">
-          <span class="material-symbols-outlined text-[18px]">badge</span>
-          <span>Sales</span>
-        </button>
       </div>
 
-      <!-- Admin Form Fields -->
-      <div id="adminFields" class="flex flex-col gap-4">
-        <div class="p-4 rounded-xl bg-surface-2 border border-border-subtle flex items-center gap-3.5">
-          <div class="w-10 h-10 rounded-full bg-surface-hover border border-border-default flex items-center justify-center text-accent shrink-0">
-            <span class="material-symbols-outlined text-[20px]">person</span>
+      <!-- Alert Notification: Success -->
+      <div id="alert-success" class="hidden w-full mb-4 p-3 rounded-xl bg-[#14261B] border border-semantic-success/40 text-semantic-success flex items-start gap-2.5 text-xs text-left" role="status">
+        <i class="ph ph-check-circle text-base flex-shrink-0 mt-0.5"></i>
+        <div class="flex-1">
+          <span id="success-role-title" class="font-semibold block">Login berhasil!</span>
+          <span id="success-role-desc" class="text-text-secondary text-[11px]">Mengarahkan ke dashboard FADE...</span>
+        </div>
+      </div>
+
+      <!-- AUTHENTICATION FORM -->
+      <form id="login-form" class="w-full space-y-3.5" novalidate onsubmit="handleLoginSubmit(event)">
+        
+        <!-- Username / Email Field -->
+        <div class="text-left space-y-1">
+          <label for="username" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-0.5">Username atau Email</label>
+          <div id="wrap-username" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
+            <input 
+              id="username" 
+              name="username" 
+              type="text" 
+              placeholder="Username atau email" 
+              autocomplete="username" 
+              spellcheck="false" 
+              oninput="handleInputChange('username')"
+              class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal"
+            >
           </div>
-          <div class="flex flex-col min-w-0">
-            <span class="text-sm font-semibold text-text-primary">Raka Pratama</span>
-            <span class="text-xs text-text-muted">Administrator · Akses Seluruh Sales & Upload</span>
+          <p id="error-username" class="hidden text-[11px] text-semantic-danger flex items-center gap-1 mt-1 font-medium">
+            <i class="ph ph-warning-circle text-xs"></i>
+            <span>Username atau email wajib diisi.</span>
+          </p>
+        </div>
+
+        <!-- Password Field with Visibility Toggle -->
+        <div class="text-left space-y-1">
+          <div class="flex items-center justify-between px-0.5">
+            <label for="password" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">Kata Sandi</label>
+            <a href="javascript:void(0)" onclick="alert('Untuk demonstrasi showcase, gunakan kredensial demo di bawah.')" class="text-[11px] text-text-muted hover:text-text-primary transition-colors">Lupa sandi?</a>
           </div>
+          <div id="wrap-password" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              placeholder="Password" 
+              autocomplete="current-password" 
+              oninput="handleInputChange('password')"
+              class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted pl-3.5 pr-10 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal"
+            >
+            <button 
+              id="btn-toggle-password" 
+              type="button" 
+              onclick="togglePasswordVisibility()" 
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-primary transition-colors focus:outline-none" 
+              aria-label="Tampilkan sandi"
+            >
+              <i id="icon-toggle-password" class="ph ph-eye text-base"></i>
+            </button>
+          </div>
+          <p id="error-password" class="hidden text-[11px] text-semantic-danger flex items-center gap-1 mt-1 font-medium">
+            <i class="ph ph-warning-circle text-xs"></i>
+            <span>Password wajib diisi.</span>
+          </p>
         </div>
-      </div>
 
-      <!-- Sales Form Fields (Hidden by default) -->
-      <div id="salesFields" class="hidden flex flex-col gap-3">
-        <label for="salesSelect" class="text-xs font-semibold text-text-secondary uppercase tracking-wider">Pilih Akun Sales Representative:</label>
-        <div class="relative">
-          <select id="salesSelect" class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-surface-2 border border-border-default text-sm text-text-primary hover:border-border-strong focus:outline-none focus:border-accent transition-colors appearance-none cursor-pointer">
-            <option value="Aruna Pratama">Aruna Pratama (Sales Senior)</option>
-            <option value="Budi Santoso">Budi Santoso (Sales Specialist)</option>
-            <option value="Citra Lestari">Citra Lestari (Sales Specialist)</option>
-            <option value="Dimas Pratama">Dimas Pratama (Sales Representative)</option>
-            <option value="Eko Prasetyo">Eko Prasetyo (Sales Representative)</option>
-            <option value="Fajar Ramadhan">Fajar Ramadhan (Sales Junior)</option>
-          </select>
-          <span class="material-symbols-outlined text-[18px] text-text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
-        </div>
-        <p class="text-[11px] text-text-muted italic">*Sales hanya dapat melihat data penjualan dan invoice miliknya sendiri (Strict Own-Data Scope).</p>
-      </div>
-
-      <!-- Submit / Launch Button -->
-      <button id="loginBtn" type="button" class="w-full h-11 rounded-xl bg-accent hover:bg-accent-hover text-surface-sidebar font-semibold text-sm transition-all shadow-lg shadow-accent/15 flex items-center justify-center gap-2 mt-2">
-        <span>Masuk ke Dashboard</span>
-        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </button>
-
-      <!-- Dataset Status Card -->
-      <div class="border-t border-border-subtle pt-4 flex flex-col gap-2">
-        <div class="flex items-center justify-between text-xs">
-          <span class="text-text-muted">Dataset Aktif:</span>
-          <span class="text-text-secondary font-medium">Synthetic QA (210 record)</span>
-        </div>
-        <div class="flex items-center justify-between text-xs">
-          <span class="text-text-muted">Cutoff Audit:</span>
-          <span class="text-text-secondary font-medium">22 November 2026</span>
-        </div>
-        <div class="flex items-center justify-between text-xs pt-1">
-          <button id="resetDataBtn" type="button" class="text-xs text-text-muted hover:text-accent transition-colors underline flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">restart_alt</span>
-            <span>Reset localStorage ke Default QA</span>
+        <!-- Submit Button (High Contrast Solid) -->
+        <div class="pt-1">
+          <button 
+            id="btn-submit" 
+            type="submit" 
+            class="w-full h-11 bg-text-primary hover:opacity-95 active:scale-[0.99] text-canvas font-semibold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-canvas"
+          >
+            <span id="btn-text" class="font-semibold inline-flex items-center gap-1.5">
+              Masuk ke Dashboard
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </span>
+            <span id="btn-spinner" class="hidden flex items-center gap-2 text-canvas">
+              <svg class="animate-spin-custom h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Memverifikasi...</span>
+            </span>
           </button>
         </div>
+
+        <!-- Secondary Alternative: Magic link -->
+        <div class="pt-1 pb-0.5">
+          <button type="button" onclick="fillCredentials('sales', 'sales123')" class="text-xs text-text-muted hover:text-text-primary transition-colors font-normal">
+            Masuk menggunakan magic link
+          </button>
+        </div>
+
+        <!-- Subtle Divider -->
+        <div class="relative flex items-center justify-center py-1">
+          <div class="w-full border-t border-border-subtle"></div>
+          <span class="absolute bg-canvas px-2 text-[10px] text-text-muted uppercase tracking-wider font-medium">atau</span>
+        </div>
+
+        <!-- SSO Button -->
+        <div>
+          <button type="button" onclick="fillCredentials('admin', 'admin123')" class="w-full h-10 bg-surface-1 hover:bg-surface-2 active:bg-surface-hover border border-border-subtle text-text-secondary hover:text-text-primary font-medium text-[12px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150">
+            <span class="material-symbols-outlined text-[16px] text-text-muted">key</span>
+            <span>Single sign-on (SSO Enterprise)</span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- ============================================================== -->
+      <!-- DEDICATED SHOWCASE DEMO ACCOUNTS SECTION                        -->
+      <!-- ============================================================== -->
+      <div class="w-full mt-5 pt-4 border-t border-border-subtle flex flex-col items-center gap-2.5">
+        <div class="flex items-center gap-1.5 text-[10px] text-text-muted tracking-wide uppercase font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
+          <span>Akun Uji Demo:</span>
+          <span class="text-[9px] text-text-muted/80 lowercase font-normal">(Sekali klik untuk isi)</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 w-full">
+          <!-- Admin Demo Card -->
+          <button 
+            type="button" 
+            onclick="fillCredentials('admin', 'admin123')" 
+            class="demo-chip group flex flex-col p-2.5 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/60 text-left transition-all shadow-sm"
+          >
+            <div class="flex items-center justify-between text-[11px] mb-0.5">
+              <span class="font-semibold text-text-primary">Admin</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary group-hover:bg-accent group-hover:text-white transition-colors">Isi</span>
+            </div>
+            <div class="text-[10px] text-text-muted truncate">admin / admin123</div>
+          </button>
+
+          <!-- Sales Demo Card -->
+          <button 
+            type="button" 
+            onclick="fillCredentials('sales', 'sales123')" 
+            class="demo-chip group flex flex-col p-2.5 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/60 text-left transition-all shadow-sm"
+          >
+            <div class="flex items-center justify-between text-[11px] mb-0.5">
+              <span class="font-semibold text-text-primary">Sales</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary group-hover:bg-accent group-hover:text-white transition-colors">Isi</span>
+            </div>
+            <div class="text-[10px] text-text-muted truncate">sales / sales123</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Legal & Showcase Disclaimer -->
+      <div class="mt-6 text-center text-[11px] text-text-muted max-w-xs leading-relaxed">
+        <p>Dengan melanjutkan, Anda menyetujui <a class="underline text-text-secondary hover:text-text-primary" href="javascript:void(0)">Ketentuan Layanan</a> &amp; <a class="underline text-text-secondary hover:text-text-primary" href="javascript:void(0)">Kebijakan Privasi</a>.</p>
+        <p class="text-[10px] text-text-muted/70 mt-1.5">FADE Pods · Internal Sales Monitoring Showcase v0.2</p>
       </div>
 
     </div>
   </main>
 
-  <!-- Footer Disclaimer -->
-  <footer class="w-full py-4 px-6 border-t border-border-subtle bg-surface-1/40 text-center text-xs text-text-muted">
-    <p>FADE Pods Showcase v0.2 · Non-Production Showcase · Static Frontend on Vercel · Data tersimpan lokal di browser (localStorage).</p>
-  </footer>
-
-  <!-- Scripts -->
+  <!-- ==================================================================== -->
+  <!-- 3. CLIENT LOGIC & AUTHENTICATION HANDLERS                            -->
+  <!-- ==================================================================== -->
   <script src="assets/js/data/synthetic-seed.js"></script>
   <script src="assets/js/store.js"></script>
   <script>
-    (function () {
-      var selectedRole = 'admin';
+    // Elements
+    var usernameInput = document.getElementById('username');
+    var passwordInput = document.getElementById('password');
+    var wrapUsername = document.getElementById('wrap-username');
+    var wrapPassword = document.getElementById('wrap-password');
+    var errorUsername = document.getElementById('error-username');
+    var errorPassword = document.getElementById('error-password');
+    var alertInvalid = document.getElementById('alert-invalid');
+    var alertSuccess = document.getElementById('alert-success');
+    var btnSubmit = document.getElementById('btn-submit');
+    var btnText = document.getElementById('btn-text');
+    var btnSpinner = document.getElementById('btn-spinner');
+    var iconToggle = document.getElementById('icon-toggle-password');
+    var themeToggleBtn = document.getElementById('themeToggleBtn');
+    var themeToggleIcon = document.getElementById('themeToggleIcon');
 
-      var tabAdmin = document.getElementById('roleTabAdmin');
-      var tabSales = document.getElementById('roleTabSales');
-      var adminFields = document.getElementById('adminFields');
-      var salesFields = document.getElementById('salesFields');
-      var salesSelect = document.getElementById('salesSelect');
-      var loginBtn = document.getElementById('loginBtn');
-      var resetBtn = document.getElementById('resetDataBtn');
-      var themeBtn = document.getElementById('themeToggleBtn');
+    // Initialize Store
+    FADE_STORE.init();
 
-      function updateTabs() {
-        if (selectedRole === 'admin') {
-          tabAdmin.className = 'py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 bg-surface-1 text-text-primary shadow-sm border border-border-subtle';
-          tabAdmin.querySelector('span').classList.add('text-accent');
-          tabSales.className = 'py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 text-text-muted hover:text-text-primary';
-          tabSales.querySelector('span').classList.remove('text-accent');
-          adminFields.classList.remove('hidden');
-          salesFields.classList.add('hidden');
-        } else {
-          tabSales.className = 'py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 bg-surface-1 text-text-primary shadow-sm border border-border-subtle';
-          tabSales.querySelector('span').classList.add('text-accent');
-          tabAdmin.className = 'py-2.5 px-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 text-text-muted hover:text-text-primary';
-          tabAdmin.querySelector('span').classList.remove('text-accent');
-          adminFields.classList.add('hidden');
-          salesFields.classList.remove('hidden');
-        }
+    // Theme Management
+    function syncThemeUI(theme) {
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+        themeToggleIcon.textContent = 'light_mode';
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        themeToggleIcon.textContent = 'dark_mode';
+      }
+    }
+    syncThemeUI(FADE_STORE.getTheme());
+
+    themeToggleBtn.addEventListener('click', function () {
+      var current = FADE_STORE.getTheme();
+      var next = current === 'dark' ? 'light' : 'dark';
+      FADE_STORE.setTheme(next);
+      syncThemeUI(next);
+    });
+
+    // 1. Password Visibility Toggle
+    function togglePasswordVisibility() {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        iconToggle.classList.remove('ph-eye');
+        iconToggle.classList.add('ph-eye-slash');
+        iconToggle.classList.add('text-accent');
+      } else {
+        passwordInput.type = 'password';
+        iconToggle.classList.remove('ph-eye-slash');
+        iconToggle.classList.remove('text-accent');
+        iconToggle.classList.add('ph-eye');
+      }
+    }
+
+    // 2. Clear Validation Errors on Input
+    function handleInputChange(fieldName) {
+      if (fieldName === 'username') {
+        wrapUsername.classList.remove('border-semantic-danger');
+        wrapUsername.classList.add('border-border-subtle');
+        errorUsername.classList.add('hidden');
+      } else if (fieldName === 'password') {
+        wrapPassword.classList.remove('border-semantic-danger');
+        wrapPassword.classList.add('border-border-subtle');
+        errorPassword.classList.add('hidden');
+      }
+      alertInvalid.classList.add('hidden');
+    }
+
+    function dismissAlert() {
+      alertInvalid.classList.add('hidden');
+    }
+
+    // 3. Demo Autofill Handler
+    function fillCredentials(user, pass) {
+      usernameInput.value = user;
+      passwordInput.value = pass;
+      handleInputChange('username');
+      handleInputChange('password');
+      usernameInput.focus();
+
+      // Subtle feedback ring
+      wrapUsername.classList.add('border-accent');
+      wrapPassword.classList.add('border-accent');
+      setTimeout(function () {
+        wrapUsername.classList.remove('border-accent');
+        wrapPassword.classList.remove('border-accent');
+      }, 400);
+    }
+
+    // 4. Form Submission & Verified Authentication
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      dismissAlert();
+      alertSuccess.classList.add('hidden');
+
+      var userVal = usernameInput.value.trim();
+      var passVal = passwordInput.value.trim();
+      var hasError = false;
+
+      if (!userVal) {
+        wrapUsername.classList.remove('border-border-subtle');
+        wrapUsername.classList.add('border-semantic-danger');
+        errorUsername.classList.remove('hidden');
+        hasError = true;
+      }
+      if (!passVal) {
+        wrapPassword.classList.remove('border-border-subtle');
+        wrapPassword.classList.add('border-semantic-danger');
+        errorPassword.classList.remove('hidden');
+        hasError = true;
       }
 
-      tabAdmin.addEventListener('click', function () {
-        selectedRole = 'admin';
-        updateTabs();
-      });
+      if (hasError) return;
 
-      tabSales.addEventListener('click', function () {
-        selectedRole = 'sales';
-        updateTabs();
-      });
+      // Loading state
+      btnSubmit.disabled = true;
+      btnText.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
 
-      loginBtn.addEventListener('click', function () {
-        if (selectedRole === 'admin') {
+      setTimeout(function () {
+        btnSubmit.disabled = false;
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+
+        var lowerUser = userVal.toLowerCase();
+
+        // 1. Admin Verification
+        if ((lowerUser === 'admin' || lowerUser === 'admin@fade.id') && passVal === 'admin123') {
           FADE_STORE.setActiveSession({
             role: 'admin',
             name: 'Raka Pratama',
-            title: 'Administrator',
-            salesName: null
+            title: 'Head of Operations'
           });
-        } else {
-          var sName = salesSelect.value || 'Aruna Pratama';
+          document.getElementById('success-role-title').textContent = 'Login Admin Berhasil!';
+          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Admin Dashboard...';
+          alertSuccess.classList.remove('hidden');
+          setTimeout(function () {
+            window.location.href = 'app.html#dashboard';
+          }, 600);
+          return;
+        }
+
+        // 2. Sales Verification
+        var salesDirectory = {
+          'sales': 'Aruna Pratama',
+          'sales@fade.id': 'Aruna Pratama',
+          'aruna': 'Aruna Pratama',
+          'aruna@fade.id': 'Aruna Pratama',
+          'bayu': 'Bayu Wicaksono',
+          'citra': 'Citra Dewi',
+          'dimas': 'Dimas Setiawan',
+          'eka': 'Eka Kurniawan',
+          'fajar': 'Fajar Nugroho'
+        };
+
+        if (salesDirectory[lowerUser] && passVal === 'sales123') {
+          var repName = salesDirectory[lowerUser];
           FADE_STORE.setActiveSession({
             role: 'sales',
-            name: sName,
-            title: 'Sales Representative',
-            salesName: sName
+            name: repName,
+            title: 'Sales Senior',
+            salesName: repName
           });
+          document.getElementById('success-role-title').textContent = 'Login Sales Berhasil!';
+          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Sales Dashboard (' + repName + ')...';
+          alertSuccess.classList.remove('hidden');
+          setTimeout(function () {
+            window.location.href = 'app.html#dashboard';
+          }, 600);
+          return;
         }
-        window.location.href = 'app.html';
-      });
 
-      resetBtn.addEventListener('click', function () {
-        if (confirm('Reset seluruh data ke dataset sintetis awal (210 baris)?')) {
-          FADE_STORE.resetToDefault();
-          alert('Dataset berhasil di-reset ke default QA sintetis.');
-        }
-      });
+        // 3. Invalid Credentials
+        alertInvalid.classList.remove('hidden');
+        wrapUsername.classList.add('border-semantic-danger');
+        wrapPassword.classList.add('border-semantic-danger');
 
-      themeBtn.addEventListener('click', function () {
-        var current = FADE_STORE.getTheme();
-        var next = current === 'dark' ? 'light' : 'dark';
-        FADE_STORE.setTheme(next);
-      });
-
-      // Apply saved theme
-      FADE_STORE.setTheme(FADE_STORE.getTheme());
-    })();
+      }, 700);
+    }
   </script>
 </body>
 </html>
