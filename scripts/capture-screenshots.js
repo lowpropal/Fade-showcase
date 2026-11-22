@@ -31,7 +31,6 @@ async function runCapture() {
     '--no-default-browser-check'
   ], { stdio: 'ignore' });
 
-  // Wait for Chrome to be ready
   let version = null;
   for (let i = 0; i < 20; i++) {
     await sleep(400);
@@ -68,13 +67,13 @@ async function runCapture() {
     },
     {
       name: '03_admin_desktop_dark_1440x900.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html?theme=dark#dashboard'),
+      url: 'file://' + path.join(BASE_DIR, 'admin.html?theme=dark#dashboard'),
       width: 1440,
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'dark');
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -82,13 +81,13 @@ async function runCapture() {
     },
     {
       name: '04_admin_desktop_light_1440x900.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html?theme=light#dashboard'),
+      url: 'file://' + path.join(BASE_DIR, 'admin.html?theme=light#dashboard'),
       width: 1440,
       height: 1080,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'light');
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v02', 'light');
       `,
       actions: async (send) => {
         await sleep(500);
@@ -96,71 +95,122 @@ async function runCapture() {
     },
     {
       name: '05_admin_mobile_390x844.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      url: 'file://' + path.join(BASE_DIR, 'admin.html#dashboard'),
       width: 390,
-      height: 950,
+      height: 844,
       mobile: true,
       initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'dark');
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
       `,
       actions: async (send) => {
         await sleep(500);
       }
     },
     {
-      name: '06_admin_mobile_charts_390x844.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      name: '06_sales_desktop_dark_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html?theme=dark#dashboard'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+      `,
+      actions: async (send) => {
+        await sleep(500);
+      }
+    },
+    {
+      name: '07_sales_desktop_light_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html?theme=light#dashboard'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'light');
+      `,
+      actions: async (send) => {
+        await sleep(500);
+      }
+    },
+    {
+      name: '08_sales_mobile_390x844.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#dashboard'),
       width: 390,
-      height: 900,
+      height: 844,
       mobile: true,
       initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'dark');
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+      `,
+      actions: async (send) => {
+        await sleep(500);
+      }
+    },
+    {
+      name: '09_sales_kpi_drilldown_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#kpi-outstanding'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+      `,
+      actions: async (send) => {
+        await sleep(500);
+      }
+    },
+    {
+      name: '10_sales_invoice_detail_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#invoice-QA26-0001'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
+      `,
+      actions: async (send) => {
+        await sleep(500);
+      }
+    },
+    {
+      name: '11_sales_upload_modal.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#dashboard'),
+      width: 1440,
+      height: 900,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
       `,
       actions: async (send) => {
         await send('Runtime.evaluate', {
           expression: `
-            var el = document.getElementById('adminAnalyticsSection');
-            if (el) el.scrollIntoView();
+            openUploadDocModal();
           `
         });
         await sleep(400);
       }
     },
     {
-      name: '07_admin_chart_7D_interactive.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      name: '12_sales_profile_1440x900.png',
+      url: 'file://' + path.join(BASE_DIR, 'sales.html#profile'),
       width: 1440,
-      height: 1080,
+      height: 900,
       mobile: false,
       initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'dark');
+        localStorage.setItem('fade_showcase_session_v02', JSON.stringify({ role: 'sales', name: 'Aruna Pratama', title: 'Sales Representative', salesName: 'Aruna Pratama', salesId: 'SYN-S01', region: 'DKI Jakarta & Banten' }));
+        localStorage.setItem('fade_showcase_theme_v02', 'dark');
       `,
       actions: async (send) => {
         await send('Runtime.evaluate', {
           expression: `
-            document.getElementById('chartBtn7D').click();
-          `
-        });
-        await sleep(500);
-      }
-    },
-    {
-      name: '08_admin_chart_90D_interactive.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
-      width: 1440,
-      height: 1080,
-      mobile: false,
-      initScript: `
-        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
-        localStorage.setItem('fade_theme', 'dark');
-      `,
-      actions: async (send) => {
-        await send('Runtime.evaluate', {
-          expression: `
-            document.getElementById('chartBtn90D').click();
+            if (typeof closeUploadDocModal === 'function') closeUploadDocModal();
+            window.location.hash = '#profile';
           `
         });
         await sleep(500);
@@ -169,17 +219,13 @@ async function runCapture() {
   ];
 
   try {
-    // Get initial tab or create via Target domain
-    const tabs = await getJson(`http://localhost:${PORT}/json/list`);
     const browserWs = version.webSocketDebuggerUrl;
 
     for (const t of targets) {
       console.log(`Capturing ${t.name}...`);
       
-      // Connect to browser or existing tab
       let tab = (await getJson(`http://localhost:${PORT}/json/list`)).find(x => x.type === 'page');
       if (!tab) {
-        // Create new target via PUT
         const res = await fetch(`http://localhost:${PORT}/json/new`, { method: 'PUT' });
         tab = await res.json();
       }
@@ -211,7 +257,6 @@ async function runCapture() {
       await send('Page.enable');
       await send('DOM.enable');
 
-      // Set Device Metrics
       await send('Emulation.setDeviceMetricsOverride', {
         width: t.width,
         height: t.height,
@@ -225,17 +270,13 @@ async function runCapture() {
         });
       }
 
-      // Navigate to target URL
       await send('Page.navigate', { url: t.url });
-
-      // Wait a moment for page load
-      await sleep(500);
+      await sleep(600);
 
       if (t.actions) {
         await t.actions(send);
       }
 
-      // Capture Screenshot
       const result = await send('Page.captureScreenshot', {
         format: 'png',
         captureBeyondViewport: false
@@ -247,7 +288,7 @@ async function runCapture() {
       console.log(`Saved: ${outPath} (${buffer.length} bytes)`);
 
       ws.close();
-      await sleep(200);
+      await sleep(150);
     }
   } finally {
     chromeProc.kill();

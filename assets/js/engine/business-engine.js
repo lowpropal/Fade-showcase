@@ -13,10 +13,6 @@
     return new Date(isoStr + 'T00:00:00');
   }
 
-  function formatIso(dt) {
-    return dt.toISOString().slice(0, 10);
-  }
-
   function pad(n) {
     return (n < 10 ? '0' : '') + n;
   }
@@ -33,7 +29,6 @@
     var paidTotal = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal != null ? inv.paidTotal : (inv.terbayar || inv.p || 0)));
     var lastPayDate = inv.last_payment_date || inv.lastPaymentDate || inv.tglBayarTerakhir || inv.lp;
 
-    // Check if payment occurred on or before asOfDate
     var paidAsOf = (lastPayDate && d(lastPayDate) <= asOfDate) ? paidTotal : (asOfDate ? paidTotal : 0);
     var sisa = Math.max(0, rev - settl - paidAsOf);
 
@@ -47,14 +42,13 @@
       bisaDitagihkan = false;
     } else if (!dueDateStr) {
       status = 'Belum Jatuh Tempo';
-      bisaDitagihkan = false; // Tanpa tanggal jatuh tempo
+      bisaDitagihkan = false;
     } else {
       var dueDate = d(dueDateStr);
       if (dueDate > asOfDate) {
         status = 'Belum Jatuh Tempo';
         bisaDitagihkan = false;
       } else {
-        // Due today or in the past
         bisaDitagihkan = true;
         hariTelat = Math.max(0, Math.round((asOfDate - dueDate) / MS_PER_DAY));
         status = hariTelat > 0 ? 'Terlambat Bayar' : 'Belum Jatuh Tempo';
@@ -73,9 +67,23 @@
     };
   }
 
-  // Period Boundaries Resolver (Calendar Year YTD)
-  function resolvePeriod(periode, mode, snapshotCutoff) {
+  // Period Boundaries Resolver (Bulanan, YTD, or Custom Date Range)
+  function resolvePeriod(periode, mode, snapshotCutoff, startDate, endDate) {
     snapshotCutoff = snapshotCutoff || '2026-11-22';
+
+    if (mode === 'custom' && startDate && endDate) {
+      var dari = startDate <= endDate ? startDate : endDate;
+      var sampai = startDate <= endDate ? endDate : startDate;
+      var effectiveAsOf = sampai > snapshotCutoff ? snapshotCutoff : sampai;
+      return {
+        mode: 'custom',
+        dari: dari,
+        sampai: sampai,
+        asOf: effectiveAsOf,
+        label: dari + ' s/d ' + sampai
+      };
+    }
+
     if (mode === 'ytd') {
       var yr = periode ? periode.slice(0, 4) : snapshotCutoff.slice(0, 4);
       return {
@@ -86,19 +94,18 @@
         label: '1 Januari ' + yr + ' sampai ' + snapshotCutoff
       };
     } else {
-      // Monthly mode: YYYY-MM
       var p = periode || snapshotCutoff.slice(0, 7);
       var y = +p.slice(0, 4), m = +p.slice(5, 7);
       var endDay = lastDayOfMonth(y, m);
       var monthEndIso = y + '-' + pad(m) + '-' + pad(endDay);
-      var effectiveAsOf = monthEndIso > snapshotCutoff ? snapshotCutoff : monthEndIso;
+      var effectiveMonthAsOf = monthEndIso > snapshotCutoff ? snapshotCutoff : monthEndIso;
       return {
         mode: 'bulan',
         periode: p,
         dari: y + '-' + pad(m) + '-01',
         sampai: monthEndIso,
-        asOf: effectiveAsOf,
-        label: 'Bulan ' + p + ' (As of ' + effectiveAsOf + ')'
+        asOf: effectiveMonthAsOf,
+        label: 'Bulan ' + p + ' (As of ' + effectiveMonthAsOf + ')'
       };
     }
   }
@@ -106,13 +113,11 @@
   // Filter dataset by role scope
   function filterByScope(invoices, role, userSalesName, selectedSales) {
     if (role === 'sales') {
-      // Strict own-data scope
       return invoices.filter(function (i) {
         var sName = i.sales_name || i.salesName || i.sales || i.s;
         return sName === userSalesName;
       });
     }
-    // Admin scope
     if (!selectedSales || selectedSales === 'all') {
       return invoices;
     }
@@ -132,10 +137,9 @@
     var periode = options.periode || '2026-11';
     var snapshot = options.snapshot || '2026-11-22';
 
-    var pContext = resolvePeriod(periode, mode, snapshot);
+    var pContext = resolvePeriod(periode, mode, snapshot, options.startDate, options.endDate);
     var scopedInvoices = filterByScope(invoices, role, userSales, selectedSales);
 
-    // In-range invoices for Revenue & QTY (filtered by invoice_date)
     var inRangeInvoices = scopedInvoices.filter(function (i) {
       var dStr = i.invoice_date || i.date || i.tanggal || i.d;
       return dStr >= pContext.dari && dStr <= pContext.sampai;
@@ -175,7 +179,6 @@
 
     scopedInvoices.forEach(function (i) {
       var invDate = i.invoice_date || i.date || i.tanggal || i.d;
-      // An invoice is considered for outstanding if it was issued on or before asOf date
       if (invDate <= pContext.asOf) {
         var st = evaluateInvoiceState(i, pContext.asOf);
         if (st.sisa > 0) {
@@ -203,7 +206,6 @@
         if (activeSalesKey) {
           targetValue = Number(targets[activeSalesKey + '|' + periode] || 0);
         } else {
-          // Sum for all sales in month
           for (var k in targets) {
             if (k.endsWith('|' + periode)) {
               targetValue += Number(targets[k] || 0);
@@ -211,12 +213,13 @@
           }
         }
       } else {
-        // YTD target: sum all months within YTD
+        var startMonth = pContext.dari.slice(0, 7);
+        var endMonth = pContext.sampai.slice(0, 7);
         for (var tk in targets) {
           var parts = tk.split('|');
           var s = parts[0], m = parts[1];
           if (!activeSalesKey || s === activeSalesKey) {
-            if (m >= pContext.dari.slice(0, 7) && m <= pContext.sampai.slice(0, 7)) {
+            if (m >= startMonth && m <= endMonth) {
               targetValue += Number(targets[tk] || 0);
             }
           }
@@ -230,8 +233,8 @@
       role: role,
       salesScope: activeSalesKey || 'all',
       period: pContext,
-      totalQty: totalQty,                       // Unit fisik produk dlm pcs
-      totalDataTerinput: inRangeInvoices.length, // Jumlah record invoice aktif
+      totalQty: totalQty,
+      totalDataTerinput: inRangeInvoices.length,
       totalInvoicesInScope: scopedInvoices.length,
       revenue: totalRevenue,
       penyelesaianLain: totalSettlement,
@@ -250,13 +253,12 @@
   // Cross-Sales Comparison (Admin Only)
   function calculateComparison(invoices, targets, options) {
     options = options || {};
-    var pContext = resolvePeriod(options.periode, options.mode, options.snapshot);
-    var metric = options.metric || 'qty'; // 'qty', 'revenue', 'pembayaran', 'outstanding'
+    var pContext = resolvePeriod(options.periode, options.mode, options.snapshot, options.startDate, options.endDate);
+    var metric = options.metric || 'qty';
 
-    // Group invoices by sales
     var salesMap = {};
     invoices.forEach(function (i) {
-      var sName = i.sales_name || i.sales || i.s || 'Unassigned';
+      var sName = i.sales_name || i.salesName || i.sales || i.s || 'Unassigned';
       if (!salesMap[sName]) {
         salesMap[sName] = [];
       }
@@ -271,7 +273,9 @@
         userSales: sName,
         mode: options.mode,
         periode: options.periode,
-        snapshot: options.snapshot
+        snapshot: options.snapshot,
+        startDate: options.startDate,
+        endDate: options.endDate
       });
 
       var val = 0;
@@ -293,7 +297,6 @@
       });
     }
 
-    // Sort descending by selected metric
     rows.sort(function (a, b) {
       return b.value - a.value;
     });
@@ -303,12 +306,11 @@
     return {
       metric: metric,
       period: pContext,
-      maxValue: maxValue,
+      maxValue: maxValue || 1,
       rows: rows
     };
   }
 
-  // Monthly QTY Bars Generator
   function calculateMonthlyQtyBars(invoices, options) {
     options = options || {};
     var scoped = filterByScope(invoices, options.role, options.userSales, options.selectedSales);

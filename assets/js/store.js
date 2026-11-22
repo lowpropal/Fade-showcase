@@ -49,6 +49,9 @@
           timestamp: '2026-11-22T08:00:00Z',
           filename: '01_Master_Import_Candidate.xlsx',
           rowsIngested: seed.invoices.length,
+          validCount: seed.invoices.length,
+          invalidCount: 0,
+          uploadedBy: 'Raka Pratama (Admin)',
           status: 'Success',
           notes: 'Initial synthetic showcase seed'
         }
@@ -78,10 +81,103 @@
     }
   }
 
+  function normalizeInvoiceRecord(data) {
+    var qty = Math.max(1, Number(data.qty || 1));
+    var unitPrice = Math.max(0, Number(data.unitPrice != null ? data.unitPrice : (data.unit_price_idr || 0)));
+    var invoiceTotal = data.invoiceTotal != null ? Number(data.invoiceTotal) : (qty * unitPrice);
+    var otherSettlement = Math.max(0, Number(data.otherSettlement != null ? data.otherSettlement : (data.other_settlement_idr || 0)));
+    var paidTotal = Math.max(0, Math.min(invoiceTotal - otherSettlement, Number(data.paidTotal != null ? data.paidTotal : (data.paid_total_idr || 0))));
+    var outstanding = Math.max(0, invoiceTotal - otherSettlement - paidTotal);
+    var status = outstanding <= 0 ? 'PAID' : (paidTotal > 0 ? 'PARTIAL' : 'UNPAID');
+
+    return {
+      id: data.id || data.invoice_id || generateNextInvoiceId(),
+      date: data.date || data.invoice_date || '2026-11-22',
+      storeId: data.storeId || data.store_id || 'ST-CUSTOM',
+      storeName: (data.storeName || data.store_name || '').trim(),
+      salesId: data.salesId || data.sales_id || 'SYN-CUSTOM',
+      salesName: (data.salesName || data.sales_name || '').trim(),
+      productName: (data.productName || data.product_name || 'FADE Plus Pod 2ml').trim(),
+      qty: qty,
+      unitPrice: unitPrice,
+      invoiceTotal: invoiceTotal,
+      dueDate: data.dueDate || data.due_date || null,
+      paidTotal: paidTotal,
+      otherSettlement: otherSettlement,
+      outstanding: outstanding,
+      lastPaymentDate: paidTotal > 0 ? (data.lastPaymentDate || data.last_payment_date || data.date || '2026-11-22') : null,
+      status: status
+    };
+  }
+
+  function generateNextInvoiceId() {
+    var list = getInvoices();
+    var maxNum = 210;
+    list.forEach(function (inv) {
+      var id = String(inv.id || inv.invoice_id || '');
+      var m = id.match(/(\d+)$/);
+      if (m) {
+        var n = parseInt(m[1], 10);
+        if (n > maxNum) maxNum = n;
+      }
+    });
+    var next = maxNum + 1;
+    return 'QA26-' + String(next).padStart(4, '0');
+  }
+
+  function addInvoice(data) {
+    var list = getInvoices();
+    var rec = normalizeInvoiceRecord(data);
+    // Ensure unique ID
+    var exists = list.some(function (i) { return (i.id || i.invoice_id) === rec.id; });
+    if (exists) {
+      rec.id = generateNextInvoiceId();
+    }
+    list.unshift(rec);
+    saveInvoices(list);
+    return rec;
+  }
+
+  function updateInvoice(id, updates) {
+    var list = getInvoices();
+    var idx = list.findIndex(function (i) { return (i.id || i.invoice_id) === id; });
+    if (idx === -1) return null;
+    var merged = Object.assign({}, list[idx], updates, { id: id });
+    var updated = normalizeInvoiceRecord(merged);
+    list[idx] = updated;
+    saveInvoices(list);
+    return updated;
+  }
+
+  function deleteInvoice(id) {
+    var list = getInvoices();
+    var filtered = list.filter(function (i) { return (i.id || i.invoice_id) !== id; });
+    if (filtered.length === list.length) return false;
+    saveInvoices(filtered);
+    return true;
+  }
+
+  function recordPayment(id, amount, paymentDate) {
+    var list = getInvoices();
+    var idx = list.findIndex(function (i) { return (i.id || i.invoice_id) === id; });
+    if (idx === -1) return null;
+    var inv = list[idx];
+    var currentPaid = Number(inv.paidTotal != null ? inv.paidTotal : (inv.paid_total_idr || 0));
+    var addAmt = Math.max(0, Number(amount || 0));
+    var updated = normalizeInvoiceRecord(Object.assign({}, inv, {
+      paidTotal: currentPaid + addAmt,
+      lastPaymentDate: paymentDate || '2026-11-22'
+    }));
+    list[idx] = updated;
+    saveInvoices(list);
+    return updated;
+  }
+
   function getTargets() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.TARGETS);
-      return raw ? JSON.parse(raw) : getSeed().targets;
+      var parsed = raw ? JSON.parse(raw) : {};
+      return Object.assign({}, getSeed().targets, parsed);
     } catch (e) {
       return getSeed().targets;
     }
@@ -94,6 +190,32 @@
     } catch (e) {
       return getSeed().sales;
     }
+  }
+
+  function getUniqueSalesNames() {
+    var set = new Set();
+    getInvoices().forEach(function (i) {
+      var s = i.salesName || i.sales_name;
+      if (s) set.add(s);
+    });
+    if (set.size === 0) {
+      getSalesList().forEach(function (s) {
+        if (s.name) set.add(s.name);
+      });
+    }
+    return Array.from(set).sort();
+  }
+
+  function getUniqueStoreNames() {
+    var set = new Set();
+    getStoresList().forEach(function (st) {
+      if (st.name) set.add(st.name);
+    });
+    getInvoices().forEach(function (i) {
+      var st = i.storeName || i.store_name;
+      if (st) set.add(st);
+    });
+    return Array.from(set).sort();
   }
 
   function getStoresList() {
@@ -110,7 +232,6 @@
       var raw = localStorage.getItem(STORAGE_KEYS.SESSION);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    // Return null when unauthenticated to enforce login boundary
     return null;
   }
 
@@ -167,7 +288,6 @@
     } catch (e) {}
   }
 
-  // Initialize store immediately
   init();
 
   var Store = {
@@ -175,8 +295,15 @@
     resetToDefault: resetToDefault,
     getInvoices: getInvoices,
     saveInvoices: saveInvoices,
+    addInvoice: addInvoice,
+    updateInvoice: updateInvoice,
+    deleteInvoice: deleteInvoice,
+    recordPayment: recordPayment,
+    generateNextInvoiceId: generateNextInvoiceId,
     getTargets: getTargets,
     getSalesList: getSalesList,
+    getUniqueSalesNames: getUniqueSalesNames,
+    getUniqueStoreNames: getUniqueStoreNames,
     getStoresList: getStoresList,
     getActiveSession: getActiveSession,
     setActiveSession: setActiveSession,

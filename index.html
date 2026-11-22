@@ -3,56 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>FADE Pods — Unified Login Page</title>
+  <title>FADE Pods · Masuk Portal</title>
 
-  <!-- Plus Jakarta Sans Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Phosphor Icons & Material Symbols CDN -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
           colors: {
-            canvas: '#0D0D0E',
-            sidebar: '#131314',
+            canvas: 'var(--bg-canvas)',
+            sidebar: 'var(--bg-sidebar)',
             surface: {
-              DEFAULT: '#19191B',
-              1: '#19191B',
-              2: '#202022',
-              hover: '#29292C'
+              DEFAULT: 'var(--bg-surface-1)',
+              1: 'var(--bg-surface-1)',
+              2: 'var(--bg-surface-2)',
+              hover: 'var(--bg-surface-hover)'
             },
             border: {
-              DEFAULT: '#363639',
-              subtle: '#2B2B2E',
-              strong: '#55555A'
+              DEFAULT: 'var(--border-default)',
+              subtle: 'var(--border-subtle)',
+              strong: 'var(--border-strong)'
             },
             accent: {
-              DEFAULT: '#F28C45',
-              orange: '#F28C45',
-              hover: '#FF9E5C',
-              wash: '#30231B'
+              DEFAULT: 'var(--color-accent)',
+              orange: 'var(--color-accent)',
+              hover: 'var(--color-accent-hover)',
+              wash: 'var(--color-accent-wash)'
             },
             text: {
-              primary: '#F5F5F3',
-              secondary: '#B8B8BB',
-              muted: '#8F8F93'
+              primary: 'var(--text-primary)',
+              secondary: 'var(--text-secondary)',
+              muted: 'var(--text-muted)'
             },
             semantic: {
-              danger: '#F07878',
-              warning: '#F2BD4B',
-              success: '#63C995'
+              danger: 'var(--status-danger)',
+              warning: 'var(--status-warning)',
+              success: 'var(--status-success)'
             }
           }
         }
@@ -61,118 +55,82 @@
   </script>
   <link rel="stylesheet" href="assets/css/tokens.css">
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    body {
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    }
-    input:focus {
-      outline: none;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    .animate-spin-custom {
-      animation: spin 0.8s linear infinite;
-    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    input:focus { outline: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .animate-spin-custom { animation: spin 0.8s linear infinite; }
   </style>
 </head>
 <body class="bg-canvas text-text-primary min-h-screen max-w-[100vw] flex flex-col justify-between selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-200 relative">
 
-  <!-- Floating Minimalist Theme Switcher (Top Right Corner) -->
-  <button id="themeToggleBtn" type="button" class="fixed top-4 right-4 z-30 w-8 h-8 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors shadow-sm" title="Ubah Tema" aria-label="Ubah Tema">
-    <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
-  </button>
+  <!-- Top Theme Switcher -->
+  <div class="fixed top-4 right-4 z-30">
+    <button id="themeToggleBtn" type="button" class="w-9 h-9 rounded-lg border border-border-subtle bg-surface-2 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors shadow-sm" title="Ubah Tema Gelap / Terang" aria-label="Ubah Tema">
+      <span id="themeToggleIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
+    </button>
+  </div>
 
-  <!-- ==================================================================== -->
-  <!-- MAIN AUTHENTICATION CONTAINER (Center Form with Radial Glow)         -->
-  <!-- ==================================================================== -->
+  <!-- Main Centered Login Card -->
   <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-full max-w-full overflow-hidden relative z-10 my-auto">
-    
-    <!-- Subtle Ambient Radial Glow -->
-    <div class="hidden sm:block absolute pointer-events-none w-[420px] h-[420px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
+    <div class="hidden dark:sm:block absolute pointer-events-none w-[440px] h-[440px] -top-10 left-1/2 -translate-x-1/2 bg-radial from-[#25252b]/40 via-[#151518]/10 to-transparent blur-3xl -z-10 rounded-full opacity-70"></div>
 
-    <div class="w-full max-w-[380px] mx-auto flex flex-col items-center text-center">
+    <div class="w-full max-w-[390px] mx-auto flex flex-col items-center text-center">
+      <!-- Brand Header -->
+      <div class="flex items-center gap-2.5 mb-5">
+        <span class="text-2xl font-bold tracking-tight text-text-primary">FADE</span>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-semibold">v0.2</span>
+      </div>
 
-      <!-- Headline & Subtitle (Clean Title without center icon) -->
-      <h1 class="text-[24px] sm:text-[26px] font-semibold tracking-tight text-text-primary mb-1">
-        Selamat datang kembali!
+      <h1 class="text-[24px] sm:text-[26px] font-semibold tracking-tight text-text-primary mb-1.5">
+        Masuk ke FADE Pods
       </h1>
       <p class="text-[13px] text-text-muted mb-6 leading-normal font-normal">
-        Pertama kali di sini? <a class="text-text-primary hover:text-accent font-medium hover:underline transition-colors" href="javascript:void(0)" onclick="alert('Fitur pendaftaran akun baru akan tersedia pada rilis produksi.')">Daftar akun baru</a>
+        Sistem otomatis mengarahkan Anda ke <strong class="text-text-secondary font-medium">Panel Admin</strong> atau <strong class="text-text-secondary font-medium">Panel Sales</strong> sesuai akun yang masuk.
       </p>
 
-      <!-- Alert Notification: Invalid Credentials -->
-      <div id="alert-invalid" class="hidden w-full mb-4 p-3 rounded-xl bg-[#271717] border border-semantic-danger/40 text-semantic-danger flex items-start gap-2.5 text-xs text-left" role="alert">
+      <!-- Error Alert -->
+      <div id="alert-invalid" class="hidden w-full mb-4 p-3 rounded-xl bg-semantic-danger/10 border border-semantic-danger/40 text-semantic-danger flex items-start gap-2.5 text-xs text-left" role="alert">
         <i class="ph ph-warning-circle text-base flex-shrink-0 mt-0.5"></i>
         <div class="flex-1">
           <span class="font-semibold block">Gagal masuk</span>
-          <span class="text-text-secondary text-[11px]">Username atau password tidak sesuai. Coba akun demo di bawah.</span>
+          <span id="alert-invalid-msg" class="text-text-secondary text-[11px]">Username atau password tidak sesuai.</span>
         </div>
         <button type="button" onclick="dismissAlert()" class="text-text-muted hover:text-text-primary p-0.5" aria-label="Tutup">
           <i class="ph ph-x text-sm"></i>
         </button>
       </div>
 
-      <!-- Alert Notification: Success -->
-      <div id="alert-success" class="hidden w-full mb-4 p-3 rounded-xl bg-[#14261B] border border-semantic-success/40 text-semantic-success flex items-start gap-2.5 text-xs text-left" role="status">
+      <!-- Success Alert -->
+      <div id="alert-success" class="hidden w-full mb-4 p-3 rounded-xl bg-semantic-success/10 border border-semantic-success/40 text-semantic-success flex items-start gap-2.5 text-xs text-left" role="status">
         <i class="ph ph-check-circle text-base flex-shrink-0 mt-0.5"></i>
         <div class="flex-1">
-          <span id="success-role-title" class="font-semibold block">Login berhasil!</span>
-          <span id="success-role-desc" class="text-text-secondary text-[11px]">Mengarahkan ke dashboard FADE...</span>
+          <span class="font-semibold block">Berhasil masuk!</span>
+          <span id="success-role-desc" class="text-text-secondary text-[11px]">Mengarahkan ke workspace...</span>
         </div>
       </div>
 
-      <!-- AUTHENTICATION FORM -->
-      <form id="login-form" class="w-full space-y-3.5" novalidate onsubmit="handleLoginSubmit(event)">
-        
-        <!-- Username / Email Field -->
+      <!-- Unified Login Form -->
+      <form id="login-form" class="w-full space-y-3.5" novalidate onsubmit="handleUnifiedLogin(event)">
         <div class="text-left space-y-1">
           <label for="username" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider px-0.5">Username atau Email</label>
           <div id="wrap-username" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
-            <input 
-              id="username" 
-              name="username" 
-              type="text" 
-              placeholder="Username atau email" 
-              autocomplete="username" 
-              spellcheck="false" 
-              oninput="handleInputChange('username')"
-              class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal"
-            >
+            <input id="username" name="username" type="text" placeholder="admin atau nama sales (aruna, bima, ...)" autocomplete="username" spellcheck="false" oninput="handleInputChange('username')" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted px-3.5 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
           </div>
           <p id="error-username" class="hidden text-[11px] text-semantic-danger flex items-center gap-1 mt-1 font-medium">
             <i class="ph ph-warning-circle text-xs"></i>
-            <span>Username atau email wajib diisi.</span>
+            <span>Username wajib diisi.</span>
           </p>
         </div>
 
-        <!-- Password Field with Visibility Toggle -->
         <div class="text-left space-y-1">
           <div class="flex items-center justify-between px-0.5">
             <label for="password" class="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">Kata Sandi</label>
-            <a href="javascript:void(0)" onclick="alert('Untuk demonstrasi showcase, gunakan kredensial demo di bawah.')" class="text-[11px] text-text-muted hover:text-text-primary transition-colors">Lupa sandi?</a>
+            <a href="javascript:void(0)" onclick="alert('Gunakan akun demo di bawah: Admin (admin / admin123) atau Sales (aruna, bima, citra, damar, elang, fira / sales123).')" class="text-[11px] text-text-muted hover:text-text-primary transition-colors">Lupa sandi?</a>
           </div>
           <div id="wrap-password" class="relative rounded-xl border border-border-subtle bg-surface-1 hover:border-border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all duration-150">
-            <input 
-              id="password" 
-              name="password" 
-              type="password" 
-              placeholder="Password" 
-              autocomplete="current-password" 
-              oninput="handleInputChange('password')"
-              class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted pl-3.5 pr-10 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal"
-            >
-            <button 
-              id="btn-toggle-password" 
-              type="button" 
-              onclick="togglePasswordVisibility()" 
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-primary transition-colors focus:outline-none" 
-              aria-label="Tampilkan sandi"
-            >
+            <input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" oninput="handleInputChange('password')" class="w-full bg-transparent text-[13px] text-text-primary placeholder:text-text-muted pl-3.5 pr-10 py-3 rounded-xl border-none focus:outline-none focus:ring-0 leading-normal">
+            <button id="btn-toggle-password" type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-primary transition-colors focus:outline-none" aria-label="Tampilkan sandi">
               <i id="icon-toggle-password" class="ph ph-eye text-base"></i>
             </button>
           </div>
@@ -182,18 +140,13 @@
           </p>
         </div>
 
-        <!-- Submit Button (High Contrast Solid) -->
         <div class="pt-1">
-          <button 
-            id="btn-submit" 
-            type="submit" 
-            class="w-full h-11 bg-text-primary hover:opacity-95 active:scale-[0.99] text-canvas font-semibold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-canvas"
-          >
+          <button id="btn-submit" type="submit" class="w-full h-11 bg-[var(--action-bg)] hover:opacity-95 active:scale-[0.99] text-[var(--action-fg)] font-semibold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
             <span id="btn-text" class="font-semibold inline-flex items-center gap-1.5">
-              Masuk ke Dashboard
+              Masuk
               <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
             </span>
-            <span id="btn-spinner" class="hidden flex items-center gap-2 text-canvas">
+            <span id="btn-spinner" class="hidden flex items-center gap-2 text-[var(--action-fg)]">
               <svg class="animate-spin-custom h-4 w-4" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -202,84 +155,47 @@
             </span>
           </button>
         </div>
-
-        <!-- Secondary Alternative: Magic link -->
-        <div class="pt-1 pb-0.5">
-          <button type="button" onclick="fillCredentials('sales', 'sales123')" class="text-xs text-text-muted hover:text-text-primary transition-colors font-normal">
-            Masuk menggunakan magic link
-          </button>
-        </div>
-
-        <!-- Subtle Divider -->
-        <div class="relative flex items-center justify-center py-1">
-          <div class="w-full border-t border-border-subtle"></div>
-          <span class="absolute bg-canvas px-2 text-[10px] text-text-muted uppercase tracking-wider font-medium">atau</span>
-        </div>
-
-        <!-- SSO Button -->
-        <div>
-          <button type="button" onclick="fillCredentials('admin', 'admin123')" class="w-full h-10 bg-surface-1 hover:bg-surface-2 active:bg-surface-hover border border-border-subtle text-text-secondary hover:text-text-primary font-medium text-[12px] rounded-xl flex items-center justify-center gap-2 transition-all duration-150">
-            <span class="material-symbols-outlined text-[16px] text-text-muted">key</span>
-            <span>Single sign-on (SSO Enterprise)</span>
-          </button>
-        </div>
-
       </form>
 
-      <!-- ============================================================== -->
-      <!-- DEDICATED SHOWCASE DEMO ACCOUNTS SECTION                        -->
-      <!-- ============================================================== -->
-      <div class="w-full mt-5 pt-4 border-t border-border-subtle flex flex-col items-center gap-2.5">
-        <div class="flex items-center gap-1.5 text-[10px] text-text-muted tracking-wide uppercase font-semibold">
+      <!-- Quick Demo Credentials (Single Unified Login, Role-Based Routing) -->
+      <div class="w-full mt-5 pt-4 border-t border-border-subtle flex flex-col gap-2.5 text-left">
+        <div class="flex items-center justify-center gap-1.5 text-[10px] text-text-muted tracking-wide uppercase font-semibold">
           <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
-          <span>Akun Uji Demo:</span>
-          <span class="text-[9px] text-text-muted/80 lowercase font-normal">(Sekali klik untuk isi)</span>
+          <span>Isi Cepat Akun Demo Showcase</span>
         </div>
-        <div class="grid grid-cols-2 gap-2 w-full">
-          <!-- Admin Demo Card -->
-          <button 
-            type="button" 
-            onclick="fillCredentials('admin', 'admin123')" 
-            class="demo-chip group flex flex-col p-2.5 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/60 text-left transition-all shadow-sm"
-          >
-            <div class="flex items-center justify-between text-[11px] mb-0.5">
-              <span class="font-semibold text-text-primary">Admin</span>
-              <span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary group-hover:bg-accent group-hover:text-white transition-colors">Isi</span>
-            </div>
-            <div class="text-[10px] text-text-muted truncate">admin / admin123</div>
-          </button>
 
-          <!-- Sales Demo Card -->
-          <button 
-            type="button" 
-            onclick="fillCredentials('sales', 'sales123')" 
-            class="demo-chip group flex flex-col p-2.5 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/60 text-left transition-all shadow-sm"
-          >
-            <div class="flex items-center justify-between text-[11px] mb-0.5">
-              <span class="font-semibold text-text-primary">Sales</span>
-              <span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary group-hover:bg-accent group-hover:text-white transition-colors">Isi</span>
+        <!-- Admin Quick Fill -->
+        <button type="button" onclick="fillAdmin()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-surface-1 hover:bg-surface-hover border border-border-subtle transition-colors">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[18px] text-accent">admin_panel_settings</span>
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold text-text-primary">Admin (Raka Pratama)</span>
+              <span class="text-[10px] text-text-muted font-mono">admin / admin123 · Akses Penuh</span>
             </div>
-            <div class="text-[10px] text-text-muted truncate">sales / sales123</div>
+          </div>
+          <span class="text-[11px] font-semibold text-accent">Isi</span>
+        </button>
+
+        <!-- 6 Sales Reps Quick Fill -->
+        <div class="w-full flex items-center gap-2 p-2.5 rounded-xl bg-surface-1 border border-border-subtle">
+          <select id="demoSalesSelect" onchange="fillSelectedSales()" aria-label="Pilih Akun Sales Demo" class="flex-1 h-8 bg-surface-2 border border-border-subtle rounded-lg px-2.5 text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+            <option value="aruna">Aruna Pratama</option>
+          </select>
+          <button type="button" onclick="fillSelectedSales()" class="h-8 px-3 rounded-lg bg-surface-2 hover:bg-accent hover:text-white border border-border-subtle text-xs font-semibold text-text-primary transition-colors shrink-0">
+            Isi Sales
           </button>
         </div>
       </div>
 
-      <!-- Legal & Showcase Disclaimer -->
-      <div class="mt-6 text-center text-[11px] text-text-muted max-w-xs leading-relaxed">
-        <p>Dengan melanjutkan, Anda menyetujui <a class="underline text-text-secondary hover:text-text-primary" href="javascript:void(0)">Ketentuan Layanan</a> &amp; <a class="underline text-text-secondary hover:text-text-primary" href="javascript:void(0)">Kebijakan Privasi</a>.</p>
-        <p class="text-[10px] text-text-muted/70 mt-1.5">FADE Pods · Internal Sales Monitoring Showcase v0.2</p>
+      <div class="mt-6 text-center text-[10px] text-text-muted/70">
+        FADE Pods Sales Monitoring &amp; Invoice Tracking Portal · v0.2
       </div>
-
     </div>
   </main>
 
-  <!-- ==================================================================== -->
-  <!-- 3. CLIENT LOGIC & AUTHENTICATION HANDLERS                            -->
-  <!-- ==================================================================== -->
   <script src="assets/js/data/synthetic-seed.js"></script>
   <script src="assets/js/store.js"></script>
   <script>
-    // Elements
     var usernameInput = document.getElementById('username');
     var passwordInput = document.getElementById('password');
     var wrapUsername = document.getElementById('wrap-username');
@@ -287,6 +203,7 @@
     var errorUsername = document.getElementById('error-username');
     var errorPassword = document.getElementById('error-password');
     var alertInvalid = document.getElementById('alert-invalid');
+    var alertInvalidMsg = document.getElementById('alert-invalid-msg');
     var alertSuccess = document.getElementById('alert-success');
     var btnSubmit = document.getElementById('btn-submit');
     var btnText = document.getElementById('btn-text');
@@ -295,10 +212,8 @@
     var themeToggleBtn = document.getElementById('themeToggleBtn');
     var themeToggleIcon = document.getElementById('themeToggleIcon');
 
-    // Initialize Store
     FADE_STORE.init();
 
-    // Theme Management
     function syncThemeUI(theme) {
       if (theme === 'light') {
         document.documentElement.classList.add('light');
@@ -313,28 +228,23 @@
     syncThemeUI(FADE_STORE.getTheme());
 
     themeToggleBtn.addEventListener('click', function () {
-      var current = FADE_STORE.getTheme();
-      var next = current === 'dark' ? 'light' : 'dark';
+      var next = FADE_STORE.getTheme() === 'dark' ? 'light' : 'dark';
       FADE_STORE.setTheme(next);
       syncThemeUI(next);
     });
 
-    // 1. Password Visibility Toggle
     function togglePasswordVisibility() {
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         iconToggle.classList.remove('ph-eye');
-        iconToggle.classList.add('ph-eye-slash');
-        iconToggle.classList.add('text-accent');
+        iconToggle.classList.add('ph-eye-slash', 'text-accent');
       } else {
         passwordInput.type = 'password';
-        iconToggle.classList.remove('ph-eye-slash');
-        iconToggle.classList.remove('text-accent');
+        iconToggle.classList.remove('ph-eye-slash', 'text-accent');
         iconToggle.classList.add('ph-eye');
       }
     }
 
-    // 2. Clear Validation Errors on Input
     function handleInputChange(fieldName) {
       if (fieldName === 'username') {
         wrapUsername.classList.remove('border-semantic-danger');
@@ -352,25 +262,49 @@
       alertInvalid.classList.add('hidden');
     }
 
-    // 3. Demo Autofill Handler
-    function fillCredentials(user, pass) {
-      usernameInput.value = user;
-      passwordInput.value = pass;
-      handleInputChange('username');
-      handleInputChange('password');
-      usernameInput.focus();
+    function populateDemoSalesSelect() {
+      var sel = document.getElementById('demoSalesSelect');
+      if (!sel || !window.FADE_STORE) return;
+      var names = FADE_STORE.getUniqueSalesNames();
+      if (!names || names.length === 0) return;
+      sel.innerHTML = '';
+      names.forEach(function (fullName) {
+        var firstName = fullName.split(' ')[0].toLowerCase();
+        var opt = document.createElement('option');
+        opt.value = firstName;
+        opt.textContent = 'Sales: ' + fullName;
+        sel.appendChild(opt);
+      });
+    }
+    populateDemoSalesSelect();
 
-      // Subtle feedback ring
+    function flashInputs() {
       wrapUsername.classList.add('border-accent');
       wrapPassword.classList.add('border-accent');
       setTimeout(function () {
         wrapUsername.classList.remove('border-accent');
         wrapPassword.classList.remove('border-accent');
-      }, 400);
+      }, 350);
     }
 
-    // 4. Form Submission & Verified Authentication
-    function handleLoginSubmit(e) {
+    function fillAdmin() {
+      usernameInput.value = 'admin';
+      passwordInput.value = 'admin123';
+      handleInputChange('username');
+      handleInputChange('password');
+      flashInputs();
+    }
+
+    function fillSelectedSales() {
+      var sel = document.getElementById('demoSalesSelect');
+      usernameInput.value = sel ? sel.value : 'aruna';
+      passwordInput.value = 'sales123';
+      handleInputChange('username');
+      handleInputChange('password');
+      flashInputs();
+    }
+
+    function handleUnifiedLogin(e) {
       e.preventDefault();
       dismissAlert();
       alertSuccess.classList.add('hidden');
@@ -380,21 +314,17 @@
       var hasError = false;
 
       if (!userVal) {
-        wrapUsername.classList.remove('border-border-subtle');
-        wrapUsername.classList.add('border-semantic-danger');
+        wrapUsername.classList.replace('border-border-subtle', 'border-semantic-danger');
         errorUsername.classList.remove('hidden');
         hasError = true;
       }
       if (!passVal) {
-        wrapPassword.classList.remove('border-border-subtle');
-        wrapPassword.classList.add('border-semantic-danger');
+        wrapPassword.classList.replace('border-border-subtle', 'border-semantic-danger');
         errorPassword.classList.remove('hidden');
         hasError = true;
       }
-
       if (hasError) return;
 
-      // Loading state
       btnSubmit.disabled = true;
       btnText.classList.add('hidden');
       btnSpinner.classList.remove('hidden');
@@ -406,58 +336,60 @@
 
         var lowerUser = userVal.toLowerCase();
 
-        // 1. Admin Verification
+        // 1. Admin Account -> strictly routes to admin.html
         if ((lowerUser === 'admin' || lowerUser === 'admin@fade.id') && passVal === 'admin123') {
           FADE_STORE.setActiveSession({
             role: 'admin',
             name: 'Raka Pratama',
-            title: 'Head of Operations'
+            title: 'Head of Operations',
+            salesName: null
           });
-          document.getElementById('success-role-title').textContent = 'Login Admin Berhasil!';
-          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Admin Dashboard...';
+          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Admin (Raka Pratama)...';
           alertSuccess.classList.remove('hidden');
           setTimeout(function () {
-            window.location.href = 'app.html#dashboard';
-          }, 600);
+            window.location.href = 'admin.html#dashboard';
+          }, 450);
           return;
         }
 
-        // 2. Sales Verification
+        // 2. Sales Accounts (All 6 reps) -> strictly routes to sales.html
+        var allSalesNames = window.FADE_STORE ? FADE_STORE.getUniqueSalesNames() : [];
         var salesDirectory = {
-          'sales': 'Aruna Pratama',
-          'sales@fade.id': 'Aruna Pratama',
-          'aruna': 'Aruna Pratama',
-          'aruna@fade.id': 'Aruna Pratama',
-          'bayu': 'Bayu Wicaksono',
-          'citra': 'Citra Dewi',
-          'dimas': 'Dimas Setiawan',
-          'eka': 'Eka Kurniawan',
-          'fajar': 'Fajar Nugroho'
+          'sales': allSalesNames[0] || 'Aruna Pratama',
+          'sales@fade.id': allSalesNames[0] || 'Aruna Pratama'
         };
+        allSalesNames.forEach(function (fullName) {
+          var lowerFull = fullName.toLowerCase();
+          var first = lowerFull.split(' ')[0];
+          salesDirectory[lowerFull] = fullName;
+          salesDirectory[first] = fullName;
+          salesDirectory[first + '@fade.id'] = fullName;
+        });
 
         if (salesDirectory[lowerUser] && passVal === 'sales123') {
           var repName = salesDirectory[lowerUser];
+          var salesObj = (FADE_STORE.getSalesList() || []).find(function (s) { return s.name === repName; });
           FADE_STORE.setActiveSession({
             role: 'sales',
             name: repName,
-            title: 'Sales Senior',
-            salesName: repName
+            title: 'Sales Representative',
+            salesName: repName,
+            salesId: salesObj ? salesObj.id : 'SYN-S01',
+            region: salesObj ? salesObj.region : 'DKI Jakarta & Banten'
           });
-          document.getElementById('success-role-title').textContent = 'Login Sales Berhasil!';
-          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Sales Dashboard (' + repName + ')...';
+          document.getElementById('success-role-desc').textContent = 'Mengarahkan ke Panel Sales (' + repName + ')...';
           alertSuccess.classList.remove('hidden');
           setTimeout(function () {
-            window.location.href = 'app.html#dashboard';
-          }, 600);
+            window.location.href = 'sales.html#dashboard';
+          }, 450);
           return;
         }
 
-        // 3. Invalid Credentials
+        alertInvalidMsg.textContent = 'Username atau kata sandi tidak sesuai. Gunakan akun demo di bawah.';
         alertInvalid.classList.remove('hidden');
         wrapUsername.classList.add('border-semantic-danger');
         wrapPassword.classList.add('border-semantic-danger');
-
-      }, 700);
+      }, 400);
     }
   </script>
 </body>

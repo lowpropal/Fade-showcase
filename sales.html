@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FADE Pods Showcase v0.2 · Panel Sales</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          colors: {
+            canvas: 'var(--bg-canvas)',
+            sidebar: 'var(--bg-sidebar)',
+            surface: { 1: 'var(--bg-surface-1)', 2: 'var(--bg-surface-2)', hover: 'var(--bg-surface-hover)' },
+            border: { subtle: 'var(--border-subtle)', default: 'var(--border-default)', strong: 'var(--border-strong)' },
+            accent: { DEFAULT: 'var(--color-accent)', hover: 'var(--color-accent-hover)', wash: 'var(--color-accent-wash)' },
+            text: { primary: 'var(--text-primary)', secondary: 'var(--text-secondary)', muted: 'var(--text-muted)' },
+            status: { success: 'var(--status-success)', warning: 'var(--status-warning)', danger: 'var(--status-danger)', neutral: 'var(--status-neutral, #71717A)' }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <style>
+    @media print {
+      aside, header, nav, #toastContainer, .no-print { display: none !important; }
+      .shell-main-content { margin-left: 0 !important; padding: 0 !important; }
+      body { background: #fff !important; color: #000 !important; }
+    }
+  </style>
+</head>
+<body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
+
+  <!-- ==================================================================== -->
+  <!-- 1. DESKTOP SIDEBAR (240px Fixed — Sales Only)                        -->
+  <!-- ==================================================================== -->
+  <aside class="shell-sidebar fixed left-0 top-0 h-full w-60 bg-sidebar border-r border-border-subtle z-40 flex flex-col justify-between">
+    <div class="flex flex-col pt-6">
+      <div class="px-6 mb-8 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle font-semibold">SALES</span>
+        </div>
+      </div>
+
+      <nav class="flex flex-col px-3 gap-1" id="desktopNavContainer">
+        <a href="#dashboard" data-route="dashboard" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
+          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
+          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">dashboard</span>
+          <span>Dashboard Bulanan</span>
+        </a>
+        <a href="#ytd" data-route="ytd" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
+          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
+          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">trending_up</span>
+          <span>Dashboard YTD</span>
+        </a>
+        <a href="#invoices" data-route="invoices" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
+          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
+          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">receipt_long</span>
+          <span>Invoice &amp; Pembayaran</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-border-subtle flex items-center justify-between gap-2">
+      <a href="#profile" id="sidebarProfileLink" class="flex items-center gap-2.5 min-w-0 text-left hover:opacity-80 transition-opacity">
+        <div class="w-8 h-8 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent font-bold text-xs">
+          <span id="sidebarAvatarInitial">S</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span id="sidebarUserName" class="text-xs font-semibold text-text-primary truncate">Sales Rep</span>
+          <span id="sidebarUserRole" class="text-[10px] text-text-muted truncate">Sales Representative</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-1 shrink-0">
+        <button id="sidebarThemeBtn" aria-label="Ganti Tema" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" type="button" title="Ubah Tema">
+          <span id="sidebarThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
+        </button>
+        <button id="sidebarLogoutBtn" aria-label="Keluar" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-status-danger hover:bg-surface-hover transition-colors" type="button" title="Keluar">
+          <span class="material-symbols-outlined text-[16px]">logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================================================================== -->
+  <!-- 2. MOBILE HEADER                                                     -->
+  <!-- ==================================================================== -->
+  <header class="shell-mobile-header fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
+    <div class="h-14 px-4 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
+        <span class="px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle text-[10px] font-semibold uppercase tracking-wider">SALES</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
+          <span id="mobileThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
+        </button>
+        <button id="mobileLogoutBtn" aria-label="Keluar" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
+          <span class="material-symbols-outlined text-[16px]">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- 3. MAIN CONTENT AREA                                                 -->
+  <!-- ==================================================================== -->
+  <div class="shell-main-content flex-1 flex flex-col min-h-screen min-w-0">
+    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-12 bg-canvas flex-1 flex flex-col gap-6">
+
+      <!-- ================================================================ -->
+      <!-- VIEW 1: DASHBOARD SALES (BULANAN & YTD)                          -->
+      <!-- ================================================================ -->
+      <section id="viewDashboard" class="flex flex-col gap-6">
+        <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 w-full min-w-0">
+          <div class="flex flex-col gap-1.5 min-w-0 w-full xl:w-auto">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">WORKSPACE / Sales Operation</span>
+            <div class="flex items-center flex-wrap gap-2.5">
+              <h1 id="pageTitle" class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Dashboard Sales</h1>
+              <span class="px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent/30 text-accent text-[10px] font-bold uppercase tracking-wider">PERSONAL VIEW</span>
+            </div>
+            <div class="flex items-center pt-0.5 max-w-full">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle max-w-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0"></span>
+                <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Data per 22/11/2026</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center flex-wrap gap-2 justify-start xl:justify-end w-full xl:w-auto">
+            <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle shrink-0" role="tablist">
+              <button id="tabModeBulanan" type="button" class="relative px-3 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+                <span>Bulanan</span>
+                <span id="tabIndicatorBulanan" class="absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
+              </button>
+              <button id="tabModeYTD" type="button" class="relative px-3 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+                <span>YTD</span>
+                <span id="tabIndicatorYTD" class="hidden absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
+              </button>
+            </div>
+
+            <div id="dateFilterWrapper" class="relative shrink-0">
+              <button id="dateFilterBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm shrink-0">
+                <span class="material-symbols-outlined text-[16px] text-accent">calendar_today</span>
+                <span id="filterDateLabel">01 Nov – 22 Nov 2026</span>
+                <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
+              </button>
+
+              <div id="dateFilterPopover" class="hidden absolute right-0 sm:left-0 xl:left-auto xl:right-0 mt-2 w-72 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
+                <div class="flex items-center justify-between border-b border-border-subtle pb-2">
+                  <span class="text-xs font-bold text-text-primary">Filter Rentang Tanggal</span>
+                  <button id="closeDatePopoverBtn" type="button" class="text-text-muted hover:text-text-primary">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                  </button>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <button type="button" data-preset="bulan" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
+                    <span>Bulan Ini (Nov 2026)</span><span class="text-[10px] text-text-muted">01–22 Nov</span>
+                  </button>
+                  <button type="button" data-preset="7d" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
+                    <span>7 Hari Terakhir</span><span class="text-[10px] text-text-muted">16–22 Nov</span>
+                  </button>
+                  <button type="button" data-preset="30d" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
+                    <span>30 Hari Terakhir</span><span class="text-[10px] text-text-muted">24 Okt–22 Nov</span>
+                  </button>
+                  <button type="button" data-preset="ytd" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
+                    <span>YTD 2026</span><span class="text-[10px] text-text-muted">01 Jan–22 Nov</span>
+                  </button>
+                </div>
+                <div class="border-t border-border-subtle pt-2.5 flex flex-col gap-2">
+                  <span class="text-[11px] font-semibold text-text-secondary">Rentang Kustom</span>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="flex flex-col gap-1">
+                      <label for="customStartDate" class="text-[10px] text-text-muted">Dari</label>
+                      <input id="customStartDate" type="date" value="2026-11-01" class="h-8 px-2 rounded-lg bg-surface-2 border border-border-default text-[11px] text-text-primary focus:outline-none focus:border-accent">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="customEndDate" class="text-[10px] text-text-muted">Sampai</label>
+                      <input id="customEndDate" type="date" value="2026-11-22" class="h-8 px-2 rounded-lg bg-surface-2 border border-border-default text-[11px] text-text-primary focus:outline-none focus:border-accent">
+                    </div>
+                  </div>
+                  <button id="applyCustomDateBtn" type="button" class="w-full h-8 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 font-semibold text-xs transition-colors">Terapkan Rentang</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle flex items-center gap-1.5 text-xs text-text-primary shadow-sm shrink-0">
+              <span class="material-symbols-outlined text-[15px] text-accent">lock</span>
+              <span id="lockedSalesBadgeName" class="font-semibold">Sales Rep</span>
+            </div>
+
+            <button type="button" onclick="openUploadDocModal()" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 text-xs font-semibold transition-colors shadow-sm shrink-0">
+              <span class="material-symbols-outlined text-[16px]">upload_file</span>
+              <span>Unggah Dokumen</span>
+            </button>
+
+            <div class="relative shrink-0">
+              <button id="exportMenuBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle hover:bg-surface-hover text-text-primary text-xs font-semibold transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[16px] text-accent">download</span>
+                <span>Ekspor</span>
+                <span class="material-symbols-outlined text-[15px] text-text-muted">expand_more</span>
+              </button>
+              <div id="exportDropdownMenu" class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-1.5 z-50 flex flex-col gap-0.5">
+                <button type="button" data-export="xls" class="export-opt-btn w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-status-success">table_view</span><span>Excel (.xls)</span></button>
+                <button type="button" data-export="csv" class="export-opt-btn w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-accent">csv</span><span>CSV (.csv)</span></button>
+                <button type="button" data-export="doc" class="export-opt-btn w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-text-secondary">description</span><span>Rekap Dokumen (.doc)</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Clickable KPI Cards (Open Full-Page Drill-down KPI Dashboard) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div data-kpi="achievement" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Achievement &amp; Target</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiAchievementVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">--%</span>
+            </div>
+            <div class="mt-3 flex flex-col gap-1.5">
+              <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
+                <div id="kpiAchievementBar" class="h-full rounded-full bg-accent transition-all duration-500" style="width: 0%;"></div>
+              </div>
+              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums">Realisasi -- pcs / Target -- pcs</span>
+            </div>
+          </div>
+
+          <div data-kpi="qty" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">QTY Penjualan</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiQtyVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- pcs</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5">
+              <span class="text-xs text-text-muted">Unit fisik produk terjual (pcs)</span>
+            </div>
+          </div>
+
+          <div data-kpi="revenue" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Revenue</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiRevenueVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5">
+              <span class="text-xs text-text-muted">Total nilai tagihan kotor terbit</span>
+            </div>
+          </div>
+
+          <div data-kpi="pembayaran" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Pembayaran Diterima</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiPembayaranVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5">
+              <span class="text-xs text-status-success tabular-nums font-medium">Uang kas masuk teratribusi tanggal bayar</span>
+            </div>
+          </div>
+
+          <div data-kpi="outstanding" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Outstanding</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiOutstandingVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
+            </div>
+            <div class="mt-3 flex items-center justify-between text-xs text-text-secondary gap-2">
+              <span id="kpiBisaDitagihSub" class="truncate">Bisa Ditagih: Rp --</span>
+              <span id="kpiBelumJatuhTempoSub" class="truncate">Tempo: Rp --</span>
+            </div>
+          </div>
+
+          <div data-kpi="invoices" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Invoice &amp; Outlet</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="kpiInvoicesVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- Invoice</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5">
+              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums">-- Toko Unik Terlayani</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-7 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-3">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <h2 id="chartTitleText" class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
+                  <span id="chartPeriodLabel" class="text-xs text-text-muted">01 – 22 Nov 2026</span>
+                </div>
+                <div class="flex items-baseline gap-2.5 mt-0.5">
+                  <span id="chartMonthlyRevenue" class="text-[24px] leading-7 font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
+                  <span id="chartTrendGrowth" class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
+                    <span class="material-symbols-outlined text-[15px]">trending_up</span>
+                    <span>Aktif (Tersinkron)</span>
+                  </span>
+                </div>
+              </div>
+              <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
+                <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
+                <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+              </div>
+            </div>
+
+            <div id="chartInteractiveContainer" class="relative w-full h-72 sm:h-80 pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan.">
+              <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 640 220">
+                <defs>
+                  <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#F28C45" stop-opacity="0.22"></stop>
+                    <stop offset="75%" stop-color="#F28C45" stop-opacity="0.04"></stop>
+                    <stop offset="100%" stop-color="#F28C45" stop-opacity="0.00"></stop>
+                  </linearGradient>
+                </defs>
+                <g id="chartGridLines"></g>
+                <g id="chartYAxisLabels"></g>
+                <path id="chartSplineArea" fill="url(#fadeChartGrad)"></path>
+                <path id="chartSplineStroke" fill="none" stroke="#F28C45" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                <g id="chartNodesGroup"></g>
+                <line id="chartGuideLine" stroke="#55555A" stroke-dasharray="3 3" stroke-width="1.25"></line>
+                <g id="chartActiveNodeGroup" class="pointer-events-none">
+                  <circle id="chartActiveNodeRing" r="5.5" fill="#19191B" stroke="#F28C45" stroke-width="2.5"></circle>
+                  <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
+                </g>
+                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(450, 6)">
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="36" rx="6" stroke="#39393D" stroke-width="1" width="148"></rect>
+                  <circle cx="14" cy="18" fill="#F28C45" r="3"></circle>
+                  <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
+                  <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="68" y="16">Rp 48,1 jt</text>
+                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="29">+1,9 jt periode ini</text>
+                </g>
+                <g id="chartXAxisLabels"></g>
+                <rect id="chartPointerOverlay" width="640" height="220" fill="transparent" class="cursor-crosshair" aria-label="Eksplorasi data grafik" style="touch-action: pan-y;"></rect>
+              </svg>
+              <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between p-5 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h2 class="text-base font-semibold text-text-primary tracking-tight">Status Pembayaran</h2>
+                <p id="chartStatusSub" class="text-xs text-text-muted mt-0.5">Distribusi status tagihan Anda</p>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4 my-auto">
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium"><span class="w-2 h-2 rounded-full bg-status-success"></span>Lunas / Pembayaran Masuk</span>
+                  <span id="chartPayLunasText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden"><div id="chartPayLunasBar" class="h-full rounded-full bg-status-success transition-all duration-500" style="width: 0%;"></div></div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium"><span class="w-2 h-2 rounded-full bg-status-warning"></span>Sebagian</span>
+                  <span id="chartPaySebagianText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden"><div id="chartPaySebagianBar" class="h-full rounded-full bg-status-warning transition-all duration-500" style="width: 0%;"></div></div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium"><span class="w-2 h-2 rounded-full bg-status-danger"></span>Terlambat (Bisa Ditagih)</span>
+                  <span id="chartPayTerlambatText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden"><div id="chartPayTerlambatBar" class="h-full rounded-full bg-status-danger transition-all duration-500" style="width: 0%;"></div></div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-2 text-text-primary font-medium"><span class="w-2 h-2 rounded-full bg-status-neutral"></span>Belum Jatuh Tempo</span>
+                  <span id="chartPayTempoText" class="text-text-secondary tabular-nums font-semibold">Rp 0</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden"><div id="chartPayTempoBar" class="h-full rounded-full bg-status-neutral transition-all duration-500" style="width: 0%;"></div></div>
+              </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-border-subtle flex items-center justify-between text-xs">
+              <span class="text-text-muted">Total Tertagih</span>
+              <span id="chartTotalCollectedFooter" class="font-bold text-text-primary tabular-nums">Rp 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compact Daftar Invoice on Dashboard -->
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-text-primary tracking-tight">Daftar Invoice</h2>
+              <p id="dashInvSub" class="text-xs text-text-muted">Klik baris invoice untuk membuka halaman Detail Invoice lengkap</p>
+            </div>
+            <a href="#invoices" class="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline shrink-0">
+              <span>Lihat Semua</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="relative flex-1 min-w-[200px] sm:max-w-xs">
+              <span class="material-symbols-outlined text-[17px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2">search</span>
+              <input id="dashInvSearch" type="text" placeholder="Cari no. invoice atau toko..." class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent">
+            </div>
+            <select id="dashInvStatus" class="h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+              <option value="all">Semua Status</option>
+              <option value="PAID">Lunas</option>
+              <option value="PARTIAL">Sebagian</option>
+              <option value="UNPAID">Belum Jatuh Tempo</option>
+              <option value="OVERDUE">Terlambat</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto border border-border-subtle rounded-lg">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+              <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
+                <tr>
+                  <th class="py-2.5 px-3.5">INVOICE</th>
+                  <th class="py-2.5 px-3.5">TOKO</th>
+                  <th class="py-2.5 px-3.5">TANGGAL</th>
+                  <th class="py-2.5 px-3.5 text-right">QTY (PCS)</th>
+                  <th class="py-2.5 px-3.5 text-right">NILAI</th>
+                  <th class="py-2.5 px-3.5 text-center">STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="dashInvoiceTableBody" class="divide-y divide-border-subtle text-xs"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- VIEW 2: FULL-PAGE DRILL-DOWN KPI (Matches 05_KPI Dashboard)      -->
+      <!-- ================================================================ -->
+      <section id="viewKpiDrilldown" class="hidden flex flex-col gap-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="flex flex-col gap-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">WORKSPACE / Sales Operation</span>
+            <button type="button" onclick="window.location.hash='#dashboard'" class="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary w-fit">
+              <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span>Kembali ke Dashboard Sales</span>
+            </button>
+          </div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-1 border border-border-subtle text-[10px] font-bold uppercase tracking-wider text-text-secondary w-fit">
+            <span class="w-1.5 h-1.5 rounded-full bg-status-warning"></span>
+            READ-ONLY MODE
+          </span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h1 id="drillTitle" class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Drill-down KPI: Outstanding</h1>
+          <p id="drillSubtitle" class="text-xs text-text-muted">Periode · Scope Sales · Invoice Berkontribusi</p>
+        </div>
+
+        <!-- Drill-down Summary Banner Card -->
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-center shadow-sm">
+          <div class="lg:col-span-4 flex flex-col gap-2">
+            <span id="drillBannerLabel" class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">TOTAL OUTSTANDING</span>
+            <div class="flex items-center flex-wrap gap-2.5">
+              <span id="drillBannerValue" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp 0</span>
+              <span id="drillBannerBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-status-danger/15 text-status-danger">PERLU TINDAK LANJUT</span>
+            </div>
+            <p id="drillBannerDesc" class="text-xs text-text-muted leading-relaxed">Akumulasi piutang tak tertagih per siklus cut-off aktif.</p>
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col gap-2.5">
+            <div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-2">
+              <div class="flex flex-col">
+                <span id="drillTile1Title" class="text-xs font-semibold text-text-primary flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-danger"></span>Bisa Ditagihkan (Terlambat)</span>
+                <span id="drillTile1Sub" class="text-[11px] text-text-muted">0 invoice melewati batas tempo</span>
+              </div>
+              <span id="drillTile1Val" class="text-sm font-bold text-status-danger tabular-nums shrink-0">Rp 0</span>
+            </div>
+            <div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-2">
+              <div class="flex flex-col">
+                <span id="drillTile2Title" class="text-xs font-semibold text-text-primary flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-neutral"></span>Belum Jatuh Tempo</span>
+                <span id="drillTile2Sub" class="text-[11px] text-text-muted">0 invoice dalam termin aktif</span>
+              </div>
+              <span id="drillTile2Val" class="text-sm font-bold text-text-primary tabular-nums shrink-0">Rp 0</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col gap-2.5">
+            <div class="flex items-center justify-between text-xs">
+              <span id="drillRatioLabel" class="font-semibold text-text-muted uppercase tracking-wider">PORSI DARI REVENUE</span>
+              <span id="drillRatioVal" class="font-bold text-text-primary tabular-nums">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">
+              <div id="drillRatioBar" class="h-full rounded-full bg-accent transition-all duration-500" style="width: 0%;"></div>
+            </div>
+            <div class="flex items-start gap-1.5 text-[11px] text-text-muted">
+              <span class="material-symbols-outlined text-[14px] mt-0.5 shrink-0">info</span>
+              <span id="drillRatioHint">Batas ambang risiko maksimal tim sales: 25,0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill-down Filter & Table -->
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-4 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2 flex-1">
+              <div class="relative flex-1 min-w-[200px] sm:max-w-xs">
+                <span class="material-symbols-outlined text-[18px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2">search</span>
+                <input id="drillSearchInput" type="text" placeholder="Cari no. invoice, toko..." class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent">
+              </div>
+              <select id="drillCategoryFilter" class="h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+                <option value="all">Kategori: Semua</option>
+                <option value="OVERDUE">Terlambat</option>
+                <option value="PARTIAL">Sebagian</option>
+                <option value="UNPAID">Belum Jatuh Tempo</option>
+                <option value="PAID">Lunas</option>
+              </select>
+            </div>
+            <span id="drillDatePill" class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-secondary">
+              <span class="material-symbols-outlined text-[15px] text-accent">calendar_today</span>
+              <span>01 Nov – 22 Nov 2026</span>
+            </span>
+          </div>
+
+          <div class="overflow-x-auto border border-border-subtle rounded-lg">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+              <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
+                <tr>
+                  <th class="py-3 px-3.5">NO. INVOICE</th>
+                  <th class="py-3 px-3.5">TOKO</th>
+                  <th class="py-3 px-3.5">TANGGAL INVOICE</th>
+                  <th class="py-3 px-3.5">JATUH TEMPO</th>
+                  <th class="py-3 px-3.5 text-right">TOTAL NILAI</th>
+                  <th class="py-3 px-3.5 text-right">SUDAH DIBAYAR</th>
+                  <th class="py-3 px-3.5 text-right">SISA OUTSTANDING</th>
+                  <th class="py-3 px-3.5 text-center">STATUS</th>
+                  <th class="py-3 px-3.5 text-center">AKSI</th>
+                </tr>
+              </thead>
+              <tbody id="drillTableBody" class="divide-y divide-border-subtle font-mono text-[11px]"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-text-muted">
+            <span id="drillFooterCount">Menampilkan 0 invoice berkontribusi</span>
+            <span>Siklus Data: Real-time Snapshot · Akses Terkunci: Hanya Baca</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- VIEW 3: INVOICE & PEMBAYARAN + ANTRIAN DOKUMEN TERUNGGAH         -->
+      <!-- ================================================================ -->
+      <section id="viewInvoices" class="hidden flex flex-col gap-5">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-3">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Invoice &amp; Pembayaran</h1>
+              <span class="px-2.5 py-0.5 rounded-full bg-surface-2 border border-border-default text-text-secondary text-[10px] font-bold uppercase tracking-wider">READ-ONLY</span>
+            </div>
+            <div class="flex items-center flex-wrap gap-2 text-xs text-text-secondary">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 border border-border-subtle">
+                <span class="material-symbols-outlined text-[14px] text-accent">person</span>
+                <span id="invScopePill">Scope: Sales (Sales)</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-1 border border-border-subtle">
+                <span class="material-symbols-outlined text-[14px] text-text-muted">visibility</span>
+                <span>Hak Akses: Penjualan / Baca Saja + Unggah Dokumen</span>
+              </span>
+            </div>
+          </div>
+
+          <button type="button" onclick="openUploadDocModal()" class="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-xl bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 text-xs font-semibold transition-colors shadow-sm shrink-0">
+            <span class="material-symbols-outlined text-[18px]">upload_file</span>
+            <span>Unggah Dokumen Invoice</span>
+          </button>
+        </div>
+
+        <!-- 4 Summary KPI Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle shadow-sm flex flex-col gap-1">
+            <span class="text-[11px] font-semibold text-text-muted uppercase tracking-wider">TOTAL NILAI</span>
+            <span id="invSumTotal" class="text-lg sm:text-xl font-bold text-text-primary tabular-nums">Rp 0</span>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle shadow-sm flex flex-col gap-1">
+            <span class="text-[11px] font-semibold text-text-muted uppercase tracking-wider">DITERIMA</span>
+            <span id="invSumPaid" class="text-lg sm:text-xl font-bold text-status-success tabular-nums">Rp 0</span>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle shadow-sm flex flex-col gap-1">
+            <span class="text-[11px] font-semibold text-text-muted uppercase tracking-wider">OUTSTANDING</span>
+            <span id="invSumOut" class="text-lg sm:text-xl font-bold text-status-danger tabular-nums">Rp 0</span>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle shadow-sm flex flex-col gap-1">
+            <span class="text-[11px] font-semibold text-text-muted uppercase tracking-wider">VOLUME</span>
+            <span id="invSumVol" class="text-lg sm:text-xl font-bold text-text-primary tabular-nums">0 Invoice · 0 pcs</span>
+          </div>
+        </div>
+
+        <!-- Antrian Dokumen Terunggah oleh Sales (Finance Queue) -->
+        <div id="salesUploadedDocsCard" class="hidden bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-3 shadow-sm">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-accent text-[18px]">inventory</span>
+              <h2 class="text-sm font-bold text-text-primary">Antrian Dokumen Terunggah (Verifikasi Finance)</h2>
+            </div>
+            <span id="salesUploadedDocsCount" class="px-2 py-0.5 rounded-full bg-accent/15 text-accent text-[10px] font-bold">0 Berkas</span>
+          </div>
+          <div id="salesUploadedDocsList" class="grid grid-cols-1 md:grid-cols-2 gap-2.5"></div>
+        </div>
+
+        <!-- Filter & Table Container -->
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-4 shadow-sm">
+          <div class="flex flex-wrap items-center gap-2 justify-between">
+            <div class="flex flex-wrap items-center gap-2 flex-1">
+              <div class="relative flex-1 min-w-[180px] sm:max-w-xs">
+                <span class="material-symbols-outlined text-[18px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2">search</span>
+                <input id="invoiceSearchInput" type="text" placeholder="Cari no. invoice atau toko..." class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors">
+              </div>
+
+              <div class="h-9 px-3 rounded-lg bg-surface-2 border border-border-default flex items-center gap-1.5 text-xs text-text-secondary shrink-0">
+                <span class="material-symbols-outlined text-[14px] text-accent">lock</span>
+                <span id="invLockedSalesText" class="font-medium text-text-primary">Sales</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-1 text-text-muted font-semibold uppercase">KUNCI</span>
+              </div>
+
+              <select id="invoiceStatusFilter" class="h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+                <option value="all">Semua Status</option>
+                <option value="PAID">Lunas</option>
+                <option value="PARTIAL">Sebagian</option>
+                <option value="UNPAID">Belum Jatuh Tempo</option>
+                <option value="OVERDUE">Terlambat</option>
+              </select>
+
+              <label class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-secondary cursor-pointer select-none">
+                <input id="invoiceDateScopeCheckbox" type="checkbox" checked class="accent-[#F28C45] rounded">
+                <span>Ikuti Filter Tanggal</span>
+              </label>
+            </div>
+
+            <button id="resetInvoiceFilterBtn" type="button" class="h-9 px-3 rounded-lg border border-border-subtle bg-surface-2 hover:bg-surface-hover text-xs text-text-secondary hover:text-text-primary transition-colors inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">restart_alt</span>
+              <span>Reset Filter</span>
+            </button>
+          </div>
+
+          <!-- Desktop Table -->
+          <div class="hidden md:block overflow-x-auto border border-border-subtle rounded-lg">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+              <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
+                <tr>
+                  <th class="py-3 px-3.5">No. Invoice</th>
+                  <th class="py-3 px-3.5">Tanggal</th>
+                  <th class="py-3 px-3.5">Nama Toko</th>
+                  <th class="py-3 px-3.5 text-right">QTY</th>
+                  <th class="py-3 px-3.5 text-right">Total Invoice</th>
+                  <th class="py-3 px-3.5 text-right">Terbayar</th>
+                  <th class="py-3 px-3.5 text-right">Outstanding</th>
+                  <th class="py-3 px-3.5 text-center">Status</th>
+                  <th class="py-3 px-3.5 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceTableBody" class="divide-y divide-border-subtle font-mono text-[11px]"></tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Card List -->
+          <div id="invoiceMobileList" class="md:hidden flex flex-col gap-3"></div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between text-xs text-text-secondary pt-1">
+            <span id="paginationInfo">Menampilkan 0–0 dari 0 invoice</span>
+            <div class="flex items-center gap-1">
+              <button id="prevPageBtn" class="px-2.5 py-1.5 rounded-md bg-surface-2 border border-border-default hover:bg-surface-hover text-text-primary disabled:opacity-40 disabled:cursor-not-allowed">Sebelumnya</button>
+              <span id="pageNumberDisplay" class="px-2 py-1 text-text-primary font-semibold">1</span>
+              <button id="nextPageBtn" class="px-2.5 py-1.5 rounded-md bg-surface-2 border border-border-default hover:bg-surface-hover text-text-primary disabled:opacity-40 disabled:cursor-not-allowed">Berikutnya</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- VIEW 4: FULL-PAGE INVOICE DETAIL (Matches 03_Invoice Detail)     -->
+      <!-- ================================================================ -->
+      <section id="viewInvoiceDetail" class="hidden flex flex-col gap-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 no-print">
+          <div class="flex flex-col gap-1">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">WORKSPACE / Sales Operation</span>
+            <button id="detailBackBtn" type="button" class="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary w-fit">
+              <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span id="detailBackLabel">Kembali ke Invoice &amp; Pembayaran</span>
+            </button>
+          </div>
+          <span id="detailReadOnlyPill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-1 border border-border-subtle text-[10px] font-bold uppercase tracking-wider text-text-secondary w-fit">
+            <span class="material-symbols-outlined text-[13px]">visibility</span>
+            <span>AKSES READ-ONLY</span>
+          </span>
+        </div>
+
+        <!-- Invoice Header -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center flex-wrap gap-2.5">
+              <h1 id="detInvIdHeading" class="text-2xl sm:text-3xl font-bold text-text-primary font-mono tracking-tight">INV-XXXX</h1>
+              <span class="text-text-muted text-xl">/</span>
+              <span id="detStoreHeading" class="text-lg sm:text-xl font-semibold text-text-secondary">Nama Toko</span>
+              <span id="detStatusBadge"></span>
+            </div>
+            <p class="text-xs text-text-muted">Diterbitkan pada sistem operasional penjualan B2B FADE Pods</p>
+          </div>
+          <div class="flex items-center gap-2 no-print shrink-0">
+            <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-surface-1 border border-border-subtle hover:bg-surface-hover text-text-primary text-xs font-semibold transition-colors">
+              <span class="material-symbols-outlined text-[16px]">print</span>
+              <span>Cetak Dokumen</span>
+            </button>
+            <button id="detDownloadPdfBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-surface-1 border border-border-subtle hover:bg-surface-hover text-text-primary text-xs font-semibold transition-colors">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              <span>Unduh PDF / Dokumen</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2-Column Invoice Detail Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <!-- Left Column: Informasi Invoice & Pengiriman + Verifikasi Gerai -->
+          <div class="lg:col-span-7 flex flex-col gap-5">
+            <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-5 shadow-sm">
+              <div class="flex items-center justify-between gap-2 pb-3 border-b border-border-subtle">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-text-secondary text-[18px]">receipt_long</span>
+                  <h2 class="text-sm font-bold text-text-primary">Informasi Invoice &amp; Pengiriman</h2>
+                </div>
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">SPESIFIKASI ORDER</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">NOMOR INVOICE</span>
+                  <span id="detFieldInvId" class="font-mono font-bold text-text-primary">-</span>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">SALES PERSON IN CHARGE</span>
+                  <span id="detFieldSalesPic" class="font-semibold text-text-primary flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>-</span>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">TANGGAL TERBIT</span>
+                  <span id="detFieldDate" class="font-medium text-text-primary">-</span>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">TANGGAL JATUH TEMPO</span>
+                  <span id="detFieldDueDate" class="font-medium text-text-primary">-</span>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">NAMA TOKO MITRA</span>
+                  <span id="detFieldStore" class="font-semibold text-text-primary">-</span>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">TOTAL KUANTITAS PESANAN</span>
+                  <span id="detFieldQty" class="font-bold text-text-primary tabular-nums">- pcs</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1 text-xs">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">WILAYAH &amp; ALAMAT PENGIRIMAN TOKO</span>
+                <span id="detFieldAddress" class="text-text-secondary">-</span>
+              </div>
+
+              <div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1 text-xs">
+                <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">CATATAN LOGISTIK INTERNAL</span>
+                <p id="detFieldNotes" class="text-text-secondary leading-relaxed">Pengiriman melalui armada logistik FADE Pods. Seluruh segel barcode produk telah diverifikasi sebelum serah terima gerai.</p>
+              </div>
+
+              <!-- Rincian Produk Pesanan -->
+              <div class="flex flex-col gap-2.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-semibold text-text-primary">Rincian Produk Pesanan</span>
+                  <span class="text-text-muted">1 Item Utama</span>
+                </div>
+                <div class="overflow-x-auto border border-border-subtle rounded-lg">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-surface-2 text-text-muted uppercase text-[10px] tracking-wider border-b border-border-subtle">
+                      <tr>
+                        <th class="py-2.5 px-3">ITEM PRODUK</th>
+                        <th class="py-2.5 px-3 text-right">HARGA SATUAN</th>
+                        <th class="py-2.5 px-3 text-right">QTY</th>
+                        <th class="py-2.5 px-3 text-right">SUBTOTAL</th>
+                      </tr>
+                    </thead>
+                    <tbody id="detProductBody" class="divide-y divide-border-subtle"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Verifikasi Gerai & Dokumen Terkait -->
+            <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-3 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-text-secondary text-[18px]">storefront</span>
+                  <h2 class="text-sm font-bold text-text-primary">Verifikasi Gerai &amp; Dokumen Pendukung</h2>
+                </div>
+                <button type="button" id="detUploadDocShortcut" class="text-xs font-semibold text-accent hover:underline no-print">+ Unggah Dokumen</button>
+              </div>
+              <div id="detRelatedDocs" class="text-xs text-text-muted">Belum ada berkas tambahan yang diunggah untuk invoice ini.</div>
+            </div>
+          </div>
+
+          <!-- Right Column: Status & Riwayat Pembayaran + Billing Support -->
+          <div class="lg:col-span-5 flex flex-col gap-5">
+            <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-text-secondary text-[18px]">payments</span>
+                  <h2 class="text-sm font-bold text-text-primary">Status &amp; Riwayat Pembayaran</h2>
+                </div>
+                <span id="detPayStatusDot" class="w-2.5 h-2.5 rounded-full bg-status-success"></span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-1">
+                <span class="text-[11px] text-text-muted">Total Nilai Tagihan (Gross)</span>
+                <span id="detGrossTotal" class="text-2xl font-bold text-text-primary tabular-nums">Rp 0</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-text-muted">Pembayaran Diterima</span>
+                  <span id="detPaidPct" class="font-semibold text-text-secondary tabular-nums">0% Terealisasi</span>
+                </div>
+                <span id="detPaidAmount" class="text-xl font-bold text-status-success tabular-nums">Rp 0</span>
+                <div class="w-full h-1.5 rounded-full bg-surface-1 overflow-hidden">
+                  <div id="detPaidBar" class="h-full rounded-full bg-status-success transition-all duration-500" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div id="detOutstandingBox" class="p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 flex flex-col gap-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-semibold text-status-danger">Sisa Tagihan (Outstanding)</span>
+                  <span id="detOverdueTag" class="px-2 py-0.5 rounded bg-status-danger/20 text-status-danger text-[10px] font-bold uppercase">TERLAMBAT</span>
+                </div>
+                <span id="detOutstandingAmount" class="text-2xl font-bold text-status-danger tabular-nums">Rp 0</span>
+                <p id="detOutstandingHint" class="text-[11px] text-status-danger/90 leading-snug"></p>
+              </div>
+
+              <!-- Aging Bukti Piutang -->
+              <div class="p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex items-center justify-between gap-3">
+                <div class="flex flex-col">
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">AGING BUKTI PIUTANG</span>
+                  <span id="detAgingLabel" class="text-xs font-semibold text-text-primary">Lunas / Lancar</span>
+                </div>
+                <div id="detAgingBars" class="flex items-end gap-1 h-6"></div>
+              </div>
+
+              <!-- Log Transaksi Pembayaran -->
+              <div class="flex flex-col gap-2 pt-2 border-t border-border-subtle">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-semibold text-text-primary">Log Transaksi Pembayaran</span>
+                  <span id="detPayLogCount" class="text-text-muted">0 Transaksi</span>
+                </div>
+                <div id="detPayLogContainer" class="p-4 rounded-xl bg-surface-2 border border-border-subtle text-center text-xs text-text-muted"></div>
+              </div>
+
+              <!-- Prosedur Rekonsiliasi -->
+              <div class="p-3.5 rounded-xl bg-surface-2/70 border border-border-subtle flex items-start gap-2.5 text-[11px] text-text-secondary">
+                <span class="material-symbols-outlined text-accent text-[16px] shrink-0 mt-0.5">info</span>
+                <div>
+                  <strong class="text-text-primary block mb-0.5">Prosedur Rekonsiliasi Keuangan</strong>
+                  Sales memiliki hak akses tampilan saja (read-only). Untuk konfirmasi, validasi transfer bank, atau pencatatan pembayaran toko, harap hubungi <strong class="text-text-primary">Admin Keuangan (@finance-ops)</strong>.
+                </div>
+              </div>
+            </div>
+
+            <!-- Billing Support Desk -->
+            <div class="bg-surface-1 border border-border-subtle rounded-xl p-4 flex items-center justify-between gap-3 shadow-sm no-print">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-full bg-surface-2 border border-border-subtle flex items-center justify-center text-text-secondary shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">support_agent</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="text-xs font-semibold text-text-primary">Billing Support Desk</span>
+                  <span class="text-[11px] text-text-muted truncate">keuangan@fade.internal · ext 402</span>
+                </div>
+              </div>
+              <a id="detEmailFinanceBtn" href="mailto:keuangan@fade.internal" class="h-8 px-3 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-xs font-semibold text-text-primary inline-flex items-center shrink-0 transition-colors">Email Finance</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- VIEW 5: PROFIL SAYA                                              -->
+      <!-- ================================================================ -->
+      <section id="viewProfile" class="hidden flex flex-col gap-6 max-w-2xl">
+        <div class="flex flex-col gap-1">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">AKUN / PROFIL STAF</span>
+          <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Profil Saya</h1>
+          <p class="text-xs text-text-secondary">Lihat informasi akun dan kelola sesi Anda pada Panel Sales FADE Pods.</p>
+        </div>
+
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 sm:p-6 flex flex-col gap-5 shadow-sm">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-accent/15 border border-accent/40 flex items-center justify-center text-accent text-xl font-bold shrink-0">
+              <span id="profAvatarInitial">S</span>
+            </div>
+            <div class="flex flex-col min-w-0 gap-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 id="profFullName" class="text-lg font-bold text-text-primary truncate">Sales Name</h2>
+                <span class="px-2 py-0.5 rounded-full bg-surface-2 border border-border-default text-text-secondary text-[10px] font-bold uppercase tracking-wider">SALES</span>
+              </div>
+              <span id="profHandle" class="text-xs text-text-muted font-mono">@sales · SYN-S01</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border-subtle text-xs">
+            <div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1">
+              <span class="text-text-muted">Status Sesi</span>
+              <span class="font-semibold text-status-success inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-status-success"></span>
+                Sesi Aktif Online
+              </span>
+            </div>
+            <div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1">
+              <span class="text-text-muted">Wilayah Operasional</span>
+              <span id="profRegion" class="font-semibold text-text-primary">DKI Jakarta &amp; Banten</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 p-3 rounded-lg bg-surface-2/60 border border-border-subtle text-[11px] text-text-muted">
+            <span class="material-symbols-outlined text-[16px] text-text-muted shrink-0 mt-0.5">info</span>
+            <span>Informasi profil bersifat baca-saja (read-only). Perubahan nama atau wilayah dikelola oleh Administrator pusat.</span>
+          </div>
+        </div>
+
+        <div class="bg-surface-1 border border-border-subtle rounded-xl overflow-hidden shadow-sm">
+          <div class="px-5 py-3.5 border-b border-border-subtle">
+            <h3 class="text-sm font-bold text-text-primary">Pengelolaan Akun</h3>
+          </div>
+          <div class="divide-y divide-border-subtle">
+            <button id="btnSwitchSalesAccount" type="button" class="w-full px-5 py-4 flex items-center justify-between gap-3 hover:bg-surface-hover transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-center text-accent shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">switch_account</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold text-text-primary">Ganti Akun</span>
+                  <span class="text-xs text-text-muted">Masuk menggunakan akun FADE Pods lainnya.</span>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-text-muted">chevron_right</span>
+            </button>
+
+            <button id="btnForgotPassword" type="button" class="w-full px-5 py-4 flex items-center justify-between gap-3 hover:bg-surface-hover transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-center text-text-secondary shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">lock_reset</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold text-text-primary">Lupa Password</span>
+                  <span class="text-xs text-text-muted">Dapatkan bantuan untuk memulihkan akses akun Anda.</span>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-text-muted">chevron_right</span>
+            </button>
+
+            <button id="btnProfileLogout" type="button" class="w-full px-5 py-4 flex items-center justify-between gap-3 hover:bg-status-danger/10 transition-colors text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-status-danger/10 border border-status-danger/30 flex items-center justify-center text-status-danger shrink-0">
+                  <span class="material-symbols-outlined text-[18px]">logout</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold text-status-danger">Keluar</span>
+                  <span class="text-xs text-text-muted">Akhiri sesi dan kembali ke halaman masuk.</span>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-status-danger">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 4. MOBILE BOTTOM NAVIGATION                                          -->
+  <!-- ==================================================================== -->
+  <nav class="shell-mobile-nav fixed bottom-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
+    <div class="flex justify-around items-center h-16 px-2" id="mobileNavContainer">
+      <a href="#dashboard" data-route="dashboard" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span><span class="text-[10px]">Dashboard</span>
+        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
+      </a>
+      <a href="#ytd" data-route="ytd" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span><span class="text-[10px]">YTD</span>
+        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
+      </a>
+      <a href="#invoices" data-route="invoices" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="text-[10px]">Invoice</span>
+        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
+      </a>
+      <a href="#profile" data-route="profile" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
+        <span class="material-symbols-outlined text-[20px]">person</span><span class="text-[10px]">Profil</span>
+        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ==================================================================== -->
+  <!-- 5. MODAL UNGGAH DOKUMEN INVOICE (Matches 02_Pop Up)                  -->
+  <!-- ==================================================================== -->
+  <div id="uploadDocModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-2xl bg-surface-1 border border-border-default shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div class="px-5 py-4 border-b border-border-subtle flex items-start justify-between gap-3">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-accent text-[20px]">cloud_upload</span>
+            <h3 class="text-base font-bold text-text-primary">Unggah Dokumen Invoice</h3>
+          </div>
+          <p class="text-xs text-text-muted">Unggah berkas invoice atau manifest penjualan dalam format PDF, Excel (.xlsx/.xls), CSV, atau scan dokumen resmi.</p>
+        </div>
+        <button type="button" onclick="closeUploadDocModal()" class="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover shrink-0">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <form id="uploadDocForm" class="p-5 overflow-y-auto flex flex-col gap-4 text-xs">
+        <!-- Dropzone -->
+        <div id="docDropzone" class="border-2 border-dashed border-border-default hover:border-accent rounded-xl p-6 flex flex-col items-center justify-center gap-2 text-center cursor-pointer bg-surface-2/40 transition-colors">
+          <div class="w-11 h-11 rounded-full bg-accent/15 text-accent flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">upload_file</span>
+          </div>
+          <div class="text-xs font-medium text-text-primary">
+            Tarik &amp; lepas berkas ke sini, atau <span class="text-accent font-semibold underline">Pilih Berkas</span>
+          </div>
+          <span class="text-[11px] text-text-muted">Mendukung .PDF, .XLSX, .CSV, .JPG/PNG (Maks. 15 MB per berkas)</span>
+          <input id="docFileInput" type="file" accept=".pdf,.xlsx,.xls,.csv,.jpg,.jpeg,.png" class="hidden">
+        </div>
+
+        <!-- Selected File Card -->
+        <div id="docSelectedFileCard" class="hidden p-3 rounded-xl bg-surface-2 border border-border-default flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-lg bg-status-danger/15 border border-status-danger/30 text-status-danger flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[18px]">description</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="docFileNameText" class="font-semibold text-text-primary truncate max-w-[200px]">file.pdf</span>
+                <span class="px-2 py-0.5 rounded-full bg-status-success/15 text-status-success text-[9px] font-bold uppercase">SIAP DIUNGGAH</span>
+              </div>
+              <span id="docFileMetaText" class="text-[11px] text-text-muted">0 KB</span>
+            </div>
+          </div>
+          <button type="button" onclick="clearSelectedDocFile()" class="w-8 h-8 rounded-lg hover:bg-status-danger/15 text-text-muted hover:text-status-danger flex items-center justify-center shrink-0" title="Hapus berkas">
+            <span class="material-symbols-outlined text-[17px]">delete</span>
+          </button>
+        </div>
+
+        <!-- Store & Ref Number -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1">
+            <label for="docStoreSelect" class="font-semibold text-text-secondary">Pilih Toko Mitra <span class="text-status-danger">*</span></label>
+            <select id="docStoreSelect" required class="h-10 px-3 rounded-xl bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent"></select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="docRefInput" class="font-semibold text-text-secondary">Nomor Faktur / Ref (Opsional)</label>
+            <input id="docRefInput" type="text" placeholder="Contoh: INV-2026-1094-REV" class="h-10 px-3 rounded-xl bg-surface-2 border border-border-default text-xs text-text-primary font-mono placeholder:text-text-muted focus:outline-none focus:border-accent">
+          </div>
+        </div>
+
+        <!-- Notes & Sales PIC -->
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between gap-2">
+            <label for="docNotesInput" class="font-semibold text-text-secondary">Catatan Dokumen / Verifikasi</label>
+            <span id="docSalesPicBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-2 border border-border-subtle text-[10px] text-text-secondary">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+              Sales PIC: -
+            </span>
+          </div>
+          <textarea id="docNotesInput" rows="3" placeholder="Tambahkan catatan pengiriman, jatuh tempo khusus, atau referensi pembayaran jika ada..." class="p-3 rounded-xl bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent resize-none"></textarea>
+        </div>
+
+        <!-- Footer -->
+        <div class="pt-3 border-t border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+            <span class="material-symbols-outlined text-[14px]">lock</span>
+            <span>Akses Sales: Otomatis masuk antrian Finance</span>
+          </span>
+          <div class="flex items-center justify-end gap-2">
+            <button type="button" onclick="closeUploadDocModal()" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium">Batal</button>
+            <button type="submit" class="h-9 px-4 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 font-semibold inline-flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">check_circle</span>
+              <span>Unggah Dokumen</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 6. ACCOUNT ACTION MODAL                                              -->
+  <!-- ==================================================================== -->
+  <div id="accountModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-surface-1 border border-border-default shadow-2xl p-5 flex flex-col gap-4 text-xs">
+      <h3 id="accountModalTitle" class="text-base font-bold text-text-primary">Konfirmasi</h3>
+      <p id="accountModalDesc" class="text-text-secondary leading-relaxed"></p>
+      <div id="accountModalActions" class="flex items-center justify-end gap-2 pt-2"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-20 lg:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================================================================== -->
+  <!-- 7. ENGINE & SALES CONTROLLER                                         -->
+  <!-- ==================================================================== -->
+  <script src="assets/js/engine/business-engine.js"></script>
+  <script src="assets/js/data/synthetic-seed.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/components/trend-chart.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      FADE_STORE.init();
+
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('theme')) FADE_STORE.setTheme(urlParams.get('theme'));
+
+      var session = FADE_STORE.getActiveSession();
+      if (!session) {
+        window.location.replace('index.html');
+        return;
+      }
+      if (session.role !== 'sales') {
+        window.location.replace('admin.html' + (window.location.hash || '#dashboard'));
+        return;
+      }
+
+      var DOCS_STORAGE_KEY = 'fade_sales_docs_v1';
+      var currentMode = 'bulan';
+      var currentPeriod = '2026-11';
+      var customStartDate = '2026-11-01';
+      var customEndDate = '2026-11-22';
+      var invoicePage = 1;
+      var invoicePageSize = 25;
+      var activeDrillKpi = 'outstanding';
+      var activeDetailInvoiceId = null;
+      var detailReturnHash = '#invoices';
+      var pendingUploadFile = null;
+
+      var statusBadgeText = document.getElementById('statusBadgeText');
+      var filterDateLabel = document.getElementById('filterDateLabel');
+      var tabModeBulanan = document.getElementById('tabModeBulanan');
+      var tabModeYTD = document.getElementById('tabModeYTD');
+      var tabIndicatorBulanan = document.getElementById('tabIndicatorBulanan');
+      var tabIndicatorYTD = document.getElementById('tabIndicatorYTD');
+
+      var viewDashboard = document.getElementById('viewDashboard');
+      var viewKpiDrilldown = document.getElementById('viewKpiDrilldown');
+      var viewInvoices = document.getElementById('viewInvoices');
+      var viewInvoiceDetail = document.getElementById('viewInvoiceDetail');
+      var viewProfile = document.getElementById('viewProfile');
+
+      function showToast(msg, type) {
+        var container = document.getElementById('toastContainer');
+        var el = document.createElement('div');
+        var colorClass = type === 'error' ? 'border-status-danger/50 text-status-danger' : 'border-status-success/50 text-status-success';
+        var icon = type === 'error' ? 'error' : 'check_circle';
+        el.className = 'pointer-events-auto px-4 py-2.5 rounded-xl bg-surface-1 border ' + colorClass + ' shadow-2xl text-xs font-semibold flex items-center gap-2 transition-all';
+        el.innerHTML = '<span class="material-symbols-outlined text-[16px]">' + icon + '</span><span class="text-text-primary">' + msg + '</span>';
+        container.appendChild(el);
+        setTimeout(function () {
+          el.style.opacity = '0';
+          setTimeout(function () { el.remove(); }, 250);
+        }, 2800);
+      }
+
+      function formatShortIdDate(iso) {
+        if (!iso) return '-';
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        var p = iso.split('-');
+        if (p.length !== 3) return iso;
+        return p[2] + ' ' + (months[parseInt(p[1], 10) - 1] || p[1]) + ' ' + p[0];
+      }
+
+      function formatRpShort(val) {
+        if (val >= 1000000) {
+          return 'Rp ' + (val / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+        }
+        return 'Rp ' + val.toLocaleString('id-ID');
+      }
+
+      function getStatusBadgeHtml(evalState, paid) {
+        if (evalState.sisa <= 0) {
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-success/15 text-status-success">Lunas</span>';
+        }
+        if (evalState.status === 'Terlambat Bayar') {
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-danger/15 text-status-danger">Terlambat</span>';
+        }
+        if (paid > 0) {
+          return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-warning/15 text-status-warning">Sebagian</span>';
+        }
+        return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-2 text-text-secondary border border-border-default">Belum Jatuh Tempo</span>';
+      }
+
+      // Sales Document Upload Storage
+      function getUploadedDocs() {
+        try {
+          var raw = localStorage.getItem(DOCS_STORAGE_KEY);
+          var list = raw ? JSON.parse(raw) : [];
+          return list.filter(function (d) { return d.salesName === session.salesName; });
+        } catch (e) { return []; }
+      }
+
+      function saveUploadedDoc(doc) {
+        var all = [];
+        try { all = JSON.parse(localStorage.getItem(DOCS_STORAGE_KEY) || '[]'); } catch (e) {}
+        all.unshift(doc);
+        localStorage.setItem(DOCS_STORAGE_KEY, JSON.stringify(all));
+      }
+
+      function deleteUploadedDoc(docId) {
+        var all = [];
+        try { all = JSON.parse(localStorage.getItem(DOCS_STORAGE_KEY) || '[]'); } catch (e) {}
+        all = all.filter(function (d) { return d.id !== docId; });
+        localStorage.setItem(DOCS_STORAGE_KEY, JSON.stringify(all));
+        renderUploadedDocsQueue();
+        if (activeDetailInvoiceId) renderInvoiceDetailPage(activeDetailInvoiceId);
+        showToast('Berkas dihapus dari antrian');
+      }
+      window.deleteUploadedDoc = deleteUploadedDoc;
+
+      function renderUploadedDocsQueue() {
+        var docs = getUploadedDocs();
+        var card = document.getElementById('salesUploadedDocsCard');
+        var list = document.getElementById('salesUploadedDocsList');
+        var badge = document.getElementById('salesUploadedDocsCount');
+        if (docs.length === 0) {
+          card.classList.add('hidden');
+          return;
+        }
+        card.classList.remove('hidden');
+        badge.textContent = docs.length + ' Berkas';
+        list.innerHTML = '';
+        docs.forEach(function (d) {
+          var item = document.createElement('div');
+          item.className = 'p-3 rounded-xl bg-surface-2 border border-border-subtle flex items-center justify-between gap-3 text-xs';
+          item.innerHTML =
+            '<div class="flex items-center gap-2.5 min-w-0">' +
+              '<div class="w-8 h-8 rounded-lg bg-accent/15 text-accent flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[16px]">description</span></div>' +
+              '<div class="flex flex-col min-w-0">' +
+                '<span class="font-semibold text-text-primary truncate">' + d.fileName + '</span>' +
+                '<span class="text-[11px] text-text-muted truncate">' + d.storeName + (d.refNumber ? ' · ' + d.refNumber : '') + ' · ' + d.sizeLabel + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-2 shrink-0">' +
+              '<span class="px-2 py-0.5 rounded-full bg-status-warning/15 text-status-warning text-[10px] font-semibold">Antrian Finance</span>' +
+              '<button type="button" onclick="deleteUploadedDoc(\'' + d.id + '\')" class="text-text-muted hover:text-status-danger" title="Batalkan unggahan"><span class="material-symbols-outlined text-[16px]">delete</span></button>' +
+            '</div>';
+          list.appendChild(item);
+        });
+      }
+
+      function populateSalesIdentity() {
+        var initial = (session.salesName || session.name || 'S').charAt(0).toUpperCase();
+        document.getElementById('sidebarAvatarInitial').textContent = initial;
+        document.getElementById('sidebarUserName').textContent = session.salesName;
+        document.getElementById('sidebarUserRole').textContent = 'Sales Representative';
+        document.getElementById('lockedSalesBadgeName').textContent = session.salesName;
+        document.getElementById('invScopePill').textContent = 'Scope: ' + session.salesName + ' (Sales)';
+        document.getElementById('invLockedSalesText').textContent = session.salesName;
+        document.getElementById('profAvatarInitial').textContent = initial;
+        document.getElementById('profFullName').textContent = session.salesName;
+        var handleSlug = session.salesName.split(' ')[0].toLowerCase();
+        document.getElementById('profHandle').textContent = '@' + handleSlug + ' · ' + (session.salesId || 'SYN-S01');
+        document.getElementById('profRegion').textContent = session.region || 'DKI Jakarta & Banten';
+        document.getElementById('docSalesPicBadge').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Sales PIC: ' + session.salesName;
+        document.getElementById('detailReadOnlyPill').innerHTML = '<span class="material-symbols-outlined text-[13px]">visibility</span><span>AKSES READ-ONLY · SALES ' + session.salesName.toUpperCase() + '</span>';
+
+        var storeSel = document.getElementById('docStoreSelect');
+        storeSel.innerHTML = '';
+        var ownStores = new Set();
+        FADE_STORE.getInvoices().forEach(function (i) {
+          if ((i.salesName || i.sales_name) === session.salesName) {
+            ownStores.add(i.storeName || i.store_name);
+          }
+        });
+        var storeArr = Array.from(ownStores).sort();
+        if (storeArr.length === 0) storeArr = FADE_STORE.getUniqueStoreNames();
+        storeArr.forEach(function (st) {
+          var opt = document.createElement('option');
+          opt.value = st;
+          opt.textContent = st;
+          storeSel.appendChild(opt);
+        });
+      }
+
+      function renderAll() {
+        renderMetrics();
+        renderDashboardInvoices();
+        renderInvoicesTable();
+        renderUploadedDocsQueue();
+        if (!viewKpiDrilldown.classList.contains('hidden')) renderKpiDrilldownPage(activeDrillKpi);
+      }
+
+      function renderMetrics() {
+        var invoices = FADE_STORE.getInvoices();
+        var targets = FADE_STORE.getTargets();
+
+        var summary = FADE_ENGINE.calculateSummary(invoices, targets, {
+          role: 'sales',
+          userSales: session.salesName,
+          selectedSales: session.salesName,
+          mode: currentMode,
+          periode: currentPeriod,
+          snapshot: '2026-11-22',
+          startDate: customStartDate,
+          endDate: customEndDate
+        });
+
+        var achText = summary.achievement != null ? summary.achievement.toFixed(1) + '%' : 'N/A';
+        document.getElementById('kpiAchievementVal').textContent = achText;
+        document.getElementById('kpiAchievementBar').style.width = Math.min(100, summary.achievement || 0) + '%';
+        document.getElementById('kpiAchievementSub').textContent = 'Realisasi ' + summary.totalQty.toLocaleString('id-ID') + ' pcs / Target ' + (summary.target ? summary.target.toLocaleString('id-ID') + ' pcs' : '0');
+
+        document.getElementById('kpiQtyVal').textContent = summary.totalQty.toLocaleString('id-ID') + ' pcs';
+        document.getElementById('kpiRevenueVal').textContent = 'Rp ' + summary.revenue.toLocaleString('id-ID');
+        document.getElementById('kpiPembayaranVal').textContent = 'Rp ' + summary.pembayaranMasuk.toLocaleString('id-ID');
+        document.getElementById('kpiOutstandingVal').textContent = 'Rp ' + summary.totalOutstanding.toLocaleString('id-ID');
+        document.getElementById('kpiBisaDitagihSub').textContent = 'Bisa Ditagih: Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
+        document.getElementById('kpiBelumJatuhTempoSub').textContent = 'Tempo: Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        document.getElementById('kpiInvoicesVal').textContent = summary.totalDataTerinput.toLocaleString('id-ID') + ' Invoice';
+        document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
+
+        if (window.FADE_TREND_CHART) {
+          window.FADE_TREND_CHART.setData(invoices, session.salesName, currentMode, customStartDate, customEndDate);
+        }
+
+        document.getElementById('chartMonthlyRevenue').textContent = formatRpShort(summary.revenue);
+        document.getElementById('chartStatusSub').textContent = 'Distribusi dari ' + summary.totalDataTerinput + ' invoice Anda';
+        document.getElementById('chartTrendGrowth').innerHTML =
+          '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>' +
+          (summary.achievement != null ? summary.achievement.toFixed(1) + '% dari target' : summary.totalDataTerinput + ' transaksi') +
+          '</span>';
+
+        var lunasVal = summary.pembayaranMasuk || 0;
+        var terlambatVal = summary.bisaDitagihkan || 0;
+        var tempoVal = summary.belumJatuhTempo || 0;
+        var sebagianVal = Math.max(0, summary.revenue - lunasVal - summary.totalOutstanding);
+        var totalBase = Math.max(1, lunasVal + terlambatVal + tempoVal + sebagianVal);
+
+        var setBar = function (textId, barId, val) {
+          var pct = ((val / totalBase) * 100).toFixed(1);
+          document.getElementById(textId).innerHTML = formatRpShort(val) + ' <span class="text-text-muted font-normal">(' + pct.replace('.', ',') + '%)</span>';
+          document.getElementById(barId).style.width = (val > 0 ? Math.min(100, Math.max(2, Number(pct))) : 0) + '%';
+        };
+
+        setBar('chartPayLunasText', 'chartPayLunasBar', lunasVal);
+        setBar('chartPaySebagianText', 'chartPaySebagianBar', sebagianVal);
+        setBar('chartPayTerlambatText', 'chartPayTerlambatBar', terlambatVal);
+        setBar('chartPayTempoText', 'chartPayTempoBar', tempoVal);
+        document.getElementById('chartTotalCollectedFooter').textContent = 'Rp ' + lunasVal.toLocaleString('id-ID');
+      }
+
+      function getScopedInvoices(useDateCheckbox, searchVal, statusVal) {
+        var all = FADE_STORE.getInvoices();
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var search = (searchVal || '').toLowerCase().trim();
+
+        return all.filter(function (inv) {
+          var sName = inv.sales_name || inv.salesName;
+          if (sName !== session.salesName) return false;
+
+          var dStr = inv.invoice_date || inv.date || '';
+          if (useDateCheckbox && (dStr < pContext.dari || dStr > pContext.sampai)) return false;
+
+          var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          var out = evalState.sisa;
+          var paid = Number(inv.paidTotal != null ? inv.paidTotal : (inv.paid_total_idr || 0));
+
+          if (statusVal === 'PAID' && out > 0) return false;
+          if (statusVal === 'PARTIAL' && !(out > 0 && paid > 0)) return false;
+          if (statusVal === 'UNPAID' && !(out > 0 && evalState.status !== 'Terlambat Bayar' && paid === 0)) return false;
+          if (statusVal === 'OVERDUE' && evalState.status !== 'Terlambat Bayar') return false;
+
+          if (search) {
+            var id = (inv.id || inv.invoice_id || '').toLowerCase();
+            var st = (inv.store_name || inv.storeName || '').toLowerCase();
+            if (id.indexOf(search) < 0 && st.indexOf(search) < 0) return false;
+          }
+          return true;
+        });
+      }
+
+      function renderDashboardInvoices() {
+        var search = document.getElementById('dashInvSearch').value;
+        var status = document.getElementById('dashInvStatus').value;
+        var rows = getScopedInvoices(true, search, status);
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var tbody = document.getElementById('dashInvoiceTableBody');
+        tbody.innerHTML = '';
+
+        document.getElementById('dashInvSub').textContent = 'Menampilkan ' + Math.min(6, rows.length) + ' dari ' + rows.length + ' invoice milik ' + session.salesName + ' · Klik baris untuk Detail Invoice';
+
+        if (rows.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-text-muted">Tidak ada invoice pada periode atau filter ini.</td></tr>';
+          return;
+        }
+
+        rows.slice(0, 6).forEach(function (inv) {
+          var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+          var invId = inv.invoice_id || inv.id || '-';
+          var tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-2/60 transition-colors cursor-pointer';
+          tr.addEventListener('click', function () {
+            detailReturnHash = '#dashboard';
+            openInvoiceDetailPage(invId);
+          });
+          tr.innerHTML =
+            '<td class="py-2.5 px-3.5 font-mono font-bold text-text-primary">' + invId + '</td>' +
+            '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + (inv.store_name || inv.storeName || '-') + '</td>' +
+            '<td class="py-2.5 px-3.5 text-text-secondary">' + formatShortIdDate(inv.invoice_date || inv.date) + '</td>' +
+            '<td class="py-2.5 px-3.5 text-right tabular-nums">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
+            '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary tabular-nums">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
+            '<td class="py-2.5 px-3.5 text-center">' + getStatusBadgeHtml(evalState, paid) + '</td>';
+          tbody.appendChild(tr);
+        });
+      }
+
+      // FULL-PAGE KPI DRILL-DOWN RENDERER
+      function openKpiDrilldownPage(kpiType) {
+        activeDrillKpi = kpiType || 'outstanding';
+        document.getElementById('drillSearchInput').value = '';
+        document.getElementById('drillCategoryFilter').value = 'all';
+        window.location.hash = '#kpi-' + activeDrillKpi;
+      }
+
+      function renderKpiDrilldownPage(kpiType) {
+        var invoices = FADE_STORE.getInvoices();
+        var targets = FADE_STORE.getTargets();
+        var summary = FADE_ENGINE.calculateSummary(invoices, targets, {
+          role: 'sales',
+          userSales: session.salesName,
+          selectedSales: session.salesName,
+          mode: currentMode,
+          periode: currentPeriod,
+          snapshot: '2026-11-22',
+          startDate: customStartDate,
+          endDate: customEndDate
+        });
+        var pContext = summary.period;
+        var scopedAll = FADE_ENGINE.filterByScope(invoices, 'sales', session.salesName, session.salesName);
+
+        var baseList = [];
+        if (kpiType === 'outstanding') {
+          baseList = scopedAll.filter(function (i) {
+            var d = i.invoice_date || i.date || '';
+            return d <= pContext.asOf && FADE_ENGINE.evaluateInvoiceState(i, pContext.asOf).sisa > 0;
+          });
+        } else {
+          baseList = scopedAll.filter(function (i) {
+            var d = i.invoice_date || i.date || '';
+            return d >= pContext.dari && d <= pContext.sampai;
+          });
+        }
+
+        var metaMap = {
+          outstanding: { title: 'Outstanding', val: formatRpShort(summary.totalOutstanding), label: 'TOTAL OUTSTANDING', badge: summary.bisaDitagihkan > 0 ? 'PERLU TINDAK LANJUT' : 'TERKENDALI', desc: 'Akumulasi piutang tak tertagih per siklus cut-off ' + pContext.asOf + '.' },
+          revenue: { title: 'Revenue', val: formatRpShort(summary.revenue), label: 'TOTAL REVENUE', badge: 'AKTIF', desc: 'Total nilai tagihan kotor yang diterbitkan pada periode ' + pContext.label + '.' },
+          pembayaran: { title: 'Pembayaran Diterima', val: formatRpShort(summary.pembayaranMasuk), label: 'PEMBAYARAN MASUK', badge: 'TERVERIFIKASI', desc: 'Akumulasi kas masuk berdasarkan tanggal pembayaran pada periode aktif.' },
+          qty: { title: 'QTY Penjualan', val: summary.totalQty.toLocaleString('id-ID') + ' pcs', label: 'TOTAL VOLUME PENJUALAN', badge: 'ON TRACK', desc: 'Total kuantitas fisik produk terjual pada periode aktif.' },
+          achievement: { title: 'Achievement & Target', val: (summary.achievement != null ? summary.achievement.toFixed(1) + '%' : 'N/A'), label: 'PENCAPAIAN TARGET', badge: (summary.achievement >= 80 ? 'ON TRACK' : 'PERLU DORONGAN'), desc: 'Realisasi ' + summary.totalQty.toLocaleString('id-ID') + ' pcs dari target ' + (summary.target || 0).toLocaleString('id-ID') + ' pcs.' },
+          invoices: { title: 'Invoice & Outlet', val: summary.totalDataTerinput + ' Invoice', label: 'VOLUME INVOICE & OUTLET', badge: summary.tokoUnikCount + ' TOKO UNIK', desc: 'Daftar seluruh invoice dan gerai aktif dalam periode terpilih.' }
+        };
+        var m = metaMap[kpiType] || metaMap.outstanding;
+
+        document.getElementById('drillTitle').textContent = 'Drill-down KPI: ' + m.title + ' (' + m.val + ')';
+        document.getElementById('drillSubtitle').textContent = 'Periode: ' + filterDateLabel.textContent + ' · Scope: ' + session.salesName + ' (Sales) · ' + baseList.length + ' Invoice Berkontribusi';
+        document.getElementById('drillBannerLabel').textContent = m.label;
+        document.getElementById('drillBannerValue').textContent = m.val;
+        document.getElementById('drillBannerBadge').textContent = m.badge;
+        document.getElementById('drillBannerDesc').textContent = m.desc;
+
+        var overdueCount = 0, tempoCount = 0;
+        baseList.forEach(function (inv) {
+          var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          if (st.sisa > 0 && st.bisaDitagihkan) overdueCount++;
+          else if (st.sisa > 0) tempoCount++;
+        });
+        document.getElementById('drillTile1Sub').textContent = overdueCount + ' invoice melewati batas tempo';
+        document.getElementById('drillTile1Val').textContent = formatRpShort(summary.bisaDitagihkan);
+        document.getElementById('drillTile2Sub').textContent = tempoCount + ' invoice dalam termin aktif';
+        document.getElementById('drillTile2Val').textContent = formatRpShort(summary.belumJatuhTempo);
+
+        var ratio = summary.revenue > 0 ? ((summary.totalOutstanding / summary.revenue) * 100) : 0;
+        if (kpiType === 'achievement' && summary.achievement != null) {
+          document.getElementById('drillRatioLabel').textContent = 'CAPAIAN TARGET';
+          document.getElementById('drillRatioVal').textContent = summary.achievement.toFixed(1) + '%';
+          document.getElementById('drillRatioBar').style.width = Math.min(100, summary.achievement) + '%';
+          document.getElementById('drillRatioHint').textContent = 'Target periode ini: ' + (summary.target || 0).toLocaleString('id-ID') + ' pcs';
+        } else {
+          document.getElementById('drillRatioLabel').textContent = 'PORSI OUTSTANDING DARI REVENUE';
+          document.getElementById('drillRatioVal').textContent = ratio.toFixed(1).replace('.', ',') + '%';
+          document.getElementById('drillRatioBar').style.width = Math.min(100, ratio) + '%';
+          document.getElementById('drillRatioHint').textContent = 'Batas ambang risiko maksimal tim sales: 25,0%';
+        }
+
+        document.getElementById('drillDatePill').innerHTML = '<span class="material-symbols-outlined text-[15px] text-accent">calendar_today</span><span>' + filterDateLabel.textContent + '</span>';
+
+        // Apply drilldown search + category filter
+        var q = document.getElementById('drillSearchInput').value.toLowerCase().trim();
+        var cat = document.getElementById('drillCategoryFilter').value;
+        var filtered = baseList.filter(function (inv) {
+          var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          var paid = Number(inv.paidTotal != null ? inv.paidTotal : (inv.paid_total_idr || 0));
+          if (cat === 'OVERDUE' && st.status !== 'Terlambat Bayar') return false;
+          if (cat === 'PARTIAL' && !(st.sisa > 0 && paid > 0)) return false;
+          if (cat === 'UNPAID' && !(st.sisa > 0 && st.status !== 'Terlambat Bayar' && paid === 0)) return false;
+          if (cat === 'PAID' && st.sisa > 0) return false;
+          if (q) {
+            var id = (inv.id || inv.invoice_id || '').toLowerCase();
+            var sn = (inv.storeName || inv.store_name || '').toLowerCase();
+            if (id.indexOf(q) < 0 && sn.indexOf(q) < 0) return false;
+          }
+          return true;
+        });
+
+        var tbody = document.getElementById('drillTableBody');
+        tbody.innerHTML = '';
+        if (filtered.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-text-muted">Tidak ada invoice berkontribusi untuk filter ini.</td></tr>';
+        } else {
+          filtered.forEach(function (inv) {
+            var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+            var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+            var invId = inv.invoice_id || inv.id || '-';
+            var isOverdue = st.status === 'Terlambat Bayar';
+            var tr = document.createElement('tr');
+            tr.className = 'hover:bg-surface-2/60 transition-colors';
+            tr.innerHTML =
+              '<td class="py-3 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
+              '<td class="py-3 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate">' + (inv.storeName || inv.store_name || '-') + '</td>' +
+              '<td class="py-3 px-3.5 text-text-secondary">' + formatShortIdDate(inv.date || inv.invoice_date) + '</td>' +
+              '<td class="py-3 px-3.5 ' + (isOverdue ? 'text-status-danger font-semibold' : 'text-text-secondary') + '">' + formatShortIdDate(inv.dueDate || inv.due_date) + '</td>' +
+              '<td class="py-3 px-3.5 text-right text-text-primary font-semibold">Rp ' + st.revenue.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-3 px-3.5 text-right text-text-secondary">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-3 px-3.5 text-right font-bold ' + (isOverdue ? 'text-status-danger' : (st.sisa > 0 ? 'text-status-warning' : 'text-text-muted')) + '">Rp ' + st.sisa.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-3 px-3.5 text-center">' + getStatusBadgeHtml(st, paid) + '</td>' +
+              '<td class="py-3 px-3.5 text-center"><button type="button" data-inv="' + invId + '" class="drill-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
+            tbody.appendChild(tr);
+          });
+          tbody.querySelectorAll('.drill-detail-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              detailReturnHash = '#kpi-' + activeDrillKpi;
+              openInvoiceDetailPage(btn.getAttribute('data-inv'));
+            });
+          });
+        }
+        document.getElementById('drillFooterCount').textContent = 'Menampilkan ' + filtered.length + ' invoice berkontribusi';
+      }
+
+      // INVOICE & PEMBAYARAN RENDERER
+      function renderInvoicesTable() {
+        var search = document.getElementById('invoiceSearchInput').value;
+        var status = document.getElementById('invoiceStatusFilter').value;
+        var useDate = document.getElementById('invoiceDateScopeCheckbox').checked;
+        var filtered = getScopedInvoices(useDate, search, status);
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+
+        var sumTotal = 0, sumPaid = 0, sumOut = 0, sumQty = 0;
+        filtered.forEach(function (inv) {
+          var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          sumTotal += st.revenue; sumPaid += st.dibayar; sumOut += st.sisa; sumQty += Number(inv.qty || 0);
+        });
+        document.getElementById('invSumTotal').textContent = 'Rp ' + sumTotal.toLocaleString('id-ID');
+        document.getElementById('invSumPaid').textContent = 'Rp ' + sumPaid.toLocaleString('id-ID');
+        document.getElementById('invSumOut').textContent = 'Rp ' + sumOut.toLocaleString('id-ID');
+        document.getElementById('invSumVol').textContent = filtered.length + ' Invoice · ' + sumQty.toLocaleString('id-ID') + ' pcs';
+
+        var totalCount = filtered.length;
+        var totalPages = Math.max(1, Math.ceil(totalCount / invoicePageSize));
+        if (invoicePage > totalPages) invoicePage = totalPages;
+        var startIdx = (invoicePage - 1) * invoicePageSize;
+        var pageItems = filtered.slice(startIdx, startIdx + invoicePageSize);
+
+        var tbody = document.getElementById('invoiceTableBody');
+        var mobileList = document.getElementById('invoiceMobileList');
+        tbody.innerHTML = '';
+        mobileList.innerHTML = '';
+
+        if (pageItems.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-text-muted">Tidak ada invoice yang cocok dengan filter saat ini.</td></tr>';
+          mobileList.innerHTML = '<div class="py-8 text-center text-xs text-text-muted">Tidak ada invoice yang cocok dengan filter saat ini.</div>';
+        } else {
+          pageItems.forEach(function (inv) {
+            var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+            var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+            var invId = inv.invoice_id || inv.id || '-';
+            var store = inv.store_name || inv.storeName || '-';
+            var dStr = inv.invoice_date || inv.date || '-';
+            var badge = getStatusBadgeHtml(evalState, paid);
+
+            var tr = document.createElement('tr');
+            tr.className = 'hover:bg-surface-2/60 transition-colors';
+            tr.innerHTML =
+              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + dStr + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate">' + store + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' font-medium">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-center">' + badge + '</td>' +
+              '<td class="py-2.5 px-3.5 text-center"><button type="button" data-inv="' + invId + '" class="inv-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
+            tbody.appendChild(tr);
+
+            var card = document.createElement('div');
+            card.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2.5';
+            card.innerHTML =
+              '<div class="flex items-start justify-between gap-2">' +
+                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate">' + store + '</div><div class="text-[11px] text-text-muted font-mono">' + invId + ' · ' + formatShortIdDate(dStr) + '</div></div>' +
+                '<div class="shrink-0">' + badge + '</div>' +
+              '</div>' +
+              '<div class="grid grid-cols-3 gap-2 pt-2 border-t border-border-subtle text-[11px]">' +
+                '<div><span class="text-text-muted block">Total (' + (inv.qty || 0) + ' pcs)</span><span class="font-bold text-text-primary tabular-nums">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</span></div>' +
+                '<div><span class="text-text-muted block">Terbayar</span><span class="font-semibold text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</span></div>' +
+                '<div class="text-right"><span class="text-text-muted block">Sisa</span><span class="font-semibold ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' tabular-nums">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</span></div>' +
+              '</div>' +
+              '<div class="flex justify-end"><button type="button" data-inv="' + invId + '" class="inv-detail-btn inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"><span>Detail</span><span class="material-symbols-outlined text-[15px]">arrow_forward</span></button></div>';
+            mobileList.appendChild(card);
+          });
+
+          document.querySelectorAll('.inv-detail-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              detailReturnHash = '#invoices';
+              openInvoiceDetailPage(btn.getAttribute('data-inv'));
+            });
+          });
+        }
+
+        document.getElementById('paginationInfo').textContent = 'Menampilkan ' + (totalCount > 0 ? (startIdx + 1) : 0) + '–' + Math.min(startIdx + invoicePageSize, totalCount) + ' dari ' + totalCount + ' invoice';
+        document.getElementById('pageNumberDisplay').textContent = invoicePage + ' / ' + totalPages;
+        document.getElementById('prevPageBtn').disabled = invoicePage <= 1;
+        document.getElementById('nextPageBtn').disabled = invoicePage >= totalPages;
+      }
+
+      // FULL-PAGE INVOICE DETAIL RENDERER
+      function openInvoiceDetailPage(invoiceId) {
+        activeDetailInvoiceId = invoiceId;
+        window.location.hash = '#invoice-' + encodeURIComponent(invoiceId);
+      }
+
+      function renderInvoiceDetailPage(invoiceId) {
+        var inv = FADE_STORE.getInvoices().find(function (i) { return (i.id || i.invoice_id) === invoiceId; });
+        if (!inv) {
+          window.location.hash = '#invoices';
+          return;
+        }
+        var st = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
+        var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+        var store = inv.storeName || inv.store_name || '-';
+        var qty = Number(inv.qty || 0);
+        var unitPrice = Number(inv.unitPrice || inv.unit_price_idr || (qty > 0 ? Math.round(st.revenue / qty) : 0));
+        var paidPct = st.revenue > 0 ? Math.round((paid / st.revenue) * 100) : 0;
+
+        document.getElementById('detailBackLabel').textContent = detailReturnHash.indexOf('#kpi-') === 0 ? 'Kembali ke Drill-down KPI' : (detailReturnHash === '#dashboard' ? 'Kembali ke Dashboard Sales' : 'Kembali ke Invoice & Pembayaran');
+        document.getElementById('detailBackBtn').onclick = function () { window.location.hash = detailReturnHash || '#invoices'; };
+
+        document.getElementById('detInvIdHeading').textContent = invoiceId;
+        document.getElementById('detStoreHeading').textContent = store;
+        document.getElementById('detStatusBadge').innerHTML = getStatusBadgeHtml(st, paid);
+
+        document.getElementById('detFieldInvId').textContent = invoiceId;
+        document.getElementById('detFieldSalesPic').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> ' + session.salesName + ' (@' + session.salesName.split(' ')[0].toLowerCase() + ')';
+        document.getElementById('detFieldDate').textContent = formatShortIdDate(inv.date || inv.invoice_date);
+        document.getElementById('detFieldDueDate').innerHTML = formatShortIdDate(inv.dueDate || inv.due_date) + (st.hariTerlambat > 0 ? ' <span class="ml-1 px-1.5 py-0.5 rounded bg-status-danger/15 text-status-danger text-[10px] font-bold">Telat ' + st.hariTerlambat + ' hari</span>' : '');
+        document.getElementById('detFieldStore').textContent = store;
+        document.getElementById('detFieldQty').textContent = qty.toLocaleString('id-ID') + ' pcs';
+        document.getElementById('detFieldAddress').textContent = store + ' · Wilayah ' + (session.region || 'DKI Jakarta & Banten');
+
+        document.getElementById('detProductBody').innerHTML =
+          '<tr>' +
+            '<td class="py-3 px-3"><div class="font-semibold text-text-primary">' + (inv.productName || 'FADE Pods Series') + '</div><div class="text-[10px] text-text-muted font-mono">SKU: FD-POD-' + (invoiceId.slice(-3)) + '</div></td>' +
+            '<td class="py-3 px-3 text-right tabular-nums text-text-secondary">Rp ' + unitPrice.toLocaleString('id-ID') + '</td>' +
+            '<td class="py-3 px-3 text-right tabular-nums font-medium">' + qty + ' pcs</td>' +
+            '<td class="py-3 px-3 text-right tabular-nums font-bold text-text-primary">Rp ' + st.revenue.toLocaleString('id-ID') + '</td>' +
+          '</tr>' +
+          '<tr class="bg-surface-2/50 font-bold">' +
+            '<td colspan="2" class="py-3 px-3 text-text-primary">Total Nilai Tagihan Barang</td>' +
+            '<td class="py-3 px-3 text-right tabular-nums">' + qty + ' pcs</td>' +
+            '<td class="py-3 px-3 text-right tabular-nums text-text-primary">Rp ' + st.revenue.toLocaleString('id-ID') + '</td>' +
+          '</tr>';
+
+        document.getElementById('detGrossTotal').textContent = 'Rp ' + st.revenue.toLocaleString('id-ID');
+        document.getElementById('detPaidPct').textContent = paidPct + '% Terealisasi';
+        document.getElementById('detPaidAmount').textContent = 'Rp ' + paid.toLocaleString('id-ID');
+        document.getElementById('detPaidBar').style.width = paidPct + '%';
+        document.getElementById('detOutstandingAmount').textContent = 'Rp ' + st.sisa.toLocaleString('id-ID');
+
+        var outBox = document.getElementById('detOutstandingBox');
+        var dot = document.getElementById('detPayStatusDot');
+        if (st.sisa <= 0) {
+          outBox.className = 'p-4 rounded-xl bg-status-success/10 border border-status-success/30 flex flex-col gap-1.5';
+          document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-success/20 text-status-success text-[10px] font-bold uppercase';
+          document.getElementById('detOverdueTag').textContent = 'LUNAS';
+          document.getElementById('detOutstandingAmount').className = 'text-2xl font-bold text-status-success tabular-nums';
+          document.getElementById('detOutstandingHint').className = 'text-[11px] text-status-success';
+          document.getElementById('detOutstandingHint').textContent = 'Seluruh tagihan pada invoice ini telah dilunasi.';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-status-success';
+        } else if (st.status === 'Terlambat Bayar') {
+          outBox.className = 'p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 flex flex-col gap-1.5';
+          document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-danger/20 text-status-danger text-[10px] font-bold uppercase';
+          document.getElementById('detOverdueTag').textContent = 'TERLAMBAT ' + st.hariTerlambat + ' HARI';
+          document.getElementById('detOutstandingAmount').className = 'text-2xl font-bold text-status-danger tabular-nums';
+          document.getElementById('detOutstandingHint').className = 'text-[11px] text-status-danger/90';
+          document.getElementById('detOutstandingHint').textContent = 'Jatuh tempo terlewati sejak ' + formatShortIdDate(inv.dueDate || inv.due_date) + '.';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-status-danger';
+        } else {
+          outBox.className = 'p-4 rounded-xl bg-surface-2 border border-border-default flex flex-col gap-1.5';
+          document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-warning/20 text-status-warning text-[10px] font-bold uppercase';
+          document.getElementById('detOverdueTag').textContent = paid > 0 ? 'SEBAGIAN' : 'BELUM JATUH TEMPO';
+          document.getElementById('detOutstandingAmount').className = 'text-2xl font-bold text-text-primary tabular-nums';
+          document.getElementById('detOutstandingHint').className = 'text-[11px] text-text-muted';
+          document.getElementById('detOutstandingHint').textContent = 'Batas waktu pelunasan: ' + formatShortIdDate(inv.dueDate || inv.due_date) + '.';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-status-warning';
+        }
+
+        // Aging bars
+        var agingText = st.sisa <= 0 ? 'Lunas (0 Hari)' : (st.hariTerlambat === 0 ? 'Aktif (Belum Jatuh Tempo)' : (st.hariTerlambat <= 15 ? 'Overdue Tier 1 (1–15 Hari)' : 'Overdue Tier 2 (>15 Hari)'));
+        document.getElementById('detAgingLabel').textContent = agingText;
+        var level = st.sisa <= 0 ? 1 : (st.hariTerlambat === 0 ? 2 : (st.hariTerlambat <= 15 ? 4 : 5));
+        var barsHtml = '';
+        for (var b = 1; b <= 5; b++) {
+          var h = 6 + (b * 3);
+          var cls = b <= level ? (level >= 4 ? 'bg-status-danger' : (level === 2 ? 'bg-status-warning' : 'bg-status-success')) : 'bg-border-default';
+          barsHtml += '<span class="w-1.5 rounded-sm ' + cls + '" style="height:' + h + 'px"></span>';
+        }
+        document.getElementById('detAgingBars').innerHTML = barsHtml;
+
+        // Payment Log
+        var payLogBox = document.getElementById('detPayLogContainer');
+        if (paid > 0) {
+          document.getElementById('detPayLogCount').textContent = '1 Transaksi';
+          payLogBox.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex items-center justify-between text-xs';
+          payLogBox.innerHTML =
+            '<div class="text-left"><div class="font-semibold text-text-primary">Transfer Bank Terverifikasi</div><div class="text-[11px] text-text-muted">' + formatShortIdDate(inv.lastPaymentDate || inv.last_payment_date || inv.date) + '</div></div>' +
+            '<span class="font-bold text-status-success tabular-nums">+ Rp ' + paid.toLocaleString('id-ID') + '</span>';
+        } else {
+          document.getElementById('detPayLogCount').textContent = '0 Transaksi';
+          payLogBox.className = 'p-5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col items-center gap-1.5 text-center text-xs text-text-muted';
+          payLogBox.innerHTML = '<span class="material-symbols-outlined text-[22px] opacity-60">receipt_long</span><strong class="text-text-secondary">Tidak Ada Riwayat</strong><span>Belum ada riwayat pembayaran tercatat untuk invoice ini.</span>';
+        }
+
+        // Related uploaded docs
+        var relDocs = getUploadedDocs().filter(function (d) { return d.storeName === store || d.refNumber === invoiceId; });
+        var relContainer = document.getElementById('detRelatedDocs');
+        if (relDocs.length === 0) {
+          relContainer.innerHTML = '<p class="text-text-muted">Belum ada berkas pendukung yang diunggah untuk toko/invoice ini. Klik "+ Unggah Dokumen" untuk menambahkan bukti serah terima atau faktur.</p>';
+        } else {
+          relContainer.innerHTML = relDocs.map(function (d) {
+            return '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-2 mb-2">' +
+              '<div class="min-w-0"><div class="font-semibold text-text-primary truncate">' + d.fileName + '</div><div class="text-[11px] text-text-muted">' + d.sizeLabel + (d.notes ? ' · ' + d.notes : '') + '</div></div>' +
+              '<span class="px-2 py-0.5 rounded-full bg-status-warning/15 text-status-warning text-[10px] font-semibold shrink-0">Antrian Finance</span>' +
+            '</div>';
+          }).join('');
+        }
+
+        document.getElementById('detUploadDocShortcut').onclick = function () {
+          openUploadDocModal(store, invoiceId);
+        };
+        document.getElementById('detEmailFinanceBtn').href = 'mailto:keuangan@fade.internal?subject=' + encodeURIComponent('Rekonsiliasi Invoice ' + invoiceId + ' - ' + store);
+        document.getElementById('detDownloadPdfBtn').onclick = function () {
+          var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;padding:20px;}table{width:100%;border-collapse:collapse;margin-top:14px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>' +
+            '<h2>INVOICE ' + invoiceId + ' · ' + store + '</h2>' +
+            '<p><strong>Sales PIC:</strong> ' + session.salesName + '<br><strong>Tanggal Terbit:</strong> ' + formatShortIdDate(inv.date || inv.invoice_date) + '<br><strong>Jatuh Tempo:</strong> ' + formatShortIdDate(inv.dueDate || inv.due_date) + '<br><strong>Status:</strong> ' + st.status + '</p>' +
+            '<table><thead><tr><th>Produk</th><th>Harga Satuan</th><th>QTY</th><th>Subtotal</th></tr></thead><tbody><tr><td>' + (inv.productName || 'FADE Pods') + '</td><td>Rp ' + unitPrice.toLocaleString('id-ID') + '</td><td>' + qty + ' pcs</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td></tr></tbody></table>' +
+            '<p><strong>Total Tagihan:</strong> Rp ' + st.revenue.toLocaleString('id-ID') + '<br><strong>Terbayar:</strong> Rp ' + paid.toLocaleString('id-ID') + '<br><strong>Sisa Outstanding:</strong> Rp ' + st.sisa.toLocaleString('id-ID') + '</p></body></html>';
+          triggerDownload(invoiceId + '_' + store.replace(/\s+/g, '_') + '.doc', docHtml, 'application/msword;charset=utf-8;');
+          showToast('Dokumen invoice ' + invoiceId + ' berhasil diunduh');
+        };
+      }
+
+      // MODAL UNGGAH DOKUMEN INVOICE CONTROLLER
+      var uploadDocModalBackdrop = document.getElementById('uploadDocModalBackdrop');
+      var docDropzone = document.getElementById('docDropzone');
+      var docFileInput = document.getElementById('docFileInput');
+
+      function openUploadDocModal(presetStore, presetRef) {
+        clearSelectedDocFile();
+        if (presetStore) document.getElementById('docStoreSelect').value = presetStore;
+        document.getElementById('docRefInput').value = presetRef || '';
+        document.getElementById('docNotesInput').value = '';
+        uploadDocModalBackdrop.classList.remove('hidden');
+      }
+      function closeUploadDocModal() {
+        uploadDocModalBackdrop.classList.add('hidden');
+      }
+      function clearSelectedDocFile() {
+        pendingUploadFile = null;
+        docFileInput.value = '';
+        document.getElementById('docSelectedFileCard').classList.add('hidden');
+      }
+      function setSelectedDocFile(file) {
+        if (!file) return;
+        if (file.size > 15 * 1024 * 1024) {
+          showToast('Ukuran berkas melebihi batas maksimal 15 MB', 'error');
+          return;
+        }
+        pendingUploadFile = file;
+        var sizeLabel = file.size >= 1048576 ? (file.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(file.size / 1024)) + ' KB';
+        document.getElementById('docFileNameText').textContent = file.name;
+        document.getElementById('docFileMetaText').textContent = sizeLabel + ' · Siap masuk antrian Finance';
+        document.getElementById('docSelectedFileCard').classList.remove('hidden');
+      }
+      window.openUploadDocModal = openUploadDocModal;
+      window.closeUploadDocModal = closeUploadDocModal;
+      window.clearSelectedDocFile = clearSelectedDocFile;
+
+      docDropzone.addEventListener('click', function () { docFileInput.click(); });
+      docDropzone.addEventListener('dragover', function (e) { e.preventDefault(); docDropzone.classList.add('border-accent'); });
+      docDropzone.addEventListener('dragleave', function () { docDropzone.classList.remove('border-accent'); });
+      docDropzone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        docDropzone.classList.remove('border-accent');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) setSelectedDocFile(e.dataTransfer.files[0]);
+      });
+      docFileInput.addEventListener('change', function () {
+        if (docFileInput.files && docFileInput.files[0]) setSelectedDocFile(docFileInput.files[0]);
+      });
+
+      document.getElementById('uploadDocForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!pendingUploadFile) {
+          showToast('Pilih berkas dokumen terlebih dahulu', 'error');
+          return;
+        }
+        var sizeLabel = pendingUploadFile.size >= 1048576 ? (pendingUploadFile.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(pendingUploadFile.size / 1024)) + ' KB';
+        saveUploadedDoc({
+          id: 'DOC-' + Date.now(),
+          salesName: session.salesName,
+          fileName: pendingUploadFile.name,
+          sizeLabel: sizeLabel,
+          storeName: document.getElementById('docStoreSelect').value,
+          refNumber: document.getElementById('docRefInput').value.trim(),
+          notes: document.getElementById('docNotesInput').value.trim(),
+          uploadedAt: new Date().toISOString()
+        });
+        closeUploadDocModal();
+        renderUploadedDocsQueue();
+        if (!viewInvoiceDetail.classList.contains('hidden') && activeDetailInvoiceId) {
+          renderInvoiceDetailPage(activeDetailInvoiceId);
+        }
+        showToast('Dokumen berhasil diunggah ke antrian verifikasi Finance');
+      });
+
+      // EXPORT ENGINE
+      function triggerDownload(filename, content, mimeType) {
+        var blob = new Blob(['\uFEFF' + content], { type: mimeType });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      }
+
+      function runExport(format) {
+        var rows = getScopedInvoices(true, '', 'all');
+        var summary = FADE_ENGINE.calculateSummary(FADE_STORE.getInvoices(), FADE_STORE.getTargets(), {
+          role: 'sales', userSales: session.salesName, selectedSales: session.salesName,
+          mode: currentMode, periode: currentPeriod, snapshot: '2026-11-22', startDate: customStartDate, endDate: customEndDate
+        });
+        var stamp = new Date().toISOString().slice(0, 10);
+        var safeName = session.salesName.replace(/\s+/g, '_');
+
+        if (format === 'csv') {
+          var headers = ['No. Invoice', 'Tanggal', 'Toko', 'Sales', 'Produk', 'QTY (pcs)', 'Total Invoice (IDR)', 'Terbayar (IDR)', 'Outstanding (IDR)', 'Jatuh Tempo', 'Status'];
+          var csvLines = [headers.join(',')];
+          rows.forEach(function (inv) {
+            var st = FADE_ENGINE.evaluateInvoiceState(inv, summary.period.asOf);
+            csvLines.push(['"' + (inv.id || inv.invoice_id || '') + '"', '"' + (inv.date || inv.invoice_date || '') + '"', '"' + String(inv.storeName || inv.store_name || '').replace(/"/g, '""') + '"', '"' + session.salesName + '"', '"' + String(inv.productName || '').replace(/"/g, '""') + '"', inv.qty || 0, st.revenue, st.dibayar, st.sisa, '"' + (inv.dueDate || inv.due_date || '') + '"', '"' + st.status + '"'].join(','));
+          });
+          triggerDownload('FADE_Sales_' + safeName + '_' + stamp + '.csv', csvLines.join('\r\n'), 'text/csv;charset=utf-8;');
+          showToast('Berhasil ekspor ' + rows.length + ' invoice ke CSV');
+        } else if (format === 'xls') {
+          var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><h3>Rekap Sales: ' + session.salesName + '</h3><table border="1"><thead><tr><th>No. Invoice</th><th>Tanggal</th><th>Toko</th><th>QTY</th><th>Total</th><th>Terbayar</th><th>Sisa</th><th>Status</th></tr></thead><tbody>';
+          rows.forEach(function (inv) {
+            var st = FADE_ENGINE.evaluateInvoiceState(inv, summary.period.asOf);
+            html += '<tr><td>' + (inv.id || inv.invoice_id) + '</td><td>' + (inv.date || inv.invoice_date) + '</td><td>' + (inv.storeName || inv.store_name) + '</td><td>' + (inv.qty || 0) + '</td><td>' + st.revenue + '</td><td>' + st.dibayar + '</td><td>' + st.sisa + '</td><td>' + st.status + '</td></tr>';
+          });
+          html += '</tbody></table></body></html>';
+          triggerDownload('FADE_Sales_' + safeName + '_' + stamp + '.xls', html, 'application/vnd.ms-excel;charset=utf-8;');
+          showToast('Berhasil ekspor ' + rows.length + ' invoice ke Excel (.xls)');
+        } else {
+          var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;}table{width:100%;border-collapse:collapse;margin-top:12px;}th,td{border:1px solid #ccc;padding:6px;text-align:left;}</style></head><body><h2>Laporan Penjualan · ' + session.salesName + '</h2><table><thead><tr><th>No. Invoice</th><th>Tanggal</th><th>Toko</th><th>QTY</th><th>Total</th><th>Sisa</th><th>Status</th></tr></thead><tbody>';
+          rows.forEach(function (inv) {
+            var st = FADE_ENGINE.evaluateInvoiceState(inv, summary.period.asOf);
+            docHtml += '<tr><td>' + (inv.id || inv.invoice_id) + '</td><td>' + (inv.date || inv.invoice_date) + '</td><td>' + (inv.storeName || inv.store_name) + '</td><td>' + (inv.qty || 0) + '</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td><td>Rp ' + st.sisa.toLocaleString('id-ID') + '</td><td>' + st.status + '</td></tr>';
+          });
+          docHtml += '</tbody></table></body></html>';
+          triggerDownload('FADE_Sales_' + safeName + '_' + stamp + '.doc', docHtml, 'application/msword;charset=utf-8;');
+          showToast('Berhasil ekspor ringkasan dokumen (.doc)');
+        }
+      }
+
+      var exportMenuBtn = document.getElementById('exportMenuBtn');
+      var exportDropdownMenu = document.getElementById('exportDropdownMenu');
+      exportMenuBtn.addEventListener('click', function (e) { e.stopPropagation(); exportDropdownMenu.classList.toggle('hidden'); });
+      document.querySelectorAll('.export-opt-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { exportDropdownMenu.classList.add('hidden'); runExport(btn.getAttribute('data-export')); });
+      });
+
+      // DATE FILTER POPOVER
+      var dateFilterBtn = document.getElementById('dateFilterBtn');
+      var dateFilterPopover = document.getElementById('dateFilterPopover');
+      dateFilterBtn.addEventListener('click', function (e) { e.stopPropagation(); dateFilterPopover.classList.toggle('hidden'); });
+      document.getElementById('closeDatePopoverBtn').addEventListener('click', function () { dateFilterPopover.classList.add('hidden'); });
+      document.addEventListener('click', function (e) {
+        if (!dateFilterPopover.contains(e.target) && !dateFilterBtn.contains(e.target)) dateFilterPopover.classList.add('hidden');
+        if (!exportDropdownMenu.contains(e.target) && !exportMenuBtn.contains(e.target)) exportDropdownMenu.classList.add('hidden');
+      });
+
+      document.querySelectorAll('.date-preset-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var preset = btn.getAttribute('data-preset');
+          if (preset === 'bulan') { currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Nov – 22 Nov 2026'; }
+          else if (preset === '7d') { currentMode = 'custom'; customStartDate = '2026-11-16'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '16 Nov – 22 Nov 2026'; }
+          else if (preset === '30d') { currentMode = 'custom'; customStartDate = '2026-10-24'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '24 Okt – 22 Nov 2026'; }
+          else if (preset === 'ytd') { currentMode = 'ytd'; customStartDate = '2026-01-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Jan – 22 Nov 2026'; }
+          document.getElementById('customStartDate').value = customStartDate;
+          document.getElementById('customEndDate').value = customEndDate;
+          dateFilterPopover.classList.add('hidden');
+          updatePeriodTabs(); invoicePage = 1; renderAll();
+        });
+      });
+
+      document.getElementById('applyCustomDateBtn').addEventListener('click', function () {
+        var s = document.getElementById('customStartDate').value;
+        var e = document.getElementById('customEndDate').value;
+        if (!s || !e) return;
+        currentMode = 'custom';
+        customStartDate = s <= e ? s : e; customEndDate = s <= e ? e : s;
+        filterDateLabel.textContent = formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
+        dateFilterPopover.classList.add('hidden');
+        updatePeriodTabs(); invoicePage = 1; renderAll();
+      });
+
+      // ROUTING
+      function updatePeriodTabs() {
+        if (currentMode === 'bulan') {
+          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorBulanan.classList.remove('hidden');
+          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorYTD.classList.add('hidden');
+          statusBadgeText.textContent = 'November 2026 · Data per 22/11/2026';
+        } else if (currentMode === 'ytd') {
+          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorYTD.classList.remove('hidden');
+          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorBulanan.classList.add('hidden');
+          statusBadgeText.textContent = 'YTD 2026 (01 Jan – 22 Nov 2026)';
+        } else {
+          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorBulanan.classList.add('hidden');
+          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabIndicatorYTD.classList.add('hidden');
+          statusBadgeText.textContent = 'Rentang Kustom · ' + formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
+        }
+      }
+
+      function setActiveNavHighlight(navRoute) {
+        document.querySelectorAll('#desktopNavContainer .nav-item').forEach(function (el) {
+          var route = el.getAttribute('data-route');
+          var indicator = el.querySelector('.nav-indicator');
+          var icon = el.querySelector('.material-symbols-outlined');
+          if (route === navRoute) {
+            el.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-surface-2 text-text-primary h-10 overflow-hidden';
+            if (indicator) indicator.classList.remove('hidden');
+            if (icon) icon.className = 'material-symbols-outlined text-[18px] text-accent shrink-0';
+          } else {
+            el.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden';
+            if (indicator) indicator.classList.add('hidden');
+            if (icon) icon.className = 'material-symbols-outlined text-[18px] text-text-muted shrink-0';
+          }
+        });
+        document.querySelectorAll('#mobileNavContainer .mobile-nav-item').forEach(function (el) {
+          var route = el.getAttribute('data-route');
+          var indicator = el.querySelector('.mobile-nav-indicator');
+          if (route === navRoute) {
+            el.classList.add('text-accent', 'font-semibold'); el.classList.remove('text-text-muted');
+            if (indicator) indicator.classList.remove('hidden');
+          } else {
+            el.classList.remove('text-accent', 'font-semibold'); el.classList.add('text-text-muted');
+            if (indicator) indicator.classList.add('hidden');
+          }
+        });
+      }
+
+      function handleRouting() {
+        var hash = window.location.hash.replace('#', '') || 'dashboard';
+        viewDashboard.classList.add('hidden');
+        viewKpiDrilldown.classList.add('hidden');
+        viewInvoices.classList.add('hidden');
+        viewInvoiceDetail.classList.add('hidden');
+        viewProfile.classList.add('hidden');
+        closeUploadDocModal();
+        closeAccountModal();
+        if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
+        if (exportDropdownMenu) exportDropdownMenu.classList.add('hidden');
+
+        if (hash.indexOf('kpi-') === 0) {
+          activeDrillKpi = hash.slice(4);
+          setActiveNavHighlight(currentMode === 'ytd' ? 'ytd' : 'dashboard');
+          viewKpiDrilldown.classList.remove('hidden');
+          renderKpiDrilldownPage(activeDrillKpi);
+          window.scrollTo(0, 0);
+        } else if (hash.indexOf('invoice-') === 0) {
+          activeDetailInvoiceId = decodeURIComponent(hash.slice(8));
+          setActiveNavHighlight('invoices');
+          viewInvoiceDetail.classList.remove('hidden');
+          renderInvoiceDetailPage(activeDetailInvoiceId);
+          window.scrollTo(0, 0);
+        } else if (hash === 'ytd') {
+          currentMode = 'ytd';
+          filterDateLabel.textContent = '01 Jan – 22 Nov 2026';
+          setActiveNavHighlight('ytd');
+          updatePeriodTabs();
+          viewDashboard.classList.remove('hidden');
+          renderMetrics();
+          renderDashboardInvoices();
+        } else if (hash === 'invoices') {
+          setActiveNavHighlight('invoices');
+          viewInvoices.classList.remove('hidden');
+          renderUploadedDocsQueue();
+          renderInvoicesTable();
+        } else if (hash === 'profile') {
+          setActiveNavHighlight('profile');
+          viewProfile.classList.remove('hidden');
+        } else {
+          if (currentMode === 'ytd') currentMode = 'bulan';
+          setActiveNavHighlight('dashboard');
+          updatePeriodTabs();
+          viewDashboard.classList.remove('hidden');
+          renderMetrics();
+          renderDashboardInvoices();
+        }
+      }
+
+      window.addEventListener('hashchange', handleRouting);
+
+      tabModeBulanan.addEventListener('click', function () {
+        currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
+        if (window.location.hash !== '#dashboard') window.location.hash = '#dashboard';
+        else { updatePeriodTabs(); renderAll(); }
+      });
+      tabModeYTD.addEventListener('click', function () {
+        currentMode = 'ytd'; customStartDate = '2026-01-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Jan – 22 Nov 2026';
+        if (window.location.hash !== '#ytd') window.location.hash = '#ytd';
+        else { updatePeriodTabs(); renderAll(); }
+      });
+
+      document.querySelectorAll('.kpi-card').forEach(function (card) {
+        card.addEventListener('click', function () { openKpiDrilldownPage(card.getAttribute('data-kpi')); });
+      });
+
+      document.getElementById('dashInvSearch').addEventListener('input', renderDashboardInvoices);
+      document.getElementById('dashInvStatus').addEventListener('change', renderDashboardInvoices);
+      document.getElementById('drillSearchInput').addEventListener('input', function () { renderKpiDrilldownPage(activeDrillKpi); });
+      document.getElementById('drillCategoryFilter').addEventListener('change', function () { renderKpiDrilldownPage(activeDrillKpi); });
+
+      document.getElementById('prevPageBtn').addEventListener('click', function () { if (invoicePage > 1) { invoicePage--; renderInvoicesTable(); } });
+      document.getElementById('nextPageBtn').addEventListener('click', function () { invoicePage++; renderInvoicesTable(); });
+      document.getElementById('invoiceSearchInput').addEventListener('input', function () { invoicePage = 1; renderInvoicesTable(); });
+      document.getElementById('invoiceStatusFilter').addEventListener('change', function () { invoicePage = 1; renderInvoicesTable(); });
+      document.getElementById('invoiceDateScopeCheckbox').addEventListener('change', function () { invoicePage = 1; renderInvoicesTable(); });
+      document.getElementById('resetInvoiceFilterBtn').addEventListener('click', function () {
+        document.getElementById('invoiceSearchInput').value = '';
+        document.getElementById('invoiceStatusFilter').value = 'all';
+        document.getElementById('invoiceDateScopeCheckbox').checked = false;
+        invoicePage = 1; renderInvoicesTable();
+      });
+
+      // THEME
+      function applyTheme(theme) {
+        FADE_STORE.setTheme(theme);
+        var icon = theme === 'dark' ? 'dark_mode' : 'light_mode';
+        document.getElementById('sidebarThemeIcon').textContent = icon;
+        document.getElementById('mobileThemeIcon').textContent = icon;
+      }
+      function toggleTheme() { applyTheme(FADE_STORE.getTheme() === 'dark' ? 'light' : 'dark'); }
+      document.getElementById('sidebarThemeBtn').addEventListener('click', toggleTheme);
+      document.getElementById('mobileThemeBtn').addEventListener('click', toggleTheme);
+
+      // ACCOUNT MODALS (Redirect back to unified index.html)
+      var accountModalBackdrop = document.getElementById('accountModalBackdrop');
+      function openAccountModal(title, desc, buttonsHtml) {
+        document.getElementById('accountModalTitle').textContent = title;
+        document.getElementById('accountModalDesc').textContent = desc;
+        document.getElementById('accountModalActions').innerHTML = buttonsHtml;
+        accountModalBackdrop.classList.remove('hidden');
+      }
+      function closeAccountModal() { accountModalBackdrop.classList.add('hidden'); }
+      window.closeAccountModal = closeAccountModal;
+      window.confirmSalesLogout = function () {
+        FADE_STORE.clearSession();
+        window.location.href = 'index.html';
+      };
+
+      function triggerLogoutModal() {
+        openAccountModal(
+          'Keluar dari Akun?',
+          'Anda akan mengakhiri sesi saat ini dan kembali ke halaman masuk.',
+          '<button type="button" onclick="closeAccountModal()" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium">Batal</button>' +
+          '<button type="button" onclick="confirmSalesLogout()" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90">Keluar</button>'
+        );
+      }
+
+      document.getElementById('sidebarLogoutBtn').addEventListener('click', triggerLogoutModal);
+      document.getElementById('mobileLogoutBtn').addEventListener('click', triggerLogoutModal);
+      document.getElementById('btnProfileLogout').addEventListener('click', triggerLogoutModal);
+
+      document.getElementById('btnSwitchSalesAccount').addEventListener('click', function () {
+        openAccountModal(
+          'Ganti Akun?',
+          'Anda akan keluar dari akun ' + session.salesName + ' dan diarahkan ke halaman masuk untuk menggunakan akun lainnya.',
+          '<button type="button" onclick="closeAccountModal()" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium">Batal</button>' +
+          '<button type="button" onclick="confirmSalesLogout()" class="h-9 px-4 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] font-semibold hover:opacity-90">Ganti Akun</button>'
+        );
+      });
+
+      document.getElementById('btnForgotPassword').addEventListener('click', function () {
+        openAccountModal(
+          'Lupa Password?',
+          'Untuk Showcase v0.2, silakan hubungi Administrator atau pengelola sistem FADE Pods untuk mendapatkan bantuan pemulihan akses akun Anda.',
+          '<button type="button" onclick="closeAccountModal()" class="h-9 px-4 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] font-semibold hover:opacity-90">Tutup</button>'
+        );
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeUploadDocModal();
+          closeAccountModal();
+        }
+      });
+
+      if (window.FADE_TREND_CHART) window.FADE_TREND_CHART.init();
+      populateSalesIdentity();
+      applyTheme(FADE_STORE.getTheme());
+      handleRouting();
+    })();
+  </script>
+</body>
+</html>
