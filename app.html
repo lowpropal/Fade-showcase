@@ -304,17 +304,17 @@
                   </span>
                 </div>
               </div>
-              <!-- Timeframe Selector -->
-              <div class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
-                <button type="button" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors">7D</button>
-                <button type="button" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors">30D</button>
-                <button type="button" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors">90D</button>
+              <!-- Timeframe Selector (7D / 30D / 90D Interactive Tabs) -->
+              <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
+                <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
+                <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
               </div>
             </div>
 
-            <!-- Sleek Modern Spline Area Chart (SVG) -->
-            <div class="relative w-full h-64 pt-2 pb-1">
-              <svg aria-label="Grafik Tren Penjualan Bulanan" class="w-full h-full overflow-visible" viewBox="0 0 640 210">
+            <!-- Active Interactive Spline Area Chart (SVG) -->
+            <div id="chartInteractiveContainer" class="relative w-full h-64 pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan Bulanan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+              <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan Bulanan" class="w-full h-full overflow-visible select-none" viewBox="0 0 640 210">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#F28C45" stop-opacity="0.22"></stop>
@@ -323,58 +323,48 @@
                   </linearGradient>
                 </defs>
 
-                <!-- Horizontal Dotted Grid Lines -->
-                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="20" y2="20"></line>
-                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="60" y2="60"></line>
-                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="100" y2="100"></line>
-                <line stroke="#2B2B2E" stroke-dasharray="3 3" stroke-width="1" x1="46" x2="625" y1="140" y2="140"></line>
-                <line stroke="#39393D" stroke-width="1" x1="46" x2="625" y1="175" y2="175"></line>
+                <!-- Dynamic Horizontal Dotted Grid Lines -->
+                <g id="chartGridLines"></g>
 
-                <!-- Y-Axis Labels -->
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="24">80jt</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="64">60jt</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="104">40jt</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="144">20jt</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="end" x="38" y="179">0</text>
+                <!-- Dynamic Y-Axis Labels -->
+                <g id="chartYAxisLabels"></g>
 
                 <!-- Smooth Spline Area Gradient Fill -->
-                <path d="M 55 145 C 110 140, 140 120, 185 106 C 230 92, 255 104, 295 90 C 335 76, 365 65, 405 74 C 445 83, 480 60, 520 46 C 548 36, 568 39, 585 26 L 585 175 L 55 175 Z" fill="url(#fadeChartGrad)"></path>
+                <path id="chartSplineArea" fill="url(#fadeChartGrad)"></path>
 
                 <!-- Smooth Spline Stroke Curve -->
-                <path d="M 55 145 C 110 140, 140 120, 185 106 C 230 92, 255 104, 295 90 C 335 76, 365 65, 405 74 C 445 83, 480 60, 520 46 C 548 36, 568 39, 585 26" fill="none" stroke="#F28C45" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                <path id="chartSplineStroke" fill="none" stroke="#F28C45" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
 
                 <!-- Milestone Data Nodes -->
-                <circle cx="55" cy="145" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
-                <circle cx="185" cy="106" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
-                <circle cx="295" cy="90" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
-                <circle cx="405" cy="74" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
-                <circle cx="520" cy="46" fill="#19191B" r="3.5" stroke="#55555A" stroke-width="1.5"></circle>
+                <g id="chartNodesGroup"></g>
 
                 <!-- Active Point Vertical Guide Line -->
-                <line stroke="#55555A" stroke-dasharray="3 3" stroke-width="1.25" x1="585" x2="585" y1="26" y2="175"></line>
+                <line id="chartGuideLine" stroke="#55555A" stroke-dasharray="3 3" stroke-width="1.25"></line>
 
                 <!-- Active Highlighted Node -->
-                <circle cx="585" cy="26" fill="#19191B" r="5.5" stroke="#F28C45" stroke-width="2.5"></circle>
-                <circle cx="585" cy="26" fill="#F28C45" r="2"></circle>
+                <g id="chartActiveNodeGroup" class="pointer-events-none">
+                  <circle id="chartActiveNodeRing" r="5.5" fill="#19191B" stroke="#F28C45" stroke-width="2.5"></circle>
+                  <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
+                </g>
 
-                <!-- Floating Tooltip Pill -->
-                <g transform="translate(450, 6)">
-                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="34" rx="6" stroke="#39393D" stroke-width="1" width="128"></rect>
-                  <polygon fill="#39393D" points="128,17 134,17 128,22"></polygon>
-                  <polygon fill="#202022" points="127,17 132,17 127,21"></polygon>
+                <!-- Floating Tooltip Pill (Interactive Overlay) -->
+                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(450, 6)">
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="34" rx="6" stroke="#39393D" stroke-width="1" width="132"></rect>
+                  <polygon fill="#39393D" points="132,17 138,17 132,22"></polygon>
+                  <polygon fill="#202022" points="131,17 136,17 131,21"></polygon>
                   <circle cx="14" cy="17" fill="#F28C45" r="3"></circle>
-                  <text fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
-                  <text fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="65" y="16">Rp 68,4 jt</text>
-                  <text fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="27">Hari ini (+14%)</text>
+                  <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
+                  <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="65" y="16">Rp 48,1 jt</text>
+                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="27">+1,9 jt transaksi</text>
                 </g>
 
                 <!-- X-Axis Labels -->
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="55" y="196">01 Nov</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="185" y="196">05 Nov</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="295" y="196">10 Nov</text>
-                <text fill="#8F8F93" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" text-anchor="middle" x="405" y="196">15 Nov</text>
-                <text fill="#F28C45" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="585" y="196">19 Nov</text>
+                <g id="chartXAxisLabels"></g>
+
+                <!-- Transparent Tracking Overlay for Crosshair Pointer -->
+                <rect id="chartPointerOverlay" width="640" height="210" fill="transparent" class="cursor-crosshair" aria-label="Eksplorasi data grafik"></rect>
               </svg>
+              <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
             </div>
           </div>
 
@@ -696,6 +686,7 @@
   <script src="assets/js/engine/business-engine.js"></script>
   <script src="assets/js/data/synthetic-seed.js"></script>
   <script src="assets/js/store.js"></script>
+  <script src="assets/js/components/trend-chart.js"></script>
   <script src="assets/js/vendor/xlsx-reader.js"></script>
   <script>
     (function () {
@@ -947,12 +938,16 @@
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
 
         if (session.role === 'admin') {
-          renderAdminAnalytics(summary);
+          renderAdminAnalytics(summary, invoices);
           renderComparison(invoices, targets);
         }
       }
 
-      function renderAdminAnalytics(summary) {
+      function renderAdminAnalytics(summary, invoices) {
+        if (window.FADE_TREND_CHART) {
+          window.FADE_TREND_CHART.setData(invoices, currentSalesFilter, currentMode);
+        }
+
         var elMonthlyRevenue = document.getElementById('chartMonthlyRevenue');
         var elPeriodLabel = document.getElementById('chartPeriodLabel');
         var elStatusSub = document.getElementById('chartStatusSub');
@@ -1561,6 +1556,9 @@
       });
 
       // Initial Bootstrap
+      if (window.FADE_TREND_CHART) {
+        window.FADE_TREND_CHART.init();
+      }
       setupRoleInterface();
       applyTheme(FADE_STORE.getTheme());
       handleRouting();

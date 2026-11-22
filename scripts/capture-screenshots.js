@@ -68,7 +68,7 @@ async function runCapture() {
     },
     {
       name: '03_admin_desktop_dark_1440x900.png',
-      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      url: 'file://' + path.join(BASE_DIR, 'app.html?theme=dark#dashboard'),
       width: 1440,
       height: 1080,
       mobile: false,
@@ -126,6 +126,44 @@ async function runCapture() {
           `
         });
         await sleep(400);
+      }
+    },
+    {
+      name: '07_admin_chart_7D_interactive.png',
+      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
+        localStorage.setItem('fade_theme', 'dark');
+      `,
+      actions: async (send) => {
+        await send('Runtime.evaluate', {
+          expression: `
+            document.getElementById('chartBtn7D').click();
+          `
+        });
+        await sleep(500);
+      }
+    },
+    {
+      name: '08_admin_chart_90D_interactive.png',
+      url: 'file://' + path.join(BASE_DIR, 'app.html#dashboard'),
+      width: 1440,
+      height: 1080,
+      mobile: false,
+      initScript: `
+        localStorage.setItem('fade_active_session', JSON.stringify({ role: 'admin', name: 'Raka Pratama', title: 'Administrator', salesName: null }));
+        localStorage.setItem('fade_theme', 'dark');
+      `,
+      actions: async (send) => {
+        await send('Runtime.evaluate', {
+          expression: `
+            document.getElementById('chartBtn90D').click();
+          `
+        });
+        await sleep(500);
       }
     }
   ];
