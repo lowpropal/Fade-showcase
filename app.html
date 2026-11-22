@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>FADE Pods Showcase v0.2 — Application Shell</title>
+  <title>FADE Pods Showcase v0.2 — Shared Application Shell</title>
 
   <!-- Google Fonts: Plus Jakarta Sans & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,32 +22,32 @@
             sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
           },
           colors: {
-            canvas: '#0D0D0E',
-            sidebar: '#131314',
+            canvas: 'var(--bg-canvas)',
+            sidebar: 'var(--bg-sidebar)',
             surface: {
-              1: '#19191B',
-              2: '#202022',
-              hover: '#29292C'
+              1: 'var(--bg-surface-1)',
+              2: 'var(--bg-surface-2)',
+              hover: 'var(--bg-surface-hover)'
             },
             border: {
-              subtle: '#2B2B2E',
-              default: '#39393D',
-              strong: '#55555A'
+              subtle: 'var(--border-subtle)',
+              default: 'var(--border-default)',
+              strong: 'var(--border-strong)'
             },
             accent: {
-              DEFAULT: '#F28C45',
-              hover: '#FF9E5C',
-              wash: '#30231B'
+              DEFAULT: 'var(--color-accent)',
+              hover: 'var(--color-accent-hover)',
+              wash: 'var(--color-accent-wash)'
             },
             text: {
-              primary: '#F5F5F3',
-              secondary: '#B8B8BB',
-              muted: '#8F8F93'
+              primary: 'var(--text-primary)',
+              secondary: 'var(--text-secondary)',
+              muted: 'var(--text-muted)'
             },
             status: {
-              success: '#63C995',
-              warning: '#F2BD4B',
-              danger: '#F07878'
+              success: 'var(--status-success)',
+              warning: 'var(--status-warning)',
+              danger: 'var(--status-danger)'
             }
           }
         }
@@ -59,9 +59,9 @@
 <body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
 
   <!-- ==================================================================== -->
-  <!-- 1. DESKTOP SIDEBAR (Master Reference Design)                         -->
+  <!-- 1. DESKTOP SIDEBAR (Master Desktop Design: 240px Fixed)               -->
   <!-- ==================================================================== -->
-  <aside class="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-sidebar border-r border-border-subtle z-40 flex-col justify-between">
+  <aside class="shell-sidebar fixed left-0 top-0 h-full w-60 bg-sidebar border-r border-border-subtle z-40 flex flex-col justify-between">
     <div class="flex flex-col pt-6">
       <!-- Brand Logo -->
       <div class="px-6 mb-8 flex items-center justify-between">
@@ -71,47 +71,28 @@
         </div>
       </div>
 
-      <!-- Navigation Menu -->
-      <nav class="flex flex-col px-3 gap-1" id="desktopNav">
-        <a href="#dashboard" data-route="dashboard" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-surface-2 text-text-primary h-10 overflow-hidden">
-          <span class="nav-indicator absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
-          <span class="material-symbols-outlined text-[18px] text-accent shrink-0">dashboard</span>
-          <span>Dashboard Bulanan</span>
-        </a>
-        <a href="#ytd" data-route="ytd" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
-          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
-          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">trending_up</span>
-          <span>Dashboard YTD</span>
-        </a>
-        <a href="#invoices" data-route="invoices" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
-          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
-          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">receipt_long</span>
-          <span>Invoice & Pembayaran</span>
-        </a>
-        <a href="#upload" data-route="upload" id="navUploadMaster" class="nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden">
-          <span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>
-          <span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">upload_file</span>
-          <span>Upload Master Excel</span>
-        </a>
+      <!-- Role-based Navigation Links (Rendered dynamically based on Role) -->
+      <nav class="flex flex-col px-3 gap-1" id="desktopNavContainer">
+        <!-- Rendered by JavaScript: NAV_CONFIG[role] -->
       </nav>
     </div>
 
-    <!-- Sidebar Footer / User Profile & Controls -->
+    <!-- Sidebar Footer: Profile, Theme Switcher & Logout -->
     <div class="p-4 border-t border-border-subtle flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5 min-w-0">
         <div class="w-8 h-8 rounded-full bg-surface-2 border border-border-default flex items-center justify-center shrink-0 text-accent">
           <span class="material-symbols-outlined text-[16px]">person</span>
         </div>
         <div class="flex flex-col min-w-0">
-          <span id="sidebarUserName" class="text-xs font-semibold text-text-primary truncate">Raka Pratama</span>
-          <span id="sidebarUserRole" class="text-[10px] text-text-muted truncate">Admin</span>
+          <span id="sidebarUserName" class="text-xs font-semibold text-text-primary truncate">User Name</span>
+          <span id="sidebarUserRole" class="text-[10px] text-text-muted truncate">User Role</span>
         </div>
       </div>
       <div class="flex items-center gap-1">
-        <button id="sidebarThemeBtn" aria-label="Ganti Tema" class="w-7 h-7 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" type="button" title="Ubah Tema">
-          <span class="material-symbols-outlined text-[16px]">dark_mode</span>
+        <button id="sidebarThemeBtn" aria-label="Ganti Tema" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors" type="button" title="Ubah Tema">
+          <span id="sidebarThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
         </button>
-        <button id="sidebarLogoutBtn" aria-label="Ganti Akun" class="w-7 h-7 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-status-danger hover:bg-surface-hover transition-colors" type="button" title="Keluar / Ganti Akun">
+        <button id="sidebarLogoutBtn" aria-label="Ganti Akun" class="w-7 h-7 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-center text-text-muted hover:text-status-danger hover:bg-surface-hover transition-colors" type="button" title="Keluar / Ganti Akun">
           <span class="material-symbols-outlined text-[16px]">logout</span>
         </button>
       </div>
@@ -119,17 +100,17 @@
   </aside>
 
   <!-- ==================================================================== -->
-  <!-- 2. MOBILE HEADER (Master Mobile View)                                -->
+  <!-- 2. MOBILE HEADER (Master Mobile View: Fixed Top Safe-Area)           -->
   <!-- ==================================================================== -->
-  <header class="lg:hidden fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
+  <header class="shell-mobile-header fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
     <div class="h-14 px-4 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
-        <span id="mobileRoleBadge" class="px-2 py-0.5 rounded-full bg-surface-2 text-text-secondary text-[10px] font-semibold uppercase tracking-wider">Admin</span>
+        <span id="mobileRoleBadge" class="px-2 py-0.5 rounded-full bg-surface-2 text-text-secondary text-[10px] font-semibold uppercase tracking-wider">ROLE</span>
       </div>
       <div class="flex items-center gap-2">
         <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
-          <span class="material-symbols-outlined text-[16px]">dark_mode</span>
+          <span id="mobileThemeIcon" class="material-symbols-outlined text-[16px]">dark_mode</span>
         </button>
         <button id="mobileLogoutBtn" aria-label="Keluar" class="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
           <span class="material-symbols-outlined text-[16px]">logout</span>
@@ -139,9 +120,9 @@
   </header>
 
   <!-- ==================================================================== -->
-  <!-- 3. MAIN APPLICATION CONTAINER                                        -->
+  <!-- 3. PAGE CONTENT CONTAINER                                            -->
   <!-- ==================================================================== -->
-  <div class="lg:pl-60 flex-1 flex flex-col min-h-screen">
+  <div class="shell-main-content flex-1 flex flex-col min-h-screen">
     <main class="w-full px-4 sm:px-6 lg:px-8 pt-18 lg:pt-6 pb-24 lg:pb-12 bg-canvas min-h-screen flex flex-col gap-6">
 
       <!-- Top Header & Toolbar -->
@@ -157,8 +138,8 @@
           </div>
         </div>
 
-        <!-- Toolbar: Period Toggle & Filters -->
-        <div class="flex items-center flex-wrap gap-2.5 justify-start xl:justify-end">
+        <!-- Toolbar: Period Toggle & Role-conditional controls -->
+        <div class="flex items-center flex-wrap gap-2.5 justify-start xl:justify-end" id="headerToolbar">
           <!-- Segmented Toggle: Bulanan vs YTD -->
           <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle" role="tablist">
             <button id="tabModeBulanan" type="button" class="relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
@@ -172,38 +153,47 @@
           </div>
 
           <!-- Date Filter Button -->
-          <button type="button" class="inline-flex items-center gap-2 h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors">
+          <button type="button" class="inline-flex items-center gap-2 h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm">
             <span class="material-symbols-outlined text-[16px] text-text-secondary">calendar_today</span>
             <span id="filterDateLabel">01 Nov – 22 Nov 2026</span>
           </button>
 
-          <!-- Sales Filter Dropdown (Admin Only) -->
-          <div id="salesFilterContainer" class="relative">
-            <select id="salesFilterSelect" class="appearance-none h-9 pl-3 pr-8 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors focus:outline-none focus:border-accent cursor-pointer">
-              <option value="all">Semua Sales</option>
-              <!-- Dynamic Options -->
-            </select>
-            <span class="material-symbols-outlined text-[16px] text-text-muted pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">expand_more</span>
+          <!-- Sales Scope Container (Admin has dropdown; Sales has locked badge) -->
+          <div id="salesScopeContainer" class="relative">
+            <!-- Rendered conditionally by role -->
           </div>
 
-          <!-- Export Recap Button -->
-          <button id="exportRecapBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-surface-1 border border-border-subtle hover:bg-surface-hover text-text-primary text-xs font-semibold transition-colors">
-            <span class="material-symbols-outlined text-[16px] text-accent">download</span>
-            <span>Ekspor .xlsx</span>
-          </button>
+          <!-- Export Recap Button (Admin Only - Conditionally rendered) -->
+          <div id="exportActionContainer">
+            <!-- Rendered conditionally by role -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Role Switcher Banner (For seamless demo testing between Admin and Sales) -->
+      <div class="p-3 rounded-xl bg-surface-1 border border-border-subtle flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-accent">swap_horiz</span>
+          <span class="font-medium text-text-secondary">Sesi Demo Aktif:</span>
+          <span id="demoSessionLabel" class="font-bold text-text-primary">Admin (Raka Pratama)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-text-muted">Cepat Ganti Peran:</span>
+          <button id="quickSwitchAdminBtn" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Admin</button>
+          <button id="quickSwitchSalesBtn" class="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Sales: Aruna Pratama</button>
         </div>
       </div>
 
       <!-- ================================================================ -->
-      <!-- VIEW 1: DASHBOARD BULANAN & YTD (KPI Cards & Charts)             -->
+      <!-- VIEW 1: DASHBOARD BULANAN & YTD                                  -->
       <!-- ================================================================ -->
       <section id="viewDashboard" class="flex flex-col gap-6">
         
-        <!-- KPI Grid (6 Metric Cards per Master Design) -->
+        <!-- KPI Grid (6 Metric Cards strictly bound to Business Engine) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           
           <!-- KPI 1: Achievement & Target -->
-          <div data-kpi="achievement" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="achievement" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Achievement & Target</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -220,7 +210,7 @@
           </div>
 
           <!-- KPI 2: QTY Penjualan -->
-          <div data-kpi="qty" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="qty" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">QTY Penjualan</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -234,7 +224,7 @@
           </div>
 
           <!-- KPI 3: Total Revenue -->
-          <div data-kpi="revenue" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="revenue" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Revenue</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -248,7 +238,7 @@
           </div>
 
           <!-- KPI 4: Pembayaran Masuk -->
-          <div data-kpi="pembayaran" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="pembayaran" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Pembayaran Diterima</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -262,7 +252,7 @@
           </div>
 
           <!-- KPI 5: Total Outstanding -->
-          <div data-kpi="outstanding" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="outstanding" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Outstanding</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -277,7 +267,7 @@
           </div>
 
           <!-- KPI 6: Invoice & Data Terinput -->
-          <div data-kpi="invoices" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer">
+          <div data-kpi="invoices" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Invoice & Outlet</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
@@ -292,8 +282,8 @@
 
         </div>
 
-        <!-- Section 2: Sales Comparison Table (Admin YTD Mode) -->
-        <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4">
+        <!-- Section 2: Sales Comparison Table (Admin Only) -->
+        <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-bold text-text-primary tracking-tight">Perbandingan Kinerja Sales</h2>
@@ -332,7 +322,7 @@
       <!-- ================================================================ -->
       <!-- VIEW 2: INVOICES & PAYMENTS TABLE                                -->
       <!-- ================================================================ -->
-      <section id="viewInvoices" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-5">
+      <section id="viewInvoices" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-base font-bold text-text-primary tracking-tight">Daftar Rekaman Invoice</h2>
@@ -387,10 +377,10 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- VIEW 3: UPLOAD MASTER EXCEL MODULE                               -->
+      <!-- VIEW 3: UPLOAD MASTER EXCEL MODULE (Admin Only)                  -->
       <!-- ================================================================ -->
       <section id="viewUpload" class="hidden flex flex-col gap-6">
-        <div class="bg-surface-1 border border-border-subtle rounded-xl p-6 flex flex-col gap-5">
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-6 flex flex-col gap-5 shadow-sm">
           <div>
             <h2 class="text-lg font-bold text-text-primary tracking-tight">Upload Master Excel (.xlsx / .csv)</h2>
             <p class="text-xs text-text-muted mt-0.5">Unggah dataset invoice menggunakan Canonical Schema v1.0. Sistem memvalidasi integritas data secara atomik sebelum data disimpan.</p>
@@ -411,14 +401,12 @@
           <!-- Ingestion Result Banner / Alert -->
           <div id="uploadResultBanner" class="hidden rounded-xl p-4 flex flex-col gap-3">
             <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2.5 font-semibold text-sm" id="uploadResultTitle">
-                <!-- Dynamic Status Title -->
-              </div>
+              <div class="flex items-center gap-2.5 font-semibold text-sm" id="uploadResultTitle"></div>
               <span id="uploadResultBadge" class="text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase"></span>
             </div>
             <p id="uploadResultDesc" class="text-xs"></p>
             
-            <!-- Defect Diagnostics Table (If errors occurred) -->
+            <!-- Defect Diagnostics Table -->
             <div id="uploadDefectsContainer" class="hidden overflow-x-auto border border-border-subtle rounded-lg mt-2">
               <table class="w-full text-left text-xs">
                 <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
@@ -428,9 +416,7 @@
                     <th class="py-2 px-3">Deskripsi Diagnostik</th>
                   </tr>
                 </thead>
-                <tbody id="uploadDefectsBody" class="divide-y divide-border-subtle font-mono text-[11px]">
-                  <!-- Dynamic Error Rows -->
-                </tbody>
+                <tbody id="uploadDefectsBody" class="divide-y divide-border-subtle font-mono text-[11px]"></tbody>
               </table>
             </div>
           </div>
@@ -449,9 +435,7 @@
                     <th class="py-2.5 px-3">Keterangan</th>
                   </tr>
                 </thead>
-                <tbody id="uploadHistoryBody" class="divide-y divide-border-subtle">
-                  <!-- Dynamic History Rows -->
-                </tbody>
+                <tbody id="uploadHistoryBody" class="divide-y divide-border-subtle"></tbody>
               </table>
             </div>
           </div>
@@ -463,34 +447,11 @@
   </div>
 
   <!-- ==================================================================== -->
-  <!-- 4. MOBILE BOTTOM NAVIGATION (Master Mobile View)                     -->
+  <!-- 4. MOBILE BOTTOM NAVIGATION (Master Mobile View: 5 Items)            -->
   <!-- ==================================================================== -->
-  <nav class="lg:hidden fixed bottom-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
-    <div class="flex justify-around items-center h-16 px-2" id="mobileNav">
-      <a href="#dashboard" data-route="dashboard" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-accent font-semibold transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span>
-        <span class="text-[10px]">Dashboard</span>
-        <span class="mobile-nav-indicator absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
-      </a>
-      <a href="#ytd" data-route="ytd" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">trending_up</span>
-        <span class="text-[10px]">YTD</span>
-        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
-      </a>
-      <a href="#invoices" data-route="invoices" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">receipt_long</span>
-        <span class="text-[10px]">Invoice</span>
-        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
-      </a>
-      <a href="#upload" data-route="upload" id="mobileNavUpload" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
-        <span class="text-[10px]">Upload</span>
-        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
-      </a>
-      <a href="index.html" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">account_circle</span>
-        <span class="text-[10px]">Akun</span>
-      </a>
+  <nav class="shell-mobile-nav fixed bottom-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
+    <div class="flex justify-around items-center h-16 px-2" id="mobileNavContainer">
+      <!-- Rendered dynamically based on Role: MOBILE_NAV_CONFIG[role] -->
     </div>
   </nav>
 
@@ -498,7 +459,7 @@
   <!-- 5. SLIDE-IN KPI DRILL-DOWN DRAWER (#dr)                              -->
   <!-- ==================================================================== -->
   <div id="kpiDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity"></div>
-  <aside id="kpiDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-50 flex-col shadow-2xl transition-transform transform translate-x-full">
+  <aside id="kpiDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-50 flex flex-col shadow-2xl transition-transform transform translate-x-full">
     <div class="p-5 border-b border-border-subtle flex items-center justify-between">
       <div class="flex flex-col">
         <h3 id="drawerTitle" class="text-base font-bold text-text-primary tracking-tight">Rincian KPI Drill-down</h3>
@@ -508,13 +469,11 @@
         <span class="material-symbols-outlined text-[18px]">close</span>
       </button>
     </div>
-    <div id="drawerContent" class="flex-1 p-5 overflow-y-auto flex flex-col gap-4 text-xs">
-      <!-- Dynamic Drawer Details -->
-    </div>
+    <div id="drawerContent" class="flex-1 p-5 overflow-y-auto flex flex-col gap-4 text-xs"></div>
   </aside>
 
   <!-- ==================================================================== -->
-  <!-- 6. ENGINE & APPLICATION SCRIPTS                                      -->
+  <!-- 6. ENGINE & APPLICATION CONTROLLER                                   -->
   <!-- ==================================================================== -->
   <script src="assets/js/engine/validator.js"></script>
   <script src="assets/js/engine/excel-importer.js"></script>
@@ -526,14 +485,45 @@
     (function () {
       'use strict';
 
-      // 1. Session & State initialization
+      // NAVIGATION CONFIGURATION SPECIFICATION (Role-Based Dynamic Inventory)
+      var NAV_CONFIG = {
+        admin: [
+          { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
+          { id: 'ytd', label: 'Dashboard YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' },
+          { id: 'upload', label: 'Upload Master Excel', icon: 'upload_file', href: '#upload' }
+        ],
+        sales: [
+          { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
+          { id: 'ytd', label: 'Dashboard YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' }
+        ]
+      };
+
+      var MOBILE_NAV_CONFIG = {
+        admin: [
+          { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
+          { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
+          { id: 'upload', label: 'Upload', icon: 'cloud_upload', href: '#upload' },
+          { id: 'logout', label: 'Keluar', icon: 'logout', href: 'index.html' }
+        ],
+        sales: [
+          { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
+          { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
+          { id: 'logout', label: 'Keluar', icon: 'logout', href: 'index.html' }
+        ]
+      };
+
+      // 1. Session & State
       var session = FADE_STORE.getActiveSession();
       if (!session) {
         window.location.href = 'index.html';
         return;
       }
 
-      var currentMode = 'bulan'; // 'bulan' or 'ytd'
+      var currentMode = 'bulan';
       var currentPeriod = '2026-11';
       var currentSalesFilter = session.role === 'sales' ? session.salesName : 'all';
       var activeCompMetric = 'qty';
@@ -546,10 +536,12 @@
       var sidebarUserName = document.getElementById('sidebarUserName');
       var sidebarUserRole = document.getElementById('sidebarUserRole');
       var mobileRoleBadge = document.getElementById('mobileRoleBadge');
-      var salesFilterContainer = document.getElementById('salesFilterContainer');
-      var salesFilterSelect = document.getElementById('salesFilterSelect');
-      var navUploadMaster = document.getElementById('navUploadMaster');
-      var mobileNavUpload = document.getElementById('mobileNavUpload');
+      var demoSessionLabel = document.getElementById('demoSessionLabel');
+
+      var desktopNavContainer = document.getElementById('desktopNavContainer');
+      var mobileNavContainer = document.getElementById('mobileNavContainer');
+      var salesScopeContainer = document.getElementById('salesScopeContainer');
+      var exportActionContainer = document.getElementById('exportActionContainer');
 
       var tabModeBulanan = document.getElementById('tabModeBulanan');
       var tabModeYTD = document.getElementById('tabModeYTD');
@@ -561,34 +553,127 @@
       var viewUpload = document.getElementById('viewUpload');
       var salesComparisonSection = document.getElementById('salesComparisonSection');
 
-      // Setup User Interface by Role
-      sidebarUserName.textContent = session.name;
-      sidebarUserRole.textContent = session.title;
-      mobileRoleBadge.textContent = session.role.toUpperCase();
+      // 3. Conditional Rendering of Navigation & Header
+      function setupRoleInterface() {
+        sidebarUserName.textContent = session.name;
+        sidebarUserRole.textContent = session.title;
+        mobileRoleBadge.textContent = session.role.toUpperCase();
+        demoSessionLabel.textContent = session.name + ' (' + session.title + ')';
 
-      if (session.role === 'sales') {
-        pageTitle.textContent = 'Dashboard Sales · ' + session.name;
-        salesFilterContainer.classList.add('hidden');
-        salesComparisonSection.classList.add('hidden');
-        navUploadMaster.classList.add('hidden');
-        mobileNavUpload.classList.add('hidden');
-      } else {
-        pageTitle.textContent = 'Dashboard Admin';
-        populateSalesFilter();
-      }
-
-      function populateSalesFilter() {
-        var salesList = FADE_STORE.getSalesList();
-        salesFilterSelect.innerHTML = '<option value="all">Semua Sales</option>';
-        salesList.forEach(function (s) {
-          var opt = document.createElement('option');
-          opt.value = s.name;
-          opt.textContent = s.name;
-          salesFilterSelect.appendChild(opt);
+        // Render Desktop Navigation
+        var dNavItems = NAV_CONFIG[session.role] || NAV_CONFIG.admin;
+        desktopNavContainer.innerHTML = '';
+        dNavItems.forEach(function (item) {
+          var a = document.createElement('a');
+          a.href = item.href;
+          a.setAttribute('data-route', item.id);
+          a.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-surface-hover hover:text-text-primary transition-colors h-10 overflow-hidden';
+          a.innerHTML =
+            '<span class="nav-indicator hidden absolute left-0 top-1.5 bottom-1.5 w-[3px] bg-accent rounded-r-full"></span>' +
+            '<span class="material-symbols-outlined text-[18px] text-text-muted shrink-0">' + item.icon + '</span>' +
+            '<span>' + item.label + '</span>';
+          desktopNavContainer.appendChild(a);
         });
+
+        // Render Mobile Bottom Navigation
+        var mNavItems = MOBILE_NAV_CONFIG[session.role] || MOBILE_NAV_CONFIG.admin;
+        mobileNavContainer.innerHTML = '';
+        mNavItems.forEach(function (item) {
+          var a = document.createElement('a');
+          a.href = item.href;
+          a.setAttribute('data-route', item.id);
+          a.className = 'mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors';
+          a.innerHTML =
+            '<span class="material-symbols-outlined text-[20px]">' + item.icon + '</span>' +
+            '<span class="text-[10px]">' + item.label + '</span>' +
+            '<span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>';
+          mobileNavContainer.appendChild(a);
+        });
+
+        // Header Sales Scope Control
+        salesScopeContainer.innerHTML = '';
+        if (session.role === 'admin') {
+          pageTitle.textContent = 'Dashboard Admin';
+          salesComparisonSection.classList.remove('hidden');
+
+          var sel = document.createElement('select');
+          sel.id = 'salesFilterSelect';
+          sel.className = 'appearance-none h-9 pl-3 pr-8 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors focus:outline-none focus:border-accent cursor-pointer shadow-sm';
+          sel.innerHTML = '<option value="all">Semua Sales</option>';
+          FADE_STORE.getSalesList().forEach(function (s) {
+            var opt = document.createElement('option');
+            opt.value = s.name;
+            opt.textContent = s.name;
+            sel.appendChild(opt);
+          });
+          sel.addEventListener('change', function () {
+            currentSalesFilter = sel.value;
+            renderMetrics();
+            renderInvoicesTable();
+          });
+          salesScopeContainer.appendChild(sel);
+
+          var arrow = document.createElement('span');
+          arrow.className = 'material-symbols-outlined text-[16px] text-text-muted pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2';
+          arrow.textContent = 'expand_more';
+          salesScopeContainer.appendChild(arrow);
+
+          // Export Button
+          exportActionContainer.innerHTML =
+            '<button id="exportRecapBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-surface-1 border border-border-subtle hover:bg-surface-hover text-text-primary text-xs font-semibold transition-colors shadow-sm">' +
+              '<span class="material-symbols-outlined text-[16px] text-accent">download</span>' +
+              '<span>Ekspor .xlsx</span>' +
+            '</button>';
+          document.getElementById('exportRecapBtn').addEventListener('click', function () {
+            alert('Ekspor Rekap: Dalam mode showcase, dataset acuan tersinkronisasi dengan 01_Master_Import_Candidate.xlsx');
+          });
+
+        } else {
+          // Strict Sales Scope UI
+          pageTitle.textContent = 'Dashboard Sales · ' + session.name;
+          salesComparisonSection.classList.add('hidden');
+
+          salesScopeContainer.innerHTML =
+            '<div class="h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle flex items-center gap-2 text-xs text-text-secondary shadow-sm">' +
+              '<span class="w-2 h-2 rounded-full bg-accent"></span>' +
+              '<span class="font-medium">' + session.name + ' (Own Data Scope)</span>' +
+            '</div>';
+          exportActionContainer.innerHTML = '';
+        }
       }
 
-      // 3. Calculation & Metric Rendering via FADE_ENGINE
+      // Quick Demo Role Switcher
+      document.getElementById('quickSwitchAdminBtn').addEventListener('click', function () {
+        FADE_STORE.setActiveSession({
+          role: 'admin',
+          name: 'Raka Pratama',
+          title: 'Administrator',
+          salesName: null
+        });
+        session = FADE_STORE.getActiveSession();
+        currentSalesFilter = 'all';
+        setupRoleInterface();
+        handleRouting();
+        renderMetrics();
+        renderInvoicesTable();
+      });
+
+      document.getElementById('quickSwitchSalesBtn').addEventListener('click', function () {
+        FADE_STORE.setActiveSession({
+          role: 'sales',
+          name: 'Aruna Pratama',
+          title: 'Sales Senior',
+          salesName: 'Aruna Pratama'
+        });
+        session = FADE_STORE.getActiveSession();
+        currentSalesFilter = 'Aruna Pratama';
+        setupRoleInterface();
+        handleRouting();
+        renderMetrics();
+        renderInvoicesTable();
+      });
+
+      // 4. Calculation & Metric Rendering via FADE_ENGINE
       function renderMetrics() {
         var invoices = FADE_STORE.getInvoices();
         var targets = FADE_STORE.getTargets();
@@ -618,7 +703,6 @@
         document.getElementById('kpiInvoicesVal').textContent = summary.totalDataTerinput.toLocaleString('id-ID') + ' Invoice';
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
 
-        // Render Comparison Table (Admin only)
         if (session.role === 'admin') {
           renderComparison(invoices, targets);
         }
@@ -639,9 +723,12 @@
           var tr = document.createElement('tr');
           tr.className = 'hover:bg-surface-2/60 transition-colors cursor-pointer';
           tr.addEventListener('click', function () {
-            salesFilterSelect.value = r.sales;
-            currentSalesFilter = r.sales;
-            renderMetrics();
+            var sel = document.getElementById('salesFilterSelect');
+            if (sel) {
+              sel.value = r.sales;
+              currentSalesFilter = r.sales;
+              renderMetrics();
+            }
           });
 
           var pctWidth = Math.max(4, (r.value / (comp.maxValue || 1)) * 100);
@@ -666,21 +753,22 @@
         });
       }
 
-      // 4. Invoices Table Renderer
+      // 5. Invoices Table Renderer
       function renderInvoicesTable() {
         var allInvoices = FADE_STORE.getInvoices();
         var search = document.getElementById('invoiceSearchInput').value.toLowerCase().trim();
         var statusFilter = document.getElementById('invoiceStatusFilter').value;
 
         var filtered = allInvoices.filter(function (inv) {
-          if (session.role === 'sales' && inv.salesName !== session.salesName) return false;
-          if (currentSalesFilter !== 'all' && inv.salesName !== currentSalesFilter) return false;
+          var sName = inv.sales_name || inv.salesName;
+          if (session.role === 'sales' && sName !== session.salesName) return false;
+          if (currentSalesFilter !== 'all' && sName !== currentSalesFilter) return false;
           if (statusFilter !== 'all' && inv.status !== statusFilter) return false;
           if (search) {
-            var matchesId = (inv.id || '').toLowerCase().indexOf(search) >= 0;
-            var matchesStore = (inv.storeName || '').toLowerCase().indexOf(search) >= 0;
-            var matchesSales = (inv.salesName || '').toLowerCase().indexOf(search) >= 0;
-            if (!matchesId && !matchesStore && !matchesSales) return false;
+            var id = (inv.id || inv.invoice_id || '').toLowerCase();
+            var st = (inv.store_name || inv.storeName || '').toLowerCase();
+            var sl = (sName || '').toLowerCase();
+            if (id.indexOf(search) < 0 && st.indexOf(search) < 0 && sl.indexOf(search) < 0) return false;
           }
           return true;
         });
@@ -702,24 +790,32 @@
             var tr = document.createElement('tr');
             tr.className = 'hover:bg-surface-2/60 transition-colors';
 
+            var total = inv.invoice_total_idr || inv.invoiceTotal || 0;
+            var paid = inv.paid_total_idr || inv.paidTotal || 0;
+            var outstanding = inv.outstanding_idr != null ? inv.outstanding_idr : inv.outstanding;
+            var sName = inv.sales_name || inv.salesName || '-';
+            var store = inv.store_name || inv.storeName || '-';
+            var dStr = inv.invoice_date || inv.date || '-';
+            var invId = inv.invoice_id || inv.id || '-';
+
             var statusBadge = '';
-            if (inv.status === 'Paid' || inv.outstanding <= 0) {
+            if (inv.status === 'Paid' || inv.status === 'Lunas' || outstanding <= 0) {
               statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-success/15 text-status-success">Lunas</span>';
-            } else if (inv.paidTotal > 0) {
+            } else if (paid > 0) {
               statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-warning/15 text-status-warning">Sebagian</span>';
             } else {
               statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-danger/15 text-status-danger">Belum Bayar</span>';
             }
 
             tr.innerHTML =
-              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + (inv.id || '-') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + (inv.date || '-') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + (inv.storeName || '-') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + (inv.salesName || '-') + '</td>' +
+              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + dStr + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + store + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + sName + '</td>' +
               '<td class="py-2.5 px-3.5 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + (inv.invoiceTotal || 0).toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + (inv.paidTotal || 0).toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right text-status-danger font-medium">Rp ' + (inv.outstanding || 0).toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + total.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3.5 text-right text-status-danger font-medium">Rp ' + (outstanding || 0).toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-center">' + statusBadge + '</td>';
             tbody.appendChild(tr);
           });
@@ -733,7 +829,7 @@
         document.getElementById('nextPageBtn').disabled = invoicePage >= totalPages;
       }
 
-      // 5. Upload Master Excel Module & XLSX Parsing
+      // 6. Upload Module & Drag-Drop Handling
       var dropzone = document.getElementById('dropzoneContainer');
       var fileInput = document.getElementById('excelFileInput');
 
@@ -781,12 +877,9 @@
 
         try {
           var rawRows = await FADE_XLSX_READER.parseXlsxFile(file);
-          var result = FADE_IMPORTER.processParsedRows(rawRows, {
-            cutoff: '2026-11-22'
-          });
+          var result = FADE_IMPORTER.processParsedRows(rawRows, { cutoff: '2026-11-22' });
 
           if (result.success && result.isClean) {
-            // Success: update invoices
             var newInvoices = result.records.map(function (r) {
               return {
                 id: r.invoice_id,
@@ -819,7 +912,7 @@
 
             banner.className = 'rounded-xl p-4 flex flex-col gap-3 bg-status-success/10 border border-status-success/30';
             bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-success">check_circle</span><span class="text-status-success">Impor Berhasil (100% Bersih)</span>';
-            bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-success text-surface-sidebar';
+            bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-success text-white';
             bannerBadge.textContent = 'PASSED';
             bannerDesc.textContent = 'Berhasil memproses ' + result.validCount + ' baris transaksi tanpa kesalahan. Header terdeteksi di Baris ' + (result.headerRowIndex + 1) + '. Data dashboard telah diperbarui.';
             defectsContainer.classList.add('hidden');
@@ -829,7 +922,6 @@
             renderInvoicesTable();
 
           } else {
-            // Defect / Rejected
             banner.className = 'rounded-xl p-4 flex flex-col gap-3 bg-status-danger/10 border border-status-danger/30';
             bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-danger">error</span><span class="text-status-danger">Impor Ditolak (Ditemukan ' + result.invalidCount + ' Baris Cacat)</span>';
             bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-danger text-white';
@@ -888,16 +980,23 @@
         });
       }
 
-      // 6. Routing & View Switcher
+      // 7. Client-side Routing & Route Gating
       function handleRouting() {
         var hash = window.location.hash.replace('#', '') || 'dashboard';
 
-        // Update Nav Active Classes
-        document.querySelectorAll('#desktopNav .nav-item').forEach(function (el) {
+        // STRICT ROLE GATE: Sales cannot access upload!
+        if (session.role === 'sales' && hash === 'upload') {
+          alert('Akses Terbatas: Fitur Upload Master Excel hanya dapat diakses oleh Administrator.');
+          window.location.hash = '#dashboard';
+          return;
+        }
+
+        // Update Desktop Navigation State
+        document.querySelectorAll('#desktopNavContainer .nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
           var indicator = el.querySelector('.nav-indicator');
           var icon = el.querySelector('.material-symbols-outlined');
-          if (route === hash || (hash === 'ytd' && route === 'ytd')) {
+          if (route === hash) {
             el.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-surface-2 text-text-primary h-10 overflow-hidden';
             if (indicator) indicator.classList.remove('hidden');
             if (icon) icon.className = 'material-symbols-outlined text-[18px] text-accent shrink-0';
@@ -908,7 +1007,8 @@
           }
         });
 
-        document.querySelectorAll('#mobileNav .mobile-nav-item').forEach(function (el) {
+        // Update Mobile Bottom Navigation State
+        document.querySelectorAll('#mobileNavContainer .mobile-nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
           var indicator = el.querySelector('.mobile-nav-indicator');
           if (route === hash) {
@@ -972,14 +1072,7 @@
         window.location.hash = '#ytd';
       });
 
-      // Sales Filter Select Change
-      salesFilterSelect.addEventListener('change', function () {
-        currentSalesFilter = salesFilterSelect.value;
-        renderMetrics();
-        renderInvoicesTable();
-      });
-
-      // Metric tabs for comparison
+      // Comparison Metric Tabs
       document.querySelectorAll('.comp-metric-tab').forEach(function (tab) {
         tab.addEventListener('click', function () {
           activeCompMetric = tab.getAttribute('data-metric');
@@ -1011,18 +1104,25 @@
         renderInvoicesTable();
       });
 
-      // Theme toggle buttons
+      // Theme toggle controller
+      function applyTheme(theme) {
+        FADE_STORE.setTheme(theme);
+        var icon = theme === 'dark' ? 'dark_mode' : 'light_mode';
+        document.getElementById('sidebarThemeIcon').textContent = icon;
+        document.getElementById('mobileThemeIcon').textContent = icon;
+      }
+
       function toggleTheme() {
         var current = FADE_STORE.getTheme();
         var next = current === 'dark' ? 'light' : 'dark';
-        FADE_STORE.setTheme(next);
+        applyTheme(next);
       }
       document.getElementById('sidebarThemeBtn').addEventListener('click', toggleTheme);
       document.getElementById('mobileThemeBtn').addEventListener('click', toggleTheme);
 
       // Logout buttons
       function logout() {
-        if (confirm('Keluar dari sesi saat ini dan kembali ke portal masuk?')) {
+        if (confirm('Keluar dari sesi dan kembali ke halaman login?')) {
           FADE_STORE.clearSession();
           window.location.href = 'index.html';
         }
@@ -1047,9 +1147,15 @@
 
         var invoices = FADE_STORE.getInvoices();
         if (session.role === 'sales') {
-          invoices = invoices.filter(function (i) { return i.salesName === session.salesName; });
+          invoices = invoices.filter(function (i) {
+            var s = i.sales_name || i.salesName;
+            return s === session.salesName;
+          });
         } else if (currentSalesFilter !== 'all') {
-          invoices = invoices.filter(function (i) { return i.salesName === currentSalesFilter; });
+          invoices = invoices.filter(function (i) {
+            var s = i.sales_name || i.salesName;
+            return s === currentSalesFilter;
+          });
         }
 
         drawerContent.innerHTML = '';
@@ -1058,39 +1164,52 @@
           drawerTitle.textContent = 'Rincian Invoice Outstanding';
           drawerSubtitle.textContent = 'Daftar invoice yang memiliki sisa tagihan belum lunas';
 
-          var outstandingList = invoices.filter(function (i) { return i.outstanding > 0; });
+          var outstandingList = invoices.filter(function (i) {
+            var out = i.outstanding_idr != null ? i.outstanding_idr : i.outstanding;
+            return out > 0;
+          });
           if (outstandingList.length === 0) {
-            drawerContent.innerHTML = '<p class="text-text-muted">Tidak ada invoice outstanding.</p>';
+            drawerContent.innerHTML = '<p class="text-text-muted">Tidak ada invoice outstanding dalam cakupan data ini.</p>';
           } else {
             outstandingList.forEach(function (inv) {
               var card = document.createElement('div');
               card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1.5';
+              var out = inv.outstanding_idr != null ? inv.outstanding_idr : inv.outstanding;
+              var st = inv.store_name || inv.storeName || '-';
+              var id = inv.invoice_id || inv.id || '-';
+              var dt = inv.invoice_date || inv.date || '-';
+              var sl = inv.sales_name || inv.salesName || '-';
+
               card.innerHTML =
                 '<div class="flex items-center justify-between font-semibold text-text-primary">' +
-                  '<span>' + inv.storeName + '</span>' +
-                  '<span class="text-status-danger">Rp ' + inv.outstanding.toLocaleString('id-ID') + '</span>' +
+                  '<span>' + st + '</span>' +
+                  '<span class="text-status-danger">Rp ' + (out || 0).toLocaleString('id-ID') + '</span>' +
                 '</div>' +
                 '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
-                  '<span>' + inv.id + ' · ' + inv.date + '</span>' +
-                  '<span>Sales: ' + inv.salesName + '</span>' +
+                  '<span>' + id + ' · ' + dt + '</span>' +
+                  '<span>Sales: ' + sl + '</span>' +
                 '</div>';
               drawerContent.appendChild(card);
             });
           }
         } else {
           drawerTitle.textContent = 'Rincian Transaksi KPI: ' + kpiType.toUpperCase();
-          drawerSubtitle.textContent = 'Menampilkan sampel invoice terkait cakupan aktif';
+          drawerSubtitle.textContent = 'Sampel rekaman transaksi terkait metrik ini';
           invoices.slice(0, 15).forEach(function (inv) {
             var card = document.createElement('div');
             card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1';
+            var tot = inv.invoice_total_idr || inv.invoiceTotal || 0;
+            var st = inv.store_name || inv.storeName || '-';
+            var id = inv.invoice_id || inv.id || '-';
+            var dt = inv.invoice_date || inv.date || '-';
             card.innerHTML =
               '<div class="flex items-center justify-between font-semibold text-text-primary">' +
-                '<span>' + inv.storeName + ' (' + inv.qty + ' pcs)</span>' +
-                '<span>Rp ' + inv.invoiceTotal.toLocaleString('id-ID') + '</span>' +
+                '<span>' + st + ' (' + (inv.qty || 0) + ' pcs)</span>' +
+                '<span>Rp ' + tot.toLocaleString('id-ID') + '</span>' +
               '</div>' +
               '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
-                '<span>' + inv.id + ' · ' + inv.date + '</span>' +
-                '<span>Status: ' + inv.status + '</span>' +
+                '<span>' + id + ' · ' + dt + '</span>' +
+                '<span>Status: ' + (inv.status || 'Active') + '</span>' +
               '</div>';
             drawerContent.appendChild(card);
           });
@@ -1118,13 +1237,9 @@
         if (e.key === 'Escape') closeDrawer();
       });
 
-      // Export button action
-      document.getElementById('exportRecapBtn').addEventListener('click', function () {
-        alert('Fitur Ekspor Rekap: Dalam mode showcase, ekspor data dapat langsung menggunakan file dummy 01_Master_Import_Candidate.xlsx sebagai dataset acuan.');
-      });
-
-      // Initial View Setup
-      FADE_STORE.setTheme(FADE_STORE.getTheme());
+      // Initial Bootstrap
+      setupRoleInterface();
+      applyTheme(FADE_STORE.getTheme());
       handleRouting();
     })();
   </script>
