@@ -371,8 +371,8 @@
               </div>
             </div>
 
-            <!-- Larger Interactive Spline Area Chart (SVG: 1000x340) -->
-            <div id="chartInteractiveContainer" class="relative w-full min-h-[360px] lg:h-[380px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+            <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
+            <div id="chartInteractiveContainer" class="relative w-full h-[260px] sm:h-[340px] lg:h-[360px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
               <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
@@ -399,14 +399,29 @@
                 <g id="chartActiveNodeGroup" class="pointer-events-none">
                   <circle id="chartActiveNodeRing" r="5.5" fill="#19191B" stroke="#F28C45" stroke-width="2.5"></circle>
                   <circle id="chartActiveNodeDot" r="3" fill="#F28C45"></circle>
+                  <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
                 </g>
+                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(750, 16)">
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="36" rx="6" stroke="#39393D" stroke-width="1" width="148"></rect>
+                  <circle cx="14" cy="18" fill="#F28C45" r="3"></circle>
+                  <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
+                  <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="68" y="16">Rp 48,1 jt</text>
+                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="29">+1,9 jt periode ini</text>
+                </g>
+                <g id="chartXAxisLabels"></g>
               </svg>
-              <div id="chartTooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full mb-3 px-3 py-2 rounded-lg bg-surface-2 border border-border-default shadow-xl text-xs z-30 transition-all duration-75">
-                <div class="text-[10px] text-text-muted" id="chartTooltipDate">-</div>
-                <div class="font-bold text-text-primary text-sm tabular-nums" id="chartTooltipRevenue">Rp -</div>
-                <div class="text-[10px] text-text-secondary" id="chartTooltipStatus">-</div>
+              <!-- Unified Bounded HTML Tooltip (Fallback Container) -->
+              <div id="chartTooltip" class="pointer-events-none absolute hidden px-3 py-2 rounded-lg bg-surface-2/95 backdrop-blur-sm border border-border-default shadow-xl text-xs z-30 transition-all duration-75">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
+                  <span id="chartTooltipHtmlDate" class="text-[11px] text-text-muted font-medium">--</span>
+                  <span class="text-text-muted">·</span>
+                  <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-xs tabular-nums">Rp --</span>
+                </div>
+                <div id="chartTooltipHtmlSub" class="text-[10px] text-status-success font-semibold mt-0.5">--</div>
               </div>
-              <div id="chartPointerOverlay" class="absolute inset-0 cursor-crosshair"></div>
+              <div id="chartPointerOverlay" class="absolute inset-0 cursor-crosshair z-10" style="touch-action: pan-y;"></div>
+              <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
             </div>
           </div>
 
@@ -1352,14 +1367,15 @@
 
         if (window.FADE_TREND_CHART) {
           window.FADE_TREND_CHART.setData(invoices, session.salesName, currentMode, customStartDate, customEndDate);
+        } else {
+          document.getElementById('chartMonthlyRevenue').textContent = formatRpShort(summary.revenue);
+          document.getElementById('chartTrendGrowth').innerHTML =
+            '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>' +
+            (summary.achievement != null ? summary.achievement.toFixed(1) + '% dari target' : summary.totalDataTerinput + ' transaksi') +
+            '</span>';
         }
 
-        document.getElementById('chartMonthlyRevenue').textContent = formatRpShort(summary.revenue);
         document.getElementById('chartStatusSub').textContent = 'Distribusi dari ' + summary.totalDataTerinput + ' invoice Anda';
-        document.getElementById('chartTrendGrowth').innerHTML =
-          '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>' +
-          (summary.achievement != null ? summary.achievement.toFixed(1) + '% dari target' : summary.totalDataTerinput + ' transaksi') +
-          '</span>';
 
         var lunasVal = summary.pembayaranMasuk || 0;
         var terlambatVal = summary.bisaDitagihkan || 0;

@@ -1,41 +1,111 @@
 /**
  * FADE Pods Showcase v0.2 · Interactive Trend Chart Component
- * High-fidelity interactive spline curve chart supporting Bulanan (7D/30D/90D),
- * YTD (monthly aggregation), and Custom Date Ranges with SVG Catmull-Rom spline pathing.
+ * Revision 02B: Dynamic Container-Aware Geometry, Unified Tooltip Contract,
+ * Zero-Value / Empty-State Handling, and Timeframe Synchronization.
  */
 (function (root) {
   'use strict';
 
   var FADE_TREND_CHART = {
     chartType: 'line', // 'line' | 'bar'
-    activeTimeframe: '30D',
+    activeTimeframe: '30D', // '7D' | '30D' | '90D'
     activePointIndex: null,
     points: [],
     invoices: [],
     currentSalesFilter: 'all',
-    currentMode: 'bulan',
+    currentMode: 'bulan', // 'bulan' | 'ytd' | 'custom'
     customStart: null,
     customEnd: null,
+    _initialized: false,
+    _resizeObserver: null,
+    _resizeRaf: null,
 
     BOUNDS: {
       viewBoxWidth: 1000,
       viewBoxHeight: 340,
-      xMin: 72,
+      xMin: 64,
       xMax: 960,
-      yMin: 30,
-      yMax: 280
+      yMin: 24,
+      yMax: 290,
+      isMobile: false
     },
 
     init: function () {
+      if (this._initialized) {
+        this.render();
+        return;
+      }
+      this._initialized = true;
+
       this.bindControls();
+      this.setupResizeObserver();
+    },
+
+    setupResizeObserver: function () {
       var self = this;
-      window.addEventListener('resize', function () {
-        self.render();
-      });
+      var container = document.getElementById('chartInteractiveContainer');
+
+      if (container && typeof window.ResizeObserver !== 'undefined') {
+        if (this._resizeObserver) {
+          try { this._resizeObserver.disconnect(); } catch (e) {}
+        }
+        this._resizeObserver = new ResizeObserver(function () {
+          if (self._resizeRaf) cancelAnimationFrame(self._resizeRaf);
+          self._resizeRaf = requestAnimationFrame(function () {
+            self.render();
+          });
+        });
+        this._resizeObserver.observe(container);
+      } else {
+        window.addEventListener('resize', function () {
+          if (self._resizeRaf) cancelAnimationFrame(self._resizeRaf);
+          self._resizeRaf = requestAnimationFrame(function () {
+            self.render();
+          });
+        });
+      }
     },
 
     resize: function () {
       this.render();
+    },
+
+    calculateBounds: function () {
+      var container = document.getElementById('chartInteractiveContainer');
+      var w = 1000;
+      var h = 340;
+
+      if (container) {
+        var rect = container.getBoundingClientRect();
+        if (rect.width > 0) w = Math.round(rect.width);
+        if (rect.height > 0) h = Math.round(rect.height);
+      }
+
+      if (w < 280) w = 280;
+      if (h < 220) h = 220;
+
+      var isMobile = w < 640;
+      var yAxisSpace = isMobile ? 44 : 58;
+      var rightMargin = isMobile ? 12 : 24;
+      var topMargin = 22;
+      var bottomMargin = isMobile ? 36 : 42;
+
+      this.BOUNDS = {
+        viewBoxWidth: w,
+        viewBoxHeight: h,
+        xMin: yAxisSpace,
+        xMax: Math.max(yAxisSpace + 100, w - rightMargin),
+        yMin: topMargin,
+        yMax: Math.max(topMargin + 100, h - bottomMargin),
+        isMobile: isMobile
+      };
+
+      var svg = document.getElementById('trendChartSvg');
+      if (svg) {
+        svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      }
+
+      return this.BOUNDS;
     },
 
     bindControls: function () {
@@ -78,12 +148,21 @@
         overlay.addEventListener('pointermove', function (e) {
           self.handlePointerMove(e);
         });
-        overlay.addEventListener('pointerleave', function () {
-          self.handlePointerLeave();
+        overlay.addEventListener('pointerdown', function (e) {
+          self.handlePointerClick(e);
         });
         overlay.addEventListener('click', function (e) {
           self.handlePointerClick(e);
         });
+        overlay.addEventListener('touchstart', function (e) {
+          self.handlePointerMove(e);
+        }, { passive: true });
+        overlay.addEventListener('touchmove', function (e) {
+          self.handlePointerMove(e);
+        }, { passive: true });
+        overlay.addEventListener('touchend', function (e) {
+          self.handlePointerMove(e);
+        }, { passive: true });
       }
 
       var container = document.getElementById('chartInteractiveContainer');
@@ -163,6 +242,17 @@
       this.render();
     },
 
+    getFilteredInvoices: function () {
+      var self = this;
+      return this.invoices.filter(function (inv) {
+        if (self.currentSalesFilter !== 'all') {
+          var s = inv.salesName || inv.sales_name;
+          if (s !== self.currentSalesFilter) return false;
+        }
+        return true;
+      });
+    },
+
     formatShortDate: function (iso) {
       var months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
       var parts = iso.split('-');
@@ -190,16 +280,7 @@
       return result;
     },
 
-    aggregatePoints: function () {
-      var self = this;
-      var filtered = this.invoices.filter(function (inv) {
-        if (self.currentSalesFilter !== 'all') {
-          var s = inv.salesName || inv.sales_name;
-          if (s !== self.currentSalesFilter) return false;
-        }
-        return true;
-      });
-
+    aggregatePoints: function (filtered) {
       if (this.currentMode === 'ytd') {
         var months = [
           { ym: '2026-06', label: 'Jun' },
@@ -288,22 +369,132 @@
       });
     },
 
-    render: function () {
-      var rawPoints = this.aggregatePoints();
-      if (!rawPoints || rawPoints.length < 2) return;
+    setEmptyState: function (isEmpty, message, subtitle) {
+      var emptyEl = document.getElementById('chartEmptyState');
+      var tooltip = document.getElementById('chartTooltip');
+      var tooltipGroup = document.getElementById('chartTooltipGroup');
 
-      var b = this.BOUNDS;
+      if (isEmpty) {
+        if (!emptyEl) {
+          var container = document.getElementById('chartInteractiveContainer');
+          if (container) {
+            emptyEl = document.createElement('div');
+            emptyEl.id = 'chartEmptyState';
+            emptyEl.className = 'absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-surface-1/90 backdrop-blur-sm rounded-lg z-20';
+            emptyEl.innerHTML =
+              '<span class="material-symbols-outlined text-[36px] text-text-muted mb-2">bar_chart</span>' +
+              '<p class="text-xs font-semibold text-text-primary">' + (message || 'Tidak ada data transaksi') + '</p>' +
+              '<p class="text-[11px] text-text-muted mt-1 max-w-xs">' + (subtitle || 'Ubah rentang waktu atau filter sales.') + '</p>';
+            container.appendChild(emptyEl);
+          }
+        } else {
+          emptyEl.classList.remove('hidden');
+          var pMsg = emptyEl.querySelector('p.text-xs');
+          if (pMsg) pMsg.textContent = message || 'Tidak ada data transaksi';
+          var pSub = emptyEl.querySelector('p.text-\\[11px\\]') || emptyEl.querySelectorAll('p')[1];
+          if (pSub) pSub.textContent = subtitle || 'Ubah rentang waktu atau filter sales.';
+        }
+
+        // Clean SVG elements
+        var areaEl = document.getElementById('chartSplineArea');
+        var strokeEl = document.getElementById('chartSplineStroke');
+        var nodesContainer = document.getElementById('chartNodesGroup');
+        var barsContainer = document.getElementById('chartBarsGroup');
+        var gridContainer = document.getElementById('chartGridLines');
+        var yLabelsContainer = document.getElementById('chartYAxisLabels');
+        var xLabelsContainer = document.getElementById('chartXAxisLabels');
+        var activeRing = document.getElementById('chartActiveNodeRing');
+        var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+        var guide = document.getElementById('chartGuideLine');
+
+        if (areaEl) areaEl.setAttribute('d', '');
+        if (strokeEl) strokeEl.setAttribute('d', '');
+        if (nodesContainer) nodesContainer.innerHTML = '';
+        if (barsContainer) barsContainer.innerHTML = '';
+        if (gridContainer) gridContainer.innerHTML = '';
+        if (yLabelsContainer) yLabelsContainer.innerHTML = '';
+        if (xLabelsContainer) xLabelsContainer.innerHTML = '';
+        if (activeRing) activeRing.style.display = 'none';
+        if (activePip) activePip.style.display = 'none';
+        if (guide) guide.style.display = 'none';
+        if (tooltip) tooltip.classList.add('hidden');
+        if (tooltipGroup) tooltipGroup.style.display = 'none';
+
+        var revEl = document.getElementById('chartMonthlyRevenue');
+        if (revEl) revEl.textContent = 'Rp 0';
+        var growthEl = document.getElementById('chartTrendGrowth');
+        if (growthEl) {
+          growthEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-text-muted">info</span><span class="text-text-muted">Tidak ada transaksi</span>';
+        }
+
+        var periodEl = document.getElementById('chartPeriodLabel');
+        if (periodEl) {
+          if (this.currentMode === 'ytd') {
+            periodEl.textContent = 'Jun – Nov 2026 (YTD)';
+          } else if (this.activeTimeframe === '7D') {
+            periodEl.textContent = '16 – 22 Nov 2026 (7 Hari)';
+          } else if (this.activeTimeframe === '90D') {
+            periodEl.textContent = '01 Sep – 22 Nov 2026 (90 Hari)';
+          } else {
+            periodEl.textContent = '01 – 22 Nov 2026';
+          }
+        }
+      } else {
+        if (emptyEl) emptyEl.classList.add('hidden');
+        var guideEl = document.getElementById('chartGuideLine');
+        if (guideEl) guideEl.style.display = '';
+      }
+    },
+
+    render: function () {
+      var filteredInvoices = this.getFilteredInvoices();
+      if (!filteredInvoices || filteredInvoices.length === 0) {
+        this.setEmptyState(true, 'Tidak ada data transaksi untuk filter ini', 'Coba ganti filter sales atau pilih Semua Sales.');
+        return;
+      }
+
+      var rawPoints = this.aggregatePoints(filteredInvoices);
+      if (!rawPoints || rawPoints.length < 2) {
+        this.setEmptyState(true, 'Rentang waktu tidak valid', 'Pilih rentang tanggal yang memiliki minimal 2 titik data.');
+        return;
+      }
+
+      // Check if there is actual activity in the selected timeframe range
+      var startDate = rawPoints[0].date;
+      var endDate = rawPoints[rawPoints.length - 1].date;
+      var hasTransactionsInRange = false;
+
+      filteredInvoices.forEach(function (inv) {
+        var d = inv.date || inv.invoice_date || '';
+        if (d >= startDate && d <= endDate) {
+          hasTransactionsInRange = true;
+        }
+      });
+
+      if (!hasTransactionsInRange) {
+        var tfName = this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'rentang waktu ini');
+        this.setEmptyState(true, 'Tidak ada transaksi pada ' + tfName, 'Pilih rentang 30D atau 90D untuk melihat riwayat penjualan lainnya.');
+        return;
+      }
+
+      this.setEmptyState(false);
+      var b = this.calculateBounds();
       var totalPoints = rawPoints.length;
 
-      var maxVal = 1;
+      var maxVal = 0;
       rawPoints.forEach(function (p) {
         if (p.cumulative > maxVal) maxVal = p.cumulative;
       });
 
-      var maxMillions = Math.max(10, Math.ceil(maxVal / 1000000));
-      // Pick clean step multiple (multiples of 20jt for <=200jt, or 50jt/100jt for YTD)
-      var stepUnit = maxMillions > 250 ? 100 : (maxMillions > 100 ? 40 : 20);
-      var scaleCeilingMillions = Math.max(stepUnit, Math.ceil(maxMillions / stepUnit) * stepUnit);
+      // Handle pure zero data: establish a standard 10jt ceiling
+      var isAllZero = (maxVal === 0);
+      var scaleCeilingMillions = 10;
+
+      if (!isAllZero) {
+        var maxMillions = Math.ceil(maxVal / 1000000);
+        var stepUnit = maxMillions > 250 ? 100 : (maxMillions > 100 ? 40 : (maxMillions > 40 ? 20 : 10));
+        scaleCeilingMillions = Math.max(stepUnit, Math.ceil(maxMillions / stepUnit) * stepUnit);
+      }
       var scaleCeiling = scaleCeilingMillions * 1000000;
 
       var plottedPoints = rawPoints.map(function (p, idx) {
@@ -326,7 +517,38 @@
         this.activePointIndex = totalPoints - 1;
       }
 
-      var lastPoint = plottedPoints[plottedPoints.length - 1];
+      this.updateSummaryPresentation(plottedPoints);
+      this.renderGrid(scaleCeilingMillions);
+
+      if (this.chartType === 'line') {
+        this.renderSpline(plottedPoints);
+        this.renderNodes(plottedPoints);
+        var barsContainer = document.getElementById('chartBarsGroup');
+        if (barsContainer) barsContainer.innerHTML = '';
+        var activeRing = document.getElementById('chartActiveNodeRing');
+        var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+        if (activeRing) activeRing.style.display = '';
+        if (activePip) activePip.style.display = '';
+      } else {
+        var areaEl = document.getElementById('chartSplineArea');
+        var strokeEl = document.getElementById('chartSplineStroke');
+        var nodesContainer = document.getElementById('chartNodesGroup');
+        if (areaEl) areaEl.setAttribute('d', '');
+        if (strokeEl) strokeEl.setAttribute('d', '');
+        if (nodesContainer) nodesContainer.innerHTML = '';
+        var activeRing2 = document.getElementById('chartActiveNodeRing');
+        var activePip2 = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+        if (activeRing2) activeRing2.style.display = 'none';
+        if (activePip2) activePip2.style.display = 'none';
+        this.renderBars(plottedPoints);
+      }
+
+      this.renderXAxis(plottedPoints);
+      this.updateActivePresentation();
+    },
+
+    updateSummaryPresentation: function (points) {
+      var lastPoint = points[points.length - 1];
       var totalRev = lastPoint.cumulative;
       var revEl = document.getElementById('chartMonthlyRevenue');
       if (revEl) {
@@ -356,31 +578,15 @@
         }
       }
 
-      this.renderGrid(scaleCeilingMillions);
-      if (this.chartType === 'line') {
-        this.renderSpline(plottedPoints);
-        this.renderNodes(plottedPoints);
-        var barsContainer = document.getElementById('chartBarsGroup');
-        if (barsContainer) barsContainer.innerHTML = '';
-        var activeRing = document.getElementById('chartActiveNodeRing');
-        var activePip = document.getElementById('chartActiveNodePip');
-        if (activeRing) activeRing.style.display = '';
-        if (activePip) activePip.style.display = '';
-      } else {
-        var areaEl = document.getElementById('chartSplineArea');
-        var strokeEl = document.getElementById('chartSplineStroke');
-        var nodesContainer = document.getElementById('chartNodesGroup');
-        if (areaEl) areaEl.setAttribute('d', '');
-        if (strokeEl) strokeEl.setAttribute('d', '');
-        if (nodesContainer) nodesContainer.innerHTML = '';
-        var activeRing = document.getElementById('chartActiveNodeRing');
-        var activePip = document.getElementById('chartActiveNodePip');
-        if (activeRing) activeRing.style.display = 'none';
-        if (activePip) activePip.style.display = 'none';
-        this.renderBars(plottedPoints);
+      var growthEl = document.getElementById('chartTrendGrowth');
+      if (growthEl) {
+        var timeLabel = this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'tersinkron');
+        if (totalRev === 0) {
+          growthEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-text-muted">info</span><span class="text-text-muted">Tidak ada transaksi</span>';
+        } else {
+          growthEl.innerHTML = '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>Rp ' + (totalRev / 1000000).toFixed(1) + ' jt (' + timeLabel + ')</span>';
+        }
       }
-      this.renderXAxis(plottedPoints);
-      this.updateActivePresentation();
     },
 
     renderBars: function (points) {
@@ -391,14 +597,14 @@
 
       var count = points.length;
       var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
-      var barW = Math.max(16, Math.min(48, Math.round((availableWidth / count) * 0.45)));
+      var barW = Math.max(12, Math.min(42, Math.round((availableWidth / count) * 0.48)));
       var activeIdx = self.activePointIndex;
       if (activeIdx === null || activeIdx < 0 || activeIdx >= points.length) {
         activeIdx = points.length - 1;
       }
 
       points.forEach(function (p, idx) {
-        var barH = Math.max(6, self.BOUNDS.yMax - p.y);
+        var barH = Math.max(4, self.BOUNDS.yMax - p.y);
         var barX = Math.round(p.x - (barW / 2));
         var barY = Math.round(p.y);
         var isHighlight = (idx === activeIdx);
@@ -451,12 +657,12 @@
         var y = Math.round(l.y);
         var isBase = idx === lines.length - 1;
         if (isBase) {
-          gridHtml += '<line stroke="var(--border-default, #39393D)" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 16) + '" y1="' + y + '" y2="' + y + '"></line>';
+          gridHtml += '<line stroke="var(--border-default, #39393D)" stroke-width="1" x1="' + (b.xMin - 6) + '" x2="' + (b.xMax + 6) + '" y1="' + y + '" y2="' + y + '"></line>';
         } else {
-          gridHtml += '<line stroke="var(--border-subtle, #2B2B2E)" stroke-dasharray="3 3" stroke-width="1" x1="' + (b.xMin - 8) + '" x2="' + (b.xMax + 16) + '" y1="' + y + '" y2="' + y + '"></line>';
+          gridHtml += '<line stroke="var(--border-subtle, #2B2B2E)" stroke-dasharray="3 3" stroke-width="1" x1="' + (b.xMin - 6) + '" x2="' + (b.xMax + 6) + '" y1="' + y + '" y2="' + y + '"></line>';
         }
 
-        labelsHtml += '<text fill="var(--text-muted, #8F8F93)" font-family="\'Plus Jakarta Sans\', sans-serif" font-size="11" text-anchor="end" x="' + (b.xMin - 16) + '" y="' + (y + 4) + '">' + l.label + '</text>';
+        labelsHtml += '<text fill="var(--text-muted, #8F8F93)" font-family="\'Plus Jakarta Sans\', sans-serif" font-size="12" text-anchor="end" x="' + (b.xMin - 10) + '" y="' + (y + 4) + '">' + l.label + '</text>';
       });
 
       gridContainer.innerHTML = gridHtml;
@@ -535,14 +741,19 @@
       if (!container) return;
 
       container.innerHTML = '';
+      var b = this.BOUNDS;
       var activeIdx = this.activePointIndex;
+      var count = points.length;
+      var availableW = b.xMax - b.xMin;
+      var slotW = count > 1 ? (availableW / (count - 1)) : availableW;
+      var compactDates = slotW < 52;
 
       points.forEach(function (p, idx) {
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', p.x);
-        text.setAttribute('y', '312');
+        text.setAttribute('y', b.yMax + (b.isMobile ? 22 : 24));
         text.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
-        text.setAttribute('font-size', '11');
+        text.setAttribute('font-size', '12'); // Actual >= 12px
         text.setAttribute('text-anchor', 'middle');
 
         var isActive = idx === activeIdx;
@@ -554,7 +765,15 @@
           text.setAttribute('font-weight', '400');
         }
 
-        text.textContent = p.label;
+        var displayLabel = p.label;
+        if (compactDates && count > 5) {
+          if (idx !== 0 && idx !== count - 1) {
+            var parts = p.label.split(' ');
+            if (parts.length >= 1) displayLabel = parts[0];
+          }
+        }
+
+        text.textContent = displayLabel;
         container.appendChild(text);
       });
     },
@@ -585,17 +804,22 @@
       }
 
       var activeRing = document.getElementById('chartActiveNodeRing');
-      var activePip = document.getElementById('chartActiveNodePip');
-      if (activeRing && activePip) {
+      var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+      if (activeRing) {
         if (this.chartType === 'line') {
           activeRing.style.display = '';
-          activePip.style.display = '';
           activeRing.setAttribute('cx', pt.x);
           activeRing.setAttribute('cy', pt.y);
+        } else {
+          activeRing.style.display = 'none';
+        }
+      }
+      if (activePip) {
+        if (this.chartType === 'line') {
+          activePip.style.display = '';
           activePip.setAttribute('cx', pt.x);
           activePip.setAttribute('cy', pt.y);
         } else {
-          activeRing.style.display = 'none';
           activePip.style.display = 'none';
         }
       }
@@ -616,27 +840,52 @@
         }
       }
 
+      var tipFormattedVal = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+      var tipSubText = pt.daily > 0
+        ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
+        : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')');
+
+      // 1. Update Primary SVG Tooltip (per Master Stitch Design)
       var tooltipGroup = document.getElementById('chartTooltipGroup');
       if (tooltipGroup) {
-        var tipWidth = 148;
-        var tipX = pt.x > 750 ? (pt.x - tipWidth - 14) : (pt.x + 14);
-        var tipY = Math.max(10, Math.min(230, pt.y - 22));
+        tooltipGroup.style.display = '';
+        var svgTipW = 148;
+        var tipX = pt.x > (b.viewBoxWidth - 160) ? (pt.x - svgTipW - 14) : (pt.x + 14);
+        var tipY = Math.max(10, Math.min(b.yMax - 40, pt.y - 22));
 
         tooltipGroup.setAttribute('transform', 'translate(' + tipX + ', ' + tipY + ')');
 
-        var tipDate = document.getElementById('chartTooltipDate');
-        var tipVal = document.getElementById('chartTooltipValue');
-        var tipSub = document.getElementById('chartTooltipSub');
+        var svgTipDate = tooltipGroup.querySelector('#chartTooltipDate');
+        var svgTipVal = tooltipGroup.querySelector('#chartTooltipValue');
+        var svgTipSub = tooltipGroup.querySelector('#chartTooltipSub');
 
-        if (tipDate) tipDate.textContent = pt.label + ' ·';
-        if (tipVal) tipVal.textContent = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+        if (svgTipDate) svgTipDate.textContent = pt.label + ' ·';
+        if (svgTipVal) svgTipVal.textContent = tipFormattedVal;
+        if (svgTipSub) svgTipSub.textContent = tipSubText;
+      }
 
-        if (tipSub) {
-          if (pt.daily > 0) {
-            tipSub.textContent = '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini';
-          } else {
-            tipSub.textContent = 'Stabil (' + pt.label + ')';
-          }
+      // 2. Fallback HTML Tooltip (only active if SVG Tooltip is missing)
+      var tipHtml = document.getElementById('chartTooltip');
+      if (tipHtml) {
+        if (!tooltipGroup) {
+          tipHtml.classList.remove('hidden');
+          var tipDate = document.getElementById('chartTooltipHtmlDate') || document.getElementById('chartTooltipDate');
+          var tipVal = document.getElementById('chartTooltipHtmlVal') || document.getElementById('chartTooltipValue');
+          var tipSub = document.getElementById('chartTooltipHtmlSub') || document.getElementById('chartTooltipSub');
+
+          if (tipDate) tipDate.textContent = pt.label;
+          if (tipVal) tipVal.textContent = tipFormattedVal;
+          if (tipSub) tipSub.textContent = tipSubText;
+
+          var tipW = tipHtml.offsetWidth || 150;
+          var tipH = tipHtml.offsetHeight || 52;
+          var tipLeft = Math.max(8, Math.min(b.viewBoxWidth - tipW - 8, pt.x - (tipW / 2)));
+          var tipTop = pt.y - tipH - 12;
+          if (tipTop < 6) tipTop = pt.y + 16;
+          tipHtml.style.left = tipLeft + 'px';
+          tipHtml.style.top = tipTop + 'px';
+        } else {
+          tipHtml.classList.add('hidden'); // Avoid double stacked boxes
         }
       }
 
@@ -655,7 +904,11 @@
       var clientX = e.clientX;
       if (e.touches && e.touches.length > 0) {
         clientX = e.touches[0].clientX;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
       }
+
+      if (clientX == null || isNaN(clientX)) return;
 
       var relX = (clientX - rect.left) * (this.BOUNDS.viewBoxWidth / rect.width);
 
@@ -675,7 +928,9 @@
       }
     },
 
-    handlePointerLeave: function () {},
+    handlePointerLeave: function () {
+      // Intentionally preserve active point selection on pointer leave
+    },
 
     handlePointerClick: function (e) {
       this.handlePointerMove(e);

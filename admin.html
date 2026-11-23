@@ -386,8 +386,8 @@
               </div>
             </div>
 
-            <!-- Larger Interactive Spline Area Chart (SVG: 1000x340) -->
-            <div id="chartInteractiveContainer" class="relative w-full min-h-[360px] lg:h-[380px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+            <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
+            <div id="chartInteractiveContainer" class="relative w-full h-[260px] sm:h-[340px] lg:h-[360px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
               <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
@@ -423,8 +423,18 @@
                   <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="29">+1,9 jt periode ini</text>
                 </g>
                 <g id="chartXAxisLabels"></g>
-                <rect id="chartPointerOverlay" width="1000" height="340" fill="transparent" class="cursor-crosshair" aria-label="Eksplorasi data grafik" style="touch-action: pan-y;"></rect>
               </svg>
+              <!-- Unified Bounded HTML Tooltip (Fallback Container) -->
+              <div id="chartTooltip" class="pointer-events-none absolute hidden px-3 py-2 rounded-lg bg-surface-2/95 backdrop-blur-sm border border-border-default shadow-xl text-xs z-30 transition-all duration-75">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
+                  <span id="chartTooltipHtmlDate" class="text-[11px] text-text-muted font-medium">--</span>
+                  <span class="text-text-muted">·</span>
+                  <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-xs tabular-nums">Rp --</span>
+                </div>
+                <div id="chartTooltipHtmlSub" class="text-[10px] text-status-success font-semibold mt-0.5">--</div>
+              </div>
+              <div id="chartPointerOverlay" class="absolute inset-0 cursor-crosshair z-10" style="touch-action: pan-y;"></div>
               <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
             </div>
           </div>
@@ -1516,19 +1526,21 @@
       function renderAdminAnalytics(summary, invoices) {
         if (window.FADE_TREND_CHART) {
           window.FADE_TREND_CHART.setData(invoices, currentSalesFilter, currentMode, customStartDate, customEndDate);
+        } else {
+          var elMonthlyRevenue = document.getElementById('chartMonthlyRevenue');
+          if (elMonthlyRevenue) {
+            var revJt = (summary.revenue / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+            elMonthlyRevenue.textContent = 'Rp ' + revJt;
+          }
+          var elGrowth = document.getElementById('chartTrendGrowth');
+          if (elGrowth) {
+            var ach = summary.achievement != null ? summary.achievement.toFixed(1) + '% dari target' : (summary.totalDataTerinput + ' transaksi');
+            elGrowth.innerHTML = '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>' + ach + '</span>';
+          }
         }
 
-        var elMonthlyRevenue = document.getElementById('chartMonthlyRevenue');
         var elStatusSub = document.getElementById('chartStatusSub');
-        var elGrowth = document.getElementById('chartTrendGrowth');
-
-        var revJt = (summary.revenue / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-        if (elMonthlyRevenue) elMonthlyRevenue.textContent = 'Rp ' + revJt;
         if (elStatusSub) elStatusSub.textContent = 'Distribusi dari ' + summary.totalDataTerinput + ' invoice periode ini';
-        if (elGrowth) {
-          var ach = summary.achievement != null ? summary.achievement.toFixed(1) + '% dari target' : (summary.totalDataTerinput + ' transaksi');
-          elGrowth.innerHTML = '<span class="material-symbols-outlined text-[15px]">trending_up</span><span>' + ach + '</span>';
-        }
 
         var lunasVal = summary.pembayaranMasuk || 0;
         var terlambatVal = summary.bisaDitagihkan || 0;
