@@ -931,6 +931,27 @@
     </div>
   </div>
 
+  <!-- ==================================================================== -->
+  <!-- 5G. RESET DEMO DATA CONFIRMATION MODAL                               -->
+  <!-- ==================================================================== -->
+  <div id="resetConfirmModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-surface-1 border border-border-default shadow-2xl p-5 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-status-danger/15 text-status-danger flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-bold text-text-primary">Reset Data Master?</h3>
+          <p class="text-text-muted mt-0.5">Kembalikan seluruh data ke 395 transaksi Master Excel asli (Cut-off 18 Nov 2026). Perubahan manual akan direset.</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
+        <button id="cancelResetBtn" type="button" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Batal</button>
+        <button id="confirmResetBtn" type="button" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90 transition-opacity">Reset Data</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div id="toastContainer" class="fixed bottom-20 lg:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -1933,18 +1954,44 @@
         if (fileInput.files && fileInput.files[0]) handleExcelFile(fileInput.files[0]);
       });
 
-      document.getElementById('resetDemoDataBtn').addEventListener('click', function () {
-        if (!session || session.role !== 'admin') {
-          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
-          return;
-        }
-        if (confirm('Kembalikan seluruh data ke 210 record demo awal? Perubahan manual Anda akan direset.')) {
+      var resetConfirmModalBackdrop = document.getElementById('resetConfirmModalBackdrop');
+      function openResetModal() {
+        if (resetConfirmModalBackdrop) resetConfirmModalBackdrop.classList.remove('hidden');
+      }
+      function closeResetModal() {
+        if (resetConfirmModalBackdrop) resetConfirmModalBackdrop.classList.add('hidden');
+      }
+
+      var cancelResetBtn = document.getElementById('cancelResetBtn');
+      if (cancelResetBtn) cancelResetBtn.addEventListener('click', closeResetModal);
+
+      var confirmResetBtn = document.getElementById('confirmResetBtn');
+      if (confirmResetBtn) {
+        confirmResetBtn.addEventListener('click', function () {
+          closeResetModal();
           FADE_STORE.resetToDefault();
           renderAll();
           renderUploadHistory();
-          showToast('Data demo berhasil direset ke kondisi awal');
-        }
-      });
+          showToast('Data master berhasil direset ke kondisi awal (395 transaksi)');
+        });
+      }
+
+      if (resetConfirmModalBackdrop) {
+        resetConfirmModalBackdrop.addEventListener('click', function (e) {
+          if (e.target === resetConfirmModalBackdrop) closeResetModal();
+        });
+      }
+
+      var resetBtn = document.getElementById('resetDemoDataBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          if (!session || session.role !== 'admin') {
+            showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+            return;
+          }
+          openResetModal();
+        });
+      }
 
       async function handleExcelFile(file) {
         if (!session || session.role !== 'admin') {
