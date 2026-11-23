@@ -114,10 +114,10 @@
       <div class="flex items-center justify-between gap-4 w-full min-w-0">
         <div class="flex flex-col gap-1 min-w-0">
           <h1 id="pageTitle" class="text-2xl sm:text-[26px] font-semibold text-text-primary tracking-tight truncate">Dashboard Sales</h1>
-          <div class="flex items-center pt-0.5 max-w-full">
+          <div id="statusBadgeContainer" class="flex items-center pt-0.5 max-w-full">
             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-1 text-xs font-medium text-text-secondary border border-border-subtle max-w-full">
               <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shrink-0"></span>
-              <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Cut-off 18 Nov 2026</span>
+              <span id="statusBadgeText" class="truncate max-w-[280px] sm:max-w-none">November 2026 · Data per 22/11/2026</span>
             </span>
           </div>
         </div>
@@ -307,9 +307,9 @@
             <div class="mt-2 flex items-baseline gap-2">
               <span id="kpiOutstandingVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
             </div>
-            <div class="mt-3 flex items-center justify-between text-xs text-text-secondary gap-2">
-              <span id="kpiBisaDitagihSub" class="truncate hover:text-accent cursor-pointer transition-colors" title="Filter Bisa Ditagihkan">Bisa Ditagih: Rp --</span>
-              <span id="kpiBelumJatuhTempoSub" class="truncate hover:text-accent cursor-pointer transition-colors" title="Filter Belum Jatuh Tempo">Tempo: Rp --</span>
+            <div class="mt-3 pt-2 border-t border-border-subtle flex flex-wrap items-center justify-between text-xs text-text-secondary gap-1.5 min-w-0">
+              <span id="kpiBisaDitagihSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Bisa Ditagihkan">Bisa Ditagih: Rp --</span>
+              <span id="kpiBelumJatuhTempoSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Belum Jatuh Tempo">Tempo: Rp --</span>
             </div>
           </div>
 
@@ -745,19 +745,19 @@
           </div>
 
           <!-- Desktop Table -->
-          <div class="hidden md:block overflow-x-auto border border-border-subtle rounded-lg">
+          <div class="hidden md:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
             <table class="w-full text-left text-xs whitespace-nowrap">
               <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                 <tr>
-                  <th class="py-3 px-3.5">No. Invoice</th>
-                  <th class="py-3 px-3.5">Tanggal</th>
-                  <th class="py-3 px-3.5">Nama Toko</th>
-                  <th class="py-3 px-3.5 text-right">QTY</th>
-                  <th class="py-3 px-3.5 text-right">Total Invoice</th>
-                  <th class="py-3 px-3.5 text-right">Terbayar</th>
-                  <th class="py-3 px-3.5 text-right">Outstanding</th>
-                  <th class="py-3 px-3.5 text-center">Status</th>
-                  <th class="py-3 px-3.5 text-center">Aksi</th>
+                  <th class="py-2.5 px-3">No. Invoice</th>
+                  <th class="py-2.5 px-3">Tanggal</th>
+                  <th class="py-2.5 px-3">Nama Toko</th>
+                  <th class="py-2.5 px-3 text-right">QTY</th>
+                  <th class="py-2.5 px-3 text-right">Total Invoice</th>
+                  <th class="py-2.5 px-3 text-right">Terbayar</th>
+                  <th class="py-2.5 px-3 text-right">Outstanding</th>
+                  <th class="py-2.5 px-3 text-center">Status</th>
+                  <th class="py-2.5 px-3 text-center sticky right-0 bg-surface-2 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10">Aksi</th>
                 </tr>
               </thead>
               <tbody id="invoiceTableBody" class="divide-y divide-border-subtle font-mono text-[11px]"></tbody>
@@ -1421,32 +1421,40 @@
         if (!container) return;
 
         var allInvs = invoices || FADE_STORE.getInvoices() || [];
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
         var criticalList = [];
 
         allInvs.forEach(function (inv) {
-          var sTxt = inv.salesName || inv.sales_name || '';
+          var sTxt = inv.sales_name || inv.salesName || '';
           if (sTxt !== session.salesName) return;
 
-          var st = String(inv.statusBayar || inv.status_bayar || inv.status || '').toLowerCase();
-          var total = Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
-          var id = inv.invoiceNumber || inv.invoice_id || inv.id || 'INV';
-          var store = inv.storeName || inv.store_name || 'Toko';
+          var dStr = inv.invoice_date || inv.date || '';
+          if (dStr < pContext.dari || dStr > pContext.sampai) return;
 
-          if (st.indexOf('terlambat') !== -1) {
+          var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
+          if (evalState.sisa <= 0) return; // Fully paid, never actionable
+
+          var id = inv.invoice_id || inv.invoiceNumber || inv.id || 'INV';
+          var store = inv.store_name || inv.storeName || 'Toko';
+          var remainingJt = 'Rp ' + (evalState.sisa / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+
+          if (evalState.status === 'Terlambat Bayar') {
             criticalList.push({
               type: 'danger',
-              title: 'Jatuh Tempo Terlewati',
+              title: 'Terlambat ' + (evalState.hariTerlambat ? '(' + evalState.hariTerlambat + ' hari)' : 'Bayar'),
               desc: id + ' · ' + store,
-              amount: 'Rp ' + (total / 1000000).toFixed(1) + ' jt',
-              date: inv.date || inv.invoice_date || ''
+              amount: remainingJt,
+              date: evalState.dueDate || dStr,
+              invoiceId: id
             });
-          } else if (st.indexOf('belum') !== -1) {
+          } else if (evalState.bisaDitagihkan) {
             criticalList.push({
               type: 'warning',
-              title: 'Mendekati Jatuh Tempo',
+              title: 'Jatuh Tempo Hari Ini',
               desc: id + ' · ' + store,
-              amount: 'Rp ' + (total / 1000000).toFixed(1) + ' jt',
-              date: inv.date || inv.invoice_date || ''
+              amount: remainingJt,
+              date: evalState.dueDate || dStr,
+              invoiceId: id
             });
           }
         });
@@ -1455,14 +1463,19 @@
         if (dot) dot.style.display = criticalList.length > 0 ? '' : 'none';
 
         if (criticalList.length === 0) {
-          container.innerHTML = '<div class="py-6 text-center text-xs text-text-muted">Semua tagihan toko Anda aman atau telah lunas.</div>';
+          container.innerHTML =
+            '<div class="py-6 text-center text-xs text-text-muted flex flex-col items-center gap-1.5">' +
+              '<span class="material-symbols-outlined text-[24px] text-status-success">check_circle</span>' +
+              '<span>Semua tagihan toko Anda aman atau telah lunas untuk periode ini.</span>' +
+            '</div>';
           return;
         }
 
         container.innerHTML = '';
-        criticalList.slice(0, 6).forEach(function (item) {
+        criticalList.slice(0, 8).forEach(function (item) {
           var row = document.createElement('div');
-          row.className = 'p-2.5 rounded-lg bg-surface-2/60 border border-border-subtle flex flex-col gap-1 hover:border-border-default transition-colors';
+          row.className = 'p-2.5 rounded-lg bg-surface-2/60 border border-border-subtle flex flex-col gap-1 hover:border-border-default transition-colors cursor-pointer';
+          row.title = 'Buka detail invoice ' + item.desc;
           row.innerHTML =
             '<div class="flex items-center justify-between text-xs">' +
               '<span class="font-semibold text-text-primary flex items-center gap-1.5">' +
@@ -1475,6 +1488,16 @@
               '<span class="truncate max-w-[200px]" title="' + esc(item.desc) + '">' + esc(item.desc) + '</span>' +
               '<span class="tabular-nums">' + esc(item.date) + '</span>' +
             '</div>';
+          row.addEventListener('click', function () {
+            if (desktopNotifPopover) desktopNotifPopover.classList.add('hidden');
+            window.location.hash = '#invoices';
+            var searchInput = document.getElementById('invoiceSearchInput');
+            if (searchInput) searchInput.value = item.invoiceId;
+            var statusSel = document.getElementById('invoiceStatusFilter');
+            if (statusSel) statusSel.value = item.type === 'danger' ? 'OVERDUE' : 'OUTSTANDING';
+            invoicePage = 1;
+            renderInvoicesTable();
+          });
           container.appendChild(row);
         });
       }
@@ -1724,15 +1747,15 @@
             var tr = document.createElement('tr');
             tr.className = 'hover:bg-surface-2/60 transition-colors';
             tr.innerHTML =
-              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + esc(invId) + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + esc(dStr) + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-right ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' font-medium">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</td>' +
-              '<td class="py-2.5 px-3.5 text-center">' + badge + '</td>' +
-              '<td class="py-2.5 px-3.5 text-center"><button type="button" data-inv="' + esc(invId) + '" class="inv-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
+              '<td class="py-2.5 px-3 font-bold text-text-primary">' + esc(invId) + '</td>' +
+              '<td class="py-2.5 px-3 text-text-secondary">' + esc(dStr) + '</td>' +
+              '<td class="py-2.5 px-3 text-text-primary font-sans font-medium max-w-[180px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
+              '<td class="py-2.5 px-3 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3 text-right font-semibold text-text-primary">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3 text-right ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' font-medium">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</td>' +
+              '<td class="py-2.5 px-3 text-center">' + badge + '</td>' +
+              '<td class="py-2.5 px-3 text-center sticky right-0 bg-surface-1 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10"><button type="button" data-inv="' + esc(invId) + '" class="inv-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
             tbody.appendChild(tr);
 
             var card = document.createElement('div');
@@ -2058,18 +2081,21 @@
           tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
           tabIndicatorYTD.classList.add('hidden');
           statusBadgeText.textContent = 'November 2026 · Data per 22/11/2026';
+          if (filterDateLabel) filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
         } else if (currentMode === 'ytd') {
           tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
           tabIndicatorYTD.classList.remove('hidden');
           tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
           tabIndicatorBulanan.classList.add('hidden');
           statusBadgeText.textContent = 'YTD 2026 (01 Jan – 22 Nov 2026)';
+          if (filterDateLabel) filterDateLabel.textContent = '01 Jan – 22 Nov 2026';
         } else {
           tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
           tabIndicatorBulanan.classList.add('hidden');
           tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
           tabIndicatorYTD.classList.add('hidden');
           statusBadgeText.textContent = 'Rentang Kustom · ' + formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
+          if (filterDateLabel) filterDateLabel.textContent = formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
         }
       }
 
@@ -2119,21 +2145,36 @@
         var expMenu = document.getElementById('exportDropdownMenu');
         if (expMenu) expMenu.classList.add('hidden');
 
+        var pageTitle = document.getElementById('pageTitle');
+        var statusBadgeContainer = document.getElementById('statusBadgeContainer');
+        var statusBadgeText = document.getElementById('statusBadgeText');
+        var headerToolbar = document.getElementById('headerToolbar');
+
         if (hash.indexOf('kpi-') === 0) {
           activeDrillKpi = hash.slice(4);
           setActiveNavHighlight(currentMode === 'ytd' ? 'ytd' : 'dashboard');
+          if (pageTitle) pageTitle.textContent = 'Drill-down KPI · ' + session.name;
+          if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          if (headerToolbar) headerToolbar.classList.remove('hidden');
           viewKpiDrilldown.classList.remove('hidden');
           renderKpiDrilldownPage(activeDrillKpi);
           window.scrollTo(0, 0);
         } else if (hash.indexOf('invoice-') === 0) {
           activeDetailInvoiceId = decodeURIComponent(hash.slice(8));
           setActiveNavHighlight('invoices');
+          if (pageTitle) pageTitle.textContent = 'Detail Invoice · ' + activeDetailInvoiceId;
+          if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          if (headerToolbar) headerToolbar.classList.remove('hidden');
           viewInvoiceDetail.classList.remove('hidden');
           renderInvoiceDetailPage(activeDetailInvoiceId);
           window.scrollTo(0, 0);
         } else if (hash === 'ytd') {
           currentMode = 'ytd';
-          filterDateLabel.textContent = '01 Jan – 22 Nov 2026';
+          customStartDate = '2026-01-01';
+          customEndDate = '2026-11-22';
+          if (pageTitle) pageTitle.textContent = 'Dashboard Sales · ' + session.name;
+          if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          if (headerToolbar) headerToolbar.classList.remove('hidden');
           setActiveNavHighlight('ytd');
           updatePeriodTabs();
           viewDashboard.classList.remove('hidden');
@@ -2141,14 +2182,26 @@
           renderDashboardInvoices();
         } else if (hash === 'invoices') {
           setActiveNavHighlight('invoices');
+          if (pageTitle) pageTitle.textContent = 'Invoice & Pembayaran';
+          if (statusBadgeText) statusBadgeText.textContent = 'Daftar & Riwayat Pembayaran Invoice';
+          if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          if (headerToolbar) headerToolbar.classList.remove('hidden');
           viewInvoices.classList.remove('hidden');
           renderUploadedDocsQueue();
           renderInvoicesTable();
         } else if (hash === 'profile') {
           setActiveNavHighlight('profile');
+          if (pageTitle) pageTitle.textContent = 'Profil Sales · ' + session.name;
+          if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
+          if (headerToolbar) headerToolbar.classList.add('hidden');
           viewProfile.classList.remove('hidden');
         } else {
-          if (currentMode === 'ytd') currentMode = 'bulan';
+          currentMode = 'bulan';
+          customStartDate = '2026-11-01';
+          customEndDate = '2026-11-22';
+          if (pageTitle) pageTitle.textContent = 'Dashboard Sales · ' + session.name;
+          if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          if (headerToolbar) headerToolbar.classList.remove('hidden');
           setActiveNavHighlight('dashboard');
           updatePeriodTabs();
           viewDashboard.classList.remove('hidden');
@@ -2158,6 +2211,55 @@
       }
 
       window.addEventListener('hashchange', handleRouting);
+
+      // Desktop and Mobile Navigation Click Listeners (State Synchronization)
+      desktopNavContainer.addEventListener('click', function (e) {
+        var a = e.target.closest('.nav-item');
+        if (a) {
+          var route = a.getAttribute('data-route');
+          if (route === 'dashboard') {
+            currentMode = 'bulan';
+            customStartDate = '2026-11-01';
+            customEndDate = '2026-11-22';
+            updatePeriodTabs();
+            if (window.location.hash === '#dashboard' || !window.location.hash) {
+              renderAll();
+            }
+          } else if (route === 'ytd') {
+            currentMode = 'ytd';
+            customStartDate = '2026-01-01';
+            customEndDate = '2026-11-22';
+            updatePeriodTabs();
+            if (window.location.hash === '#ytd') {
+              renderAll();
+            }
+          }
+        }
+      });
+
+      mobileNavContainer.addEventListener('click', function (e) {
+        var a = e.target.closest('.mobile-nav-item');
+        if (a) {
+          var route = a.getAttribute('data-route');
+          if (route === 'dashboard') {
+            currentMode = 'bulan';
+            customStartDate = '2026-11-01';
+            customEndDate = '2026-11-22';
+            updatePeriodTabs();
+            if (window.location.hash === '#dashboard' || !window.location.hash) {
+              renderAll();
+            }
+          } else if (route === 'ytd') {
+            currentMode = 'ytd';
+            customStartDate = '2026-01-01';
+            customEndDate = '2026-11-22';
+            updatePeriodTabs();
+            if (window.location.hash === '#ytd') {
+              renderAll();
+            }
+          }
+        }
+      });
 
       tabModeBulanan.addEventListener('click', function () {
         currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
@@ -2302,6 +2404,18 @@
         closeNotifPopoverBtn.addEventListener('click', function () {
           desktopNotifPopover.classList.add('hidden');
           if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+        });
+      }
+      var notifViewAllLink = document.getElementById('notifViewAllLink');
+      if (notifViewAllLink && desktopNotifPopover) {
+        notifViewAllLink.addEventListener('click', function () {
+          desktopNotifPopover.classList.add('hidden');
+          if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          window.location.hash = '#invoices';
+          var statusSel = document.getElementById('invoiceStatusFilter');
+          if (statusSel) statusSel.value = 'OVERDUE';
+          invoicePage = 1;
+          renderInvoicesTable();
         });
       }
 

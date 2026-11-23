@@ -100,6 +100,33 @@ body {
   background: var(--text-muted);
 }
 
+/* Table Scroll Container & Sticky Action Column for Desktop UX */
+.table-scroll-container {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--bg-surface-2);
+}
+.table-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+.table-scroll-container::-webkit-scrollbar-track {
+  background: var(--bg-surface-2);
+  border-radius: 9999px;
+}
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+.table-sticky-col-right {
+  position: sticky;
+  right: 0;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.12);
+}
+
 /* Safe areas for mobile devices */
 .pb-safe {
   padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
