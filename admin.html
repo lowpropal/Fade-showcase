@@ -89,18 +89,18 @@
   <!-- ==================================================================== -->
   <!-- 2. MOBILE HEADER (Master Mobile View: Fixed Top Safe-Area)           -->
   <!-- ==================================================================== -->
-  <header class="shell-mobile-header fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
-    <div class="h-16 px-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
-        <span id="mobileRoleBadge" class="px-2 py-0.5 rounded-full bg-surface-2 text-text-secondary text-[10px] font-semibold uppercase tracking-wider">ADMIN</span>
+  <header id="mobileHeaderContainer" class="shell-mobile-header fixed top-0 left-0 right-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
+    <div class="h-16 px-4 flex items-center justify-between w-full">
+      <div class="flex items-center">
+        <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
       </div>
       <div class="flex items-center gap-2">
-        <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
-          <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
+        <button id="mobileNotifBtn" type="button" aria-label="Notifikasi" aria-expanded="false" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors relative cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">notifications</span>
+          <span id="mobileNotifDot" class="w-1.5 h-1.5 rounded-full bg-accent absolute top-2 right-2"></span>
         </button>
-        <button id="mobileLogoutBtn" aria-label="Keluar" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
-          <span class="material-symbols-outlined text-[18px]">logout</span>
+        <button id="mobileThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors cursor-pointer">
+          <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
       </div>
     </div>
@@ -110,7 +110,7 @@
   <!-- 3. PAGE CONTENT CONTAINER                                            -->
   <!-- ==================================================================== -->
   <div class="shell-main-content flex-1 flex flex-col min-h-screen min-w-0">
-    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 md:pt-6 pb-24 md:pb-12 bg-canvas flex-1 flex flex-col gap-6">
+    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 mobile-content-safe bg-canvas flex-1 flex flex-col gap-6">
 
       <!-- Top Header Row 1: Title + Top-Right Utility Cluster -->
       <div class="flex items-center justify-between gap-4 w-full min-w-0">
@@ -134,7 +134,7 @@
             </button>
 
             <!-- Interactive Notification Popover -->
-            <div id="desktopNotifPopover" class="hidden absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-3">
+            <div id="desktopNotifPopover" class="hidden fixed md:absolute top-16 md:top-auto right-3 sm:right-4 md:right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-3">
               <div class="flex items-center justify-between border-b border-border-subtle pb-2.5">
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-bold text-text-primary">Notifikasi Sistem</span>
@@ -198,7 +198,7 @@
               <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
             </button>
 
-            <div id="dateFilterPopover" class="hidden absolute right-0 sm:left-0 xl:left-auto xl:right-0 mt-2 w-72 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
+            <div id="dateFilterPopover" class="hidden fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto xl:left-auto xl:right-0 mt-2 sm:w-72 max-w-full rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
               <div class="flex items-center justify-between border-b border-border-subtle pb-2">
                 <span class="text-xs font-bold text-text-primary">Filter Rentang Tanggal</span>
                 <button id="closeDatePopoverBtn" type="button" class="text-text-muted hover:text-text-primary">
@@ -257,87 +257,99 @@
       <!-- ================================================================ -->
       <section id="viewDashboard" class="flex flex-col gap-6">
         
-        <!-- KPI Grid (6 Metric Cards) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div data-kpi="achievement" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+        <!-- KPI Grid (Hybrid Mobile Hierarchy: Card 1 Full -> QTY/Rev Pair -> Bayar/Tempo Pair -> Card 6 Full) -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <!-- Card 1: Achievement & Target (Full width on mobile) -->
+          <div data-kpi="achievement" class="col-span-2 lg:col-span-1 kpi-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Achievement & Target</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
             </div>
             <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiAchievementVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">--%</span>
+              <span id="kpiAchievementVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight">--%</span>
             </div>
             <div class="mt-3 flex flex-col gap-1.5">
               <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                 <div id="kpiAchievementBar" class="h-full rounded-full bg-accent transition-all duration-500" style="width: 0%;"></div>
               </div>
-              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums">Realisasi -- pcs / Target -- pcs</span>
+              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums truncate">Realisasi -- pcs / Target -- pcs</span>
             </div>
           </div>
 
-          <div data-kpi="qty" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">QTY Penjualan</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
+          <!-- Card 2: QTY Penjualan (Paired with Revenue) -->
+          <div data-kpi="qty" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">QTY Penjualan</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-[11px] sm:text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiQtyVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- pcs</span>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiQtyVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">-- pcs</span>
             </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiQtySub" class="text-xs text-text-muted">Unit fisik produk terjual (pcs)</span>
-            </div>
-          </div>
-
-          <div data-kpi="revenue" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Revenue</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiRevenueVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
-            </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiRevenueSub" class="text-xs text-text-muted">Total nilai tagihan kotor terbit</span>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiQtySub" class="text-[11px] sm:text-xs text-text-muted truncate">Unit fisik terjual (pcs)</span>
             </div>
           </div>
 
-          <div data-kpi="pembayaran" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Pembayaran Diterima</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
+          <!-- Card 3: Revenue (Paired with QTY) -->
+          <div data-kpi="revenue" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Revenue</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiPembayaranVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiRevenueVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
             </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiPembayaranSub" class="text-xs text-status-success tabular-nums font-medium">Uang kas masuk teratribusi tanggal bayar</span>
-            </div>
-          </div>
-
-          <div data-kpi="outstanding" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Outstanding</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiOutstandingVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
-            </div>
-            <div class="mt-3 pt-2 border-t border-border-subtle flex flex-wrap items-center justify-between text-xs text-text-secondary gap-1.5 min-w-0">
-              <span id="kpiBisaDitagihSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Bisa Ditagihkan">Bisa Ditagih: Rp --</span>
-              <span id="kpiBelumJatuhTempoSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Belum Jatuh Tempo">Tempo: Rp --</span>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiRevenueSub" class="text-[11px] sm:text-xs text-text-muted truncate">Total nilai tagihan kotor</span>
             </div>
           </div>
 
-          <div data-kpi="invoices" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+          <!-- Card 4: Pembayaran Diterima (Paired with Outstanding) -->
+          <div data-kpi="pembayaran" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Pembayaran</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiPembayaranVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiPembayaranSub" class="text-[11px] sm:text-xs text-status-success tabular-nums font-medium truncate">Kas masuk teratribusi</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Total Outstanding (Paired with Pembayaran) -->
+          <div data-kpi="outstanding" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Outstanding</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiOutstandingVal" class="text-[14px] xs:text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
+            </div>
+            <div class="mt-3 pt-1.5 sm:pt-2 border-t border-border-subtle flex flex-col gap-1.5 text-[11px] sm:text-xs text-text-secondary min-w-0">
+              <div id="kpiBisaDitagihSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Bisa Ditagihkan">
+                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Bisa Ditagih</span>
+                <span id="kpiBisaDitagihVal" class="font-semibold text-status-danger tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
+              </div>
+              <div id="kpiBelumJatuhTempoSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Belum Jatuh Tempo">
+                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Tempo</span>
+                <span id="kpiBelumJatuhTempoVal" class="font-semibold text-text-secondary tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Invoice & Outlet (Full width on mobile per master) -->
+          <div data-kpi="invoices" class="col-span-2 lg:col-span-1 kpi-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Invoice & Outlet</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Detail</span>
             </div>
             <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiInvoicesVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- Invoice</span>
+              <span id="kpiInvoicesVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight">-- Invoice</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums">-- Toko Unik Terlayani</span>
+              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums truncate">-- Toko Unik Terlayani</span>
             </div>
           </div>
         </div>
@@ -345,7 +357,7 @@
         <!-- SECTION 2: CHARTS (1-COLUMN VERTICAL STACK: TREN PENJUALAN BULANAN -> STATUS PEMBAYARAN) -->
         <section id="adminAnalyticsSection" aria-label="Analitik Penjualan dan Pembayaran" class="flex flex-col gap-6 w-full">
           <!-- Card 1 (Top, Full-Width): Tren Penjualan Bulanan -->
-          <div class="w-full flex flex-col p-5 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+          <div class="w-full flex flex-col p-4 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
             <!-- Header: Row 1 Headline + Period; Row 2 Total Revenue (Left) + Controls (Right) -->
             <div class="flex flex-col gap-3 mb-4">
               <!-- Row 1: Headline + Period Badge -->
@@ -355,7 +367,7 @@
               </div>
 
               <!-- Row 2: Total Revenue (Left) & Controls (Right) -->
-              <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-baseline gap-2.5">
                   <span id="chartMonthlyRevenue" class="text-2xl sm:text-[28px] font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
                   <span id="chartTrendGrowth" class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
@@ -364,23 +376,23 @@
                   </span>
                 </div>
 
-                <div class="flex items-center flex-wrap gap-2">
+                <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                   <!-- Chart Switcher (Line vs Bar) -->
                   <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="group">
-                    <button id="chartBtnLine" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer" title="Tampilan Garis" type="button" aria-pressed="true">
+                    <button id="chartBtnLine" class="inline-flex items-center gap-1 px-3 py-1.5 sm:px-2.5 sm:py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer min-h-[36px] sm:min-h-0" title="Tampilan Garis" type="button" aria-pressed="true">
                       <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
-                      <span class="font-medium text-text-primary">Line</span>
+                      <span class="font-medium text-text-primary text-xs">Line</span>
                     </button>
-                    <button id="chartBtnBar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer" title="Tampilan Batang" type="button" aria-pressed="false">
+                    <button id="chartBtnBar" class="inline-flex items-center gap-1 px-3 py-1.5 sm:px-2.5 sm:py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0" title="Tampilan Batang" type="button" aria-pressed="false">
                       <span class="material-symbols-outlined text-[15px]">bar_chart</span>
-                      <span class="font-medium">Bar</span>
+                      <span class="font-medium text-xs">Bar</span>
                     </button>
                   </div>
                   <!-- Timeframe Selector -->
-                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
-                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
-                    <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
-                    <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">7D</button>
+                    <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1.5 sm:py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">30D</button>
+                    <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">90D</button>
                   </div>
                 </div>
               </div>
@@ -519,13 +531,13 @@
         </section>
 
         <!-- Section 3: Sales Comparison Table (Admin Only) -->
-        <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-4 shadow-sm">
+        <div id="salesComparisonSection" class="bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-4 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-bold text-text-primary tracking-tight">Perbandingan Kinerja Sales</h2>
               <p class="text-xs text-text-muted">Peringkat kontribusi sales representative berdasarkan metrik & rentang tanggal aktif</p>
             </div>
-            <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="tablist">
+            <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-2 border border-border-subtle overflow-x-auto" role="tablist">
               <button data-metric="qty" class="comp-metric-tab px-3 py-1 rounded-md bg-surface-1 text-accent text-xs font-semibold transition-colors">QTY (pcs)</button>
               <button data-metric="revenue" class="comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs font-medium transition-colors">Revenue</button>
               <button data-metric="pembayaran" class="comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs font-medium transition-colors">Bayar</button>
@@ -533,7 +545,8 @@
             </div>
           </div>
 
-          <div class="overflow-x-auto">
+          <!-- Desktop Table (>= 768px) -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="border-b border-border-subtle text-text-muted font-semibold uppercase tracking-wider">
                 <tr>
@@ -547,6 +560,9 @@
               <tbody id="comparisonTableBody" class="divide-y divide-border-subtle"></tbody>
             </table>
           </div>
+
+          <!-- Mobile Cards (< 768px, zero horizontal scroll) -->
+          <div id="comparisonMobileList" class="md:hidden flex flex-col gap-3"></div>
         </div>
 
       </section>
@@ -703,8 +719,8 @@
   <!-- ==================================================================== -->
   <!-- 4. MOBILE BOTTOM NAVIGATION                                          -->
   <!-- ==================================================================== -->
-  <nav class="shell-mobile-nav fixed bottom-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
-    <div class="flex justify-around items-center h-16 px-2" id="mobileNavContainer"></div>
+  <nav class="shell-mobile-nav fixed bottom-0 left-0 right-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
+    <div class="grid grid-cols-5 w-full h-16" id="mobileNavContainer"></div>
   </nav>
 
   <!-- ==================================================================== -->
@@ -1184,7 +1200,7 @@
         var sRole = document.getElementById('sidebarUserRole');
         if (sName) sName.textContent = session.name;
         if (sRole) sRole.textContent = session.title;
-        mobileRoleBadge.textContent = 'ADMIN';
+        if (mobileRoleBadge) mobileRoleBadge.textContent = 'ADMIN';
 
         var dNavItems = NAV_CONFIG[session.role] || NAV_CONFIG.admin;
         desktopNavContainer.innerHTML = '';
@@ -1207,11 +1223,11 @@
           var a = document.createElement('a');
           a.href = item.href;
           a.setAttribute('data-route', item.id);
-          a.className = 'mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors';
+          a.className = 'mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none';
           a.innerHTML =
             '<span class="material-symbols-outlined text-[20px]">' + item.icon + '</span>' +
-            '<span class="text-[10px]">' + item.label + '</span>' +
-            '<span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>';
+            '<span class="text-[10px] font-medium tracking-tight">' + item.label + '</span>' +
+            '<span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-2 h-[2px] bg-accent rounded-full"></span>';
           mobileNavContainer.appendChild(a);
         });
 
@@ -1417,6 +1433,7 @@
 
       // Notification Popover Controller
       var desktopNotifBtn = document.getElementById('desktopNotifBtn');
+      var mobileNotifBtn = document.getElementById('mobileNotifBtn');
       var desktopNotifPopover = document.getElementById('desktopNotifPopover');
       var closeNotifPopoverBtn = document.getElementById('closeNotifPopoverBtn');
       if (desktopNotifBtn && desktopNotifPopover) {
@@ -1424,6 +1441,16 @@
           e.stopPropagation();
           var isHidden = desktopNotifPopover.classList.toggle('hidden');
           desktopNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
+        });
+      }
+      if (mobileNotifBtn && desktopNotifPopover) {
+        mobileNotifBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var isHidden = desktopNotifPopover.classList.toggle('hidden');
+          mobileNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', !isHidden);
           if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
         });
       }
@@ -1431,6 +1458,7 @@
         closeNotifPopoverBtn.addEventListener('click', function () {
           desktopNotifPopover.classList.add('hidden');
           if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
         });
       }
       var notifViewAllLink = document.getElementById('notifViewAllLink');
@@ -1438,6 +1466,7 @@
         notifViewAllLink.addEventListener('click', function () {
           desktopNotifPopover.classList.add('hidden');
           if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
           window.location.hash = '#invoices';
           var statusSel = document.getElementById('invoiceStatusFilter');
           if (statusSel) statusSel.value = 'OVERDUE';
@@ -1487,9 +1516,10 @@
         if (!dateFilterPopover.contains(e.target) && !dateFilterBtn.contains(e.target)) {
           dateFilterPopover.classList.add('hidden');
         }
-        if (desktopNotifPopover && desktopNotifBtn && !desktopNotifPopover.contains(e.target) && !desktopNotifBtn.contains(e.target)) {
+        if (desktopNotifPopover && !desktopNotifPopover.contains(e.target) && (!desktopNotifBtn || !desktopNotifBtn.contains(e.target)) && (!mobileNotifBtn || !mobileNotifBtn.contains(e.target))) {
           desktopNotifPopover.classList.add('hidden');
-          desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
         }
         var expMenu = document.getElementById('exportDropdownMenu');
         var expBtn = document.getElementById('exportMenuBtn');
@@ -1571,8 +1601,18 @@
         document.getElementById('kpiRevenueVal').textContent = 'Rp ' + summary.revenue.toLocaleString('id-ID');
         document.getElementById('kpiPembayaranVal').textContent = 'Rp ' + summary.pembayaranMasuk.toLocaleString('id-ID');
         document.getElementById('kpiOutstandingVal').textContent = 'Rp ' + summary.totalOutstanding.toLocaleString('id-ID');
-        document.getElementById('kpiBisaDitagihSub').textContent = 'Bisa Ditagih: Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
-        document.getElementById('kpiBelumJatuhTempoSub').textContent = 'Tempo: Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        var elBisaVal = document.getElementById('kpiBisaDitagihVal');
+        if (elBisaVal) {
+          elBisaVal.textContent = 'Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
+        } else {
+          document.getElementById('kpiBisaDitagihSub').textContent = 'Bisa Ditagih: Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
+        }
+        var elTempoVal = document.getElementById('kpiBelumJatuhTempoVal');
+        if (elTempoVal) {
+          elTempoVal.textContent = 'Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        } else {
+          document.getElementById('kpiBelumJatuhTempoSub').textContent = 'Tempo: Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        }
 
         document.getElementById('kpiInvoicesVal').textContent = summary.totalDataTerinput.toLocaleString('id-ID') + ' Invoice';
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
@@ -1687,6 +1727,8 @@
 
         if (badge) badge.textContent = criticalList.length;
         if (dot) dot.style.display = criticalList.length > 0 ? '' : 'none';
+        var mDot = document.getElementById('mobileNotifDot');
+        if (mDot) mDot.style.display = criticalList.length > 0 ? '' : 'none';
 
         if (criticalList.length === 0) {
           container.innerHTML =
@@ -1739,20 +1781,11 @@
         });
 
         var tbody = document.getElementById('comparisonTableBody');
-        tbody.innerHTML = '';
+        var mList = document.getElementById('comparisonMobileList');
+        if (tbody) tbody.innerHTML = '';
+        if (mList) mList.innerHTML = '';
 
         comp.rows.forEach(function (r) {
-          var tr = document.createElement('tr');
-          tr.className = 'hover:bg-surface-2/60 transition-colors cursor-pointer';
-          tr.addEventListener('click', function () {
-            var sel = document.getElementById('salesFilterSelect');
-            if (sel) {
-              sel.value = r.sales;
-              currentSalesFilter = r.sales;
-              renderAll();
-            }
-          });
-
           var pctWidth = r.value > 0 ? Math.max(4, (r.value / (comp.maxValue || 1)) * 100) : 0;
           var valFormatted = activeCompMetric === 'qty'
             ? r.qty.toLocaleString('id-ID') + ' pcs'
@@ -1761,17 +1794,61 @@
           var targetFormatted = r.target ? r.target.toLocaleString('id-ID') + ' pcs' : '-';
           var achFormatted = r.achievement != null ? r.achievement.toFixed(1) + '%' : '-';
 
-          tr.innerHTML =
-            '<td class="py-3 px-3 font-semibold text-text-primary">' + esc(r.sales) + '</td>' +
-            '<td class="py-3 px-3 min-w-[140px]">' +
-              '<div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">' +
+          if (tbody) {
+            var tr = document.createElement('tr');
+            tr.className = 'hover:bg-surface-2/60 transition-colors cursor-pointer';
+            tr.addEventListener('click', function () {
+              var sel = document.getElementById('salesFilterSelect');
+              if (sel) {
+                sel.value = r.sales;
+                currentSalesFilter = r.sales;
+                renderAll();
+              }
+            });
+
+            tr.innerHTML =
+              '<td class="py-3 px-3 font-semibold text-text-primary">' + esc(r.sales) + '</td>' +
+              '<td class="py-3 px-3 min-w-[140px]">' +
+                '<div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">' +
+                  '<div class="h-full rounded-full bg-accent transition-all duration-300" style="width: ' + pctWidth + '%;"></div>' +
+                '</div>' +
+              '</td>' +
+              '<td class="py-3 px-3 text-right font-medium tabular-nums">' + valFormatted + '</td>' +
+              '<td class="py-3 px-3 text-right text-text-muted tabular-nums">' + targetFormatted + '</td>' +
+              '<td class="py-3 px-3 text-right font-semibold text-text-primary tabular-nums">' + achFormatted + '</td>';
+            tbody.appendChild(tr);
+          }
+
+          if (mList) {
+            var card = document.createElement('div');
+            card.className = 'p-3.5 rounded-xl bg-surface-2/60 border border-border-subtle flex flex-col gap-2.5 hover:border-accent/40 transition-colors cursor-pointer';
+            card.title = 'Filter menurut ' + r.sales;
+            card.addEventListener('click', function () {
+              var sel = document.getElementById('salesFilterSelect');
+              if (sel) {
+                sel.value = r.sales;
+                currentSalesFilter = r.sales;
+                renderAll();
+              }
+            });
+
+            card.innerHTML =
+              '<div class="flex items-center justify-between gap-2">' +
+                '<div class="flex items-center gap-2">' +
+                  '<span class="w-7 h-7 rounded-full bg-surface-1 border border-border-subtle flex items-center justify-center text-accent text-xs font-bold">' + esc((r.sales || 'S').charAt(0)) + '</span>' +
+                  '<span class="font-semibold text-sm text-text-primary">' + esc(r.sales) + '</span>' +
+                '</div>' +
+                '<span class="px-2 py-0.5 rounded-full bg-accent/10 border border-accent/30 text-accent font-bold text-xs tabular-nums">' + achFormatted + '</span>' +
+              '</div>' +
+              '<div class="w-full h-2 rounded-full bg-surface-1 overflow-hidden">' +
                 '<div class="h-full rounded-full bg-accent transition-all duration-300" style="width: ' + pctWidth + '%;"></div>' +
               '</div>' +
-            '</td>' +
-            '<td class="py-3 px-3 text-right font-medium tabular-nums">' + valFormatted + '</td>' +
-            '<td class="py-3 px-3 text-right text-text-muted tabular-nums">' + targetFormatted + '</td>' +
-            '<td class="py-3 px-3 text-right font-semibold text-text-primary tabular-nums">' + achFormatted + '</td>';
-          tbody.appendChild(tr);
+              '<div class="flex items-center justify-between text-xs text-text-secondary pt-1 border-t border-border-subtle/50">' +
+                '<span>Aktual: <strong class="text-text-primary tabular-nums">' + valFormatted + '</strong></span>' +
+                '<span>Target: <span class="tabular-nums text-text-muted">' + targetFormatted + '</span></span>' +
+              '</div>';
+            mList.appendChild(card);
+          }
         });
       }
 
@@ -2341,8 +2418,13 @@
       }
 
       // 7. Routing
+      var previousNavRoute = null;
       function handleRouting() {
         var hash = window.location.hash.replace('#', '') || 'dashboard';
+        if (previousNavRoute !== hash) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          previousNavRoute = hash;
+        }
         if (session.role === 'sales' && hash === 'upload') {
           showToast('Fitur Upload Master Excel hanya untuk Admin', 'error');
           window.location.hash = '#dashboard';
@@ -2493,6 +2575,7 @@
       mobileNavContainer.addEventListener('click', function (e) {
         var a = e.target.closest('.mobile-nav-item');
         if (a) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
           var route = a.getAttribute('data-route');
           if (route === 'dashboard') {
             currentMode = 'bulan';
@@ -2649,6 +2732,7 @@
       }
       window.closeProfileModal = closeProfileModal;
       window.logout = logout;
+      window.applyTheme = applyTheme;
       window.renderUploadHistory = renderUploadHistory;
 
       var drawer = document.getElementById('kpiDrawer');

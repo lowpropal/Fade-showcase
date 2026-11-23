@@ -129,10 +129,22 @@ body {
 
 /* Safe areas for mobile devices */
 .pb-safe {
-  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .pt-safe {
-  padding-top: max(1rem, env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.mobile-content-safe {
+  padding-top: calc(4rem + env(safe-area-inset-top, 0px) + 0.75rem);
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px) + 2rem);
+}
+
+@media (min-width: 768px) {
+  .mobile-content-safe {
+    padding-top: 1.5rem !important;
+    padding-bottom: 3rem !important;
+  }
 }
 
 /* Responsive Shell Breakpoints */

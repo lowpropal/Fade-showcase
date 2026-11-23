@@ -177,6 +177,32 @@
           self.handlePointerLeave(e);
         });
       }
+
+      // Outside tap listener: dismiss tooltip & indicators when tapping outside chart on mobile/desktop
+      document.addEventListener('pointerdown', function (e) {
+        var chartBox = document.getElementById('chartInteractiveContainer');
+        if (chartBox && !chartBox.contains(e.target)) {
+          var tooltipGroup = document.getElementById('chartTooltipGroup');
+          if (tooltipGroup && tooltipGroup.style.display !== 'none') {
+            tooltipGroup.style.display = 'none';
+            var guideLine = document.getElementById('chartGuideLine');
+            if (guideLine) guideLine.style.display = 'none';
+            var activeRing = document.getElementById('chartActiveNodeRing');
+            var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+            if (activeRing) activeRing.style.display = 'none';
+            if (activePip) activePip.style.display = 'none';
+            var barsContainer = document.getElementById('chartBarsGroup');
+            if (barsContainer) {
+              var bars = barsContainer.querySelectorAll('rect');
+              bars.forEach(function (rect) {
+                rect.setAttribute('fill', 'url(#barGradDefault)');
+                rect.setAttribute('stroke', 'var(--border-default, #39393D)');
+                rect.setAttribute('stroke-width', '1');
+              });
+            }
+          }
+        }
+      });
     },
 
     setChartType: function (type) {
@@ -208,11 +234,11 @@
         tfGroup.style.display = this.currentMode === 'bulan' ? 'flex' : 'none';
       }
 
-      var activeClass = 'px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer';
-      var inactiveClass = 'px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer';
+      var activeClass = 'h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer flex items-center justify-center';
+      var inactiveClass = 'h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer flex items-center justify-center';
 
-      var activeTypeClass = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer';
-      var inactiveTypeClass = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer';
+      var activeTypeClass = 'inline-flex items-center gap-1 h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer justify-center';
+      var inactiveTypeClass = 'inline-flex items-center gap-1 h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer justify-center';
 
       if (btnLine) {
         btnLine.className = cType === 'line' ? activeTypeClass : inactiveTypeClass;
@@ -803,19 +829,59 @@
       var b = this.BOUNDS;
       var activeIdx = this.activePointIndex;
       var count = points.length;
+      if (count === 0) return;
 
-      points.forEach(function (p, idx) {
-        var isActive = (idx === activeIdx);
+      var plotWidth = b.xMax - b.xMin;
+      var isNarrow = b.isMobile || plotWidth < 520;
 
-        // In 30D (22 points), show clean milestone dates so they never collide
-        if (count > 15) {
-          var isMilestone = (idx === 0 || idx === 4 || idx === 9 || idx === 14 || idx === 18 || idx === count - 1);
-          if (!isMilestone && !isActive) return;
-        } else if (count > 8) {
-          // In 90D (12 weekly points), show alternate milestone dates
-          var isWeeklyMilestone = (idx % 2 === 0 || idx === count - 1);
-          if (!isWeeklyMilestone && !isActive) return;
+      var displayIndices = [];
+      if (count > 15) {
+        // 30D (e.g. 22 days)
+        if (isNarrow) {
+          // 4 checkpoints on mobile: 01 Nov, 08 Nov, 15 Nov, 22 Nov
+          // Gives >= 70px gap and completely avoids 19 Nov / 22 Nov collision!
+          displayIndices = [0, 7, 14, count - 1];
+        } else {
+          displayIndices = [0, 4, 9, 14, 18, count - 1];
         }
+      } else if (count > 8) {
+        // 90D (~12 weekly intervals)
+        if (isNarrow) {
+          displayIndices = [0, Math.floor((count - 1) / 2), count - 1];
+        } else {
+          for (var w = 0; w < count; w += 2) displayIndices.push(w);
+          if (displayIndices[displayIndices.length - 1] !== count - 1) displayIndices.push(count - 1);
+        }
+      } else {
+        // 7D (7 days)
+        if (isNarrow && plotWidth < 320) {
+          displayIndices = [0, 2, 4, count - 1];
+        } else {
+          for (var d = 0; d < count; d++) displayIndices.push(d);
+        }
+      }
+
+      // Check if an active index is selected and should be displayed
+      var activePoint = (activeIdx != null && activeIdx >= 0 && activeIdx < count) ? points[activeIdx] : null;
+      var finalIndices = [];
+
+      displayIndices.forEach(function (idx) {
+        if (activePoint && idx !== activeIdx) {
+          var dist = Math.abs(points[idx].x - activePoint.x);
+          // Drop non-active milestone if it collides with active node label (< 44px)
+          if (dist < 44) return;
+        }
+        finalIndices.push(idx);
+      });
+      if (activePoint && finalIndices.indexOf(activeIdx) < 0) {
+        finalIndices.push(activeIdx);
+      }
+      finalIndices.sort(function (a, b) { return a - b; });
+
+      finalIndices.forEach(function (idx) {
+        var p = points[idx];
+        if (!p) return;
+        var isActive = (idx === activeIdx);
 
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', p.x);
@@ -910,18 +976,31 @@
           ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
           : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')'));
 
-      // 1. Update Primary SVG Tooltip (>= 190x48px desktop target)
+      // 1. Update Primary SVG Tooltip (>= 190x48px target)
       var tooltipGroup = document.getElementById('chartTooltipGroup');
       if (tooltipGroup) {
         tooltipGroup.style.display = '';
         var svgTipW = 196;
         var svgTipH = 50;
-        var tipX = pt.x > (b.viewBoxWidth - 215)
-          ? Math.max(b.xMin + 8, pt.x - svgTipW - 14)
-          : Math.min(b.xMax - svgTipW - 8, pt.x + 14);
-
         var targetY = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
-        var tipY = Math.max(b.yMin + 8, Math.min(b.yMax - svgTipH - 8, targetY - (svgTipH / 2)));
+        var tipX, tipY;
+
+        if (b.isMobile) {
+          // Mobile responsive placement: center above node clamped safely within SVG width
+          var idealX = pt.x - (svgTipW / 2);
+          tipX = Math.max(8, Math.min(b.viewBoxWidth - svgTipW - 8, idealX));
+          if (targetY - svgTipH - 12 >= b.yMin) {
+            tipY = targetY - svgTipH - 12;
+          } else {
+            tipY = Math.min(b.yMax - svgTipH - 6, targetY + 16);
+          }
+        } else {
+          // Desktop verified placement: left/right of node with 8px margin
+          tipX = pt.x > (b.viewBoxWidth - 215)
+            ? Math.max(b.xMin + 8, pt.x - svgTipW - 14)
+            : Math.min(b.xMax - svgTipW - 8, pt.x + 14);
+          tipY = Math.max(b.yMin + 8, Math.min(b.yMax - svgTipH - 8, targetY - (svgTipH / 2)));
+        }
 
         tooltipGroup.setAttribute('transform', 'translate(' + tipX + ', ' + tipY + ')');
 

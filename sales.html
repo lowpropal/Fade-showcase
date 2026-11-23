@@ -87,18 +87,18 @@
   <!-- ==================================================================== -->
   <!-- 2. MOBILE HEADER                                                     -->
   <!-- ==================================================================== -->
-  <header class="shell-mobile-header fixed top-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
-    <div class="h-16 px-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-lg font-bold tracking-tight text-text-primary">FADE</span>
-        <span class="px-2 py-0.5 rounded-full bg-surface-2 text-accent border border-border-subtle text-[10px] font-semibold uppercase tracking-wider">SALES</span>
+  <header id="mobileHeaderContainer" class="shell-mobile-header fixed top-0 left-0 right-0 w-full z-40 bg-surface-1/90 backdrop-blur-xl border-b border-border-subtle pt-safe">
+    <div class="h-16 px-4 flex items-center justify-between w-full">
+      <div class="flex items-center">
+        <span class="text-xl font-bold tracking-tight text-text-primary">FADE</span>
       </div>
       <div class="flex items-center gap-2">
-        <button id="mobileThemeBtn" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-subtle bg-surface-2 transition-colors">
-          <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
+        <button id="mobileNotifBtn" type="button" aria-label="Notifikasi" aria-expanded="false" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors relative cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">notifications</span>
+          <span id="mobileNotifDot" class="w-1.5 h-1.5 rounded-full bg-accent absolute top-2 right-2"></span>
         </button>
-        <button id="mobileLogoutBtn" aria-label="Keluar" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-status-danger border border-border-subtle bg-surface-2 transition-colors">
-          <span class="material-symbols-outlined text-[18px]">logout</span>
+        <button id="mobileThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors cursor-pointer">
+          <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
       </div>
     </div>
@@ -108,7 +108,7 @@
   <!-- 3. MAIN CONTENT AREA                                                 -->
   <!-- ==================================================================== -->
   <div class="shell-main-content flex-1 flex flex-col min-h-screen min-w-0">
-    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-20 lg:pt-6 pb-24 lg:pb-12 bg-canvas flex-1 flex flex-col gap-6">
+    <main class="w-full max-w-full min-w-0 px-4 sm:px-6 lg:px-8 mobile-content-safe bg-canvas flex-1 flex flex-col gap-6">
 
       <!-- Top Header Row 1: Title + Top-Right Utility Cluster -->
       <div class="flex items-center justify-between gap-4 w-full min-w-0">
@@ -132,7 +132,7 @@
             </button>
 
             <!-- Interactive Notification Popover -->
-            <div id="desktopNotifPopover" class="hidden absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-3">
+            <div id="desktopNotifPopover" class="hidden fixed md:absolute top-16 md:top-auto right-3 sm:right-4 md:right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-3">
               <div class="flex items-center justify-between border-b border-border-subtle pb-2.5">
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-bold text-text-primary">Notifikasi Tagihan Saya</span>
@@ -197,7 +197,7 @@
                 <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
               </button>
 
-              <div id="dateFilterPopover" class="hidden absolute right-0 sm:left-0 xl:left-auto xl:right-0 mt-2 w-72 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
+              <div id="dateFilterPopover" class="hidden fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto xl:left-auto xl:right-0 mt-2 sm:w-72 max-w-full rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
                 <div class="flex items-center justify-between border-b border-border-subtle pb-2">
                   <span class="text-xs font-bold text-text-primary">Filter Rentang Tanggal</span>
                   <button id="closeDatePopoverBtn" type="button" class="text-text-muted hover:text-text-primary">
@@ -242,87 +242,99 @@
           </div>
         </div>
 
-        <!-- 6 Clickable KPI Cards (Open Full-Page Drill-down KPI Dashboard) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div data-kpi="achievement" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+        <!-- 6 Clickable KPI Cards (Hybrid Mobile Hierarchy: Card 1 Full -> QTY/Rev Pair -> Bayar/Tempo Pair -> Card 6 Full) -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <!-- Card 1: Achievement & Target (Full width on mobile) -->
+          <div data-kpi="achievement" class="col-span-2 lg:col-span-1 kpi-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Achievement &amp; Target</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
             </div>
             <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiAchievementVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">--%</span>
+              <span id="kpiAchievementVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight">--%</span>
             </div>
             <div class="mt-3 flex flex-col gap-1.5">
               <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                 <div id="kpiAchievementBar" class="h-full rounded-full bg-accent transition-all duration-500" style="width: 0%;"></div>
               </div>
-              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums">Realisasi -- pcs / Target -- pcs</span>
+              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums truncate">Realisasi -- pcs / Target -- pcs</span>
             </div>
           </div>
 
-          <div data-kpi="qty" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">QTY Penjualan</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+          <!-- Card 2: QTY Penjualan (Paired with Revenue) -->
+          <div data-kpi="qty" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">QTY Penjualan</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-[11px] sm:text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiQtyVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- pcs</span>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiQtyVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">-- pcs</span>
             </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span class="text-xs text-text-muted">Unit fisik produk terjual (pcs)</span>
-            </div>
-          </div>
-
-          <div data-kpi="revenue" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Revenue</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiRevenueVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
-            </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span class="text-xs text-text-muted">Total nilai tagihan kotor terbit</span>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiQtySub" class="text-[11px] sm:text-xs text-text-muted truncate">Unit fisik terjual (pcs)</span>
             </div>
           </div>
 
-          <div data-kpi="pembayaran" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Pembayaran Diterima</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
+          <!-- Card 3: Revenue (Paired with QTY) -->
+          <div data-kpi="revenue" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Revenue</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiPembayaranVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiRevenueVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
             </div>
-            <div class="mt-3 flex items-center gap-1.5">
-              <span class="text-xs text-status-success tabular-nums font-medium">Uang kas masuk teratribusi tanggal bayar</span>
-            </div>
-          </div>
-
-          <div data-kpi="outstanding" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Total Outstanding</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiOutstandingVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">Rp --</span>
-            </div>
-            <div class="mt-3 pt-2 border-t border-border-subtle flex flex-wrap items-center justify-between text-xs text-text-secondary gap-1.5 min-w-0">
-              <span id="kpiBisaDitagihSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Bisa Ditagihkan">Bisa Ditagih: Rp --</span>
-              <span id="kpiBelumJatuhTempoSub" class="hover:text-accent cursor-pointer transition-colors whitespace-nowrap text-[11px] sm:text-xs font-medium" title="Filter tagihan Belum Jatuh Tempo">Tempo: Rp --</span>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiRevenueSub" class="text-[11px] sm:text-xs text-text-muted truncate">Total nilai tagihan kotor</span>
             </div>
           </div>
 
-          <div data-kpi="invoices" class="kpi-card group relative flex flex-col justify-between p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
+          <!-- Card 4: Pembayaran Diterima (Paired with Outstanding) -->
+          <div data-kpi="pembayaran" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Pembayaran</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiPembayaranVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
+            </div>
+            <div class="mt-3 flex items-center gap-1.5 min-w-0">
+              <span id="kpiPembayaranSub" class="text-[11px] sm:text-xs text-status-success tabular-nums font-medium truncate">Kas masuk teratribusi</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Total Outstanding (Paired with Pembayaran) -->
+          <div data-kpi="outstanding" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Outstanding</span>
+              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2 min-w-0">
+              <span id="kpiOutstandingVal" class="text-[14px] xs:text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
+            </div>
+            <div class="mt-3 pt-1.5 sm:pt-2 border-t border-border-subtle flex flex-col gap-1.5 text-[11px] sm:text-xs text-text-secondary min-w-0">
+              <div id="kpiBisaDitagihSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Bisa Ditagihkan">
+                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Bisa Ditagih</span>
+                <span id="kpiBisaDitagihVal" class="font-semibold text-status-danger tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
+              </div>
+              <div id="kpiBelumJatuhTempoSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Belum Jatuh Tempo">
+                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Tempo</span>
+                <span id="kpiBelumJatuhTempoVal" class="font-semibold text-text-secondary tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Invoice & Outlet (Full width on mobile per master) -->
+          <div data-kpi="invoices" class="col-span-2 lg:col-span-1 kpi-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Invoice &amp; Outlet</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs">↗ Drill-down</span>
             </div>
             <div class="mt-2 flex items-baseline gap-2">
-              <span id="kpiInvoicesVal" class="text-2xl sm:text-3xl font-bold text-text-primary tabular-nums">-- Invoice</span>
+              <span id="kpiInvoicesVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight">-- Invoice</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums">-- Toko Unik Terlayani</span>
+              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums truncate">-- Toko Unik Terlayani</span>
             </div>
           </div>
         </div>
@@ -330,7 +342,7 @@
         <!-- Section 2: Full-Width 1-Column Stack (Tren Penjualan Bulanan & Status Pembayaran) -->
         <section id="salesAnalyticsSection" aria-label="Analitik Penjualan dan Pembayaran" class="flex flex-col gap-6 w-full">
           <!-- Card 1 (Top, Full-Width): Tren Penjualan Bulanan -->
-          <div class="w-full flex flex-col p-5 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
+          <div class="w-full flex flex-col p-4 sm:p-6 rounded-xl bg-surface-1 border border-border-subtle shadow-sm">
             <!-- Header: Row 1 Headline + Period; Row 2 Total Revenue (Left) + Controls (Right) -->
             <div class="flex flex-col gap-3 mb-4">
               <!-- Row 1: Headline + Period Badge -->
@@ -340,7 +352,7 @@
               </div>
 
               <!-- Row 2: Total Revenue (Left) & Controls (Right) -->
-              <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-baseline gap-2.5">
                   <span id="chartMonthlyRevenue" class="text-2xl sm:text-[28px] font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
                   <span id="chartTrendGrowth" class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
@@ -349,23 +361,23 @@
                   </span>
                 </div>
 
-                <div class="flex items-center flex-wrap gap-2">
+                <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                   <!-- Chart Switcher (Line vs Bar) -->
                   <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle" role="group">
-                    <button id="chartBtnLine" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer" title="Tampilan Garis" type="button" aria-pressed="true">
+                    <button id="chartBtnLine" class="inline-flex items-center gap-1 px-3 py-1.5 sm:px-2.5 sm:py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer min-h-[36px] sm:min-h-0" title="Tampilan Garis" type="button" aria-pressed="true">
                       <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
-                      <span class="font-medium text-text-primary">Line</span>
+                      <span class="font-medium text-text-primary text-xs">Line</span>
                     </button>
-                    <button id="chartBtnBar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer" title="Tampilan Batang" type="button" aria-pressed="false">
+                    <button id="chartBtnBar" class="inline-flex items-center gap-1 px-3 py-1.5 sm:px-2.5 sm:py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0" title="Tampilan Batang" type="button" aria-pressed="false">
                       <span class="material-symbols-outlined text-[15px]">bar_chart</span>
-                      <span class="font-medium">Bar</span>
+                      <span class="font-medium text-xs">Bar</span>
                     </button>
                   </div>
                   <!-- Timeframe Selector -->
-                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1.5 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
-                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">7D</button>
-                    <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer">30D</button>
-                    <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer">90D</button>
+                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">
+                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">7D</button>
+                    <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-2.5 py-1.5 sm:py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">30D</button>
+                    <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer min-h-[36px] sm:min-h-0 text-xs">90D</button>
                   </div>
                 </div>
               </div>
@@ -532,7 +544,8 @@
             </select>
           </div>
 
-          <div class="overflow-x-auto border border-border-subtle rounded-lg">
+          <!-- Desktop Table (>= 768px) -->
+          <div class="hidden md:block overflow-x-auto border border-border-subtle rounded-lg">
             <table class="w-full text-left text-xs whitespace-nowrap">
               <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                 <tr>
@@ -547,6 +560,9 @@
               <tbody id="dashInvoiceTableBody" class="divide-y divide-border-subtle text-xs"></tbody>
             </table>
           </div>
+
+          <!-- Mobile Cards (< 768px, zero horizontal scroll) -->
+          <div id="dashInvoiceMobileList" class="md:hidden flex flex-col gap-3"></div>
         </div>
       </section>
 
@@ -1077,22 +1093,26 @@
   <!-- ==================================================================== -->
   <!-- 4. MOBILE BOTTOM NAVIGATION                                          -->
   <!-- ==================================================================== -->
-  <nav class="shell-mobile-nav fixed bottom-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
-    <div class="flex justify-around items-center h-16 px-2" id="mobileNavContainer">
-      <a href="#dashboard" data-route="dashboard" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">dashboard</span><span class="text-[10px]">Dashboard</span>
+  <nav class="shell-mobile-nav fixed bottom-0 left-0 right-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
+    <div class="grid grid-cols-4 w-full h-16" id="mobileNavContainer">
+      <a href="#dashboard" data-route="dashboard" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+        <span class="text-[10px] font-medium tracking-tight">Dashboard</span>
         <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
       </a>
-      <a href="#ytd" data-route="ytd" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">trending_up</span><span class="text-[10px]">YTD</span>
+      <a href="#ytd" data-route="ytd" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[10px] font-medium tracking-tight">YTD</span>
         <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
       </a>
-      <a href="#invoices" data-route="invoices" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="text-[10px]">Invoice</span>
+      <a href="#invoices" data-route="invoices" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
+        <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+        <span class="text-[10px] font-medium tracking-tight">Invoice</span>
         <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
       </a>
-      <a href="#profile" data-route="profile" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 min-w-[60px] h-12 rounded-lg text-text-muted hover:text-text-primary transition-colors">
-        <span class="material-symbols-outlined text-[20px]">person</span><span class="text-[10px]">Profil</span>
+      <a href="#profile" data-route="profile" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[10px] font-medium tracking-tight">Profil</span>
         <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
       </a>
     </div>
@@ -1128,10 +1148,24 @@
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('theme')) FADE_STORE.setTheme(urlParams.get('theme'));
 
+      var reqSales = urlParams.get('sales') || urlParams.get('user');
       var session = FADE_STORE.getActiveSession();
-      if (!session) {
+
+      if (urlParams.get('demo') === '1' && reqSales) {
+        var sName = reqSales === 'budi' ? 'Budi Santoso' : (reqSales === 'aru' ? 'Aru' : reqSales);
+        session = {
+          role: 'sales',
+          name: sName,
+          title: 'Sales Representative',
+          salesName: sName,
+          salesId: 'SLS-' + sName.toUpperCase().slice(0, 3),
+          region: 'Operasional Sales',
+          username: reqSales
+        };
+        FADE_STORE.setActiveSession(session);
+      } else if (!session) {
         if (urlParams.get('demo') === '1' || urlParams.get('role') === 'sales') {
-          session = { role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales' };
+          session = { role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales', username: 'aru' };
           FADE_STORE.setActiveSession(session);
         } else {
           window.location.replace('./index.html');
@@ -1360,8 +1394,18 @@
         document.getElementById('kpiRevenueVal').textContent = 'Rp ' + summary.revenue.toLocaleString('id-ID');
         document.getElementById('kpiPembayaranVal').textContent = 'Rp ' + summary.pembayaranMasuk.toLocaleString('id-ID');
         document.getElementById('kpiOutstandingVal').textContent = 'Rp ' + summary.totalOutstanding.toLocaleString('id-ID');
-        document.getElementById('kpiBisaDitagihSub').textContent = 'Bisa Ditagih: Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
-        document.getElementById('kpiBelumJatuhTempoSub').textContent = 'Tempo: Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        var elBisaVal = document.getElementById('kpiBisaDitagihVal');
+        if (elBisaVal) {
+          elBisaVal.textContent = 'Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
+        } else {
+          document.getElementById('kpiBisaDitagihSub').textContent = 'Bisa Ditagih: Rp ' + summary.bisaDitagihkan.toLocaleString('id-ID');
+        }
+        var elTempoVal = document.getElementById('kpiBelumJatuhTempoVal');
+        if (elTempoVal) {
+          elTempoVal.textContent = 'Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        } else {
+          document.getElementById('kpiBelumJatuhTempoSub').textContent = 'Tempo: Rp ' + summary.belumJatuhTempo.toLocaleString('id-ID');
+        }
         document.getElementById('kpiInvoicesVal').textContent = summary.totalDataTerinput.toLocaleString('id-ID') + ' Invoice';
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
 
@@ -1461,6 +1505,8 @@
 
         if (badge) badge.textContent = criticalList.length;
         if (dot) dot.style.display = criticalList.length > 0 ? '' : 'none';
+        var mDot = document.getElementById('mobileNotifDot');
+        if (mDot) mDot.style.display = criticalList.length > 0 ? '' : 'none';
 
         if (criticalList.length === 0) {
           container.innerHTML =
@@ -1539,12 +1585,15 @@
         var rows = getScopedInvoices(true, search, status);
         var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
         var tbody = document.getElementById('dashInvoiceTableBody');
+        var mList = document.getElementById('dashInvoiceMobileList');
         tbody.innerHTML = '';
+        if (mList) mList.innerHTML = '';
 
         document.getElementById('dashInvSub').textContent = 'Menampilkan ' + Math.min(6, rows.length) + ' dari ' + rows.length + ' invoice milik ' + session.salesName + ' · Klik baris untuk Detail Invoice';
 
         if (rows.length === 0) {
           tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-text-muted">Tidak ada invoice pada periode atau filter ini.</td></tr>';
+          if (mList) mList.innerHTML = '<div class="py-6 text-center text-xs text-text-muted">Tidak ada invoice pada periode atau filter ini.</div>';
           return;
         }
 
@@ -1552,6 +1601,10 @@
           var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
           var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
           var invId = inv.invoice_id || inv.id || '-';
+          var store = inv.store_name || inv.storeName || '-';
+          var dStr = inv.invoice_date || inv.date;
+          var badge = getStatusBadgeHtml(evalState, paid);
+
           var tr = document.createElement('tr');
           tr.className = 'hover:bg-surface-2/60 transition-colors cursor-pointer';
           tr.addEventListener('click', function () {
@@ -1559,13 +1612,34 @@
             openInvoiceDetailPage(invId);
           });
           tr.innerHTML =
-            '<td class="py-2.5 px-3.5 font-mono font-bold text-text-primary">' + invId + '</td>' +
-            '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + (inv.store_name || inv.storeName || '-') + '</td>' +
-            '<td class="py-2.5 px-3.5 text-text-secondary">' + formatShortIdDate(inv.invoice_date || inv.date) + '</td>' +
+            '<td class="py-2.5 px-3.5 font-mono font-bold text-text-primary">' + esc(invId) + '</td>' +
+            '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + esc(store) + '</td>' +
+            '<td class="py-2.5 px-3.5 text-text-secondary">' + formatShortIdDate(dStr) + '</td>' +
             '<td class="py-2.5 px-3.5 text-right tabular-nums">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
             '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary tabular-nums">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
-            '<td class="py-2.5 px-3.5 text-center">' + getStatusBadgeHtml(evalState, paid) + '</td>';
+            '<td class="py-2.5 px-3.5 text-center">' + badge + '</td>';
           tbody.appendChild(tr);
+
+          if (mList) {
+            var card = document.createElement('div');
+            card.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2.5 cursor-pointer hover:border-border-default transition-colors';
+            card.addEventListener('click', function () {
+              detailReturnHash = '#dashboard';
+              openInvoiceDetailPage(invId);
+            });
+            card.innerHTML =
+              '<div class="flex items-start justify-between gap-2">' +
+                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate" title="' + esc(store) + '">' + esc(store) + '</div><div class="text-[11px] text-text-muted font-mono">' + esc(invId) + ' · ' + formatShortIdDate(dStr) + '</div></div>' +
+                '<div class="shrink-0">' + badge + '</div>' +
+              '</div>' +
+              '<div class="grid grid-cols-3 gap-2 pt-2 border-t border-border-subtle text-[11px]">' +
+                '<div><span class="text-text-muted block">Total (' + (inv.qty || 0) + ' pcs)</span><span class="font-bold text-text-primary tabular-nums">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</span></div>' +
+                '<div><span class="text-text-muted block">Terbayar</span><span class="font-semibold text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</span></div>' +
+                '<div class="text-right"><span class="text-text-muted block">Sisa</span><span class="font-semibold ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' tabular-nums">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</span></div>' +
+              '</div>' +
+              '<div class="flex justify-end"><span class="inline-flex items-center gap-1 text-xs font-semibold text-accent"><span>Detail</span><span class="material-symbols-outlined text-[15px]">arrow_forward</span></span></div>';
+            mList.appendChild(card);
+          }
         });
       }
 
@@ -2127,8 +2201,13 @@
         });
       }
 
+      var previousNavRoute = null;
       function handleRouting() {
         var hash = window.location.hash.replace('#', '') || 'dashboard';
+        if (previousNavRoute !== hash) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          previousNavRoute = hash;
+        }
         if (hash === 'upload') {
           showToast('Fitur Upload Master Excel hanya untuk Admin', 'error');
           window.location.hash = '#dashboard';
@@ -2352,6 +2431,7 @@
       }
       function closeAccountModal() { accountModalBackdrop.classList.add('hidden'); }
       window.closeAccountModal = closeAccountModal;
+      window.applyTheme = applyTheme;
       window.confirmSalesLogout = function () {
         FADE_STORE.clearSession();
         window.location.href = './index.html';
@@ -2366,9 +2446,12 @@
         );
       }
 
-      document.getElementById('sidebarLogoutBtn').addEventListener('click', triggerLogoutModal);
-      document.getElementById('mobileLogoutBtn').addEventListener('click', triggerLogoutModal);
-      document.getElementById('btnProfileLogout').addEventListener('click', triggerLogoutModal);
+      var btnSidebarLogout = document.getElementById('sidebarLogoutBtn');
+      if (btnSidebarLogout) btnSidebarLogout.addEventListener('click', triggerLogoutModal);
+      var btnMobileLogout = document.getElementById('mobileLogoutBtn');
+      if (btnMobileLogout) btnMobileLogout.addEventListener('click', triggerLogoutModal);
+      var btnProfileLogout = document.getElementById('btnProfileLogout');
+      if (btnProfileLogout) btnProfileLogout.addEventListener('click', triggerLogoutModal);
 
       document.getElementById('btnSwitchSalesAccount').addEventListener('click', function () {
         openAccountModal(
@@ -2387,8 +2470,9 @@
         );
       });
 
-      // Desktop Notification Popover Controller
+      // Desktop & Mobile Notification Popover Controller
       var desktopNotifBtn = document.getElementById('desktopNotifBtn');
+      var mobileNotifBtn = document.getElementById('mobileNotifBtn');
       var desktopNotifPopover = document.getElementById('desktopNotifPopover');
       var closeNotifPopoverBtn = document.getElementById('closeNotifPopoverBtn');
 
@@ -2397,6 +2481,16 @@
           e.stopPropagation();
           var isHidden = desktopNotifPopover.classList.toggle('hidden');
           desktopNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
+        });
+      }
+      if (mobileNotifBtn && desktopNotifPopover) {
+        mobileNotifBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var isHidden = desktopNotifPopover.classList.toggle('hidden');
+          mobileNotifBtn.setAttribute('aria-expanded', !isHidden);
+          if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', !isHidden);
           if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
         });
       }
@@ -2404,6 +2498,7 @@
         closeNotifPopoverBtn.addEventListener('click', function () {
           desktopNotifPopover.classList.add('hidden');
           if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
         });
       }
       var notifViewAllLink = document.getElementById('notifViewAllLink');
@@ -2411,6 +2506,7 @@
         notifViewAllLink.addEventListener('click', function () {
           desktopNotifPopover.classList.add('hidden');
           if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+          if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
           window.location.hash = '#invoices';
           var statusSel = document.getElementById('invoiceStatusFilter');
           if (statusSel) statusSel.value = 'OVERDUE';
@@ -2459,9 +2555,10 @@
       // Close popovers on click outside
       document.addEventListener('click', function (e) {
         if (desktopNotifPopover && !desktopNotifPopover.classList.contains('hidden')) {
-          if (!desktopNotifPopover.contains(e.target) && !desktopNotifBtn.contains(e.target)) {
+          if (!desktopNotifPopover.contains(e.target) && (!desktopNotifBtn || !desktopNotifBtn.contains(e.target)) && (!mobileNotifBtn || !mobileNotifBtn.contains(e.target))) {
             desktopNotifPopover.classList.add('hidden');
             if (desktopNotifBtn) desktopNotifBtn.setAttribute('aria-expanded', 'false');
+            if (mobileNotifBtn) mobileNotifBtn.setAttribute('aria-expanded', 'false');
           }
         }
         if (dateFilterPopover && !dateFilterPopover.classList.contains('hidden')) {
