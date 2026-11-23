@@ -13,6 +13,8 @@
     SESSION: 'fade_showcase_session_v021',
     THEME: 'fade_showcase_theme_v02',
     UPLOAD_LOG: 'fade_showcase_upload_history_v021',
+    SNAPSHOTS: 'fade_showcase_upload_snapshots_v021',
+    AUDIT_LOG: 'fade_showcase_audit_log_v021',
     INITIALIZED: 'fade_showcase_initialized_v021'
   };
 
@@ -317,6 +319,134 @@
     } catch (e) {}
   }
 
+  function getSnapshots() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEYS.SNAPSHOTS);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function hasSnapshot(uploadId) {
+    if (!uploadId) return false;
+    var sn = getSnapshots();
+    return !!(sn[uploadId] && Array.isArray(sn[uploadId]) && sn[uploadId].length > 0);
+  }
+
+  function addAuditLog(entry) {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEYS.AUDIT_LOG);
+      var list = raw ? JSON.parse(raw) : [];
+      list.unshift(entry);
+      localStorage.setItem(STORAGE_KEYS.AUDIT_LOG, JSON.stringify(list.slice(0, 100)));
+    } catch (e) {}
+  }
+
+  function saveUploadWithSnapshot(newInvoices, entry) {
+    try {
+      var currentInvoices = getInvoices();
+      var uploadId = entry.id || ('upl_' + Date.now());
+      entry.id = uploadId;
+      entry.previousCount = currentInvoices.length;
+      entry.hasSnapshot = true;
+
+      // Save previous dataset snapshot
+      var snapshots = getSnapshots();
+      snapshots[uploadId] = currentInvoices;
+      localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
+
+      // Save new invoices and add history
+      saveInvoices(newInvoices);
+      addUploadHistory(entry);
+
+      addAuditLog({
+        action: 'UPLOAD_SUCCESS',
+        uploadId: uploadId,
+        filename: entry.filename,
+        timestamp: new Date().toISOString(),
+        rowsIngested: newInvoices.length,
+        previousCount: currentInvoices.length
+      });
+
+      return { success: true, uploadId: uploadId };
+    } catch (e) {
+      console.error('Failed to save upload with snapshot', e);
+      return { success: false, reason: e.message };
+    }
+  }
+
+  function rollbackUpload(uploadId) {
+    try {
+      var history = getUploadHistory();
+      var entryIndex = history.findIndex(function (h) {
+        return h.id === uploadId || h.timestamp === uploadId;
+      });
+      if (entryIndex === -1) {
+        return { success: false, reason: 'Catatan unggahan tidak ditemukan dalam riwayat.' };
+      }
+      var entry = history[entryIndex];
+      var snapshots = getSnapshots();
+      var key = entry.id || entry.timestamp;
+      var snapshot = snapshots[key];
+      if (!snapshot || !Array.isArray(snapshot) || snapshot.length === 0) {
+        return { success: false, reason: 'Snapshot pemulihan tidak tersedia untuk berkas ini.' };
+      }
+
+      // Restore invoices
+      saveInvoices(snapshot);
+
+      // Save internal audit log
+      addAuditLog({
+        action: 'ROLLBACK_UPLOAD',
+        uploadId: key,
+        filename: entry.filename,
+        timestamp: new Date().toISOString(),
+        restoredCount: snapshot.length,
+        revertedCount: entry.rowsIngested
+      });
+
+      // Remove from active upload history list
+      history.splice(entryIndex, 1);
+      localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
+
+      // Remove snapshot
+      delete snapshots[key];
+      localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
+
+      return {
+        success: true,
+        restoredCount: snapshot.length,
+        filename: entry.filename
+      };
+    } catch (e) {
+      console.error('Failed to rollback upload', e);
+      return { success: false, reason: e.message };
+    }
+  }
+
+  function deleteFailedUpload(identifier) {
+    try {
+      var history = getUploadHistory();
+      var entryIndex = history.findIndex(function (h) {
+        return h.id === identifier || h.timestamp === identifier;
+      });
+      if (entryIndex === -1) return false;
+      var entry = history[entryIndex];
+      history.splice(entryIndex, 1);
+      localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
+
+      addAuditLog({
+        action: 'DELETE_FAILED_UPLOAD_LOG',
+        filename: entry.filename,
+        timestamp: new Date().toISOString()
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   init();
 
   var Store = {
@@ -341,6 +471,10 @@
     setTheme: setTheme,
     getUploadHistory: getUploadHistory,
     addUploadHistory: addUploadHistory,
+    saveUploadWithSnapshot: saveUploadWithSnapshot,
+    rollbackUpload: rollbackUpload,
+    deleteFailedUpload: deleteFailedUpload,
+    hasSnapshot: hasSnapshot,
     STORAGE_KEYS: STORAGE_KEYS
   };
 

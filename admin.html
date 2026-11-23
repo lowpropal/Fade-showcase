@@ -415,12 +415,12 @@
                   <circle id="chartActiveNodeRing" r="5.5" fill="#19191B" stroke="#F28C45" stroke-width="2.5"></circle>
                   <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
                 </g>
-                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" transform="translate(750, 16)">
-                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="36" rx="6" stroke="#39393D" stroke-width="1" width="148"></rect>
-                  <circle cx="14" cy="18" fill="#F28C45" r="3"></circle>
-                  <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="500" x="24" y="16">19 Nov ·</text>
-                  <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" x="68" y="16">Rp 48,1 jt</text>
-                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="600" x="24" y="29">+1,9 jt periode ini</text>
+                <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" style="display: none;" transform="translate(750, 16)">
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="50" rx="8" stroke="#39393D" stroke-width="1" width="196"></rect>
+                  <circle cx="16" cy="25" fill="#F28C45" r="3.5"></circle>
+                  <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" x="26" y="21">19 Nov ·</text>
+                  <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" x="78" y="21">Rp 48,1 jt</text>
+                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="500" x="26" y="39">+1,9 jt periode ini</text>
                 </g>
                 <g id="chartXAxisLabels"></g>
               </svg>
@@ -687,6 +687,7 @@
                     <th class="py-2.5 px-3 text-right">Gagal</th>
                     <th class="py-2.5 px-3">Status</th>
                     <th class="py-2.5 px-3">Diupload Oleh</th>
+                    <th class="py-2.5 px-3 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="uploadHistoryBody" class="divide-y divide-border-subtle"></tbody>
@@ -958,6 +959,53 @@
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
         <button id="cancelResetBtn" type="button" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Batal</button>
         <button id="confirmResetBtn" type="button" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90 transition-opacity">Reset Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 5H. ROLLBACK UPLOAD CONFIRMATION MODAL                               -->
+  <!-- ==================================================================== -->
+  <div id="rollbackModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-surface-1 border border-border-default shadow-2xl p-6 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-status-danger/15 text-status-danger flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[22px]">settings_backup_restore</span>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-bold text-text-primary">Batalkan Hasil Unggahan?</h3>
+          <p class="text-text-muted mt-0.5">Pemulihan dataset ke snapshot sebelum impor</p>
+        </div>
+      </div>
+      <div class="text-xs text-text-secondary leading-relaxed bg-surface-2 p-3.5 rounded-xl border border-border-subtle flex flex-col gap-2">
+        <p>Apakah Anda yakin ingin membatalkan hasil impor dari berkas <strong id="rollbackModalFilename" class="text-text-primary font-semibold"></strong>?</p>
+        <p id="rollbackModalDesc" class="text-text-muted">Dataset invoice aktif akan dikembalikan ke kondisi sebelum berkas ini diunggah. Seluruh grafik tren, metrik KPI, dan daftar invoice akan disinkronkan kembali.</p>
+        <p class="text-[11px] text-text-muted italic border-t border-border-subtle pt-2">Catatan: Tindakan ini hanya memengaruhi database portal FADE dan tidak akan menghapus file dari komputer Anda.</p>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
+        <button id="cancelRollbackBtn" type="button" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Batal</button>
+        <button id="confirmRollbackBtn" type="button" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90 transition-opacity">Ya, Batalkan & Pulihkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 5I. DELETE FAILED UPLOAD MODAL                                       -->
+  <!-- ==================================================================== -->
+  <div id="deleteFailedUploadModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-surface-1 border border-border-default shadow-2xl p-5 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-surface-3 text-text-secondary flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">delete</span>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-bold text-text-primary">Hapus Riwayat Unggahan Gagal?</h3>
+          <p class="text-text-muted mt-0.5">Hapus catatan log kegagalan berkas <strong id="deleteFailedModalFilename" class="text-text-primary"></strong> dari riwayat. Tindakan ini tidak mengubah dataset aktif.</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
+        <button id="cancelDeleteFailedBtn" type="button" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Batal</button>
+        <button id="confirmDeleteFailedBtn" type="button" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90 transition-opacity">Hapus Log</button>
       </div>
     </div>
   </div>
@@ -2050,8 +2098,9 @@
               };
             });
 
-            FADE_STORE.saveInvoices(newInvoices);
-            FADE_STORE.addUploadHistory({
+            var uploadId = 'upl_' + Date.now();
+            FADE_STORE.saveUploadWithSnapshot(newInvoices, {
+              id: uploadId,
               timestamp: new Date().toISOString(),
               filename: file.name,
               rowsIngested: newInvoices.length,
@@ -2059,6 +2108,7 @@
               invalidCount: 0,
               uploadedBy: session.name + ' (Admin)',
               status: 'Success',
+              hasSnapshot: true,
               notes: 'Header Baris ' + (result.headerRowIndex + 1)
             });
 
@@ -2119,6 +2169,7 @@
       function renderUploadHistory() {
         var list = FADE_STORE.getUploadHistory();
         var tbody = document.getElementById('uploadHistoryBody');
+        if (!tbody) return;
         tbody.innerHTML = '';
         list.slice(0, 10).forEach(function (h) {
           var tr = document.createElement('tr');
@@ -2126,6 +2177,19 @@
           var statusClass = h.status === 'Success' ? 'text-status-success font-semibold' : 'text-status-danger font-semibold';
           var valid = h.validCount != null ? h.validCount : (h.status === 'Success' ? h.rowsIngested : 0);
           var invalid = h.invalidCount != null ? h.invalidCount : 0;
+          var hKey = h.id || h.timestamp;
+          var actionHtml = '';
+
+          if (h.status === 'Success') {
+            if (h.hasSnapshot && FADE_STORE.hasSnapshot(hKey)) {
+              actionHtml = '<button type="button" class="btn-rollback-upload inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold bg-status-danger/10 text-status-danger hover:bg-status-danger/20 border border-status-danger/30 transition-colors" data-id="' + esc(hKey) + '" data-filename="' + esc(h.filename) + '" data-prev="' + (h.previousCount || 0) + '"><span class="material-symbols-outlined text-[14px]">undo</span><span>Batalkan</span></button>';
+            } else {
+              actionHtml = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-surface-3 text-text-muted border border-border-subtle cursor-not-allowed opacity-75" title="Dataset master awal (tidak ada snapshot pemulihan sebelumnya)"><span class="material-symbols-outlined text-[13px]">lock</span><span>Data Awal</span></span>';
+            }
+          } else {
+            actionHtml = '<button type="button" class="btn-delete-failed-upload inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium bg-surface-3 hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-border-subtle transition-colors" data-id="' + esc(hKey) + '" data-filename="' + esc(h.filename) + '"><span class="material-symbols-outlined text-[14px]">delete</span><span>Hapus</span></button>';
+          }
+
           tr.innerHTML =
             '<td class="py-2.5 px-3 text-text-secondary">' + esc(dateStr) + '</td>' +
             '<td class="py-2.5 px-3 font-medium text-text-primary">' + esc(h.filename) + '</td>' +
@@ -2133,8 +2197,108 @@
             '<td class="py-2.5 px-3 text-right text-status-success font-semibold tabular-nums">' + esc(valid) + '</td>' +
             '<td class="py-2.5 px-3 text-right ' + (invalid > 0 ? 'text-status-danger font-semibold' : 'text-text-muted') + ' tabular-nums">' + esc(invalid) + '</td>' +
             '<td class="py-2.5 px-3 ' + statusClass + '">' + esc(h.status) + '</td>' +
-            '<td class="py-2.5 px-3 text-text-secondary">' + (h.uploadedBy || 'Admin') + '</td>';
+            '<td class="py-2.5 px-3 text-text-secondary">' + (h.uploadedBy || 'Admin') + '</td>' +
+            '<td class="py-2.5 px-3 text-center">' + actionHtml + '</td>';
           tbody.appendChild(tr);
+        });
+      }
+
+      var targetRollbackId = null;
+      var rollbackModalBackdrop = document.getElementById('rollbackModalBackdrop');
+      var rollbackModalFilename = document.getElementById('rollbackModalFilename');
+      var rollbackModalDesc = document.getElementById('rollbackModalDesc');
+      var cancelRollbackBtn = document.getElementById('cancelRollbackBtn');
+      var confirmRollbackBtn = document.getElementById('confirmRollbackBtn');
+
+      function openRollbackModal(id, filename, prevCount) {
+        targetRollbackId = id;
+        if (rollbackModalFilename) rollbackModalFilename.textContent = filename || 'file';
+        if (rollbackModalDesc) rollbackModalDesc.textContent = 'Dataset invoice aktif akan dikembalikan ke kondisi sebelum berkas ini diunggah' + (prevCount ? ' (' + prevCount + ' invoice)' : '') + '. Grafik tren, metrik KPI, dan daftar invoice akan disinkronkan kembali.';
+        if (rollbackModalBackdrop) rollbackModalBackdrop.classList.remove('hidden');
+      }
+
+      function closeRollbackModal() {
+        targetRollbackId = null;
+        if (rollbackModalBackdrop) rollbackModalBackdrop.classList.add('hidden');
+      }
+
+      if (cancelRollbackBtn) {
+        cancelRollbackBtn.addEventListener('click', closeRollbackModal);
+      }
+      if (rollbackModalBackdrop) {
+        rollbackModalBackdrop.addEventListener('click', function (e) {
+          if (e.target === rollbackModalBackdrop) closeRollbackModal();
+        });
+      }
+      if (confirmRollbackBtn) {
+        confirmRollbackBtn.addEventListener('click', function () {
+          if (!targetRollbackId) return;
+          var res = FADE_STORE.rollbackUpload(targetRollbackId);
+          closeRollbackModal();
+          if (res.success) {
+            renderUploadHistory();
+            renderAll();
+            showToast('Unggahan ' + res.filename + ' berhasil dibatalkan. Dataset dipulihkan ke ' + res.restoredCount + ' invoice.');
+          } else {
+            showToast(res.reason || 'Gagal membatalkan unggahan', 'error');
+          }
+        });
+      }
+
+      var targetDeleteFailedId = null;
+      var deleteFailedModalBackdrop = document.getElementById('deleteFailedUploadModalBackdrop');
+      var deleteFailedModalFilename = document.getElementById('deleteFailedModalFilename');
+      var cancelDeleteFailedBtn = document.getElementById('cancelDeleteFailedBtn');
+      var confirmDeleteFailedBtn = document.getElementById('confirmDeleteFailedBtn');
+
+      function openDeleteFailedModal(id, filename) {
+        targetDeleteFailedId = id;
+        if (deleteFailedModalFilename) deleteFailedModalFilename.textContent = filename || 'file';
+        if (deleteFailedModalBackdrop) deleteFailedModalBackdrop.classList.remove('hidden');
+      }
+
+      function closeDeleteFailedModal() {
+        targetDeleteFailedId = null;
+        if (deleteFailedModalBackdrop) deleteFailedModalBackdrop.classList.add('hidden');
+      }
+
+      if (cancelDeleteFailedBtn) {
+        cancelDeleteFailedBtn.addEventListener('click', closeDeleteFailedModal);
+      }
+      if (deleteFailedModalBackdrop) {
+        deleteFailedModalBackdrop.addEventListener('click', function (e) {
+          if (e.target === deleteFailedModalBackdrop) closeDeleteFailedModal();
+        });
+      }
+      if (confirmDeleteFailedBtn) {
+        confirmDeleteFailedBtn.addEventListener('click', function () {
+          if (!targetDeleteFailedId) return;
+          FADE_STORE.deleteFailedUpload(targetDeleteFailedId);
+          closeDeleteFailedModal();
+          renderUploadHistory();
+          showToast('Log unggahan gagal berhasil dihapus dari riwayat.');
+        });
+      }
+
+      // Delegate table button clicks
+      var historyTbody = document.getElementById('uploadHistoryBody');
+      if (historyTbody) {
+        historyTbody.addEventListener('click', function (e) {
+          var btnRollback = e.target.closest('.btn-rollback-upload');
+          if (btnRollback) {
+            var rId = btnRollback.getAttribute('data-id');
+            var fName = btnRollback.getAttribute('data-filename');
+            var pCount = btnRollback.getAttribute('data-prev');
+            openRollbackModal(rId, fName, pCount);
+            return;
+          }
+          var btnDel = e.target.closest('.btn-delete-failed-upload');
+          if (btnDel) {
+            var dId = btnDel.getAttribute('data-id');
+            var dfName = btnDel.getAttribute('data-filename');
+            openDeleteFailedModal(dId, dfName);
+            return;
+          }
         });
       }
 
@@ -2371,6 +2535,7 @@
       }
       window.closeProfileModal = closeProfileModal;
       window.logout = logout;
+      window.renderUploadHistory = renderUploadHistory;
 
       var drawer = document.getElementById('kpiDrawer');
       var drawerBackdrop = document.getElementById('kpiDrawerBackdrop');

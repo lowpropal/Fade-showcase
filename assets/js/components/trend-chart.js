@@ -151,6 +151,9 @@
         overlay.addEventListener('pointerdown', function (e) {
           self.handlePointerClick(e);
         });
+        overlay.addEventListener('pointerleave', function (e) {
+          self.handlePointerLeave(e);
+        });
         overlay.addEventListener('click', function (e) {
           self.handlePointerClick(e);
         });
@@ -169,6 +172,9 @@
       if (container) {
         container.addEventListener('keydown', function (e) {
           self.handleKeyDown(e);
+        });
+        container.addEventListener('blur', function (e) {
+          self.handlePointerLeave(e);
         });
       }
     },
@@ -283,88 +289,120 @@
     aggregatePoints: function (filtered) {
       if (this.currentMode === 'ytd') {
         var months = [
-          { ym: '2026-06', label: 'Jun' },
-          { ym: '2026-07', label: 'Jul' },
-          { ym: '2026-08', label: 'Agu' },
-          { ym: '2026-09', label: 'Sep' },
-          { ym: '2026-10', label: 'Okt' },
-          { ym: '2026-11', label: 'Nov' }
+          { ym: '2026-06', startDate: '2026-06-01', endDate: '2026-06-30', date: '2026-06-30', label: 'Jun' },
+          { ym: '2026-07', startDate: '2026-07-01', endDate: '2026-07-31', date: '2026-07-31', label: 'Jul' },
+          { ym: '2026-08', startDate: '2026-08-01', endDate: '2026-08-31', date: '2026-08-31', label: 'Agu' },
+          { ym: '2026-09', startDate: '2026-09-01', endDate: '2026-09-30', date: '2026-09-30', label: 'Sep' },
+          { ym: '2026-10', startDate: '2026-10-01', endDate: '2026-10-31', date: '2026-10-31', label: 'Okt' },
+          { ym: '2026-11', startDate: '2026-11-01', endDate: '2026-11-22', date: '2026-11-22', label: 'Nov' }
         ];
         var runningCum = 0;
         return months.map(function (m) {
           var monthRev = 0;
           filtered.forEach(function (inv) {
             var d = inv.date || inv.invoice_date || '';
-            if (d.slice(0, 7) === m.ym) {
+            if (d >= m.startDate && d <= m.endDate) {
               monthRev += Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
             }
           });
           runningCum += monthRev;
           return {
-            date: m.ym + '-28',
+            date: m.date,
             label: m.label,
+            startDate: m.startDate,
+            endDate: m.endDate,
             cumulative: runningCum,
             daily: monthRev
           };
         });
       }
 
-      var milestones = [];
+      var buckets = [];
       if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
-        milestones = this.buildCustomMilestones(this.customStart, this.customEnd);
+        var startMs = new Date(this.customStart + 'T00:00:00').getTime();
+        var endMs = new Date(this.customEnd + 'T00:00:00').getTime();
+        var diffDays = Math.max(1, Math.round((endMs - startMs) / (24 * 3600 * 1000)));
+        if (diffDays <= 31) {
+          for (var cd = 0; cd <= diffDays; cd++) {
+            var cIso = new Date(startMs + cd * 24 * 3600 * 1000).toISOString().slice(0, 10);
+            buckets.push({
+              date: cIso,
+              label: this.formatShortDate(cIso),
+              startDate: cIso,
+              endDate: cIso
+            });
+          }
+        } else {
+          var milestones = this.buildCustomMilestones(this.customStart, this.customEnd);
+          for (var cm = 0; cm < milestones.length; cm++) {
+            var prevM = cm > 0 ? milestones[cm - 1].date : milestones[0].date;
+            buckets.push({
+              date: milestones[cm].date,
+              label: milestones[cm].label,
+              startDate: cm === 0 ? milestones[0].date : prevM,
+              endDate: milestones[cm].date
+            });
+          }
+        }
       } else if (this.activeTimeframe === '7D') {
-        milestones = [
-          { date: '2026-11-16', label: '16 Nov' },
-          { date: '2026-11-17', label: '17 Nov' },
-          { date: '2026-11-18', label: '18 Nov' },
-          { date: '2026-11-19', label: '19 Nov' },
-          { date: '2026-11-20', label: '20 Nov' },
-          { date: '2026-11-21', label: '21 Nov' },
-          { date: '2026-11-22', label: '22 Nov' }
-        ];
+        // 7D: 1 bucket per day (16 Nov - 22 Nov)
+        for (var d7 = 16; d7 <= 22; d7++) {
+          var d7Str = (d7 < 10 ? '0' : '') + d7;
+          var date7 = '2026-11-' + d7Str;
+          buckets.push({
+            date: date7,
+            label: d7Str + ' Nov',
+            startDate: date7,
+            endDate: date7
+          });
+        }
       } else if (this.activeTimeframe === '90D') {
-        milestones = [
-          { date: '2026-09-01', label: '01 Sep' },
-          { date: '2026-09-15', label: '15 Sep' },
-          { date: '2026-10-01', label: '01 Okt' },
-          { date: '2026-10-15', label: '15 Okt' },
-          { date: '2026-11-01', label: '01 Nov' },
-          { date: '2026-11-15', label: '15 Nov' },
-          { date: '2026-11-22', label: '22 Nov' }
+        // 90D: 12 weekly buckets (01 Sep - 22 Nov)
+        buckets = [
+          { startDate: '2026-09-01', endDate: '2026-09-07', date: '2026-09-07', label: '01–07 Sep' },
+          { startDate: '2026-09-08', endDate: '2026-09-14', date: '2026-09-14', label: '08–14 Sep' },
+          { startDate: '2026-09-15', endDate: '2026-09-21', date: '2026-09-21', label: '15–21 Sep' },
+          { startDate: '2026-09-22', endDate: '2026-09-28', date: '2026-09-28', label: '22–28 Sep' },
+          { startDate: '2026-09-29', endDate: '2026-10-05', date: '2026-10-05', label: '29 Sep–05 Okt' },
+          { startDate: '2026-10-06', endDate: '2026-10-12', date: '2026-10-12', label: '06–12 Okt' },
+          { startDate: '2026-10-13', endDate: '2026-10-19', date: '2026-10-19', label: '13–19 Okt' },
+          { startDate: '2026-10-20', endDate: '2026-10-26', date: '2026-10-26', label: '20–26 Okt' },
+          { startDate: '2026-10-27', endDate: '2026-11-02', date: '2026-11-02', label: '27 Okt–02 Nov' },
+          { startDate: '2026-11-03', endDate: '2026-11-09', date: '2026-11-09', label: '03–09 Nov' },
+          { startDate: '2026-11-10', endDate: '2026-11-16', date: '2026-11-16', label: '10–16 Nov' },
+          { startDate: '2026-11-17', endDate: '2026-11-22', date: '2026-11-22', label: '17–22 Nov' }
         ];
       } else {
-        milestones = [
-          { date: '2026-11-01', label: '01 Nov' },
-          { date: '2026-11-05', label: '05 Nov' },
-          { date: '2026-11-10', label: '10 Nov' },
-          { date: '2026-11-15', label: '15 Nov' },
-          { date: '2026-11-19', label: '19 Nov' },
-          { date: '2026-11-22', label: '22 Nov' }
-        ];
+        // 30D: 22 daily buckets (01 Nov - 22 Nov), including days with 0 transactions
+        for (var d30 = 1; d30 <= 22; d30++) {
+          var d30Str = (d30 < 10 ? '0' : '') + d30;
+          var date30 = '2026-11-' + d30Str;
+          buckets.push({
+            date: date30,
+            label: d30Str + ' Nov',
+            startDate: date30,
+            endDate: date30
+          });
+        }
       }
 
-      var startDate = milestones[0].date;
-
-      return milestones.map(function (m, idx) {
-        var cumulative = 0;
-        var periodDelta = 0;
-        var prevDate = idx > 0 ? milestones[idx - 1].date : null;
+      var runningTotal = 0;
+      return buckets.map(function (b, idx) {
+        var bucketRev = 0;
         filtered.forEach(function (inv) {
-          var d = inv.date || inv.invoice_date;
-          var rev = Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
-          if (d <= m.date && d >= startDate) {
-            cumulative += rev;
-          }
-          if (idx === 0 ? d === m.date : (d > prevDate && d <= m.date)) {
-            periodDelta += rev;
+          var d = inv.date || inv.invoice_date || '';
+          if (d >= b.startDate && d <= b.endDate) {
+            bucketRev += Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
           }
         });
-
+        runningTotal += bucketRev;
         return {
-          date: m.date,
-          label: m.label,
-          cumulative: cumulative,
-          daily: periodDelta
+          date: b.date,
+          label: b.label,
+          startDate: b.startDate,
+          endDate: b.endDate,
+          cumulative: runningTotal,
+          daily: bucketRev
         };
       });
     },
@@ -481,15 +519,13 @@
       var b = this.calculateBounds();
       var totalPoints = rawPoints.length;
 
+      // 1. Calculate Line scale ceiling (cumulative)
       var maxVal = 0;
       rawPoints.forEach(function (p) {
         if (p.cumulative > maxVal) maxVal = p.cumulative;
       });
-
-      // Handle pure zero data: establish a standard 10jt ceiling
       var isAllZero = (maxVal === 0);
       var scaleCeilingMillions = 10;
-
       if (!isAllZero) {
         var maxMillions = Math.ceil(maxVal / 1000000);
         var stepUnit = maxMillions > 250 ? 100 : (maxMillions > 100 ? 40 : (maxMillions > 40 ? 20 : 10));
@@ -497,28 +533,49 @@
       }
       var scaleCeiling = scaleCeilingMillions * 1000000;
 
+      // 2. Calculate Bar scale ceiling (individual bucket value)
+      var maxBarVal = 0;
+      rawPoints.forEach(function (p) {
+        if (p.daily > maxBarVal) maxBarVal = p.daily;
+      });
+      var isBarAllZero = (maxBarVal === 0);
+      var barScaleCeilingMillions = 10;
+      if (!isBarAllZero) {
+        var maxBarMillions = Math.ceil(maxBarVal / 1000000);
+        var barStepUnit = maxBarMillions > 100 ? 25 : (maxBarMillions > 40 ? 10 : (maxBarMillions > 20 ? 5 : (maxBarMillions > 8 ? 2 : 1)));
+        barScaleCeilingMillions = Math.max(barStepUnit * 2, Math.ceil(maxBarMillions / barStepUnit) * barStepUnit);
+      }
+      var barScaleCeiling = barScaleCeilingMillions * 1000000;
+
+      var isBarMode = (this.chartType === 'bar');
+      var activeCeilingMillions = isBarMode ? barScaleCeilingMillions : scaleCeilingMillions;
+
       var plottedPoints = rawPoints.map(function (p, idx) {
-        var x = b.xMin + (idx / (totalPoints - 1)) * (b.xMax - b.xMin);
-        var norm = Math.min(1, Math.max(0, p.cumulative / scaleCeiling));
-        var y = b.yMax - norm * (b.yMax - b.yMin);
+        var x = b.xMin + (idx / Math.max(1, totalPoints - 1)) * (b.xMax - b.xMin);
+        var normLine = Math.min(1, Math.max(0, p.cumulative / scaleCeiling));
+        var yLine = b.yMax - normLine * (b.yMax - b.yMin);
+
+        var normBar = Math.min(1, Math.max(0, p.daily / barScaleCeiling));
+        var yBar = b.yMax - normBar * (b.yMax - b.yMin);
+        var barH = p.daily > 0 ? Math.max(4, Math.round(normBar * (b.yMax - b.yMin))) : 0;
+
         return {
           date: p.date,
           label: p.label,
           cumulative: p.cumulative,
           daily: p.daily,
           x: Math.round(x * 10) / 10,
-          y: Math.round(y * 10) / 10
+          y: Math.round(yLine * 10) / 10,
+          barY: Math.round(yBar * 10) / 10,
+          barHeight: barH
         };
       });
 
       this.points = plottedPoints;
-
-      if (this.activePointIndex === null || this.activePointIndex >= totalPoints) {
-        this.activePointIndex = totalPoints - 1;
-      }
+      this.activeCeilingMillions = activeCeilingMillions;
 
       this.updateSummaryPresentation(plottedPoints);
-      this.renderGrid(scaleCeilingMillions);
+      this.renderGrid(activeCeilingMillions);
 
       if (this.chartType === 'line') {
         this.renderSpline(plottedPoints);
@@ -597,32 +654,34 @@
 
       var count = points.length;
       var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
-      var barW = Math.max(12, Math.min(42, Math.round((availableWidth / count) * 0.48)));
+      var slotWidth = count > 1 ? (availableWidth / (count - 1)) : availableWidth;
+      var barW = Math.max(8, Math.min(48, Math.round(slotWidth * 0.52)));
+      if (count > 15) barW = Math.max(7, Math.min(20, Math.round(slotWidth * 0.62)));
+      else if (count <= 7) barW = Math.max(14, Math.min(40, Math.round(slotWidth * 0.45)));
+
       var activeIdx = self.activePointIndex;
-      if (activeIdx === null || activeIdx < 0 || activeIdx >= points.length) {
-        activeIdx = points.length - 1;
-      }
 
       points.forEach(function (p, idx) {
-        var barH = Math.max(4, self.BOUNDS.yMax - p.y);
-        var barX = Math.round(p.x - (barW / 2));
-        var barY = Math.round(p.y);
         var isHighlight = (idx === activeIdx);
+        var barX = Math.round(p.x - (barW / 2));
+        var hasValue = p.daily > 0;
+        var barH = hasValue ? p.barHeight : 2;
+        var barY = hasValue ? p.barY : (self.BOUNDS.yMax - 2);
 
         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', barX);
         rect.setAttribute('y', barY);
         rect.setAttribute('width', barW);
         rect.setAttribute('height', barH);
-        rect.setAttribute('rx', '4');
-        rect.setAttribute('fill', isHighlight ? 'url(#barGradHighlight)' : 'url(#barGradDefault)');
-        rect.setAttribute('stroke', isHighlight ? '#F28C45' : 'var(--border-default, #39393D)');
-        rect.setAttribute('stroke-width', '1');
+        rect.setAttribute('rx', barW > 12 ? '3' : '2');
+        rect.setAttribute('fill', isHighlight ? 'url(#barGradHighlight)' : (hasValue ? 'url(#barGradDefault)' : 'var(--bg-surface-2, #2B2B2E)'));
+        rect.setAttribute('stroke', isHighlight ? '#F28C45' : (hasValue ? 'var(--border-default, #39393D)' : 'var(--border-subtle, #333336)'));
+        rect.setAttribute('stroke-width', isHighlight ? '1.5' : '1');
         rect.setAttribute('class', 'chart-bar cursor-pointer transition-all duration-150');
         rect.setAttribute('data-index', idx);
         rect.setAttribute('tabindex', '0');
         rect.setAttribute('role', 'button');
-        rect.setAttribute('aria-label', p.label + ': Rp ' + (p.cumulative / 1000000).toFixed(1) + ' jt');
+        rect.setAttribute('aria-label', p.label + ': Rp ' + (p.daily / 1000000).toFixed(1) + ' jt (Kumulatif: Rp ' + (p.cumulative / 1000000).toFixed(1) + ' jt)');
 
         rect.addEventListener('click', function () {
           self.selectPoint(idx);
@@ -744,11 +803,20 @@
       var b = this.BOUNDS;
       var activeIdx = this.activePointIndex;
       var count = points.length;
-      var availableW = b.xMax - b.xMin;
-      var slotW = count > 1 ? (availableW / (count - 1)) : availableW;
-      var compactDates = slotW < 52;
 
       points.forEach(function (p, idx) {
+        var isActive = (idx === activeIdx);
+
+        // In 30D (22 points), show clean milestone dates so they never collide
+        if (count > 15) {
+          var isMilestone = (idx === 0 || idx === 4 || idx === 9 || idx === 14 || idx === 18 || idx === count - 1);
+          if (!isMilestone && !isActive) return;
+        } else if (count > 8) {
+          // In 90D (12 weekly points), show alternate milestone dates
+          var isWeeklyMilestone = (idx % 2 === 0 || idx === count - 1);
+          if (!isWeeklyMilestone && !isActive) return;
+        }
+
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', p.x);
         text.setAttribute('y', b.yMax + (b.isMobile ? 22 : 24));
@@ -756,7 +824,6 @@
         text.setAttribute('font-size', '12'); // Actual >= 12px
         text.setAttribute('text-anchor', 'middle');
 
-        var isActive = idx === activeIdx;
         if (isActive) {
           text.setAttribute('fill', 'var(--color-accent, #F28C45)');
           text.setAttribute('font-weight', '700');
@@ -765,15 +832,7 @@
           text.setAttribute('font-weight', '400');
         }
 
-        var displayLabel = p.label;
-        if (compactDates && count > 5) {
-          if (idx !== 0 && idx !== count - 1) {
-            var parts = p.label.split(' ');
-            if (parts.length >= 1) displayLabel = parts[0];
-          }
-        }
-
-        text.textContent = displayLabel;
+        text.textContent = p.label;
         container.appendChild(text);
       });
     },
@@ -840,18 +899,29 @@
         }
       }
 
-      var tipFormattedVal = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-      var tipSubText = pt.daily > 0
-        ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
-        : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')');
+      var isBar = (this.chartType === 'bar');
+      var tipFormattedVal = isBar
+        ? 'Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
+        : 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
 
-      // 1. Update Primary SVG Tooltip (per Master Stitch Design)
+      var tipSubText = isBar
+        ? 'Kumulatif: Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
+        : (pt.daily > 0
+          ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
+          : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')'));
+
+      // 1. Update Primary SVG Tooltip (>= 190x48px desktop target)
       var tooltipGroup = document.getElementById('chartTooltipGroup');
       if (tooltipGroup) {
         tooltipGroup.style.display = '';
-        var svgTipW = 148;
-        var tipX = pt.x > (b.viewBoxWidth - 160) ? (pt.x - svgTipW - 14) : (pt.x + 14);
-        var tipY = Math.max(10, Math.min(b.yMax - 40, pt.y - 22));
+        var svgTipW = 196;
+        var svgTipH = 50;
+        var tipX = pt.x > (b.viewBoxWidth - 215)
+          ? Math.max(b.xMin + 8, pt.x - svgTipW - 14)
+          : Math.min(b.xMax - svgTipW - 8, pt.x + 14);
+
+        var targetY = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
+        var tipY = Math.max(b.yMin + 8, Math.min(b.yMax - svgTipH - 8, targetY - (svgTipH / 2)));
 
         tooltipGroup.setAttribute('transform', 'translate(' + tipX + ', ' + tipY + ')');
 
@@ -860,7 +930,12 @@
         var svgTipSub = tooltipGroup.querySelector('#chartTooltipSub');
 
         if (svgTipDate) svgTipDate.textContent = pt.label + ' ·';
-        if (svgTipVal) svgTipVal.textContent = tipFormattedVal;
+        if (svgTipVal) {
+          var dateLen = (pt.label || '').length;
+          var valX = dateLen > 7 ? 88 : 78;
+          svgTipVal.setAttribute('x', valX);
+          svgTipVal.textContent = tipFormattedVal;
+        }
         if (svgTipSub) svgTipSub.textContent = tipSubText;
       }
 
@@ -877,11 +952,12 @@
           if (tipVal) tipVal.textContent = tipFormattedVal;
           if (tipSub) tipSub.textContent = tipSubText;
 
-          var tipW = tipHtml.offsetWidth || 150;
-          var tipH = tipHtml.offsetHeight || 52;
+          var tipW = tipHtml.offsetWidth || 196;
+          var tipH = tipHtml.offsetHeight || 50;
+          var targetYHtml = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
           var tipLeft = Math.max(8, Math.min(b.viewBoxWidth - tipW - 8, pt.x - (tipW / 2)));
-          var tipTop = pt.y - tipH - 12;
-          if (tipTop < 6) tipTop = pt.y + 16;
+          var tipTop = targetYHtml - tipH - 12;
+          if (tipTop < 6) tipTop = targetYHtml + 16;
           tipHtml.style.left = tipLeft + 'px';
           tipHtml.style.top = tipTop + 'px';
         } else {
@@ -891,11 +967,15 @@
 
       var liveRegion = document.getElementById('chartLiveRegion');
       if (liveRegion) {
-        liveRegion.textContent = pt.label + ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta';
+        liveRegion.textContent = pt.label + (isBar ? ', Nilai: ' + tipFormattedVal + ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta' : ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta');
       }
     },
 
     handlePointerMove: function (e) {
+      if (this._leaveTimeout) {
+        clearTimeout(this._leaveTimeout);
+        this._leaveTimeout = null;
+      }
       if (!this.points || this.points.length === 0) return;
       var svg = document.getElementById('trendChartSvg');
       if (!svg) return;
@@ -929,7 +1009,34 @@
     },
 
     handlePointerLeave: function () {
-      // Intentionally preserve active point selection on pointer leave
+      if (!this.BOUNDS.isMobile) {
+        var self = this;
+        if (this._leaveTimeout) clearTimeout(this._leaveTimeout);
+        this._leaveTimeout = setTimeout(function () {
+          var container = document.getElementById('chartInteractiveContainer');
+          var hasKbFocus = container && (document.activeElement === container || container.contains(document.activeElement));
+          if (!hasKbFocus) {
+            self.activePointIndex = null;
+            var tooltipGroup = document.getElementById('chartTooltipGroup');
+            if (tooltipGroup) tooltipGroup.style.display = 'none';
+            var guideLine = document.getElementById('chartGuideLine');
+            if (guideLine) guideLine.style.display = 'none';
+            var activeRing = document.getElementById('chartActiveNodeRing');
+            var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+            if (activeRing) activeRing.style.display = 'none';
+            if (activePip) activePip.style.display = 'none';
+            var barsContainer = document.getElementById('chartBarsGroup');
+            if (barsContainer) {
+              var bars = barsContainer.querySelectorAll('rect');
+              bars.forEach(function (rect) {
+                rect.setAttribute('fill', 'url(#barGradDefault)');
+                rect.setAttribute('stroke', 'var(--border-default, #39393D)');
+                rect.setAttribute('stroke-width', '1');
+              });
+            }
+          }
+        }, 100);
+      }
     },
 
     handlePointerClick: function (e) {
