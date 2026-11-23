@@ -910,6 +910,27 @@
     </div>
   </div>
 
+  <!-- ==================================================================== -->
+  <!-- 5F. LOGOUT CONFIRMATION MODAL                                        -->
+  <!-- ==================================================================== -->
+  <div id="logoutConfirmModalBackdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-surface-1 border border-border-default shadow-2xl p-5 flex flex-col gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-status-danger/15 text-status-danger flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-bold text-text-primary">Keluar dari Sesi Admin?</h3>
+          <p class="text-text-muted mt-0.5">Anda akan mengakhiri sesi dan kembali ke halaman login.</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
+        <button id="cancelLogoutBtn" type="button" class="h-9 px-4 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-text-primary font-medium transition-colors">Batal</button>
+        <button id="confirmLogoutBtn" type="button" class="h-9 px-4 rounded-lg bg-status-danger text-white font-semibold hover:opacity-90 transition-opacity">Keluar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div id="toastContainer" class="fixed bottom-20 lg:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -1002,6 +1023,8 @@
       var mobileNavContainer = document.getElementById('mobileNavContainer');
       var salesScopeContainer = document.getElementById('salesScopeContainer');
       var exportActionContainer = document.getElementById('exportActionContainer');
+      var exportMenuBtn = null;
+      var exportDropdownMenu = null;
       var tabModeBulanan = document.getElementById('tabModeBulanan');
       var tabModeYTD = document.getElementById('tabModeYTD');
       var tabIndicatorBulanan = document.getElementById('tabIndicatorBulanan');
@@ -1010,6 +1033,16 @@
       var viewInvoices = document.getElementById('viewInvoices');
       var viewUpload = document.getElementById('viewUpload');
       var salesComparisonSection = document.getElementById('salesComparisonSection');
+
+      function esc(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
 
       function showToast(msg, type) {
         var container = document.getElementById('toastContainer');
@@ -1162,8 +1195,8 @@
             '<button type="button" data-export="doc" class="export-opt-btn w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-text-secondary">description</span><span>Rekap Dokumen (.doc)</span></button>' +
           '</div>';
 
-        var exportMenuBtn = document.getElementById('exportMenuBtn');
-        var exportDropdownMenu = document.getElementById('exportDropdownMenu');
+        exportMenuBtn = document.getElementById('exportMenuBtn');
+        exportDropdownMenu = document.getElementById('exportDropdownMenu');
         exportMenuBtn.addEventListener('click', function (e) {
           e.stopPropagation();
           exportDropdownMenu.classList.toggle('hidden');
@@ -1564,13 +1597,13 @@
             '<div class="flex items-center justify-between text-xs">' +
               '<span class="font-semibold text-text-primary flex items-center gap-1.5">' +
                 '<span class="w-1.5 h-1.5 rounded-full ' + (item.type === 'danger' ? 'bg-status-danger' : 'bg-status-warning') + '"></span>' +
-                '<span class="truncate max-w-[170px]">' + item.title + '</span>' +
+                '<span class="truncate max-w-[170px]" title="' + esc(item.title) + '">' + esc(item.title) + '</span>' +
               '</span>' +
-              '<span class="font-semibold tabular-nums text-text-primary text-[11px]">' + item.amount + '</span>' +
+              '<span class="font-semibold tabular-nums text-text-primary text-[11px]">' + esc(item.amount) + '</span>' +
             '</div>' +
             '<div class="flex items-center justify-between text-[11px] text-text-muted mt-0.5">' +
-              '<span class="truncate max-w-[200px]">' + item.desc + '</span>' +
-              '<span class="tabular-nums">' + item.date + '</span>' +
+              '<span class="truncate max-w-[200px]" title="' + esc(item.desc) + '">' + esc(item.desc) + '</span>' +
+              '<span class="tabular-nums">' + esc(item.date) + '</span>' +
             '</div>';
           container.appendChild(row);
         });
@@ -1610,7 +1643,7 @@
           var achFormatted = r.achievement != null ? r.achievement.toFixed(1) + '%' : '-';
 
           tr.innerHTML =
-            '<td class="py-3 px-3 font-semibold text-text-primary">' + r.sales + '</td>' +
+            '<td class="py-3 px-3 font-semibold text-text-primary">' + esc(r.sales) + '</td>' +
             '<td class="py-3 px-3 min-w-[140px]">' +
               '<div class="w-full h-2 rounded-full bg-surface-2 overflow-hidden">' +
                 '<div class="h-full rounded-full bg-accent transition-all duration-300" style="width: ' + pctWidth + '%;"></div>' +
@@ -1670,18 +1703,18 @@
             if (session.role === 'admin') {
               actionsHtml = '<td class="py-2.5 px-3.5 text-center">' +
                 '<div class="inline-flex items-center gap-1">' +
-                  (outstanding > 0 ? '<button type="button" data-action="pay" data-id="' + invId + '" title="Catat Pembayaran" class="inv-action-btn w-7 h-7 rounded-md bg-status-success/10 hover:bg-status-success/20 text-status-success flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">payments</span></button>' : '') +
-                  '<button type="button" data-action="edit" data-id="' + invId + '" title="Edit Invoice" class="inv-action-btn w-7 h-7 rounded-md bg-surface-2 hover:bg-surface-hover text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">edit</span></button>' +
-                  '<button type="button" data-action="delete" data-id="' + invId + '" title="Hapus Invoice" class="inv-action-btn w-7 h-7 rounded-md bg-surface-2 hover:bg-status-danger/20 text-text-muted hover:text-status-danger flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">delete</span></button>' +
+                  (outstanding > 0 ? '<button type="button" data-action="pay" data-id="' + esc(invId) + '" title="Catat Pembayaran" class="inv-action-btn w-7 h-7 rounded-md bg-status-success/10 hover:bg-status-success/20 text-status-success flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">payments</span></button>' : '') +
+                  '<button type="button" data-action="edit" data-id="' + esc(invId) + '" title="Edit Invoice" class="inv-action-btn w-7 h-7 rounded-md bg-surface-2 hover:bg-surface-hover text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">edit</span></button>' +
+                  '<button type="button" data-action="delete" data-id="' + esc(invId) + '" title="Hapus Invoice" class="inv-action-btn w-7 h-7 rounded-md bg-surface-2 hover:bg-status-danger/20 text-text-muted hover:text-status-danger flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-[15px]">delete</span></button>' +
                 '</div>' +
               '</td>';
             }
 
             tr.innerHTML =
-              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + dStr + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate">' + store + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + sName + '</td>' +
+              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + esc(invId) + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + esc(dStr) + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-primary max-w-[180px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + esc(sName) + '</td>' +
               '<td class="py-2.5 px-3.5 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + total.toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
@@ -1780,6 +1813,10 @@
 
       invoiceForm.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (!session || session.role !== 'admin') {
+          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+          return;
+        }
         var mode = document.getElementById('formMode').value;
         var payload = {
           id: document.getElementById('formInvoiceId').value.trim(),
@@ -1836,6 +1873,10 @@
 
       document.getElementById('paymentForm').addEventListener('submit', function (e) {
         e.preventDefault();
+        if (!session || session.role !== 'admin') {
+          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+          return;
+        }
         var id = document.getElementById('payInvoiceId').value;
         var amt = Number(document.getElementById('payAmountInput').value || 0);
         var dt = document.getElementById('payDateInput').value || '2026-11-22';
@@ -1864,6 +1905,10 @@
 
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
       document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (!session || session.role !== 'admin') {
+          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+          return;
+        }
         if (!pendingDeleteId) return;
         var targetId = pendingDeleteId;
         FADE_STORE.deleteInvoice(targetId);
@@ -1889,6 +1934,10 @@
       });
 
       document.getElementById('resetDemoDataBtn').addEventListener('click', function () {
+        if (!session || session.role !== 'admin') {
+          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+          return;
+        }
         if (confirm('Kembalikan seluruh data ke 210 record demo awal? Perubahan manual Anda akan direset.')) {
           FADE_STORE.resetToDefault();
           renderAll();
@@ -1898,6 +1947,10 @@
       });
 
       async function handleExcelFile(file) {
+        if (!session || session.role !== 'admin') {
+          showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
+          return;
+        }
         var banner = document.getElementById('uploadResultBanner');
         var bannerTitle = document.getElementById('uploadResultTitle');
         var bannerBadge = document.getElementById('uploadResultBadge');
@@ -2015,12 +2068,12 @@
           var valid = h.validCount != null ? h.validCount : (h.status === 'Success' ? h.rowsIngested : 0);
           var invalid = h.invalidCount != null ? h.invalidCount : 0;
           tr.innerHTML =
-            '<td class="py-2.5 px-3 text-text-secondary">' + dateStr + '</td>' +
-            '<td class="py-2.5 px-3 font-medium text-text-primary">' + h.filename + '</td>' +
-            '<td class="py-2.5 px-3 text-right font-medium tabular-nums">' + h.rowsIngested + '</td>' +
-            '<td class="py-2.5 px-3 text-right text-status-success font-semibold tabular-nums">' + valid + '</td>' +
-            '<td class="py-2.5 px-3 text-right ' + (invalid > 0 ? 'text-status-danger font-semibold' : 'text-text-muted') + ' tabular-nums">' + invalid + '</td>' +
-            '<td class="py-2.5 px-3 ' + statusClass + '">' + h.status + '</td>' +
+            '<td class="py-2.5 px-3 text-text-secondary">' + esc(dateStr) + '</td>' +
+            '<td class="py-2.5 px-3 font-medium text-text-primary">' + esc(h.filename) + '</td>' +
+            '<td class="py-2.5 px-3 text-right font-medium tabular-nums">' + esc(h.rowsIngested) + '</td>' +
+            '<td class="py-2.5 px-3 text-right text-status-success font-semibold tabular-nums">' + esc(valid) + '</td>' +
+            '<td class="py-2.5 px-3 text-right ' + (invalid > 0 ? 'text-status-danger font-semibold' : 'text-text-muted') + ' tabular-nums">' + esc(invalid) + '</td>' +
+            '<td class="py-2.5 px-3 ' + statusClass + '">' + esc(h.status) + '</td>' +
             '<td class="py-2.5 px-3 text-text-secondary">' + (h.uploadedBy || 'Admin') + '</td>';
           tbody.appendChild(tr);
         });
@@ -2074,7 +2127,8 @@
         if (typeof closeKpiDrawer === 'function') closeKpiDrawer();
         if (hash !== 'profile' && typeof closeProfileModal === 'function') closeProfileModal();
         if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
-        if (exportDropdownMenu) exportDropdownMenu.classList.add('hidden');
+        var expMenu = document.getElementById('exportDropdownMenu') || exportDropdownMenu;
+        if (expMenu) expMenu.classList.add('hidden');
 
         if (hash === 'dashboard') {
           if (currentMode === 'ytd') currentMode = 'bulan';
@@ -2198,12 +2252,32 @@
       if (dThemeBtn) dThemeBtn.addEventListener('click', toggleTheme);
       if (mThemeBtn) mThemeBtn.addEventListener('click', toggleTheme);
 
-      function logout() {
-        if (confirm('Keluar dari sesi Admin dan kembali ke halaman login?')) {
-          FADE_STORE.clearSession();
-          window.location.href = './index.html';
-        }
+      var logoutConfirmModalBackdrop = document.getElementById('logoutConfirmModalBackdrop');
+      var cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+      var confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
+      function openLogoutModal() {
+        if (logoutConfirmModalBackdrop) logoutConfirmModalBackdrop.classList.remove('hidden');
       }
+      function closeLogoutModal() {
+        if (logoutConfirmModalBackdrop) logoutConfirmModalBackdrop.classList.add('hidden');
+      }
+      function confirmAdminLogout() {
+        FADE_STORE.clearSession();
+        window.location.href = './index.html';
+      }
+      function logout() {
+        openLogoutModal();
+      }
+
+      if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeLogoutModal);
+      if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', confirmAdminLogout);
+      if (logoutConfirmModalBackdrop) {
+        logoutConfirmModalBackdrop.addEventListener('click', function (e) {
+          if (e.target === logoutConfirmModalBackdrop) closeLogoutModal();
+        });
+      }
+
       var btnSidebarLogout = document.getElementById('sidebarLogoutBtn');
       if (btnSidebarLogout) btnSidebarLogout.addEventListener('click', logout);
       var btnMobileLogout = document.getElementById('mobileLogoutBtn');
@@ -2270,15 +2344,19 @@
               var card = document.createElement('div');
               card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1.5';
               var settlHtml = st.penyelesaian > 0 ? '<div class="text-[10px] text-accent font-semibold">Penyelesaian Lain: Rp ' + st.penyelesaian.toLocaleString('id-ID') + '</div>' : '';
-              var rincianHtml = inv.rincianProduk ? '<div class="text-[10px] text-text-muted truncate mt-0.5" title="' + inv.rincianProduk + '">' + inv.rincianProduk + '</div>' : '';
+              var invStore = inv.store_name || inv.storeName || '-';
+              var invNum = inv.invoice_id || inv.id || '-';
+              var invDate = inv.invoice_date || inv.date || '-';
+              var rincian = inv.rincianProduk || '';
+              var rincianHtml = rincian ? '<div class="text-[10px] text-text-muted truncate mt-0.5" title="' + esc(rincian) + '">' + esc(rincian) + '</div>' : '';
               card.innerHTML =
                 '<div class="flex items-center justify-between font-semibold text-text-primary">' +
-                  '<span>' + (inv.store_name || inv.storeName || '-') + '</span>' +
+                  '<span>' + esc(invStore) + '</span>' +
                   '<span class="text-status-danger">Rp ' + st.sisa.toLocaleString('id-ID') + '</span>' +
                 '</div>' +
                 '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
-                  '<span>' + (inv.invoice_id || inv.id) + ' · ' + (inv.invoice_date || inv.date) + '</span>' +
-                  '<span>' + st.status + (st.isPartial ? ' (Sebagian)' : '') + '</span>' +
+                  '<span>' + esc(invNum) + ' · ' + esc(invDate) + '</span>' +
+                  '<span>' + esc(st.status) + (st.isPartial ? ' (Sebagian)' : '') + '</span>' +
                 '</div>' + settlHtml + rincianHtml;
               drawerContent.appendChild(card);
             });
@@ -2297,14 +2375,17 @@
               var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
               var card = document.createElement('div');
               card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1';
+              var invStore2 = inv.store_name || inv.storeName || '-';
+              var invNum2 = inv.invoice_id || inv.id || '-';
+              var invDate2 = inv.invoice_date || inv.date || '-';
               card.innerHTML =
                 '<div class="flex items-center justify-between font-semibold text-text-primary">' +
-                  '<span>' + (inv.store_name || inv.storeName) + ' (' + (inv.qty || 0) + ' pcs)</span>' +
+                  '<span>' + esc(invStore2) + ' (' + (inv.qty || 0) + ' pcs)</span>' +
                   '<span>Rp ' + st.revenue.toLocaleString('id-ID') + '</span>' +
                 '</div>' +
                 '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
-                  '<span>' + (inv.invoice_id || inv.id) + ' · ' + (inv.invoice_date || inv.date) + '</span>' +
-                  '<span>' + st.status + '</span>' +
+                  '<span>' + esc(invNum2) + ' · ' + esc(invDate2) + '</span>' +
+                  '<span>' + esc(st.status) + '</span>' +
                 '</div>';
               drawerContent.appendChild(card);
             });
@@ -2363,6 +2444,7 @@
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
           closeDrawer();
+          closeLogoutModal();
           var notifPopover = document.getElementById('desktopNotifPopover');
           if (notifPopover) notifPopover.classList.add('hidden');
           var dFilterPopover = document.getElementById('dateFilterPopover');

@@ -1085,6 +1085,16 @@
       var viewInvoiceDetail = document.getElementById('viewInvoiceDetail');
       var viewProfile = document.getElementById('viewProfile');
 
+      function esc(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
       function showToast(msg, type) {
         var container = document.getElementById('toastContainer');
         var el = document.createElement('div');
@@ -1477,19 +1487,20 @@
             var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
             var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
             var invId = inv.invoice_id || inv.id || '-';
+            var invStore = inv.storeName || inv.store_name || '-';
             var isOverdue = st.status === 'Terlambat Bayar';
             var tr = document.createElement('tr');
             tr.className = 'hover:bg-surface-2/60 transition-colors';
             tr.innerHTML =
-              '<td class="py-3 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
-              '<td class="py-3 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate">' + (inv.storeName || inv.store_name || '-') + '</td>' +
+              '<td class="py-3 px-3.5 font-bold text-text-primary">' + esc(invId) + '</td>' +
+              '<td class="py-3 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate" title="' + esc(invStore) + '">' + esc(invStore) + '</td>' +
               '<td class="py-3 px-3.5 text-text-secondary">' + formatShortIdDate(inv.date || inv.invoice_date) + '</td>' +
               '<td class="py-3 px-3.5 ' + (isOverdue ? 'text-status-danger font-semibold' : 'text-text-secondary') + '">' + formatShortIdDate(inv.dueDate || inv.due_date) + '</td>' +
               '<td class="py-3 px-3.5 text-right text-text-primary font-semibold">Rp ' + st.revenue.toLocaleString('id-ID') + '</td>' +
               '<td class="py-3 px-3.5 text-right text-text-secondary">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
               '<td class="py-3 px-3.5 text-right font-bold ' + (isOverdue ? 'text-status-danger' : (st.sisa > 0 ? 'text-status-warning' : 'text-text-muted')) + '">Rp ' + st.sisa.toLocaleString('id-ID') + '</td>' +
               '<td class="py-3 px-3.5 text-center">' + getStatusBadgeHtml(st, paid) + '</td>' +
-              '<td class="py-3 px-3.5 text-center"><button type="button" data-inv="' + invId + '" class="drill-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
+              '<td class="py-3 px-3.5 text-center"><button type="button" data-inv="' + esc(invId) + '" class="drill-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
             tbody.appendChild(tr);
           });
           tbody.querySelectorAll('.drill-detail-btn').forEach(function (btn) {
@@ -1546,22 +1557,22 @@
             var tr = document.createElement('tr');
             tr.className = 'hover:bg-surface-2/60 transition-colors';
             tr.innerHTML =
-              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + invId + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-secondary">' + dStr + '</td>' +
-              '<td class="py-2.5 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate">' + store + '</td>' +
+              '<td class="py-2.5 px-3.5 font-bold text-text-primary">' + esc(invId) + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-secondary">' + esc(dStr) + '</td>' +
+              '<td class="py-2.5 px-3.5 text-text-primary font-sans font-medium max-w-[180px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
               '<td class="py-2.5 px-3.5 text-right font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-right font-semibold text-text-primary">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-right text-status-success font-medium">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-right ' + (evalState.sisa > 0 ? 'text-status-danger' : 'text-text-muted') + ' font-medium">Rp ' + evalState.sisa.toLocaleString('id-ID') + '</td>' +
               '<td class="py-2.5 px-3.5 text-center">' + badge + '</td>' +
-              '<td class="py-2.5 px-3.5 text-center"><button type="button" data-inv="' + invId + '" class="inv-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
+              '<td class="py-2.5 px-3.5 text-center"><button type="button" data-inv="' + esc(invId) + '" class="inv-detail-btn px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-sans font-semibold">Detail →</button></td>';
             tbody.appendChild(tr);
 
             var card = document.createElement('div');
             card.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2.5';
             card.innerHTML =
               '<div class="flex items-start justify-between gap-2">' +
-                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate">' + store + '</div><div class="text-[11px] text-text-muted font-mono">' + invId + ' · ' + formatShortIdDate(dStr) + '</div></div>' +
+                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate" title="' + esc(store) + '">' + esc(store) + '</div><div class="text-[11px] text-text-muted font-mono">' + esc(invId) + ' · ' + formatShortIdDate(dStr) + '</div></div>' +
                 '<div class="shrink-0">' + badge + '</div>' +
               '</div>' +
               '<div class="grid grid-cols-3 gap-2 pt-2 border-t border-border-subtle text-[11px]">' +
@@ -1634,14 +1645,14 @@
             var isFree = pType.toLowerCase().indexOf('gratis') >= 0;
             return '<tr class="' + (isFree ? 'opacity-75 bg-surface-2/20' : '') + '">' +
               '<td class="py-2.5 px-3">' +
-                '<div class="font-semibold text-text-primary text-xs">' + pName + '</div>' +
+                '<div class="font-semibold text-text-primary text-xs">' + esc(pName) + '</div>' +
                 '<div class="text-[10px] text-text-muted flex items-center gap-1.5 font-mono mt-0.5">' +
                   (isFree ? '<span class="px-1.5 py-0.2 rounded bg-status-warning/15 text-status-warning font-sans font-semibold">Gratis / Promo</span>' : '<span class="px-1.5 py-0.2 rounded bg-surface-2 text-text-secondary font-sans font-medium">Terjual</span>') +
                 '</div>' +
               '</td>' +
-              '<td class="py-2.5 px-3 text-right tabular-nums text-text-secondary text-xs">' + (pPrice.replace('@', '') || '-') + '</td>' +
-              '<td class="py-2.5 px-3 text-right tabular-nums font-medium text-xs">' + (pQty.replace('qty ', '') || '-') + '</td>' +
-              '<td class="py-2.5 px-3 text-right tabular-nums font-bold text-text-primary text-xs">' + (pNet.replace('net ', '') || '-') + '</td>' +
+              '<td class="py-2.5 px-3 text-right tabular-nums text-text-secondary text-xs">' + esc(pPrice.replace('@', '') || '-') + '</td>' +
+              '<td class="py-2.5 px-3 text-right tabular-nums font-medium text-xs">' + esc(pQty.replace('qty ', '') || '-') + '</td>' +
+              '<td class="py-2.5 px-3 text-right tabular-nums font-bold text-text-primary text-xs">' + esc(pNet.replace('net ', '') || '-') + '</td>' +
             '</tr>';
           }).join('');
         } else {
@@ -1744,22 +1755,16 @@
         var relDocs = getUploadedDocs().filter(function (d) { return d.storeName === store || d.refNumber === invoiceId; });
         var relContainer = document.getElementById('detRelatedDocs');
         if (relDocs.length === 0) {
-          relContainer.innerHTML = '<p class="text-text-muted">Belum ada berkas pendukung yang diunggah untuk toko/invoice ini. Klik "+ Unggah Dokumen" untuk menambahkan bukti serah terima atau faktur.</p>';
+          relContainer.innerHTML = '<p class="text-text-muted">Belum ada berkas pendukung yang terlampir untuk toko/invoice ini.</p>';
         } else {
           relContainer.innerHTML = relDocs.map(function (d) {
             return '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-2 mb-2">' +
-              '<div class="min-w-0"><div class="font-semibold text-text-primary truncate">' + d.fileName + '</div><div class="text-[11px] text-text-muted">' + d.sizeLabel + (d.notes ? ' · ' + d.notes : '') + '</div></div>' +
+              '<div class="min-w-0"><div class="font-semibold text-text-primary truncate">' + esc(d.fileName) + '</div><div class="text-[11px] text-text-muted">' + esc(d.sizeLabel) + (d.notes ? ' · ' + esc(d.notes) : '') + '</div></div>' +
               '<span class="px-2 py-0.5 rounded-full bg-status-warning/15 text-status-warning text-[10px] font-semibold shrink-0">Antrian Finance</span>' +
             '</div>';
           }).join('');
         }
 
-        var uploadShortcut = document.getElementById('detUploadDocShortcut');
-        if (uploadShortcut) {
-          uploadShortcut.onclick = function () {
-            openUploadDocModal(store, invoiceId);
-          };
-        }
         var emailBtn = document.getElementById('detEmailFinanceBtn');
         if (emailBtn) {
           emailBtn.href = 'mailto:keuangan@fade.internal?subject=' + encodeURIComponent('Rekonsiliasi Invoice ' + invoiceId + ' - ' + store);
@@ -1768,9 +1773,9 @@
         if (downloadBtn) {
           downloadBtn.onclick = function () {
             var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;padding:20px;}table{width:100%;border-collapse:collapse;margin-top:14px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>' +
-              '<h2>INVOICE ' + invoiceId + ' · ' + store + '</h2>' +
-              '<p><strong>Sales PIC:</strong> ' + session.salesName + '<br><strong>Tanggal Terbit:</strong> ' + formatShortIdDate(inv.date || inv.invoice_date) + '<br><strong>Jatuh Tempo:</strong> ' + formatShortIdDate(inv.dueDate || inv.due_date) + '<br><strong>Status:</strong> ' + st.status + '</p>' +
-              '<table><thead><tr><th>Produk</th><th>Harga Satuan</th><th>QTY</th><th>Subtotal</th></tr></thead><tbody><tr><td>' + (inv.productName || 'FADE Pods') + '</td><td>Rp ' + unitPrice.toLocaleString('id-ID') + '</td><td>' + qty + ' pcs</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td></tr></tbody></table>' +
+              '<h2>INVOICE ' + esc(invoiceId) + ' · ' + esc(store) + '</h2>' +
+              '<p><strong>Sales PIC:</strong> ' + esc(session.salesName) + '<br><strong>Tanggal Terbit:</strong> ' + formatShortIdDate(inv.date || inv.invoice_date) + '<br><strong>Jatuh Tempo:</strong> ' + formatShortIdDate(inv.dueDate || inv.due_date) + '<br><strong>Status:</strong> ' + esc(st.status) + '</p>' +
+              '<table><thead><tr><th>Produk</th><th>Harga Satuan</th><th>QTY</th><th>Subtotal</th></tr></thead><tbody><tr><td>' + esc(inv.productName || 'FADE Pods') + '</td><td>Rp ' + unitPrice.toLocaleString('id-ID') + '</td><td>' + qty + ' pcs</td><td>Rp ' + st.revenue.toLocaleString('id-ID') + '</td></tr></tbody></table>' +
               '<p><strong>Total Tagihan:</strong> Rp ' + st.revenue.toLocaleString('id-ID') + '<br><strong>Terbayar:</strong> Rp ' + paid.toLocaleString('id-ID') + '<br><strong>Sisa Outstanding:</strong> Rp ' + st.sisa.toLocaleString('id-ID') + '</p></body></html>';
             triggerDownload(invoiceId + '_' + store.replace(/\s+/g, '_') + '.doc', docHtml, 'application/msword;charset=utf-8;');
             showToast('Dokumen invoice ' + invoiceId + ' berhasil diunduh');
@@ -1778,89 +1783,7 @@
         }
       }
 
-      // MODAL UNGGAH DOKUMEN INVOICE CONTROLLER
-      var uploadDocModalBackdrop = document.getElementById('uploadDocModalBackdrop');
-      var docDropzone = document.getElementById('docDropzone');
-      var docFileInput = document.getElementById('docFileInput');
-
-      function openUploadDocModal(presetStore, presetRef) {
-        clearSelectedDocFile();
-        var storeSelect = document.getElementById('docStoreSelect');
-        if (storeSelect && presetStore) storeSelect.value = presetStore;
-        var refInput = document.getElementById('docRefInput');
-        if (refInput) refInput.value = presetRef || '';
-        var notesInput = document.getElementById('docNotesInput');
-        if (notesInput) notesInput.value = '';
-        if (uploadDocModalBackdrop) uploadDocModalBackdrop.classList.remove('hidden');
-      }
-      function closeUploadDocModal() {
-        if (uploadDocModalBackdrop) uploadDocModalBackdrop.classList.add('hidden');
-      }
-      function clearSelectedDocFile() {
-        pendingUploadFile = null;
-        if (docFileInput) docFileInput.value = '';
-        var card = document.getElementById('docSelectedFileCard');
-        if (card) card.classList.add('hidden');
-      }
-      function setSelectedDocFile(file) {
-        if (!file) return;
-        if (file.size > 15 * 1024 * 1024) {
-          showToast('Ukuran berkas melebihi batas maksimal 15 MB', 'error');
-          return;
-        }
-        pendingUploadFile = file;
-        var sizeLabel = file.size >= 1048576 ? (file.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(file.size / 1024)) + ' KB';
-        document.getElementById('docFileNameText').textContent = file.name;
-        document.getElementById('docFileMetaText').textContent = sizeLabel + ' · Siap masuk antrian Finance';
-        document.getElementById('docSelectedFileCard').classList.remove('hidden');
-      }
-      window.openUploadDocModal = openUploadDocModal;
-      window.closeUploadDocModal = closeUploadDocModal;
-      window.clearSelectedDocFile = clearSelectedDocFile;
-
-      var docDropzone = document.getElementById('docDropzone');
-      var docFileInput = document.getElementById('docFileInput');
-      if (docDropzone && docFileInput) {
-        docDropzone.addEventListener('click', function () { docFileInput.click(); });
-        docDropzone.addEventListener('dragover', function (e) { e.preventDefault(); docDropzone.classList.add('border-accent'); });
-        docDropzone.addEventListener('dragleave', function () { docDropzone.classList.remove('border-accent'); });
-        docDropzone.addEventListener('drop', function (e) {
-          e.preventDefault();
-          docDropzone.classList.remove('border-accent');
-          if (e.dataTransfer.files && e.dataTransfer.files[0]) setSelectedDocFile(e.dataTransfer.files[0]);
-        });
-        docFileInput.addEventListener('change', function () {
-          if (docFileInput.files && docFileInput.files[0]) setSelectedDocFile(docFileInput.files[0]);
-        });
-      }
-
-      var uploadDocForm = document.getElementById('uploadDocForm');
-      if (uploadDocForm) {
-        uploadDocForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          if (!pendingUploadFile) {
-            showToast('Pilih berkas dokumen terlebih dahulu', 'error');
-            return;
-          }
-          var sizeLabel = pendingUploadFile.size >= 1048576 ? (pendingUploadFile.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(pendingUploadFile.size / 1024)) + ' KB';
-          saveUploadedDoc({
-            id: 'DOC-' + Date.now(),
-            salesName: session.salesName,
-            fileName: pendingUploadFile.name,
-            sizeLabel: sizeLabel,
-            storeName: document.getElementById('docStoreSelect').value,
-            refNumber: document.getElementById('docRefInput').value.trim(),
-            notes: document.getElementById('docNotesInput').value.trim(),
-            uploadedAt: new Date().toISOString()
-          });
-          closeUploadDocModal();
-          renderUploadedDocsQueue();
-          if (!viewInvoiceDetail.classList.contains('hidden') && activeDetailInvoiceId) {
-            renderInvoiceDetailPage(activeDetailInvoiceId);
-          }
-          showToast('Dokumen berhasil diunggah ke antrian verifikasi Finance');
-        });
-      }
+      function closeUploadDocModal() {}
 
       // EXPORT ENGINE
       function triggerDownload(filename, content, mimeType) {
@@ -2013,6 +1936,11 @@
 
       function handleRouting() {
         var hash = window.location.hash.replace('#', '') || 'dashboard';
+        if (hash === 'upload') {
+          showToast('Fitur Upload Master Excel hanya untuk Admin', 'error');
+          window.location.hash = '#dashboard';
+          return;
+        }
         viewDashboard.classList.add('hidden');
         viewKpiDrilldown.classList.add('hidden');
         viewInvoices.classList.add('hidden');
@@ -2021,7 +1949,8 @@
         closeUploadDocModal();
         closeAccountModal();
         if (dateFilterPopover) dateFilterPopover.classList.add('hidden');
-        if (exportDropdownMenu) exportDropdownMenu.classList.add('hidden');
+        var expMenu = document.getElementById('exportDropdownMenu');
+        if (expMenu) expMenu.classList.add('hidden');
 
         if (hash.indexOf('kpi-') === 0) {
           activeDrillKpi = hash.slice(4);
