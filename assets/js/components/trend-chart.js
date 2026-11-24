@@ -95,9 +95,10 @@
       var vpW = (typeof window !== 'undefined' && (window.innerWidth || (document.documentElement && document.documentElement.clientWidth))) || w;
       var isMobile = vpW < 768;
       // Give the plot more horizontal room on phones while keeping a clear Y-axis gutter.
-      var yAxisSpace = isMobile ? 38 : 64;
-      var rightMargin = isMobile ? 4 : 24;
-      var topMargin = isMobile ? 52 : 22;
+      var yAxisSpace = isMobile ? 38 : 50;
+      var rightMargin = 8;
+      // Reserve a consistent top lane for the selected-value tooltip on every viewport.
+      var topMargin = 56;
       var bottomMargin = isMobile ? 32 : 42;
 
       this.BOUNDS = {
@@ -260,7 +261,7 @@
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
         tipHtml.classList.add('hidden');
-        tipHtml.classList.remove('mobile-docked');
+        tipHtml.classList.remove('chart-docked');
         tipHtml.style.display = 'none';
       }
       var guideLine = document.getElementById('chartGuideLine');
@@ -1129,55 +1130,12 @@
           tipSub.textContent = tipSubText;
         }
 
-        if (b.isMobile) {
-          tipHtml.classList.add('mobile-docked');
-          tipHtml.style.left = '8px';
-          tipHtml.style.right = '8px';
-          tipHtml.style.top = '6px';
-          tipHtml.style.width = 'auto';
-          tipHtml.style.maxWidth = 'none';
-        } else {
-          tipHtml.classList.remove('mobile-docked');
-          tipHtml.style.right = 'auto';
-          tipHtml.style.width = '';
-          tipHtml.style.maxWidth = '';
-
-          var container = document.getElementById('chartInteractiveContainer');
-          var cWidth = b.viewBoxWidth;
-          var cHeight = b.viewBoxHeight;
-          if (container) {
-            var cRect = container.getBoundingClientRect();
-            if (cRect.width > 0) cWidth = cRect.width;
-            if (cRect.height > 0) cHeight = cRect.height;
-          }
-
-          var scaleX = cWidth / b.viewBoxWidth;
-          var scaleY = cHeight / b.viewBoxHeight;
-          var px = pt.x * scaleX;
-          var targetY = (isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y) * scaleY;
-
-          var tipW = tipHtml.offsetWidth || 196;
-          var tipH = tipHtml.offsetHeight || 60;
-
-          var tipLeft, tipTop;
-
-          if (px > cWidth - tipW - 16) {
-            tipLeft = Math.max(8, px - tipW - 14);
-          } else if (px < tipW + 16) {
-            tipLeft = Math.min(cWidth - tipW - 8, px + 14);
-          } else {
-            tipLeft = Math.max(8, Math.min(cWidth - tipW - 8, px - (tipW / 2)));
-          }
-
-          if (targetY - tipH - 12 >= 8) {
-            tipTop = targetY - tipH - 12;
-          } else {
-            tipTop = Math.min(cHeight - tipH - 8, targetY + 16);
-          }
-
-          tipHtml.style.left = Math.round(tipLeft) + 'px';
-          tipHtml.style.top = Math.round(tipTop) + 'px';
-        }
+        tipHtml.classList.add('chart-docked');
+        tipHtml.style.left = '0px';
+        tipHtml.style.right = '0px';
+        tipHtml.style.top = '4px';
+        tipHtml.style.width = 'auto';
+        tipHtml.style.maxWidth = 'none';
       }
 
       // 2. Synchronized SVG Tooltip (Fallback & Accessible SVG Parity)
