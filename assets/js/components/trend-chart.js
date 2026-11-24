@@ -824,11 +824,18 @@
       if (!gridContainer || !labelsContainer) return;
 
       var step = maxMillions / 4;
+      var precision = step < 0.01 ? 3 : (step < 0.1 ? 2 : (step < 1 ? 1 : 0));
+      var formatAxisTick = function (value) {
+        return value.toLocaleString('id-ID', {
+          minimumFractionDigits: precision,
+          maximumFractionDigits: precision
+        }) + 'jt';
+      };
       var lines = [
-        { y: b.yMin, label: Math.round(maxMillions) + 'jt' },
-        { y: b.yMin + (b.yMax - b.yMin) * 0.25, label: Math.round(step * 3) + 'jt' },
-        { y: b.yMin + (b.yMax - b.yMin) * 0.50, label: Math.round(step * 2) + 'jt' },
-        { y: b.yMin + (b.yMax - b.yMin) * 0.75, label: Math.round(step) + 'jt' },
+        { y: b.yMin, label: formatAxisTick(maxMillions) },
+        { y: b.yMin + (b.yMax - b.yMin) * 0.25, label: formatAxisTick(step * 3) },
+        { y: b.yMin + (b.yMax - b.yMin) * 0.50, label: formatAxisTick(step * 2) },
+        { y: b.yMin + (b.yMax - b.yMin) * 0.75, label: formatAxisTick(step) },
         { y: b.yMax, label: '0' }
       ];
 
@@ -945,8 +952,7 @@
       var count = points.length;
       if (count === 0) return;
 
-      // Use the same tick density for each selected range on every viewport.
-      // Longer ranges get fewer labels; screen width never reverses this hierarchy.
+      // Keep the selected range's detail while preventing labels from colliding.
       var displayIndices = [];
       var maxLabels;
       if (this.currentMode === 'ytd' || (this.currentMode !== 'custom' && this.activeTimeframe === '7D')) {
@@ -967,22 +973,34 @@
         }
       }
 
-      // Check if an active index is selected and should be displayed
       var activePoint = (activeIdx != null && activeIdx >= 0 && activeIdx < count) ? points[activeIdx] : null;
-      var finalIndices = [];
+      var candidates = displayIndices.slice();
+      if (candidates.indexOf(0) < 0) candidates.push(0);
+      if (candidates.indexOf(count - 1) < 0) candidates.push(count - 1);
+      if (activePoint && candidates.indexOf(activeIdx) < 0) candidates.push(activeIdx);
 
-      displayIndices.forEach(function (idx) {
-        if (activePoint && idx !== activeIdx) {
-          var dist = Math.abs(points[idx].x - activePoint.x);
-          // Drop non-active milestone if it collides with active node label (< 48px mobile, < 44px desktop)
-          var minDist = b.isMobile ? 48 : 44;
-          if (dist < minDist) return;
-        }
-        finalIndices.push(idx);
+      var tickFontSize = b.isMobile ? 11 : 12;
+      var prioritizedTicks = candidates.map(function (idx) {
+        var point = points[idx];
+        var label = String(point.label || '');
+        var width = Math.max(tickFontSize * 3, label.length * tickFontSize * 0.58);
+        var anchor = b.isMobile && idx === 0 ? 'start' : (b.isMobile && idx === count - 1 ? 'end' : 'middle');
+        var left = anchor === 'start' ? point.x : (anchor === 'end' ? point.x - width : point.x - width / 2);
+        var priority = idx === activeIdx ? 3 : ((idx === 0 || idx === count - 1) ? 2 : 1);
+        return { index: idx, left: left, right: left + width, priority: priority };
+      }).sort(function (a, b) {
+        return b.priority - a.priority || a.index - b.index;
       });
-      if (activePoint && finalIndices.indexOf(activeIdx) < 0) {
-        finalIndices.push(activeIdx);
-      }
+
+      var acceptedTicks = [];
+      prioritizedTicks.forEach(function (candidate) {
+        var overlaps = acceptedTicks.some(function (accepted) {
+          return candidate.left < accepted.right + 8 && candidate.right + 8 > accepted.left;
+        });
+        if (!overlaps) acceptedTicks.push(candidate);
+      });
+
+      var finalIndices = acceptedTicks.map(function (tick) { return tick.index; });
       finalIndices.sort(function (a, b) { return a - b; });
 
       finalIndices.forEach(function (idx) {
