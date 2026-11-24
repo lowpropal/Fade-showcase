@@ -219,3 +219,64 @@ tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
 /* Keep the native date picker icon and calendar legible in each theme. */
 .dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
 html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
+
+/* Mobile Chart Docked Scrubber Banner (< 768px) */
+@media (max-width: 767.98px) {
+  #trendChartCard #chartTimeframeGroup {
+    flex: 0 1 auto;
+    max-width: 100%;
+    gap: 0;
+  }
+  #trendChartCard #chartTimeframeGroup > button {
+    flex: 1 1 0;
+  }
+  #trendChartCard #chartTypeGroup > button {
+    min-width: 0;
+    padding-left: clamp(0.5rem, 2.2vw, 0.75rem);
+    padding-right: clamp(0.5rem, 2.2vw, 0.75rem);
+  }
+  #chartTooltip.mobile-docked:not(.hidden) {
+    position: absolute !important;
+    top: 6px !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 6px 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    pointer-events: auto !important;
+    border-radius: 10px !important;
+    background: var(--bg-surface-1, #18181B) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+    border: 1px solid var(--border-default, #39393D) !important;
+    z-index: 30 !important;
+  }
+  #chartTooltip.hidden {
+    display: none !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-header-row {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-sub-row {
+    border-top: none !important;
+    padding-top: 0 !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-body-wrapper {
+    flex-direction: row !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipCloseBtn {
+    display: inline-flex !important;
+  }
+  #chartTooltip.mobile-docked .mobile-hide {
+    display: none !important;
+  }
+}

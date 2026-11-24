@@ -346,9 +346,9 @@
             <!-- Header: Row 1 Headline + Period; Row 2 Total Revenue (Left) + Controls (Right) -->
             <div class="flex flex-col gap-3 mb-4">
               <!-- Row 1: Headline + Period Badge -->
-              <div class="flex items-center gap-2">
+              <div class="flex items-center justify-between flex-wrap gap-2">
                 <h2 id="chartTitleText" class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
-                <span id="chartPeriodLabel" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-2 text-xs text-text-muted border border-border-subtle">01 – 22 Nov 2026</span>
+                <span id="chartPeriodLabel" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-2 text-xs text-text-muted border border-border-subtle whitespace-nowrap shrink-0">01 – 22 Nov 2026</span>
               </div>
 
               <!-- Row 2: Total Revenue (Left) & Controls (Right) -->
@@ -424,23 +424,26 @@
               </svg>
               <!-- Polished Desktop & Mobile Floating HTML Tooltip -->
               <div id="chartTooltip" class="pointer-events-none absolute hidden p-3 rounded-xl bg-surface-1/95 backdrop-blur-md border border-border-default shadow-2xl text-xs z-30 transition-all duration-75 min-w-[190px] max-w-[240px]">
-                <div class="flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5 mb-1.5">
+                <div class="tooltip-header-row flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5 mb-1.5">
                   <div class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
                     <span id="chartTooltipHtmlDate" class="text-[11px] font-medium text-text-muted">--</span>
                   </div>
-                  <span id="chartTooltipTypeBadge" class="text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary border border-border-subtle">Harian</span>
+                  <span id="chartTooltipTypeBadge" class="mobile-hide text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary border border-border-subtle">Harian</span>
                 </div>
-                <div class="flex flex-col gap-1">
+                <div class="tooltip-body-wrapper flex flex-col gap-1">
                   <div class="flex items-baseline justify-between gap-3">
-                    <span id="chartTooltipValLabel" class="text-[11px] text-text-muted font-medium">Nilai:</span>
+                    <span id="chartTooltipValLabel" class="mobile-hide text-[11px] text-text-muted font-medium">Nilai:</span>
                     <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-sm tabular-nums tracking-tight">Rp --</span>
                   </div>
-                  <div id="chartTooltipHtmlSub" class="text-[11px] text-status-success font-medium flex items-center justify-between gap-2 pt-1 border-t border-border-subtle">
-                    <span id="chartTooltipSubLabel" class="text-text-muted text-[10px]">Kumulatif</span>
+                  <div id="chartTooltipHtmlSub" class="tooltip-sub-row text-[11px] text-status-success font-medium flex items-center justify-between gap-2 pt-1 border-t border-border-subtle">
+                    <span id="chartTooltipSubLabel" class="mobile-hide text-text-muted text-[10px]">Kumulatif</span>
                     <span id="chartTooltipSubVal" class="tabular-nums font-semibold">Rp --</span>
                   </div>
                 </div>
+                <button id="chartTooltipCloseBtn" type="button" class="hidden text-text-muted hover:text-text-primary p-0.5 rounded transition-colors shrink-0" aria-label="Tutup info grafik">
+                  <span class="material-symbols-outlined text-[16px] block leading-none">close</span>
+                </button>
               </div>
               <div id="chartPointerOverlay" class="absolute inset-0 cursor-crosshair z-10" style="touch-action: pan-y;"></div>
               <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>

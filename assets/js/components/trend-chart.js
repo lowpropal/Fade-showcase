@@ -19,6 +19,10 @@
     _initialized: false,
     _resizeObserver: null,
     _resizeRaf: null,
+    _boundDocumentKeydown: null,
+    _boundWindowKeydown: null,
+    _boundNavDismiss: null,
+    _boundOutsidePointer: null,
 
     BOUNDS: {
       viewBoxWidth: 1000,
@@ -67,6 +71,10 @@
     },
 
     resize: function () {
+      var container = document.getElementById('chartInteractiveContainer');
+      if (container && container.offsetParent === null) {
+        return;
+      }
       this.render();
     },
 
@@ -84,11 +92,12 @@
       if (w < 280) w = 280;
       if (h < 220) h = 220;
 
-      var isMobile = w < 640;
-      var yAxisSpace = isMobile ? 46 : 64;
+      var vpW = (typeof window !== 'undefined' && (window.innerWidth || (document.documentElement && document.documentElement.clientWidth))) || w;
+      var isMobile = vpW < 768;
+      var yAxisSpace = isMobile ? 44 : 64;
       var rightMargin = isMobile ? 12 : 24;
-      var topMargin = 22;
-      var bottomMargin = isMobile ? 36 : 42;
+      var topMargin = isMobile ? 48 : 22;
+      var bottomMargin = isMobile ? 32 : 42;
 
       this.BOUNDS = {
         viewBoxWidth: w,
@@ -179,12 +188,23 @@
       }
 
       // Outside tap listener: dismiss tooltip & indicators when tapping outside chart on mobile/desktop
-      document.addEventListener('pointerdown', function (e) {
+      this._boundOutsidePointer = function (e) {
         var chartBox = document.getElementById('chartInteractiveContainer');
         if (chartBox && !chartBox.contains(e.target)) {
           self.dismissTooltip();
         }
-      });
+      };
+      document.addEventListener('pointerdown', this._boundOutsidePointer);
+
+      // Close button on mobile docked tooltip
+      var closeBtn = document.getElementById('chartTooltipCloseBtn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          self.dismissTooltip();
+        });
+      }
 
       // Escape key listener to close active tooltip / focus
       var escHandler = function (e) {
@@ -193,16 +213,53 @@
           self.dismissTooltip();
         }
       };
-      document.addEventListener('keydown', escHandler);
-      window.addEventListener('keydown', escHandler);
+      this._boundDocumentKeydown = escHandler;
+      this._boundWindowKeydown = escHandler;
+      document.addEventListener('keydown', this._boundDocumentKeydown);
+      window.addEventListener('keydown', this._boundWindowKeydown);
+
+      // Clean dismissal when navigating between hash sections or browser history
+      var navDismissHandler = function () {
+        self.activePointIndex = null;
+        self.dismissTooltip();
+      };
+      this._boundNavDismiss = navDismissHandler;
+      window.addEventListener('hashchange', this._boundNavDismiss);
+      window.addEventListener('popstate', this._boundNavDismiss);
+    },
+
+    destroy: function () {
+      if (this._resizeObserver) {
+        this._resizeObserver.disconnect();
+        this._resizeObserver = null;
+      }
+      if (this._resizeRaf) {
+        cancelAnimationFrame(this._resizeRaf);
+        this._resizeRaf = null;
+      }
+      if (this._boundDocumentKeydown) document.removeEventListener('keydown', this._boundDocumentKeydown);
+      if (this._boundWindowKeydown) window.removeEventListener('keydown', this._boundWindowKeydown);
+      if (this._boundNavDismiss) {
+        window.removeEventListener('hashchange', this._boundNavDismiss);
+        window.removeEventListener('popstate', this._boundNavDismiss);
+      }
+      if (this._boundOutsidePointer) document.removeEventListener('pointerdown', this._boundOutsidePointer);
+      this._boundDocumentKeydown = null;
+      this._boundWindowKeydown = null;
+      this._boundNavDismiss = null;
+      this._boundOutsidePointer = null;
+      this._initialized = false;
+      this.dismissTooltip();
     },
 
     dismissTooltip: function () {
+      this.activePointIndex = null;
       var tooltipGroup = document.getElementById('chartTooltipGroup');
       if (tooltipGroup) tooltipGroup.style.display = 'none';
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
         tipHtml.classList.add('hidden');
+        tipHtml.classList.remove('mobile-docked');
         tipHtml.style.display = 'none';
       }
       var guideLine = document.getElementById('chartGuideLine');
@@ -219,6 +276,9 @@
           rect.setAttribute('stroke', 'var(--border-default, #39393D)');
           rect.setAttribute('stroke-width', '1');
         });
+      }
+      if (this.points && this.points.length > 0) {
+        this.renderXAxis(this.points);
       }
     },
 
@@ -658,7 +718,11 @@
       }
 
       this.renderXAxis(plottedPoints);
-      this.updateActivePresentation();
+      if (this.activePointIndex !== null) {
+        this.updateActivePresentation();
+      } else {
+        this.dismissTooltip();
+      }
     },
 
     updateSummaryPresentation: function (points) {
@@ -778,7 +842,7 @@
           gridHtml += '<line stroke="var(--border-subtle, #2B2B2E)" stroke-dasharray="3 3" stroke-width="1" x1="' + (b.xMin - 6) + '" x2="' + (b.xMax + 6) + '" y1="' + y + '" y2="' + y + '"></line>';
         }
 
-        labelsHtml += '<text fill="var(--text-muted, #8F8F93)" font-family="\'Plus Jakarta Sans\', sans-serif" font-size="12" text-anchor="end" x="' + (b.xMin - 10) + '" y="' + (y + 4) + '">' + l.label + '</text>';
+        labelsHtml += '<text fill="var(--text-muted, #8F8F93)" font-family="\'Plus Jakarta Sans\', sans-serif" font-size="' + (b.isMobile ? '11' : '12') + '" text-anchor="end" x="' + (b.xMin - 6) + '" y="' + (y + 4) + '">' + l.label + '</text>';
       });
 
       gridContainer.innerHTML = gridHtml;
@@ -909,7 +973,7 @@
         }
       } else {
         // 7D (7 days)
-        if (isNarrow && plotWidth < 320) {
+        if (isNarrow) {
           displayIndices = [0, 2, 4, count - 1];
         } else {
           for (var d = 0; d < count; d++) displayIndices.push(d);
@@ -923,8 +987,9 @@
       displayIndices.forEach(function (idx) {
         if (activePoint && idx !== activeIdx) {
           var dist = Math.abs(points[idx].x - activePoint.x);
-          // Drop non-active milestone if it collides with active node label (< 48px)
-          if (dist < 48) return;
+          // Drop non-active milestone if it collides with active node label (< 48px mobile, < 44px desktop)
+          var minDist = b.isMobile ? 48 : 44;
+          if (dist < minDist) return;
         }
         finalIndices.push(idx);
       });
@@ -940,10 +1005,17 @@
 
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', p.x);
-        text.setAttribute('y', b.yMax + (b.isMobile ? 22 : 24));
+        text.setAttribute('y', b.yMax + (b.isMobile ? 20 : 24));
         text.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
-        text.setAttribute('font-size', '12');
-        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', b.isMobile ? '11' : '12');
+
+        if (b.isMobile && idx === 0) {
+          text.setAttribute('text-anchor', 'start');
+        } else if (b.isMobile && idx === count - 1) {
+          text.setAttribute('text-anchor', 'end');
+        } else {
+          text.setAttribute('text-anchor', 'middle');
+        }
 
         if (isActive) {
           text.setAttribute('fill', 'var(--color-accent, #F28C45)');
@@ -969,7 +1041,8 @@
       if (!this.points || this.points.length === 0) return;
       var idx = this.activePointIndex;
       if (idx === null || idx < 0 || idx >= this.points.length) {
-        idx = this.points.length - 1;
+        this.dismissTooltip();
+        return;
       }
 
       var pt = this.points[idx];
@@ -1057,41 +1130,55 @@
           tipSub.textContent = tipSubText;
         }
 
-        var container = document.getElementById('chartInteractiveContainer');
-        var cWidth = b.viewBoxWidth;
-        var cHeight = b.viewBoxHeight;
-        if (container) {
-          var cRect = container.getBoundingClientRect();
-          if (cRect.width > 0) cWidth = cRect.width;
-          if (cRect.height > 0) cHeight = cRect.height;
-        }
-
-        var scaleX = cWidth / b.viewBoxWidth;
-        var scaleY = cHeight / b.viewBoxHeight;
-        var px = pt.x * scaleX;
-        var targetY = (isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y) * scaleY;
-
-        var tipW = tipHtml.offsetWidth || 196;
-        var tipH = tipHtml.offsetHeight || 60;
-
-        var tipLeft, tipTop;
-
-        if (px > cWidth - tipW - 16) {
-          tipLeft = Math.max(8, px - tipW - 14);
-        } else if (px < tipW + 16) {
-          tipLeft = Math.min(cWidth - tipW - 8, px + 14);
+        if (b.isMobile) {
+          tipHtml.classList.add('mobile-docked');
+          tipHtml.style.left = '8px';
+          tipHtml.style.right = '8px';
+          tipHtml.style.top = '6px';
+          tipHtml.style.width = 'auto';
+          tipHtml.style.maxWidth = 'none';
         } else {
-          tipLeft = Math.max(8, Math.min(cWidth - tipW - 8, px - (tipW / 2)));
-        }
+          tipHtml.classList.remove('mobile-docked');
+          tipHtml.style.right = 'auto';
+          tipHtml.style.width = '';
+          tipHtml.style.maxWidth = '';
 
-        if (targetY - tipH - 12 >= 8) {
-          tipTop = targetY - tipH - 12;
-        } else {
-          tipTop = Math.min(cHeight - tipH - 8, targetY + 16);
-        }
+          var container = document.getElementById('chartInteractiveContainer');
+          var cWidth = b.viewBoxWidth;
+          var cHeight = b.viewBoxHeight;
+          if (container) {
+            var cRect = container.getBoundingClientRect();
+            if (cRect.width > 0) cWidth = cRect.width;
+            if (cRect.height > 0) cHeight = cRect.height;
+          }
 
-        tipHtml.style.left = Math.round(tipLeft) + 'px';
-        tipHtml.style.top = Math.round(tipTop) + 'px';
+          var scaleX = cWidth / b.viewBoxWidth;
+          var scaleY = cHeight / b.viewBoxHeight;
+          var px = pt.x * scaleX;
+          var targetY = (isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y) * scaleY;
+
+          var tipW = tipHtml.offsetWidth || 196;
+          var tipH = tipHtml.offsetHeight || 60;
+
+          var tipLeft, tipTop;
+
+          if (px > cWidth - tipW - 16) {
+            tipLeft = Math.max(8, px - tipW - 14);
+          } else if (px < tipW + 16) {
+            tipLeft = Math.min(cWidth - tipW - 8, px + 14);
+          } else {
+            tipLeft = Math.max(8, Math.min(cWidth - tipW - 8, px - (tipW / 2)));
+          }
+
+          if (targetY - tipH - 12 >= 8) {
+            tipTop = targetY - tipH - 12;
+          } else {
+            tipTop = Math.min(cHeight - tipH - 8, targetY + 16);
+          }
+
+          tipHtml.style.left = Math.round(tipLeft) + 'px';
+          tipHtml.style.top = Math.round(tipTop) + 'px';
+        }
       }
 
       // 2. Synchronized SVG Tooltip (Fallback & Accessible SVG Parity)
