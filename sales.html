@@ -177,23 +177,23 @@
       <!-- VIEW 1: DASHBOARD SALES (BULANAN & YTD)                          -->
       <!-- ================================================================ -->
       <section id="viewDashboard" class="flex flex-col gap-6">
-        <div class="flex items-center flex-wrap gap-2.5 justify-between w-full min-w-0" id="headerToolbar">
-          <div class="flex items-center flex-wrap gap-2.5">
-            <div aria-label="Periode Tampilan" class="inline-flex items-center p-0.5 rounded-lg bg-surface-1 border border-border-subtle shrink-0 h-9" role="tablist">
-              <button id="tabModeBulanan" type="button" class="relative h-full px-3 py-1 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+        <div class="grid grid-cols-5 gap-2.5 w-full min-w-0 lg:flex lg:items-center lg:justify-between lg:gap-2.5" id="headerToolbar">
+          <div class="contents lg:flex lg:items-center lg:gap-2.5">
+            <div aria-label="Periode Tampilan" class="col-span-2 inline-flex w-full lg:w-auto items-center p-1 rounded-xl bg-surface-2 md:bg-surface-1 border border-border-subtle shrink-0 h-12 lg:h-9" role="tablist">
+              <button id="tabModeBulanan" type="button" class="relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1">
                 <span>Bulanan</span>
                 <span id="tabIndicatorBulanan" class="absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
               </button>
-              <button id="tabModeYTD" type="button" class="relative h-full px-3 py-1 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1">
+              <button id="tabModeYTD" type="button" class="relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1">
                 <span>YTD</span>
                 <span id="tabIndicatorYTD" class="hidden absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"></span>
               </button>
             </div>
 
-            <div id="dateFilterWrapper" class="relative shrink-0">
-              <button id="dateFilterBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm shrink-0">
+            <div id="dateFilterWrapper" class="relative col-span-3 w-full lg:w-auto shrink-0">
+              <button id="dateFilterBtn" type="button" class="inline-flex w-full lg:w-auto min-h-[48px] lg:min-h-0 lg:h-9 items-center gap-2 lg:gap-1.5 px-3.5 lg:px-3 rounded-xl lg:rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm shrink-0">
                 <span class="material-symbols-outlined text-[16px] text-accent">calendar_today</span>
-                <span id="filterDateLabel">01 Nov – 22 Nov 2026</span>
+                <span id="filterDateLabel" class="min-w-0 flex-1 lg:flex-initial whitespace-nowrap text-left">01 Nov – 22 Nov 2026</span>
                 <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
               </button>
 
@@ -235,7 +235,7 @@
               </div>
             </div>
 
-            <div class="h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle flex items-center gap-1.5 text-xs text-text-primary shadow-sm shrink-0">
+            <div class="col-span-5 lg:col-span-1 w-fit min-h-[44px] lg:min-h-0 lg:h-9 px-3 rounded-lg bg-surface-1 border border-border-subtle flex items-center gap-1.5 text-xs text-text-primary shadow-sm shrink-0">
               <span class="material-symbols-outlined text-[15px] text-accent">lock</span>
               <span id="lockedSalesBadgeName" class="font-semibold">Sales Rep</span>
             </div>
@@ -257,7 +257,7 @@
               <div class="w-full h-1.5 rounded-full bg-surface-2 overflow-hidden">
                 <div id="kpiAchievementBar" class="h-full rounded-full bg-accent transition-all duration-500" style="width: 0%;"></div>
               </div>
-              <span id="kpiAchievementSub" class="text-xs text-text-secondary tabular-nums truncate">Realisasi -- pcs / Target -- pcs</span>
+              <span id="kpiAchievementSub" class="text-xs leading-snug text-text-secondary tabular-nums whitespace-normal break-words">Realisasi -- pcs / Target -- pcs</span>
             </div>
           </div>
 
@@ -271,7 +271,7 @@
               <span id="kpiQtyVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">-- pcs</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5 min-w-0">
-              <span id="kpiQtySub" class="text-[11px] sm:text-xs text-text-muted truncate">Unit fisik terjual (pcs)</span>
+              <span id="kpiQtySub" class="text-[11px] sm:text-xs leading-snug text-text-muted whitespace-normal break-words">Unit fisik terjual (pcs)</span>
             </div>
           </div>
 
@@ -285,7 +285,7 @@
               <span id="kpiRevenueVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5 min-w-0">
-              <span id="kpiRevenueSub" class="text-[11px] sm:text-xs text-text-muted truncate">Total nilai tagihan kotor</span>
+              <span id="kpiRevenueSub" class="text-[11px] sm:text-xs leading-snug text-text-muted whitespace-normal break-words">Total nilai tagihan kotor</span>
             </div>
           </div>
 
@@ -299,7 +299,7 @@
               <span id="kpiPembayaranVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5 min-w-0">
-              <span id="kpiPembayaranSub" class="text-[11px] sm:text-xs text-status-success tabular-nums font-medium truncate">Kas masuk teratribusi</span>
+              <span id="kpiPembayaranSub" class="text-[11px] sm:text-xs leading-snug text-status-success tabular-nums font-medium whitespace-normal break-words">Kas masuk teratribusi</span>
             </div>
           </div>
 
@@ -334,7 +334,7 @@
               <span id="kpiInvoicesVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight">-- Invoice</span>
             </div>
             <div class="mt-3 flex items-center gap-1.5">
-              <span id="kpiInvoicesSub" class="text-xs text-text-secondary tabular-nums truncate">-- Toko Unik Terlayani</span>
+              <span id="kpiInvoicesSub" class="text-xs leading-snug text-text-secondary tabular-nums whitespace-normal break-words">-- Toko Unik Terlayani</span>
             </div>
           </div>
         </div>
@@ -2301,23 +2301,23 @@
       // ROUTING
       function updatePeriodTabs() {
         if (currentMode === 'bulan') {
-          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeBulanan.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorBulanan.classList.remove('hidden');
-          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeYTD.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorYTD.classList.add('hidden');
           statusBadgeText.textContent = 'November 2026 · Data per 22/11/2026';
           if (filterDateLabel) filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
         } else if (currentMode === 'ytd') {
-          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeYTD.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorYTD.classList.remove('hidden');
-          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeBulanan.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorBulanan.classList.add('hidden');
           statusBadgeText.textContent = 'YTD 2026 (01 Jan – 22 Nov 2026)';
           if (filterDateLabel) filterDateLabel.textContent = '01 Jan – 22 Nov 2026';
         } else {
-          tabModeBulanan.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeBulanan.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorBulanan.classList.add('hidden');
-          tabModeYTD.className = 'relative px-3.5 py-1.5 rounded-md text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center gap-1';
+          tabModeYTD.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorYTD.classList.add('hidden');
           statusBadgeText.textContent = 'Rentang Kustom · ' + formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
           if (filterDateLabel) filterDateLabel.textContent = formatShortIdDate(customStartDate) + ' – ' + formatShortIdDate(customEndDate);
