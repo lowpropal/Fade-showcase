@@ -337,3 +337,27 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     pointer-events: auto !important;
   }
 }
+@media (max-width: 359.98px) {
+  #chartTooltip.mobile-docked:not(.hidden) {
+    gap: 4px !important;
+    padding: 3px 5px !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-header-row {
+    gap: 3px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipHtmlDate {
+    font-size: 9px !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-body-wrapper {
+    gap: 3px !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-body-wrapper > div {
+    gap: 1px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipHtmlVal {
+    font-size: 10px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipSubVal {
+    font-size: 9px !important;
+  }
+}

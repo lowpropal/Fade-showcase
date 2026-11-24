@@ -1096,6 +1096,7 @@
         var tipSub = document.getElementById('chartTooltipHtmlSub');
         var tipBadge = document.getElementById('chartTooltipTypeBadge');
         var tipValLabel = document.getElementById('chartTooltipValLabel');
+        var tipSubLabel = document.getElementById('chartTooltipSubLabel');
         var tipSubVal = document.getElementById('chartTooltipSubVal');
 
         if (tipDate) tipDate.textContent = pt.label;
@@ -1113,7 +1114,15 @@
           }
           tipBadge.textContent = tipBucketType;
         }
-        if (tipValLabel) tipValLabel.textContent = 'Penjualan';
+        var compactTooltipLabels = ((window.innerWidth || document.documentElement.clientWidth) < 360);
+        if (tipValLabel) {
+          tipValLabel.textContent = compactTooltipLabels ? 'Jual' : 'Penjualan';
+          tipValLabel.setAttribute('aria-label', 'Penjualan');
+        }
+        if (tipSubLabel) {
+          tipSubLabel.textContent = compactTooltipLabels ? 'Kum.' : 'Kumulatif';
+          tipSubLabel.setAttribute('aria-label', 'Kumulatif');
+        }
         if (tipSubVal) {
           tipSubVal.textContent = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
         } else if (tipSub) {
