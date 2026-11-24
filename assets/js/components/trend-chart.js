@@ -944,18 +944,18 @@
       var count = points.length;
       if (count === 0) return;
 
-      var plotWidth = b.xMax - b.xMin;
-      var isNarrow = b.isMobile || plotWidth < 520;
-
-      // Short ranges retain detail; longer ranges use fewer, evenly spaced milestones.
+      // Use the same tick density for each selected range on every viewport.
+      // Longer ranges get fewer labels; screen width never reverses this hierarchy.
       var displayIndices = [];
       var maxLabels;
-      if (count <= 8) {
+      if (this.currentMode === 'ytd' || (this.currentMode !== 'custom' && this.activeTimeframe === '7D')) {
         maxLabels = count;
-      } else if (count > 15) {
-        maxLabels = isNarrow ? 5 : 6;
+      } else if (this.currentMode === 'custom') {
+        maxLabels = count <= 8 ? count : (count > 15 ? 5 : 4);
+      } else if (this.activeTimeframe === '90D') {
+        maxLabels = 4;
       } else {
-        maxLabels = isNarrow ? 4 : 5;
+        maxLabels = 5;
       }
       maxLabels = Math.min(count, maxLabels);
       if (maxLabels === 1) {
