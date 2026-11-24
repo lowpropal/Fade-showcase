@@ -328,9 +328,9 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   }
   #chartTooltip.mobile-docked #chartTooltipCloseBtn {
     display: inline-flex !important;
-    flex: 0 0 28px !important;
-    width: 28px !important;
-    height: 28px !important;
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 44px !important;
     align-items: center !important;
     justify-content: center !important;
     padding: 0 !important;
