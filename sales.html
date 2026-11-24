@@ -197,40 +197,40 @@
                 <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
               </button>
 
-              <div id="dateFilterPopover" class="hidden fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto xl:left-auto xl:right-0 mt-2 sm:w-72 max-w-full rounded-xl bg-surface-1 border border-border-default shadow-2xl p-3 z-50 flex flex-col gap-3">
+              <div id="dateFilterPopover" class="hidden fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto mt-2 sm:w-[380px] max-w-[calc(100vw-2rem)] rounded-xl bg-surface-1 border border-border-default shadow-2xl p-4 z-50 flex flex-col gap-4">
                 <div class="flex items-center justify-between border-b border-border-subtle pb-2">
-                  <span class="text-xs font-bold text-text-primary">Filter Rentang Tanggal</span>
+                  <span class="text-sm font-bold text-text-primary">Filter Rentang Tanggal</span>
                   <button id="closeDatePopoverBtn" type="button" class="text-text-muted hover:text-text-primary">
                     <span class="material-symbols-outlined text-[16px]">close</span>
                   </button>
                 </div>
-                <div class="flex flex-col gap-1">
-                  <button type="button" data-preset="bulan" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
-                    <span>Bulan Ini (Nov 2026)</span><span class="text-[10px] text-text-muted">01–22 Nov</span>
+                <div class="flex flex-col gap-2">
+                  <button type="button" data-preset="bulan" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
+                    <span>Bulan Ini (Nov 2026)</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">01–22 Nov</span>
                   </button>
-                  <button type="button" data-preset="7d" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
-                    <span>7 Hari Terakhir</span><span class="text-[10px] text-text-muted">16–22 Nov</span>
+                  <button type="button" data-preset="7d" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
+                    <span>7 Hari Terakhir</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">16–22 Nov</span>
                   </button>
-                  <button type="button" data-preset="30d" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
-                    <span>30 Hari Terakhir</span><span class="text-[10px] text-text-muted">24 Okt–22 Nov</span>
+                  <button type="button" data-preset="30d" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
+                    <span>30 Hari Terakhir</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">24 Okt–22 Nov</span>
                   </button>
-                  <button type="button" data-preset="ytd" class="date-preset-btn w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
-                    <span>YTD 2026</span><span class="text-[10px] text-text-muted">01 Jan–22 Nov</span>
+                  <button type="button" data-preset="ytd" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
+                    <span>YTD 2026</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">01 Jan–22 Nov</span>
                   </button>
                 </div>
-                <div class="border-t border-border-subtle pt-2.5 flex flex-col gap-2">
+                <div class="border-t border-border-subtle pt-3 flex flex-col gap-3">
                   <span class="text-[11px] font-semibold text-text-secondary">Rentang Kustom</span>
-                  <div class="grid grid-cols-2 gap-2">
+                  <div class="grid grid-cols-2 gap-3">
                     <div class="flex flex-col gap-1">
                       <label for="customStartDate" class="text-[10px] text-text-muted">Dari</label>
-                      <input id="customStartDate" type="date" value="2026-11-01" class="h-8 px-2 rounded-lg bg-surface-2 border border-border-default text-[11px] text-text-primary focus:outline-none focus:border-accent">
+                      <input id="customStartDate" type="date" value="2026-11-01" class="w-full min-w-0 h-10 px-2.5 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent">
                     </div>
                     <div class="flex flex-col gap-1">
                       <label for="customEndDate" class="text-[10px] text-text-muted">Sampai</label>
-                      <input id="customEndDate" type="date" value="2026-11-22" class="h-8 px-2 rounded-lg bg-surface-2 border border-border-default text-[11px] text-text-primary focus:outline-none focus:border-accent">
+                      <input id="customEndDate" type="date" value="2026-11-22" class="w-full min-w-0 h-10 px-2.5 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent">
                     </div>
                   </div>
-                  <button id="applyCustomDateBtn" type="button" class="w-full h-8 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 font-semibold text-xs transition-colors">Terapkan Rentang</button>
+                  <button id="applyCustomDateBtn" type="button" class="w-full h-10 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:opacity-90 font-semibold text-xs transition-colors">Terapkan Rentang</button>
                 </div>
               </div>
             </div>
@@ -424,7 +424,7 @@
               </svg>
               <!-- Polished Desktop & Mobile Floating HTML Tooltip -->
               <div id="chartTooltip" class="pointer-events-none absolute hidden p-3 rounded-xl bg-surface-1/95 backdrop-blur-md border border-border-default shadow-2xl text-xs z-30 transition-all duration-75 min-w-[190px] max-w-[240px]">
-                <div class="flex items-center justify-between gap-2 border-b border-border-subtle/80 pb-1.5 mb-1.5">
+                <div class="flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5 mb-1.5">
                   <div class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
                     <span id="chartTooltipHtmlDate" class="text-[11px] font-medium text-text-muted">--</span>
@@ -436,7 +436,7 @@
                     <span id="chartTooltipValLabel" class="text-[11px] text-text-muted font-medium">Nilai:</span>
                     <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-sm tabular-nums tracking-tight">Rp --</span>
                   </div>
-                  <div id="chartTooltipHtmlSub" class="text-[11px] text-status-success font-medium flex items-center justify-between gap-2 pt-1 border-t border-border-subtle/50">
+                  <div id="chartTooltipHtmlSub" class="text-[11px] text-status-success font-medium flex items-center justify-between gap-2 pt-1 border-t border-border-subtle">
                     <span id="chartTooltipSubLabel" class="text-text-muted text-[10px]">Kumulatif</span>
                     <span id="chartTooltipSubVal" class="tabular-nums font-semibold">Rp --</span>
                   </div>
