@@ -216,6 +216,14 @@ body {
 tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
   border-top-color: var(--border-subtle);
 }
+
+/* Soften only the Admin sales comparison dividers on phone and tablet. */
+@media (max-width: 1023px) {
+  #salesComparisonSection .comparison-mobile-divider,
+  #salesComparisonSection #comparisonTableBody > :not([hidden]) ~ :not([hidden]) {
+    border-top-color: color-mix(in srgb, var(--border-subtle) 65%, transparent);
+  }
+}
 /* Keep the native date picker icon and calendar legible in each theme. */
 .dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
 html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
