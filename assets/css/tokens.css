@@ -211,3 +211,8 @@ body {
     padding-left: 0 !important;
   }
 }
+
+/* Table row dividers use the FADE theme token. */
+tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
+  border-top-color: var(--border-subtle);
+}
