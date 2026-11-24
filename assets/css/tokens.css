@@ -222,6 +222,15 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 
 /* Mobile Chart Docked Scrubber Banner (< 768px) */
 @media (max-width: 767.98px) {
+  #trendChartCard #chartControlsRow {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  #trendChartCard #chartTypeGroup,
+  #trendChartCard #chartTimeframeGroup {
+    min-width: 0;
+    max-width: 100%;
+  }
   #trendChartCard #chartTimeframeGroup {
     flex: 0 1 auto;
     max-width: 100%;

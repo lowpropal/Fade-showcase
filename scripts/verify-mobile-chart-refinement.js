@@ -116,7 +116,12 @@ async function captureElementScreenshot(ws, filename, selector = '#trendChartCar
       var el = document.querySelector('${selector}');
       if (el) {
         var r = el.getBoundingClientRect();
-        window.scrollBy({ top: r.top - 16, behavior: 'instant' });
+        var header = document.querySelector('.shell-mobile-header');
+        var headerBottom = header && getComputedStyle(header).position === 'fixed'
+          ? header.getBoundingClientRect().bottom
+          : 0;
+        var targetTop = Math.max(16, headerBottom + 12);
+        window.scrollBy({ top: r.top - targetTop, behavior: 'instant' });
       }
     })()
   `);
@@ -266,7 +271,10 @@ async function auditCurrentState(ws) {
       // Tooltip overlap with active data point / line curve / bar
       var tipOverlapsPlot = false;
       var tipOverlapsActivePoint = false;
+      var tooltipWithinChart = false;
       if (tipR && contR && chart && chart.BOUNDS) {
+        tooltipWithinChart = tipR.left >= contR.left - 1 && tipR.right <= contR.right + 1 &&
+          tipR.top >= contR.top - 1 && tipR.bottom <= contR.bottom + 1;
         // Plot area vertical span
         var plotTop = contR.top + (chart.BOUNDS.yMin * (contR.height / chart.BOUNDS.viewBoxHeight));
         var plotBottom = contR.top + (chart.BOUNDS.yMax * (contR.height / chart.BOUNDS.viewBoxHeight));
@@ -311,6 +319,7 @@ async function auditCurrentState(ws) {
           height: Math.round(tipR.height),
           overlapsPlot: tipOverlapsPlot,
           overlapsActivePoint: tipOverlapsActivePoint,
+          withinChart: tooltipWithinChart,
           dateText: tipDate ? tipDate.textContent.trim() : '',
           valText: tipVal ? tipVal.textContent.trim() : '',
           subValText: tipSubVal ? tipSubVal.textContent.trim() : ''
@@ -427,6 +436,7 @@ async function run() {
   ];
 
   const results = [];
+  const responsiveTransitions = [];
   let totalAssertions = 0;
   let passedAssertions = 0;
   let failedAssertions = 0;
@@ -478,6 +488,8 @@ async function run() {
         await selectPoint(ws, 0);
         const auditPoint0 = await auditCurrentState(ws);
         assert(auditPoint0.isTipVisible === true, `${cfgKey} point 0 tooltip visible`);
+        assert(auditPoint0.tooltip.withinChart === true, `${cfgKey} point 0 tooltip within chart`);
+        assert(auditPoint0.tooltip.overlapsActivePoint === false, `${cfgKey} point 0 tooltip does not cover active point`);
         if (isMobile) {
           assert(auditPoint0.isDocked === true, `${cfgKey} point 0 tooltip isDocked: true`);
           assert(auditPoint0.tooltip.overlapsPlot === false, `${cfgKey} point 0 overlapsPlot: false`);
@@ -493,6 +505,8 @@ async function run() {
         await selectPoint(ws, midIdx);
         const auditPointMid = await auditCurrentState(ws);
         assert(auditPointMid.isTipVisible === true, `${cfgKey} point mid tooltip visible`);
+        assert(auditPointMid.tooltip.withinChart === true, `${cfgKey} point mid tooltip within chart`);
+        assert(auditPointMid.tooltip.overlapsActivePoint === false, `${cfgKey} point mid tooltip does not cover active point`);
         if (isMobile) {
           assert(auditPointMid.isDocked === true, `${cfgKey} point mid tooltip isDocked: true`);
           assert(auditPointMid.tooltip.overlapsPlot === false, `${cfgKey} point mid overlapsPlot: false`);
@@ -507,6 +521,8 @@ async function run() {
         await selectPoint(ws, auditUntouched.pointsCount - 1);
         const auditPointLast = await auditCurrentState(ws);
         assert(auditPointLast.isTipVisible === true, `${cfgKey} point last tooltip visible`);
+        assert(auditPointLast.tooltip.withinChart === true, `${cfgKey} point last tooltip within chart`);
+        assert(auditPointLast.tooltip.overlapsActivePoint === false, `${cfgKey} point last tooltip does not cover active point`);
         if (isMobile) {
           assert(auditPointLast.isDocked === true, `${cfgKey} point last tooltip isDocked: true`);
           assert(auditPointLast.tooltip.overlapsPlot === false, `${cfgKey} point last overlapsPlot: false`);
@@ -523,6 +539,8 @@ async function run() {
         await selectPoint(ws, midIdx);
         const auditBarMid = await auditCurrentState(ws);
         assert(auditBarMid.isTipVisible === true, `${cfgKey} bar mid tooltip visible`);
+        assert(auditBarMid.tooltip.withinChart === true, `${cfgKey} bar mid tooltip within chart`);
+        assert(auditBarMid.tooltip.overlapsActivePoint === false, `${cfgKey} bar mid tooltip does not cover active point`);
         if (isMobile) {
           assert(auditBarMid.isDocked === true, `${cfgKey} bar mid tooltip isDocked: true`);
           assert(auditBarMid.tooltip.overlapsPlot === false, `${cfgKey} bar mid overlapsPlot: false`);
@@ -595,6 +613,53 @@ async function run() {
           await sleep(150);
         }
 
+        if (vp.name === '390' && theme === 'dark') {
+          await evalScript(ws, `window.FADE_TREND_CHART.setChartType('line'); window.FADE_TREND_CHART.setTimeframe('30D');`);
+          await sleep(150);
+          const resizePointIdx = Math.floor(auditUntouched.pointsCount / 2);
+          await selectPoint(ws, resizePointIdx);
+
+          await setViewport(ws, 667, 375); // Mobile landscape, still below the mobile breakpoint.
+          await sleep(400);
+          const landscapeMobile = await auditCurrentState(ws);
+          assert(!landscapeMobile.hasHorizontalOverflow, `${cfgKey} 667x375 landscape no horizontal overflow`);
+          assert(landscapeMobile.xCollisions.length === 0, `${cfgKey} 667x375 landscape X-axis labels do not collide`);
+          assert(landscapeMobile.isMobile === true, `${cfgKey} 667x375 stays in mobile chart layout`);
+          assert(landscapeMobile.tooltip.withinChart === true, `${cfgKey} 667x375 tooltip stays within chart`);
+          assert(landscapeMobile.tooltip.overlapsPlot === false, `${cfgKey} 667x375 tooltip does not cover plot`);
+          assert(landscapeMobile.tooltip.overlapsActivePoint === false, `${cfgKey} 667x375 tooltip does not cover active point`);
+
+          await setViewport(ws, 844, 390); // Tablet landscape crosses to the desktop shell.
+          await sleep(400);
+          const landscapeTablet = await auditCurrentState(ws);
+          assert(!landscapeTablet.hasHorizontalOverflow, `${cfgKey} 844x390 landscape no horizontal overflow`);
+          assert(landscapeTablet.xCollisions.length === 0, `${cfgKey} 844x390 landscape X-axis labels do not collide`);
+          assert(landscapeTablet.isMobile === false, `${cfgKey} 844x390 uses the >=768 layout`);
+          assert(landscapeTablet.tooltip.withinChart === true, `${cfgKey} 844x390 tooltip stays within chart`);
+          assert(landscapeTablet.tooltip.overlapsActivePoint === false, `${cfgKey} 844x390 tooltip does not cover active point`);
+
+          await setViewport(ws, 390, 844); // Restore portrait and verify the chart reflows back.
+          await sleep(400);
+          const restoredPortrait = await auditCurrentState(ws);
+          assert(!restoredPortrait.hasHorizontalOverflow, `${cfgKey} restored 390x844 no horizontal overflow`);
+          assert(restoredPortrait.xCollisions.length === 0, `${cfgKey} restored 390x844 X-axis labels do not collide`);
+          assert(restoredPortrait.isMobile === true, `${cfgKey} restored 390x844 mobile chart layout`);
+          assert(restoredPortrait.tooltip.withinChart === true, `${cfgKey} restored 390x844 tooltip stays within chart`);
+          assert(restoredPortrait.tooltip.overlapsPlot === false, `${cfgKey} restored 390x844 tooltip does not cover plot`);
+          assert(restoredPortrait.tooltip.overlapsActivePoint === false, `${cfgKey} restored 390x844 tooltip does not cover active point`);
+          responsiveTransitions.push({
+            role,
+            theme,
+            from: '390x844',
+            states: [
+              { viewport: '667x375', horizontalOverflow: landscapeMobile.hasHorizontalOverflow, xAxisCollisions: landscapeMobile.xCollisions.length, isMobile: landscapeMobile.isMobile, tooltipWithinChart: landscapeMobile.tooltip.withinChart, tooltipOverlapsPlot: landscapeMobile.tooltip.overlapsPlot, tooltipOverlapsActivePoint: landscapeMobile.tooltip.overlapsActivePoint },
+              { viewport: '844x390', horizontalOverflow: landscapeTablet.hasHorizontalOverflow, xAxisCollisions: landscapeTablet.xCollisions.length, isMobile: landscapeTablet.isMobile, tooltipWithinChart: landscapeTablet.tooltip.withinChart, tooltipOverlapsActivePoint: landscapeTablet.tooltip.overlapsActivePoint },
+              { viewport: '390x844 restored', horizontalOverflow: restoredPortrait.hasHorizontalOverflow, xAxisCollisions: restoredPortrait.xCollisions.length, isMobile: restoredPortrait.isMobile, tooltipWithinChart: restoredPortrait.tooltip.withinChart, tooltipOverlapsPlot: restoredPortrait.tooltip.overlapsPlot, tooltipOverlapsActivePoint: restoredPortrait.tooltip.overlapsActivePoint }
+            ]
+          });
+          await evalScript(ws, `window.FADE_TREND_CHART.dismissTooltip();`);
+        }
+
         results.push({
           cfgKey,
           viewport: `${vp.w}x${vp.h}`,
@@ -624,7 +689,8 @@ async function run() {
     passedAssertions,
     failedAssertions,
     consoleErrors,
-    results
+    results,
+    responsiveTransitions
   }, null, 2));
 
   console.log('\n========================================');

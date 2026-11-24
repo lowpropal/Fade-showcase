@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-11-24T13:50:28.979Z",
-  "totalAssertions": 381,
-  "passedAssertions": 381,
+  "timestamp": "2026-11-24T14:20:07.182Z",
+  "totalAssertions": 575,
+  "passedAssertions": 575,
   "failedAssertions": 0,
   "consoleErrors": [],
   "results": [
@@ -244,6 +244,74 @@
       "overlapsPlotMid": true,
       "overlapsPlotLast": true,
       "overlapsPlotBarMid": true
+    }
+  ],
+  "responsiveTransitions": [
+    {
+      "role": "admin",
+      "theme": "dark",
+      "from": "390x844",
+      "states": [
+        {
+          "viewport": "667x375",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": true,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsPlot": false,
+          "tooltipOverlapsActivePoint": false
+        },
+        {
+          "viewport": "844x390",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": false,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsActivePoint": false
+        },
+        {
+          "viewport": "390x844 restored",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": true,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsPlot": false,
+          "tooltipOverlapsActivePoint": false
+        }
+      ]
+    },
+    {
+      "role": "sales",
+      "theme": "dark",
+      "from": "390x844",
+      "states": [
+        {
+          "viewport": "667x375",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": true,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsPlot": false,
+          "tooltipOverlapsActivePoint": false
+        },
+        {
+          "viewport": "844x390",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": false,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsActivePoint": false
+        },
+        {
+          "viewport": "390x844 restored",
+          "horizontalOverflow": false,
+          "xAxisCollisions": 0,
+          "isMobile": true,
+          "tooltipWithinChart": true,
+          "tooltipOverlapsPlot": false,
+          "tooltipOverlapsActivePoint": false
+        }
+      ]
     }
   ]
 }
