@@ -311,8 +311,8 @@
     },
 
     buildCustomMilestones: function (startIso, endIso) {
-      var startMs = new Date(startIso + 'T00:00:00').getTime();
-      var endMs = new Date(endIso + 'T00:00:00').getTime();
+      var startMs = new Date(startIso + 'T00:00:00Z').getTime();
+      var endMs = new Date(endIso + 'T00:00:00Z').getTime();
       if (isNaN(startMs) || isNaN(endMs) || startMs >= endMs) {
         return [
           { date: startIso, label: this.formatShortDate(startIso) },
@@ -362,9 +362,9 @@
 
       var buckets = [];
       if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
-        var startMs = new Date(this.customStart + 'T00:00:00').getTime();
-        var endMs = new Date(this.customEnd + 'T00:00:00').getTime();
-        var diffDays = Math.max(1, Math.round((endMs - startMs) / (24 * 3600 * 1000)));
+        var startMs = new Date(this.customStart + 'T00:00:00Z').getTime();
+        var endMs = new Date(this.customEnd + 'T00:00:00Z').getTime();
+        var diffDays = Math.max(0, Math.round((endMs - startMs) / (24 * 3600 * 1000)));
         if (diffDays <= 31) {
           for (var cd = 0; cd <= diffDays; cd++) {
             var cIso = new Date(startMs + cd * 24 * 3600 * 1000).toISOString().slice(0, 10);
@@ -378,11 +378,13 @@
         } else {
           var milestones = this.buildCustomMilestones(this.customStart, this.customEnd);
           for (var cm = 0; cm < milestones.length; cm++) {
-            var prevM = cm > 0 ? milestones[cm - 1].date : milestones[0].date;
+            var bucketStart = cm > 0
+              ? new Date(new Date(milestones[cm - 1].date + 'T00:00:00Z').getTime() + 24 * 3600 * 1000).toISOString().slice(0, 10)
+              : milestones[0].date;
             buckets.push({
               date: milestones[cm].date,
               label: milestones[cm].label,
-              startDate: cm === 0 ? milestones[0].date : prevM,
+              startDate: bucketStart,
               endDate: milestones[cm].date
             });
           }
@@ -510,7 +512,9 @@
 
         var periodEl = document.getElementById('chartPeriodLabel');
         if (periodEl) {
-          if (this.currentMode === 'ytd') {
+          if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
+            periodEl.textContent = this.formatShortDate(this.customStart) + ' – ' + this.formatShortDate(this.customEnd);
+          } else if (this.currentMode === 'ytd') {
             periodEl.textContent = 'Jun – Nov 2026 (YTD)';
           } else if (this.activeTimeframe === '7D') {
             periodEl.textContent = '16 – 22 Nov 2026 (7 Hari)';
@@ -535,8 +539,8 @@
       }
 
       var rawPoints = this.aggregatePoints(filteredInvoices);
-      if (!rawPoints || rawPoints.length < 2) {
-        this.setEmptyState(true, 'Rentang waktu tidak valid', 'Pilih rentang tanggal yang memiliki minimal 2 titik data.');
+      if (!rawPoints || rawPoints.length === 0) {
+        this.setEmptyState(true, 'Rentang waktu tidak valid', 'Pilih tanggal awal dan akhir yang valid.');
         return;
       }
 
@@ -553,8 +557,9 @@
       });
 
       if (!hasTransactionsInRange) {
-        var tfName = this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'rentang waktu ini');
-        this.setEmptyState(true, 'Tidak ada transaksi pada ' + tfName, 'Pilih rentang 30D atau 90D untuk melihat riwayat penjualan lainnya.');
+        var tfName = this.currentMode === 'custom' ? 'rentang tanggal ini' : (this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'rentang waktu ini'));
+        var emptyHint = this.currentMode === 'custom' ? 'Pilih tanggal lain untuk melihat transaksi.' : 'Pilih rentang 30D atau 90D untuk melihat riwayat penjualan lainnya.';
+        this.setEmptyState(true, 'Tidak ada transaksi pada ' + tfName, emptyHint);
         return;
       }
 
@@ -601,7 +606,7 @@
         if (isBarMode) {
           x = b.xMin + (idx + 0.5) * slotWidth;
         } else {
-          x = b.xMin + (idx / Math.max(1, totalPoints - 1)) * availableWidth;
+          x = totalPoints === 1 ? b.xMin + availableWidth / 2 : b.xMin + (idx / (totalPoints - 1)) * availableWidth;
         }
         var normLine = Math.min(1, Math.max(0, p.cumulative / scaleCeiling));
         var yLine = b.yMax - normLine * (b.yMax - b.yMin);
@@ -786,12 +791,12 @@
       var strokeEl = document.getElementById('chartSplineStroke');
       if (!areaEl || !strokeEl) return;
 
-      var curvePath = this.getCatmullRomBezierPath(points);
+      var curvePath = points.length === 1 ? 'M ' + points[0].x + ' ' + points[0].y : this.getCatmullRomBezierPath(points);
       strokeEl.setAttribute('d', curvePath);
 
       var firstPt = points[0];
       var lastPt = points[points.length - 1];
-      var areaPath = curvePath + ' L ' + lastPt.x + ' ' + b.yMax + ' L ' + firstPt.x + ' ' + b.yMax + ' Z';
+      var areaPath = points.length === 1 ? '' : curvePath + ' L ' + lastPt.x + ' ' + b.yMax + ' L ' + firstPt.x + ' ' + b.yMax + ' Z';
       areaEl.setAttribute('d', areaPath);
     },
 

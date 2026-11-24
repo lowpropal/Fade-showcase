@@ -216,3 +216,6 @@ body {
 tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
   border-top-color: var(--border-subtle);
 }
+/* Keep the native date picker icon and calendar legible in each theme. */
+.dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
+html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
