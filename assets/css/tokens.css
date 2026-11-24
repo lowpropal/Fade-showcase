@@ -254,18 +254,18 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   }
   #chartTooltip.mobile-docked:not(.hidden) {
     position: absolute !important;
-    top: 6px !important;
-    left: 8px !important;
-    right: 8px !important;
+    top: 4px !important;
+    left: 0 !important;
+    right: 0 !important;
     width: auto !important;
     max-width: none !important;
     min-width: 0 !important;
-    padding: 6px 10px !important;
+    padding: 4px 8px !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 8px !important;
+    gap: 6px !important;
     pointer-events: auto !important;
     border-radius: 10px !important;
     background: var(--bg-surface-1, #18181B) !important;
@@ -277,23 +277,63 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     display: none !important;
   }
   #chartTooltip.mobile-docked .tooltip-header-row {
+    flex: 0 0 auto !important;
     border-bottom: none !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 4px !important;
   }
-  #chartTooltip.mobile-docked .tooltip-sub-row {
-    border-top: none !important;
-    padding-top: 0 !important;
+  #chartTooltip.mobile-docked #chartTooltipHtmlDate {
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipTypeBadge {
+    display: none !important;
   }
   #chartTooltip.mobile-docked .tooltip-body-wrapper {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
     flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 5px !important;
+    white-space: nowrap !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-body-wrapper > div {
+    min-width: 0 !important;
+    display: inline-flex !important;
     align-items: baseline !important;
-    gap: 6px !important;
+    justify-content: flex-start !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+  }
+  #chartTooltip.mobile-docked .tooltip-sub-row {
+    flex: 0 1 auto !important;
+    border-top: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 2px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipValLabel,
+  #chartTooltip.mobile-docked #chartTooltipSubLabel {
+    display: inline !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipHtmlVal {
+    font-size: 11px !important;
+  }
+  #chartTooltip.mobile-docked #chartTooltipSubVal {
+    font-size: 10px !important;
   }
   #chartTooltip.mobile-docked #chartTooltipCloseBtn {
     display: inline-flex !important;
-  }
-  #chartTooltip.mobile-docked .mobile-hide {
-    display: none !important;
+    flex: 0 0 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    pointer-events: auto !important;
   }
 }

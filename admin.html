@@ -361,16 +361,16 @@
             <!-- Header: Row 1 Headline + Period; Row 2 Total Revenue (Left) + Controls (Right) -->
             <div class="flex flex-col gap-3 mb-4">
               <!-- Row 1: Headline + Period Badge -->
-              <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex flex-col items-start gap-2 md:flex-row md:items-center md:justify-between md:flex-wrap md:gap-2">
                 <h2 id="chartTitleText" class="text-base font-semibold text-text-primary tracking-tight">Tren Penjualan Bulanan</h2>
                 <span id="chartPeriodLabel" class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-2 text-xs text-text-muted border border-border-subtle whitespace-nowrap shrink-0">01 – 22 Nov 2026</span>
               </div>
 
               <!-- Row 2: Total Revenue (Left) & Controls (Right) -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div class="flex items-baseline gap-2.5">
-                  <span id="chartMonthlyRevenue" class="text-2xl sm:text-[28px] font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
-                  <span id="chartTrendGrowth" class="inline-flex items-center gap-1 text-xs text-status-success tabular-nums font-semibold">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex flex-col items-start gap-1 md:flex-row md:items-baseline md:gap-2.5 min-w-0">
+                  <span id="chartMonthlyRevenue" class="text-[clamp(1.5rem,7.2vw,1.875rem)] md:text-[28px] whitespace-nowrap leading-none font-bold text-text-primary tracking-tight tabular-nums">Rp --</span>
+                  <span id="chartTrendGrowth" class="inline-flex flex-wrap items-center gap-1 text-xs text-status-success tabular-nums font-semibold max-w-full">
                     <span class="material-symbols-outlined text-[15px]">trending_up</span>
                     <span>Aktif (Tersinkron)</span>
                   </span>
@@ -399,7 +399,7 @@
             </div>
 
             <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
-            <div id="chartInteractiveContainer" class="relative w-full h-[260px] sm:h-[340px] lg:h-[360px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+            <div id="chartInteractiveContainer" class="relative w-full h-[260px] md:h-[340px] lg:h-[360px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
               <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">

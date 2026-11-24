@@ -94,9 +94,10 @@
 
       var vpW = (typeof window !== 'undefined' && (window.innerWidth || (document.documentElement && document.documentElement.clientWidth))) || w;
       var isMobile = vpW < 768;
-      var yAxisSpace = isMobile ? 44 : 64;
-      var rightMargin = isMobile ? 12 : 24;
-      var topMargin = isMobile ? 48 : 22;
+      // Give the plot more horizontal room on phones while keeping a clear Y-axis gutter.
+      var yAxisSpace = isMobile ? 38 : 64;
+      var rightMargin = isMobile ? 4 : 24;
+      var topMargin = isMobile ? 52 : 22;
       var bottomMargin = isMobile ? 32 : 42;
 
       this.BOUNDS = {
@@ -946,37 +947,22 @@
       var plotWidth = b.xMax - b.xMin;
       var isNarrow = b.isMobile || plotWidth < 520;
 
+      // Short ranges retain detail; longer ranges use fewer, evenly spaced milestones.
       var displayIndices = [];
-      if (count > 15) {
-        // 30D (e.g. 22 days)
-        if (isNarrow) {
-          displayIndices = [0, 7, 14, count - 1];
-        } else {
-          // Desktop: 5 milestone ticks with >= 140px spacing
-          displayIndices = [0, 5, 10, 15, count - 1];
-        }
-      } else if (count > 8) {
-        // 90D (~12 weekly intervals): 4-5 evenly distributed milestones
-        if (isNarrow) {
-          displayIndices = [0, Math.floor((count - 1) / 2), count - 1];
-        } else {
-          var step90 = Math.max(3, Math.floor((count - 1) / 4));
-          displayIndices = [0];
-          for (var w = step90; w < count - 1; w += step90) {
-            displayIndices.push(w);
-          }
-          if (count - 1 - displayIndices[displayIndices.length - 1] < 2) {
-            displayIndices[displayIndices.length - 1] = count - 1;
-          } else {
-            displayIndices.push(count - 1);
-          }
-        }
+      var maxLabels;
+      if (count <= 8) {
+        maxLabels = count;
+      } else if (count > 15) {
+        maxLabels = isNarrow ? 5 : 6;
       } else {
-        // 7D (7 days)
-        if (isNarrow) {
-          displayIndices = [0, 2, 4, count - 1];
-        } else {
-          for (var d = 0; d < count; d++) displayIndices.push(d);
+        maxLabels = isNarrow ? 4 : 5;
+      }
+      maxLabels = Math.min(count, maxLabels);
+      if (maxLabels === 1) {
+        displayIndices.push(0);
+      } else {
+        for (var tick = 0; tick < maxLabels; tick++) {
+          displayIndices.push(Math.round(tick * (count - 1) / (maxLabels - 1)));
         }
       }
 
@@ -1095,15 +1081,9 @@
       }
 
       var isBar = (this.chartType === 'bar');
-      var tipFormattedVal = isBar
-        ? 'Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
-        : 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-
-      var tipSubText = isBar
-        ? 'Kumulatif: Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
-        : (pt.daily > 0
-          ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
-          : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')'));
+      // Keep the tooltip's primary metric consistent: sales in the selected bucket.
+      var tipFormattedVal = 'Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+      var tipSubText = 'Kumulatif: Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
 
       // 1. Primary Polished HTML Tooltip (with Dynamic Viewport Clamping)
       var tipHtml = document.getElementById('chartTooltip');
@@ -1121,11 +1101,9 @@
         if (tipDate) tipDate.textContent = pt.label;
         if (tipVal) tipVal.textContent = tipFormattedVal;
         if (tipBadge) tipBadge.textContent = isBar ? (this.activeTimeframe === '90D' ? 'Mingguan' : 'Harian') : 'Kumulatif';
-        if (tipValLabel) tipValLabel.textContent = isBar ? 'Nilai:' : 'Total:';
+        if (tipValLabel) tipValLabel.textContent = 'Penjualan';
         if (tipSubVal) {
-          tipSubVal.textContent = isBar
-            ? 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
-            : (pt.daily > 0 ? '+Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt' : 'Stabil');
+          tipSubVal.textContent = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
         } else if (tipSub) {
           tipSub.textContent = tipSubText;
         }
@@ -1219,7 +1197,7 @@
 
       var liveRegion = document.getElementById('chartLiveRegion');
       if (liveRegion) {
-        liveRegion.textContent = pt.label + (isBar ? ', Nilai: ' + tipFormattedVal + ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta' : ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta');
+        liveRegion.textContent = pt.label + ', Penjualan: ' + tipFormattedVal + ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta';
       }
     },
 
