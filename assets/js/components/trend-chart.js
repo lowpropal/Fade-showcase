@@ -1100,7 +1100,19 @@
 
         if (tipDate) tipDate.textContent = pt.label;
         if (tipVal) tipVal.textContent = tipFormattedVal;
-        if (tipBadge) tipBadge.textContent = isBar ? (this.activeTimeframe === '90D' ? 'Mingguan' : 'Harian') : 'Kumulatif';
+        if (tipBadge) {
+          var tipBucketType = 'Harian';
+          if (this.currentMode === 'ytd') {
+            tipBucketType = 'Bulanan';
+          } else if (this.activeTimeframe === '90D') {
+            tipBucketType = 'Mingguan';
+          } else if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
+            var customStartMs = new Date(this.customStart + 'T00:00:00Z').getTime();
+            var customEndMs = new Date(this.customEnd + 'T00:00:00Z').getTime();
+            if (Math.round((customEndMs - customStartMs) / (24 * 3600 * 1000)) > 31) tipBucketType = 'Mingguan';
+          }
+          tipBadge.textContent = tipBucketType;
+        }
         if (tipValLabel) tipValLabel.textContent = 'Penjualan';
         if (tipSubVal) {
           tipSubVal.textContent = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
