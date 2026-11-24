@@ -85,7 +85,7 @@
       if (h < 220) h = 220;
 
       var isMobile = w < 640;
-      var yAxisSpace = isMobile ? 44 : 58;
+      var yAxisSpace = isMobile ? 46 : 64;
       var rightMargin = isMobile ? 12 : 24;
       var topMargin = 22;
       var bottomMargin = isMobile ? 36 : 42;
@@ -182,27 +182,44 @@
       document.addEventListener('pointerdown', function (e) {
         var chartBox = document.getElementById('chartInteractiveContainer');
         if (chartBox && !chartBox.contains(e.target)) {
-          var tooltipGroup = document.getElementById('chartTooltipGroup');
-          if (tooltipGroup && tooltipGroup.style.display !== 'none') {
-            tooltipGroup.style.display = 'none';
-            var guideLine = document.getElementById('chartGuideLine');
-            if (guideLine) guideLine.style.display = 'none';
-            var activeRing = document.getElementById('chartActiveNodeRing');
-            var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
-            if (activeRing) activeRing.style.display = 'none';
-            if (activePip) activePip.style.display = 'none';
-            var barsContainer = document.getElementById('chartBarsGroup');
-            if (barsContainer) {
-              var bars = barsContainer.querySelectorAll('rect');
-              bars.forEach(function (rect) {
-                rect.setAttribute('fill', 'url(#barGradDefault)');
-                rect.setAttribute('stroke', 'var(--border-default, #39393D)');
-                rect.setAttribute('stroke-width', '1');
-              });
-            }
-          }
+          self.dismissTooltip();
         }
       });
+
+      // Escape key listener to close active tooltip / focus
+      var escHandler = function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          self.activePointIndex = null;
+          self.dismissTooltip();
+        }
+      };
+      document.addEventListener('keydown', escHandler);
+      window.addEventListener('keydown', escHandler);
+    },
+
+    dismissTooltip: function () {
+      var tooltipGroup = document.getElementById('chartTooltipGroup');
+      if (tooltipGroup) tooltipGroup.style.display = 'none';
+      var tipHtml = document.getElementById('chartTooltip');
+      if (tipHtml) {
+        tipHtml.classList.add('hidden');
+        tipHtml.style.display = 'none';
+      }
+      var guideLine = document.getElementById('chartGuideLine');
+      if (guideLine) guideLine.style.display = 'none';
+      var activeRing = document.getElementById('chartActiveNodeRing');
+      var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
+      if (activeRing) activeRing.style.display = 'none';
+      if (activePip) activePip.style.display = 'none';
+      var barsContainer = document.getElementById('chartBarsGroup');
+      if (barsContainer) {
+        var bars = barsContainer.querySelectorAll('rect');
+        bars.forEach(function (rect) {
+          rect.setAttribute('fill', 'url(#barGradDefault)');
+          rect.setAttribute('stroke', 'var(--border-default, #39393D)');
+          rect.setAttribute('stroke-width', '1');
+        });
+      }
     },
 
     setChartType: function (type) {
@@ -234,11 +251,11 @@
         tfGroup.style.display = this.currentMode === 'bulan' ? 'flex' : 'none';
       }
 
-      var activeClass = 'h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer flex items-center justify-center';
-      var inactiveClass = 'h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer flex items-center justify-center';
+      var activeClass = 'h-full px-3 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer flex items-center justify-center';
+      var inactiveClass = 'h-full px-3 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer flex items-center justify-center';
 
-      var activeTypeClass = 'inline-flex items-center gap-1 h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer justify-center';
-      var inactiveTypeClass = 'inline-flex items-center gap-1 h-9 sm:h-auto min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer justify-center';
+      var activeTypeClass = 'inline-flex items-center gap-1.5 h-full px-3 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer justify-center';
+      var inactiveTypeClass = 'inline-flex items-center gap-1.5 h-full px-3 py-1 rounded-md text-caption font-label text-text-muted hover:text-text-primary transition-colors cursor-pointer justify-center';
 
       if (btnLine) {
         btnLine.className = cType === 'line' ? activeTypeClass : inactiveTypeClass;
@@ -576,8 +593,16 @@
       var isBarMode = (this.chartType === 'bar');
       var activeCeilingMillions = isBarMode ? barScaleCeilingMillions : scaleCeilingMillions;
 
+      var availableWidth = (b.xMax - b.xMin);
+      var slotWidth = totalPoints > 0 ? (availableWidth / totalPoints) : availableWidth;
+
       var plottedPoints = rawPoints.map(function (p, idx) {
-        var x = b.xMin + (idx / Math.max(1, totalPoints - 1)) * (b.xMax - b.xMin);
+        var x;
+        if (isBarMode) {
+          x = b.xMin + (idx + 0.5) * slotWidth;
+        } else {
+          x = b.xMin + (idx / Math.max(1, totalPoints - 1)) * availableWidth;
+        }
         var normLine = Math.min(1, Math.max(0, p.cumulative / scaleCeiling));
         var yLine = b.yMax - normLine * (b.yMax - b.yMin);
 
@@ -593,7 +618,8 @@
           x: Math.round(x * 10) / 10,
           y: Math.round(yLine * 10) / 10,
           barY: Math.round(yBar * 10) / 10,
-          barHeight: barH
+          barHeight: barH,
+          slotWidth: slotWidth
         };
       });
 
@@ -680,10 +706,10 @@
 
       var count = points.length;
       var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
-      var slotWidth = count > 1 ? (availableWidth / (count - 1)) : availableWidth;
-      var barW = Math.max(8, Math.min(48, Math.round(slotWidth * 0.52)));
-      if (count > 15) barW = Math.max(7, Math.min(20, Math.round(slotWidth * 0.62)));
-      else if (count <= 7) barW = Math.max(14, Math.min(40, Math.round(slotWidth * 0.45)));
+      var slotWidth = count > 0 ? (availableWidth / count) : availableWidth;
+      var barW = Math.max(8, Math.min(44, Math.round(slotWidth * 0.52)));
+      if (count > 15) barW = Math.max(6, Math.min(22, Math.round(slotWidth * 0.58)));
+      else if (count <= 7) barW = Math.max(16, Math.min(44, Math.round(slotWidth * 0.44)));
 
       var activeIdx = self.activePointIndex;
 
@@ -699,7 +725,7 @@
         rect.setAttribute('y', barY);
         rect.setAttribute('width', barW);
         rect.setAttribute('height', barH);
-        rect.setAttribute('rx', barW > 12 ? '3' : '2');
+        rect.setAttribute('rx', barW > 12 ? '4' : '2');
         rect.setAttribute('fill', isHighlight ? 'url(#barGradHighlight)' : (hasValue ? 'url(#barGradDefault)' : 'var(--bg-surface-2, #2B2B2E)'));
         rect.setAttribute('stroke', isHighlight ? '#F28C45' : (hasValue ? 'var(--border-default, #39393D)' : 'var(--border-subtle, #333336)'));
         rect.setAttribute('stroke-width', isHighlight ? '1.5' : '1');
@@ -796,11 +822,28 @@
       if (!nodesContainer) return;
 
       nodesContainer.innerHTML = '';
-      points.forEach(function (p, idx) {
+      var count = points.length;
+
+      // In dense timeframes (30D/90D), avoid rendering 22 static dots that clutter the spline.
+      // Render subtle milestone nodes at key checkpoints; active node ring & pip dynamically highlight any point.
+      var milestoneIndices = [];
+      if (count <= 7) {
+        for (var i = 0; i < count; i++) milestoneIndices.push(i);
+      } else if (count <= 14) {
+        for (var j = 0; j < count; j += 2) milestoneIndices.push(j);
+        if (milestoneIndices[milestoneIndices.length - 1] !== count - 1) milestoneIndices.push(count - 1);
+      } else {
+        // 30D (22 points): show 5 milestone nodes (01 Nov, 06 Nov, 11 Nov, 16 Nov, 22 Nov)
+        milestoneIndices = [0, 5, 10, 15, count - 1];
+      }
+
+      milestoneIndices.forEach(function (idx) {
+        var p = points[idx];
+        if (!p) return;
         var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', p.x);
         circle.setAttribute('cy', p.y);
-        circle.setAttribute('r', '4');
+        circle.setAttribute('r', '3.5');
         circle.setAttribute('fill', 'var(--bg-surface-1, #19191B)');
         circle.setAttribute('stroke', 'var(--border-strong, #55555A)');
         circle.setAttribute('stroke-width', '1.5');
@@ -838,19 +881,26 @@
       if (count > 15) {
         // 30D (e.g. 22 days)
         if (isNarrow) {
-          // 4 checkpoints on mobile: 01 Nov, 08 Nov, 15 Nov, 22 Nov
-          // Gives >= 70px gap and completely avoids 19 Nov / 22 Nov collision!
           displayIndices = [0, 7, 14, count - 1];
         } else {
-          displayIndices = [0, 4, 9, 14, 18, count - 1];
+          // Desktop: 5 milestone ticks with >= 140px spacing
+          displayIndices = [0, 5, 10, 15, count - 1];
         }
       } else if (count > 8) {
-        // 90D (~12 weekly intervals)
+        // 90D (~12 weekly intervals): 4-5 evenly distributed milestones
         if (isNarrow) {
           displayIndices = [0, Math.floor((count - 1) / 2), count - 1];
         } else {
-          for (var w = 0; w < count; w += 2) displayIndices.push(w);
-          if (displayIndices[displayIndices.length - 1] !== count - 1) displayIndices.push(count - 1);
+          var step90 = Math.max(3, Math.floor((count - 1) / 4));
+          displayIndices = [0];
+          for (var w = step90; w < count - 1; w += step90) {
+            displayIndices.push(w);
+          }
+          if (count - 1 - displayIndices[displayIndices.length - 1] < 2) {
+            displayIndices[displayIndices.length - 1] = count - 1;
+          } else {
+            displayIndices.push(count - 1);
+          }
         }
       } else {
         // 7D (7 days)
@@ -868,8 +918,8 @@
       displayIndices.forEach(function (idx) {
         if (activePoint && idx !== activeIdx) {
           var dist = Math.abs(points[idx].x - activePoint.x);
-          // Drop non-active milestone if it collides with active node label (< 44px)
-          if (dist < 44) return;
+          // Drop non-active milestone if it collides with active node label (< 48px)
+          if (dist < 48) return;
         }
         finalIndices.push(idx);
       });
@@ -887,7 +937,7 @@
         text.setAttribute('x', p.x);
         text.setAttribute('y', b.yMax + (b.isMobile ? 22 : 24));
         text.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
-        text.setAttribute('font-size', '12'); // Actual >= 12px
+        text.setAttribute('font-size', '12');
         text.setAttribute('text-anchor', 'middle');
 
         if (isActive) {
@@ -922,6 +972,7 @@
 
       var guide = document.getElementById('chartGuideLine');
       if (guide) {
+        guide.style.display = '';
         guide.setAttribute('x1', pt.x);
         guide.setAttribute('x2', pt.x);
         guide.setAttribute('y1', pt.y);
@@ -976,34 +1027,88 @@
           ? '+' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt periode ini'
           : (pt.cumulative === 0 ? 'Stabil (Rp 0)' : 'Stabil (' + pt.label + ')'));
 
-      // 1. Update Primary SVG Tooltip (>= 190x48px target)
-      var tooltipGroup = document.getElementById('chartTooltipGroup');
-      if (tooltipGroup) {
-        tooltipGroup.style.display = '';
-        var svgTipW = 196;
-        var svgTipH = 50;
-        var targetY = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
-        var tipX, tipY;
+      // 1. Primary Polished HTML Tooltip (with Dynamic Viewport Clamping)
+      var tipHtml = document.getElementById('chartTooltip');
+      if (tipHtml) {
+        tipHtml.classList.remove('hidden');
+        tipHtml.style.display = 'block';
 
-        if (b.isMobile) {
-          // Mobile responsive placement: center above node clamped safely within SVG width
-          var idealX = pt.x - (svgTipW / 2);
-          tipX = Math.max(8, Math.min(b.viewBoxWidth - svgTipW - 8, idealX));
-          if (targetY - svgTipH - 12 >= b.yMin) {
-            tipY = targetY - svgTipH - 12;
-          } else {
-            tipY = Math.min(b.yMax - svgTipH - 6, targetY + 16);
-          }
-        } else {
-          // Desktop verified placement: left/right of node with 8px margin
-          tipX = pt.x > (b.viewBoxWidth - 215)
-            ? Math.max(b.xMin + 8, pt.x - svgTipW - 14)
-            : Math.min(b.xMax - svgTipW - 8, pt.x + 14);
-          tipY = Math.max(b.yMin + 8, Math.min(b.yMax - svgTipH - 8, targetY - (svgTipH / 2)));
+        var tipDate = document.getElementById('chartTooltipHtmlDate');
+        var tipVal = document.getElementById('chartTooltipHtmlVal');
+        var tipSub = document.getElementById('chartTooltipHtmlSub');
+        var tipBadge = document.getElementById('chartTooltipTypeBadge');
+        var tipValLabel = document.getElementById('chartTooltipValLabel');
+        var tipSubVal = document.getElementById('chartTooltipSubVal');
+
+        if (tipDate) tipDate.textContent = pt.label;
+        if (tipVal) tipVal.textContent = tipFormattedVal;
+        if (tipBadge) tipBadge.textContent = isBar ? (this.activeTimeframe === '90D' ? 'Mingguan' : 'Harian') : 'Kumulatif';
+        if (tipValLabel) tipValLabel.textContent = isBar ? 'Nilai:' : 'Total:';
+        if (tipSubVal) {
+          tipSubVal.textContent = isBar
+            ? 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt'
+            : (pt.daily > 0 ? '+Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt' : 'Stabil');
+        } else if (tipSub) {
+          tipSub.textContent = tipSubText;
         }
 
-        tooltipGroup.setAttribute('transform', 'translate(' + tipX + ', ' + tipY + ')');
+        var container = document.getElementById('chartInteractiveContainer');
+        var cWidth = b.viewBoxWidth;
+        var cHeight = b.viewBoxHeight;
+        if (container) {
+          var cRect = container.getBoundingClientRect();
+          if (cRect.width > 0) cWidth = cRect.width;
+          if (cRect.height > 0) cHeight = cRect.height;
+        }
 
+        var scaleX = cWidth / b.viewBoxWidth;
+        var scaleY = cHeight / b.viewBoxHeight;
+        var px = pt.x * scaleX;
+        var targetY = (isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y) * scaleY;
+
+        var tipW = tipHtml.offsetWidth || 196;
+        var tipH = tipHtml.offsetHeight || 60;
+
+        var tipLeft, tipTop;
+
+        if (px > cWidth - tipW - 16) {
+          tipLeft = Math.max(8, px - tipW - 14);
+        } else if (px < tipW + 16) {
+          tipLeft = Math.min(cWidth - tipW - 8, px + 14);
+        } else {
+          tipLeft = Math.max(8, Math.min(cWidth - tipW - 8, px - (tipW / 2)));
+        }
+
+        if (targetY - tipH - 12 >= 8) {
+          tipTop = targetY - tipH - 12;
+        } else {
+          tipTop = Math.min(cHeight - tipH - 8, targetY + 16);
+        }
+
+        tipHtml.style.left = Math.round(tipLeft) + 'px';
+        tipHtml.style.top = Math.round(tipTop) + 'px';
+      }
+
+      // 2. Synchronized SVG Tooltip (Fallback & Accessible SVG Parity)
+      var tooltipGroup = document.getElementById('chartTooltipGroup');
+      if (tooltipGroup) {
+        var svgTipW = 196;
+        var svgTipH = 50;
+        var targetYSvg = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
+        var tipXSvg, tipYSvg;
+
+        if (b.isMobile) {
+          var idealX = pt.x - (svgTipW / 2);
+          tipXSvg = Math.max(8, Math.min(b.viewBoxWidth - svgTipW - 8, idealX));
+          tipYSvg = targetYSvg - svgTipH - 12 >= b.yMin ? targetYSvg - svgTipH - 12 : Math.min(b.yMax - svgTipH - 6, targetYSvg + 16);
+        } else {
+          tipXSvg = pt.x > (b.viewBoxWidth - 215)
+            ? Math.max(b.xMin + 8, pt.x - svgTipW - 14)
+            : Math.min(b.xMax - svgTipW - 8, pt.x + 14);
+          tipYSvg = Math.max(b.yMin + 8, Math.min(b.yMax - svgTipH - 8, targetYSvg - (svgTipH / 2)));
+        }
+
+        tooltipGroup.setAttribute('transform', 'translate(' + tipXSvg + ', ' + tipYSvg + ')');
         var svgTipDate = tooltipGroup.querySelector('#chartTooltipDate');
         var svgTipVal = tooltipGroup.querySelector('#chartTooltipValue');
         var svgTipSub = tooltipGroup.querySelector('#chartTooltipSub');
@@ -1016,32 +1121,8 @@
           svgTipVal.textContent = tipFormattedVal;
         }
         if (svgTipSub) svgTipSub.textContent = tipSubText;
-      }
-
-      // 2. Fallback HTML Tooltip (only active if SVG Tooltip is missing)
-      var tipHtml = document.getElementById('chartTooltip');
-      if (tipHtml) {
-        if (!tooltipGroup) {
-          tipHtml.classList.remove('hidden');
-          var tipDate = document.getElementById('chartTooltipHtmlDate') || document.getElementById('chartTooltipDate');
-          var tipVal = document.getElementById('chartTooltipHtmlVal') || document.getElementById('chartTooltipValue');
-          var tipSub = document.getElementById('chartTooltipHtmlSub') || document.getElementById('chartTooltipSub');
-
-          if (tipDate) tipDate.textContent = pt.label;
-          if (tipVal) tipVal.textContent = tipFormattedVal;
-          if (tipSub) tipSub.textContent = tipSubText;
-
-          var tipW = tipHtml.offsetWidth || 196;
-          var tipH = tipHtml.offsetHeight || 50;
-          var targetYHtml = isBar ? (pt.daily > 0 ? pt.barY : b.yMax) : pt.y;
-          var tipLeft = Math.max(8, Math.min(b.viewBoxWidth - tipW - 8, pt.x - (tipW / 2)));
-          var tipTop = targetYHtml - tipH - 12;
-          if (tipTop < 6) tipTop = targetYHtml + 16;
-          tipHtml.style.left = tipLeft + 'px';
-          tipHtml.style.top = tipTop + 'px';
-        } else {
-          tipHtml.classList.add('hidden'); // Avoid double stacked boxes
-        }
+        // Keep SVG tooltip synchronized; display is hidden while HTML tooltip is active to avoid double boxes
+        tooltipGroup.style.display = tipHtml ? 'none' : '';
       }
 
       var liveRegion = document.getElementById('chartLiveRegion');
@@ -1096,23 +1177,7 @@
           var hasKbFocus = container && (document.activeElement === container || container.contains(document.activeElement));
           if (!hasKbFocus) {
             self.activePointIndex = null;
-            var tooltipGroup = document.getElementById('chartTooltipGroup');
-            if (tooltipGroup) tooltipGroup.style.display = 'none';
-            var guideLine = document.getElementById('chartGuideLine');
-            if (guideLine) guideLine.style.display = 'none';
-            var activeRing = document.getElementById('chartActiveNodeRing');
-            var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
-            if (activeRing) activeRing.style.display = 'none';
-            if (activePip) activePip.style.display = 'none';
-            var barsContainer = document.getElementById('chartBarsGroup');
-            if (barsContainer) {
-              var bars = barsContainer.querySelectorAll('rect');
-              bars.forEach(function (rect) {
-                rect.setAttribute('fill', 'url(#barGradDefault)');
-                rect.setAttribute('stroke', 'var(--border-default, #39393D)');
-                rect.setAttribute('stroke-width', '1');
-              });
-            }
+            self.dismissTooltip();
           }
         }, 100);
       }

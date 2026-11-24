@@ -1,0 +1,851 @@
+{
+  "viewports": {},
+  "chartAudit": {
+    "line_7D": {
+      "chartType": "line",
+      "timeframe": "7D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 7,
+      "nodeCircles": 7,
+      "yLabels": [
+        {
+          "text": "10jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "8jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "5jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "3jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "16 Nov",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "17 Nov",
+          "x": 197.8,
+          "y": 342
+        },
+        {
+          "text": "18 Nov",
+          "x": 337.7,
+          "y": 342
+        },
+        {
+          "text": "19 Nov",
+          "x": 477.5,
+          "y": 342
+        },
+        {
+          "text": "20 Nov",
+          "x": 617.3,
+          "y": 342
+        },
+        {
+          "text": "21 Nov",
+          "x": 757.2,
+          "y": 342
+        },
+        {
+          "text": "22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": null,
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 318,
+          "tooltipX": 72,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "16 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        },
+        "mid": {
+          "pointIndex": 3,
+          "pointX": 477.5,
+          "pointY": 297.3,
+          "tooltipX": 491.5,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "19 Nov ·",
+          "textValue": "Rp 0,7 jt",
+          "textValXCoord": 78
+        },
+        "last": {
+          "pointIndex": 6,
+          "pointX": 897,
+          "pointY": 297.3,
+          "tooltipX": 687,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "22 Nov ·",
+          "textValue": "Rp 0,7 jt",
+          "textValXCoord": 78
+        }
+      }
+    },
+    "bar_7D": {
+      "chartType": "bar",
+      "timeframe": "7D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 7,
+      "nodeCircles": 0,
+      "yLabels": [
+        {
+          "text": "2jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "2jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "1jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "1jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "16 Nov",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "17 Nov",
+          "x": 197.8,
+          "y": 342
+        },
+        {
+          "text": "18 Nov",
+          "x": 337.7,
+          "y": 342
+        },
+        {
+          "text": "19 Nov",
+          "x": 477.5,
+          "y": 342
+        },
+        {
+          "text": "20 Nov",
+          "x": 617.3,
+          "y": 342
+        },
+        {
+          "text": "21 Nov",
+          "x": 757.2,
+          "y": 342
+        },
+        {
+          "text": "22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": {
+        "count": 7,
+        "firstBar": {
+          "x": 38,
+          "width": 40,
+          "leftEdge": 38,
+          "rightEdge": 78,
+          "plotXMin": 58,
+          "isLeftClippedOrOverlapY": true
+        },
+        "lastBar": {
+          "x": 877,
+          "width": 40,
+          "leftEdge": 877,
+          "rightEdge": 917,
+          "plotXMax": 897,
+          "isRightClipped": true
+        }
+      },
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 318,
+          "tooltipX": 72,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "16 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        },
+        "mid": {
+          "pointIndex": 3,
+          "pointX": 477.5,
+          "pointY": 297.3,
+          "tooltipX": 491.5,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "19 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        },
+        "last": {
+          "pointIndex": 6,
+          "pointX": 897,
+          "pointY": 297.3,
+          "tooltipX": 687,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "22 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        }
+      }
+    },
+    "line_30D": {
+      "chartType": "line",
+      "timeframe": "30D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 22,
+      "nodeCircles": 22,
+      "yLabels": [
+        {
+          "text": "80jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "60jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "40jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "20jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "01 Nov",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "05 Nov",
+          "x": 217.8,
+          "y": 342
+        },
+        {
+          "text": "10 Nov",
+          "x": 417.6,
+          "y": 342
+        },
+        {
+          "text": "15 Nov",
+          "x": 617.3,
+          "y": 342
+        },
+        {
+          "text": "19 Nov",
+          "x": 777.1,
+          "y": 342
+        },
+        {
+          "text": "22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": null,
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 318,
+          "tooltipX": 72,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "01 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        },
+        "mid": {
+          "pointIndex": 11,
+          "pointX": 497.5,
+          "pointY": 52.3,
+          "tooltipX": 511.5,
+          "tooltipY": 30,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "12 Nov ·",
+          "textValue": "Rp 71,8 jt",
+          "textValXCoord": 78
+        },
+        "last": {
+          "pointIndex": 21,
+          "pointX": 897,
+          "pointY": 33,
+          "tooltipX": 687,
+          "tooltipY": 30,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "22 Nov ·",
+          "textValue": "Rp 77,0 jt",
+          "textValXCoord": 78
+        }
+      }
+    },
+    "bar_30D": {
+      "chartType": "bar",
+      "timeframe": "30D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 22,
+      "nodeCircles": 0,
+      "yLabels": [
+        {
+          "text": "16jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "12jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "8jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "4jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "01 Nov",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "05 Nov",
+          "x": 217.8,
+          "y": 342
+        },
+        {
+          "text": "10 Nov",
+          "x": 417.6,
+          "y": 342
+        },
+        {
+          "text": "15 Nov",
+          "x": 617.3,
+          "y": 342
+        },
+        {
+          "text": "19 Nov",
+          "x": 777.1,
+          "y": 342
+        },
+        {
+          "text": "22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": {
+        "count": 22,
+        "firstBar": {
+          "x": 48,
+          "width": 20,
+          "leftEdge": 48,
+          "rightEdge": 68,
+          "plotXMin": 58,
+          "isLeftClippedOrOverlapY": true
+        },
+        "lastBar": {
+          "x": 887,
+          "width": 20,
+          "leftEdge": 887,
+          "rightEdge": 907,
+          "plotXMax": 897,
+          "isRightClipped": true
+        }
+      },
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 318,
+          "tooltipX": 72,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "01 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        },
+        "mid": {
+          "pointIndex": 11,
+          "pointX": 497.5,
+          "pointY": 52.3,
+          "tooltipX": 511.5,
+          "tooltipY": 250,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "12 Nov ·",
+          "textValue": "Rp 2,3 jt",
+          "textValXCoord": 78
+        },
+        "last": {
+          "pointIndex": 21,
+          "pointX": 897,
+          "pointY": 33,
+          "tooltipX": 687,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "22 Nov ·",
+          "textValue": "Rp 0,0 jt",
+          "textValXCoord": 78
+        }
+      }
+    },
+    "line_90D": {
+      "chartType": "line",
+      "timeframe": "90D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 12,
+      "nodeCircles": 12,
+      "yLabels": [
+        {
+          "text": "900jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "675jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "450jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "225jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "01–07 Sep",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "15–21 Sep",
+          "x": 210.5,
+          "y": 342
+        },
+        {
+          "text": "29 Sep–05 Okt",
+          "x": 363.1,
+          "y": 342
+        },
+        {
+          "text": "13–19 Okt",
+          "x": 515.6,
+          "y": 342
+        },
+        {
+          "text": "27 Okt–02 Nov",
+          "x": 668.2,
+          "y": 342
+        },
+        {
+          "text": "10–16 Nov",
+          "x": 820.7,
+          "y": 342
+        },
+        {
+          "text": "17–22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": null,
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 292.4,
+          "tooltipX": 72,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "01–07 Sep ·",
+          "textValue": "Rp 77,8 jt",
+          "textValXCoord": 88
+        },
+        "mid": {
+          "pointIndex": 6,
+          "pointX": 515.6,
+          "pointY": 151,
+          "tooltipX": 529.6,
+          "tooltipY": 126,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "13–19 Okt ·",
+          "textValue": "Rp 507,8 jt",
+          "textValXCoord": 88
+        },
+        "last": {
+          "pointIndex": 11,
+          "pointX": 897,
+          "pointY": 36,
+          "tooltipX": 687,
+          "tooltipY": 30,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "17–22 Nov ·",
+          "textValue": "Rp 857,4 jt",
+          "textValXCoord": 88
+        }
+      }
+    },
+    "bar_90D": {
+      "chartType": "bar",
+      "timeframe": "90D",
+      "bounds": {
+        "viewBoxWidth": 921,
+        "viewBoxHeight": 360,
+        "xMin": 58,
+        "xMax": 897,
+        "yMin": 22,
+        "yMax": 318,
+        "isMobile": false
+      },
+      "containerRect": {},
+      "totalPoints": 12,
+      "nodeCircles": 0,
+      "yLabels": [
+        {
+          "text": "250jt",
+          "x": 48,
+          "y": 26
+        },
+        {
+          "text": "188jt",
+          "x": 48,
+          "y": 100
+        },
+        {
+          "text": "125jt",
+          "x": 48,
+          "y": 174
+        },
+        {
+          "text": "63jt",
+          "x": 48,
+          "y": 248
+        },
+        {
+          "text": "0",
+          "x": 48,
+          "y": 322
+        }
+      ],
+      "xLabels": [
+        {
+          "text": "01–07 Sep",
+          "x": 58,
+          "y": 342
+        },
+        {
+          "text": "15–21 Sep",
+          "x": 210.5,
+          "y": 342
+        },
+        {
+          "text": "29 Sep–05 Okt",
+          "x": 363.1,
+          "y": 342
+        },
+        {
+          "text": "13–19 Okt",
+          "x": 515.6,
+          "y": 342
+        },
+        {
+          "text": "27 Okt–02 Nov",
+          "x": 668.2,
+          "y": 342
+        },
+        {
+          "text": "10–16 Nov",
+          "x": 820.7,
+          "y": 342
+        },
+        {
+          "text": "17–22 Nov",
+          "x": 897,
+          "y": 342
+        }
+      ],
+      "barBounds": {
+        "count": 12,
+        "firstBar": {
+          "x": 38,
+          "width": 40,
+          "leftEdge": 38,
+          "rightEdge": 78,
+          "plotXMin": 58,
+          "isLeftClippedOrOverlapY": true
+        },
+        "lastBar": {
+          "x": 877,
+          "width": 40,
+          "leftEdge": 877,
+          "rightEdge": 917,
+          "plotXMax": 897,
+          "isRightClipped": true
+        }
+      },
+      "tooltips": {
+        "first": {
+          "pointIndex": 0,
+          "pointX": 58,
+          "pointY": 292.4,
+          "tooltipX": 72,
+          "tooltipY": 200.9,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "01–07 Sep ·",
+          "textValue": "Rp 77,8 jt",
+          "textValXCoord": 88
+        },
+        "mid": {
+          "pointIndex": 6,
+          "pointX": 515.6,
+          "pointY": 151,
+          "tooltipX": 529.6,
+          "tooltipY": 255.2,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "13–19 Okt ·",
+          "textValue": "Rp 31,9 jt",
+          "textValXCoord": 88
+        },
+        "last": {
+          "pointIndex": 11,
+          "pointX": 897,
+          "pointY": 36,
+          "tooltipX": 687,
+          "tooltipY": 260,
+          "tooltipWidth": 196,
+          "tooltipHeight": 50,
+          "isCoveringNode": false,
+          "exceedsPlotRight": false,
+          "exceedsPlotLeft": false,
+          "textDate": "17–22 Nov ·",
+          "textValue": "Rp 0,7 jt",
+          "textValXCoord": 88
+        }
+      }
+    }
+  },
+  "toolbarAudit": {
+    "toolbar": {
+      "periodTabsRect": {},
+      "dateBtnRect": {},
+      "salesScopeRect": {},
+      "exportActionRect": {}
+    },
+    "comparisonRowsCount": 7,
+    "firstCompRow": {
+      "cells": [
+        {
+          "text": "Aru",
+          "classes": "py-3 px-3 font-semibold text-text-primary"
+        },
+        {
+          "text": "",
+          "classes": "py-3 px-3 min-w-[140px]"
+        },
+        {
+          "text": "471 pcs",
+          "classes": "py-3 px-3 text-right font-medium tabular-nums"
+        },
+        {
+          "text": "3.000 pcs",
+          "classes": "py-3 px-3 text-right text-text-muted tabular-nums"
+        },
+        {
+          "text": "15.7%",
+          "classes": "py-3 px-3 text-right font-semibold text-text-primary tabular-nums"
+        }
+      ]
+    }
+  },
+  "tableAudit": {}
+}
