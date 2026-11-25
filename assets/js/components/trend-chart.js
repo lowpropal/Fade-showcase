@@ -628,15 +628,8 @@
       var b = this.calculateBounds();
       var totalPoints = rawPoints.length;
 
-      // 1. Calculate Line scale ceiling (cumulative)
-      var maxVal = 0;
-      rawPoints.forEach(function (p) {
-        if (p.cumulative > maxVal) maxVal = p.cumulative;
-      });
-      var scaleCeilingMillions = this.getNiceScaleCeiling(maxVal / 1000000);
-      var scaleCeiling = scaleCeilingMillions * 1000000;
-
-      // 2. Calculate Bar scale ceiling (individual bucket value)
+      // Line and Bar both show the value for each displayed bucket.
+      // The cumulative total stays in the summary and tooltip as context.
       var maxBarVal = 0;
       rawPoints.forEach(function (p) {
         if (p.daily > maxBarVal) maxBarVal = p.daily;
@@ -644,8 +637,8 @@
       var barScaleCeilingMillions = this.getNiceScaleCeiling(maxBarVal / 1000000);
       var barScaleCeiling = barScaleCeilingMillions * 1000000;
 
-      var isBarMode = (this.chartType === 'bar');
-      var activeCeilingMillions = isBarMode ? barScaleCeilingMillions : scaleCeilingMillions;
+      // Use the same bucket-value scale for both chart types.
+      var activeCeilingMillions = barScaleCeilingMillions;
 
       var availableWidth = (b.xMax - b.xMin);
       var slotWidth = totalPoints > 0 ? (availableWidth / totalPoints) : availableWidth;
@@ -657,7 +650,7 @@
         } else {
           x = totalPoints === 1 ? b.xMin + availableWidth / 2 : b.xMin + (idx / (totalPoints - 1)) * availableWidth;
         }
-        var normLine = Math.min(1, Math.max(0, p.cumulative / scaleCeiling));
+        var normLine = Math.min(1, Math.max(0, p.daily / barScaleCeiling));
         var yLine = b.yMax - normLine * (b.yMax - b.yMin);
 
         var normBar = Math.min(1, Math.max(0, p.daily / barScaleCeiling));
@@ -925,7 +918,7 @@
         circle.setAttribute('data-index', idx);
         circle.setAttribute('tabindex', '0');
         circle.setAttribute('role', 'button');
-        circle.setAttribute('aria-label', p.label + ': Rp ' + (p.cumulative / 1000000).toFixed(1) + ' jt');
+        circle.setAttribute('aria-label', p.label + ': Rp ' + (p.daily / 1000000).toFixed(1) + ' jt (Penjualan per periode)');
 
         circle.addEventListener('click', function () {
           self.selectPoint(idx);
