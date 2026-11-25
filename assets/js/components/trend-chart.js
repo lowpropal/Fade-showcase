@@ -267,9 +267,11 @@
       var guideLine = document.getElementById('chartGuideLine');
       if (guideLine) guideLine.style.display = 'none';
       var activeRing = document.getElementById('chartActiveNodeRing');
-      var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
       if (activeRing) activeRing.style.display = 'none';
-      if (activePip) activePip.style.display = 'none';
+      ['chartActiveNodePip', 'chartActiveNodeDot'].forEach(function (id) {
+        var indicator = document.getElementById(id);
+        if (indicator) indicator.style.display = 'none';
+      });
       var barsContainer = document.getElementById('chartBarsGroup');
       if (barsContainer) {
         var bars = barsContainer.querySelectorAll('rect');
@@ -451,45 +453,37 @@
             });
           }
         }
-      } else if (this.activeTimeframe === '7D') {
-        // 7D: 1 bucket per day (16 Nov - 22 Nov)
-        for (var d7 = 16; d7 <= 22; d7++) {
-          var d7Str = (d7 < 10 ? '0' : '') + d7;
-          var date7 = '2026-11-' + d7Str;
-          buckets.push({
-            date: date7,
-            label: d7Str + ' Nov',
-            startDate: date7,
-            endDate: date7
-          });
-        }
-      } else if (this.activeTimeframe === '90D') {
-        // 90D: 12 weekly buckets (01 Sep - 22 Nov)
-        buckets = [
-          { startDate: '2026-09-01', endDate: '2026-09-07', date: '2026-09-07', label: '01–07 Sep' },
-          { startDate: '2026-09-08', endDate: '2026-09-14', date: '2026-09-14', label: '08–14 Sep' },
-          { startDate: '2026-09-15', endDate: '2026-09-21', date: '2026-09-21', label: '15–21 Sep' },
-          { startDate: '2026-09-22', endDate: '2026-09-28', date: '2026-09-28', label: '22–28 Sep' },
-          { startDate: '2026-09-29', endDate: '2026-10-05', date: '2026-10-05', label: '29 Sep–05 Okt' },
-          { startDate: '2026-10-06', endDate: '2026-10-12', date: '2026-10-12', label: '06–12 Okt' },
-          { startDate: '2026-10-13', endDate: '2026-10-19', date: '2026-10-19', label: '13–19 Okt' },
-          { startDate: '2026-10-20', endDate: '2026-10-26', date: '2026-10-26', label: '20–26 Okt' },
-          { startDate: '2026-10-27', endDate: '2026-11-02', date: '2026-11-02', label: '27 Okt–02 Nov' },
-          { startDate: '2026-11-03', endDate: '2026-11-09', date: '2026-11-09', label: '03–09 Nov' },
-          { startDate: '2026-11-10', endDate: '2026-11-16', date: '2026-11-16', label: '10–16 Nov' },
-          { startDate: '2026-11-17', endDate: '2026-11-22', date: '2026-11-22', label: '17–22 Nov' }
-        ];
       } else {
-        // 30D: 22 daily buckets (01 Nov - 22 Nov), including days with 0 transactions
-        for (var d30 = 1; d30 <= 22; d30++) {
-          var d30Str = (d30 < 10 ? '0' : '') + d30;
-          var date30 = '2026-11-' + d30Str;
-          buckets.push({
-            date: date30,
-            label: d30Str + ' Nov',
-            startDate: date30,
-            endDate: date30
-          });
+        var rangeEnd = this.customEnd || '2026-11-22';
+        var rangeDays = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+        var rangeEndMs = new Date(rangeEnd + 'T00:00:00Z').getTime();
+        var rangeStartMs = rangeEndMs - ((rangeDays - 1) * 24 * 60 * 60 * 1000);
+        var rangeStart = new Date(rangeStartMs).toISOString().slice(0, 10);
+
+        if (this.activeTimeframe === '90D') {
+          // Keep the 90 daily observations, grouped into readable seven-day bars.
+          for (var weekStartMs = rangeStartMs; weekStartMs <= rangeEndMs; weekStartMs += 7 * 24 * 60 * 60 * 1000) {
+            var weekEndMs = Math.min(weekStartMs + (6 * 24 * 60 * 60 * 1000), rangeEndMs);
+            var weekStart = new Date(weekStartMs).toISOString().slice(0, 10);
+            var weekEnd = new Date(weekEndMs).toISOString().slice(0, 10);
+            buckets.push({
+              date: weekEnd,
+              label: this.formatShortDate(weekStart) + '–' + this.formatShortDate(weekEnd),
+              startDate: weekStart,
+              endDate: weekEnd
+            });
+          }
+        } else {
+          // 7D and 30D always represent the full selected number of calendar days.
+          for (var dayMs = rangeStartMs; dayMs <= rangeEndMs; dayMs += 24 * 60 * 60 * 1000) {
+            var dayIso = new Date(dayMs).toISOString().slice(0, 10);
+            buckets.push({
+              date: dayIso,
+              label: this.formatShortDate(dayIso),
+              startDate: dayIso,
+              endDate: dayIso
+            });
+          }
         }
       }
 
@@ -520,6 +514,7 @@
       var tooltipGroup = document.getElementById('chartTooltipGroup');
 
       if (isEmpty) {
+        this.dismissTooltip();
         if (!emptyEl) {
           var container = document.getElementById('chartInteractiveContainer');
           if (container) {
@@ -549,7 +544,6 @@
         var yLabelsContainer = document.getElementById('chartYAxisLabels');
         var xLabelsContainer = document.getElementById('chartXAxisLabels');
         var activeRing = document.getElementById('chartActiveNodeRing');
-        var activePip = document.getElementById('chartActiveNodePip') || document.getElementById('chartActiveNodeDot');
         var guide = document.getElementById('chartGuideLine');
 
         if (areaEl) areaEl.setAttribute('d', '');
@@ -560,7 +554,10 @@
         if (yLabelsContainer) yLabelsContainer.innerHTML = '';
         if (xLabelsContainer) xLabelsContainer.innerHTML = '';
         if (activeRing) activeRing.style.display = 'none';
-        if (activePip) activePip.style.display = 'none';
+        ['chartActiveNodePip', 'chartActiveNodeDot'].forEach(function (id) {
+          var indicator = document.getElementById(id);
+          if (indicator) indicator.style.display = 'none';
+        });
         if (guide) guide.style.display = 'none';
         if (tooltip) tooltip.classList.add('hidden');
         if (tooltipGroup) tooltipGroup.style.display = 'none';
@@ -572,18 +569,24 @@
           growthEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-text-muted">info</span><span class="text-text-muted">Tidak ada transaksi</span>';
         }
 
+        var titleEl = document.getElementById('chartTitleText');
+        if (titleEl) {
+          if (this.currentMode === 'ytd') titleEl.textContent = 'Tren Penjualan YTD';
+          else if (this.currentMode === 'custom') titleEl.textContent = 'Tren Penjualan (Rentang Kustom)';
+          else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '7D' ? '7 Hari' : (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari'));
+        }
+
         var periodEl = document.getElementById('chartPeriodLabel');
         if (periodEl) {
           if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
             periodEl.textContent = this.formatShortDate(this.customStart) + ' – ' + this.formatShortDate(this.customEnd);
           } else if (this.currentMode === 'ytd') {
             periodEl.textContent = 'Jun – Nov 2026 (YTD)';
-          } else if (this.activeTimeframe === '7D') {
-            periodEl.textContent = '16 – 22 Nov 2026 (7 Hari)';
-          } else if (this.activeTimeframe === '90D') {
-            periodEl.textContent = '01 Sep – 22 Nov 2026 (90 Hari)';
           } else {
-            periodEl.textContent = '01 – 22 Nov 2026';
+            var periodEnd = this.customEnd || '2026-11-22';
+            var dayCount = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+            var periodStart = new Date(new Date(periodEnd + 'T00:00:00Z').getTime() - ((dayCount - 1) * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+            periodEl.textContent = this.formatShortDate(periodStart) + ' – ' + this.formatShortDate(periodEnd) + ' (' + dayCount + ' Hari)';
           }
         }
       } else {
@@ -606,16 +609,12 @@
         return;
       }
 
-      // Check if there is actual activity in the selected timeframe range
-      var startDate = rawPoints[0].date;
-      var endDate = rawPoints[rawPoints.length - 1].date;
-      var hasTransactionsInRange = false;
-
-      filteredInvoices.forEach(function (inv) {
+      // Check the full bucket range, including the first day of each weekly period.
+      var rangeStartDate = rawPoints[0].startDate || rawPoints[0].date;
+      var rangeEndDate = rawPoints[rawPoints.length - 1].endDate || rawPoints[rawPoints.length - 1].date;
+      var hasTransactionsInRange = filteredInvoices.some(function (inv) {
         var d = inv.date || inv.invoice_date || '';
-        if (d >= startDate && d <= endDate) {
-          hasTransactionsInRange = true;
-        }
+        return d >= rangeStartDate && d <= rangeEndDate;
       });
 
       if (!hasTransactionsInRange) {
@@ -634,13 +633,7 @@
       rawPoints.forEach(function (p) {
         if (p.cumulative > maxVal) maxVal = p.cumulative;
       });
-      var isAllZero = (maxVal === 0);
-      var scaleCeilingMillions = 10;
-      if (!isAllZero) {
-        var maxMillions = Math.ceil(maxVal / 1000000);
-        var stepUnit = maxMillions > 250 ? 100 : (maxMillions > 100 ? 40 : (maxMillions > 40 ? 20 : 10));
-        scaleCeilingMillions = Math.max(stepUnit, Math.ceil(maxMillions / stepUnit) * stepUnit);
-      }
+      var scaleCeilingMillions = this.getNiceScaleCeiling(maxVal / 1000000);
       var scaleCeiling = scaleCeilingMillions * 1000000;
 
       // 2. Calculate Bar scale ceiling (individual bucket value)
@@ -648,13 +641,7 @@
       rawPoints.forEach(function (p) {
         if (p.daily > maxBarVal) maxBarVal = p.daily;
       });
-      var isBarAllZero = (maxBarVal === 0);
-      var barScaleCeilingMillions = 10;
-      if (!isBarAllZero) {
-        var maxBarMillions = Math.ceil(maxBarVal / 1000000);
-        var barStepUnit = maxBarMillions > 100 ? 25 : (maxBarMillions > 40 ? 10 : (maxBarMillions > 20 ? 5 : (maxBarMillions > 8 ? 2 : 1)));
-        barScaleCeilingMillions = Math.max(barStepUnit * 2, Math.ceil(maxBarMillions / barStepUnit) * barStepUnit);
-      }
+      var barScaleCeilingMillions = this.getNiceScaleCeiling(maxBarVal / 1000000);
       var barScaleCeiling = barScaleCeilingMillions * 1000000;
 
       var isBarMode = (this.chartType === 'bar');
@@ -740,7 +727,7 @@
       if (titleEl) {
         if (this.currentMode === 'ytd') titleEl.textContent = 'Tren Penjualan YTD';
         else if (this.currentMode === 'custom') titleEl.textContent = 'Tren Penjualan (Rentang Kustom)';
-        else titleEl.textContent = 'Tren Penjualan Bulanan';
+        else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '7D' ? '7 Hari' : (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari'));
       }
 
       var periodEl = document.getElementById('chartPeriodLabel');
@@ -749,12 +736,11 @@
           periodEl.textContent = 'Jun – Nov 2026 (YTD)';
         } else if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
           periodEl.textContent = this.formatShortDate(this.customStart) + ' – ' + this.formatShortDate(this.customEnd);
-        } else if (this.activeTimeframe === '7D') {
-          periodEl.textContent = '16 – 22 Nov 2026 (7 Hari)';
-        } else if (this.activeTimeframe === '90D') {
-          periodEl.textContent = '01 Sep – 22 Nov 2026 (90 Hari)';
         } else {
-          periodEl.textContent = '01 – 22 Nov 2026';
+          var periodEnd = this.customEnd || '2026-11-22';
+          var dayCount = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+          var periodStart = new Date(new Date(periodEnd + 'T00:00:00Z').getTime() - ((dayCount - 1) * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10);
+          periodEl.textContent = this.formatShortDate(periodStart) + ' – ' + this.formatShortDate(periodEnd) + ' (' + dayCount + ' Hari)';
         }
       }
 
@@ -858,6 +844,16 @@
       labelsContainer.innerHTML = labelsHtml;
     },
 
+    getNiceScaleCeiling: function (maxMillions) {
+      if (!Number.isFinite(maxMillions) || maxMillions <= 0) return 1;
+      var paddedMax = maxMillions * 1.05;
+      var magnitude = Math.pow(10, Math.floor(Math.log10(paddedMax)));
+      var normalized = paddedMax / magnitude;
+      var niceMultipliers = [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 7.5, 8, 10];
+      var multiplier = niceMultipliers.find(function (candidate) { return candidate >= normalized; }) || 10;
+      return multiplier * magnitude;
+    },
+
     renderSpline: function (points) {
       var b = this.BOUNDS;
       var areaEl = document.getElementById('chartSplineArea');
@@ -911,7 +907,7 @@
         for (var j = 0; j < count; j += 2) milestoneIndices.push(j);
         if (milestoneIndices[milestoneIndices.length - 1] !== count - 1) milestoneIndices.push(count - 1);
       } else {
-        // 30D (22 points): show 5 milestone nodes (01 Nov, 06 Nov, 11 Nov, 16 Nov, 22 Nov)
+        // 30D: show five milestone nodes distributed across the full daily series.
         milestoneIndices = [0, 5, 10, 15, count - 1];
       }
 
@@ -980,10 +976,15 @@
       if (activePoint && candidates.indexOf(activeIdx) < 0) candidates.push(activeIdx);
 
       var tickFontSize = b.isMobile ? 11 : 12;
+      var useCompactDailyTicks = b.isMobile && this.currentMode !== 'custom' && this.currentMode !== 'ytd' && this.activeTimeframe === '7D';
+      var useCompactWeeklyTicks = b.isMobile && this.currentMode !== 'custom' && this.currentMode !== 'ytd' && this.activeTimeframe === '90D';
       var prioritizedTicks = candidates.map(function (idx) {
         var point = points[idx];
-        var label = String(point.label || '');
-        var width = Math.max(tickFontSize * 3, label.length * tickFontSize * 0.58);
+        var fullLabel = String(point.label || '');
+        var label = useCompactDailyTicks
+          ? String(point.date || '').slice(8, 10)
+          : (useCompactWeeklyTicks ? fullLabel.split('–')[0] : fullLabel);
+        var width = Math.max(tickFontSize * (useCompactDailyTicks ? 1.25 : 3), label.length * tickFontSize * 0.58);
         var anchor = b.isMobile && idx === 0 ? 'start' : (b.isMobile && idx === count - 1 ? 'end' : 'middle');
         var left = anchor === 'start' ? point.x : (anchor === 'end' ? point.x - width : point.x - width / 2);
         var priority = idx === activeIdx ? 3 : ((idx === 0 || idx === count - 1) ? 2 : 1);
@@ -994,8 +995,9 @@
 
       var acceptedTicks = [];
       prioritizedTicks.forEach(function (candidate) {
+        var tickGap = b.isMobile ? 4 : 8;
         var overlaps = acceptedTicks.some(function (accepted) {
-          return candidate.left < accepted.right + 8 && candidate.right + 8 > accepted.left;
+          return candidate.left < accepted.right + tickGap && candidate.right + tickGap > accepted.left;
         });
         if (!overlaps) acceptedTicks.push(candidate);
       });
@@ -1030,7 +1032,9 @@
           text.setAttribute('font-weight', '400');
         }
 
-        text.textContent = p.label;
+        text.textContent = useCompactDailyTicks
+          ? p.date.slice(8, 10)
+          : (useCompactWeeklyTicks ? String(p.label || '').split('–')[0] : p.label);
         container.appendChild(text);
       });
     },
