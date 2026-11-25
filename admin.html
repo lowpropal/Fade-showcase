@@ -659,7 +659,7 @@
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[115px]">Terbayar</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[125px]">Outstanding</th>
                 <th class="py-3 px-3.5 text-[11px] text-center min-w-[170px]">Status</th>
-                <th id="invoiceActionHeader" class="py-3 px-3.5 text-[11px] text-center sticky right-0 bg-surface-2 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10 w-[180px] min-w-[180px]">Aksi</th>
+                <th id="invoiceActionHeader" class="py-3 px-3.5 text-[11px] text-center sticky right-0 bg-surface-2 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10 w-[240px] min-w-[240px]">Aksi</th>
               </tr>
             </thead>
             <tbody id="invoiceTableBody" class="divide-y divide-border-subtle/35 text-xs"></tbody>
@@ -2040,9 +2040,9 @@
                 ? '<button type="button" data-action="pay" data-id="' + esc(invId) + '" title="Catat Pembayaran" class="inv-action-btn w-8 h-8 rounded-lg bg-status-success/10 hover:bg-status-success/20 text-status-success flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">payments</span></button>'
                 : '<span class="w-8 h-8 rounded-lg flex items-center justify-center text-status-success/40 shrink-0" title="Tagihan Lunas"><span class="material-symbols-outlined text-[16px]">check_circle</span></span>';
 
-              actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 shadow-[-4px_0_8px_rgba(0,0,0,0.08)] z-10 w-[180px] min-w-[180px]">' +
+              actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 shadow-[-4px_0_8px_rgba(0,0,0,0.08)] z-10 w-[240px] min-w-[240px]">' +
                 '<div class="inline-flex items-center justify-center gap-1.5 w-full">' +
-                  '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-surface-hover text-accent flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">visibility</span></button>' +
+                '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Buka detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn min-h-[40px] px-3 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-accent text-[11px] font-semibold inline-flex items-center justify-center gap-1 transition-colors cursor-pointer shrink-0"><span>Detail</span><span aria-hidden="true">→</span></button>' +
                   paySlot +
                   '<button type="button" data-action="edit" data-id="' + esc(invId) + '" title="Edit Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-surface-hover text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">edit</span></button>' +
                   '<button type="button" data-action="delete" data-id="' + esc(invId) + '" title="Hapus Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-status-danger/20 text-text-muted hover:text-status-danger flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">delete</span></button>' +
@@ -2084,7 +2084,7 @@
                         '<span class="material-symbols-outlined text-[20px]">more_vert</span>' +
                       '</button>' +
                       '<div class="inv-more-dropdown hidden absolute right-0 bottom-full mb-1.5 w-40 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-1 z-30 flex flex-col gap-0.5">' +
-                        '<button type="button" data-action="detail" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-accent hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px]">visibility</span><span>Detail &amp; Reward</span></button>' +
+                        '<button type="button" data-action="detail" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-accent hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px]">receipt_long</span><span>Detail Invoice &amp; Reward</span></button>' +
                         '<button type="button" data-action="edit" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-text-primary hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-text-secondary">edit</span><span>Edit Invoice</span></button>' +
                         '<button type="button" data-action="delete" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-status-danger hover:bg-status-danger/10 flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-status-danger">delete</span><span>Hapus Invoice</span></button>' +
                       '</div>' +
@@ -3190,21 +3190,49 @@
         var store = inv.store_name || inv.storeName || '-';
         var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
         var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+        var qty = Number(inv.qty || 0);
+        var dueDate = inv.due_date || inv.dueDate || '-';
+        var paidPercent = state.revenue > 0 ? Math.min(100, Math.round((paid / state.revenue) * 100)) : 0;
+        var productItems = String(inv.rincianProduk || inv.rincian_produk || '').split(';').map(function (item) { return item.trim(); }).filter(Boolean);
+        var productsHtml = productItems.length ? productItems.map(function (item) {
+          var parts = item.split('|').map(function (part) { return part.trim(); });
+          var productType = parts[1] || 'Terjual';
+          var isFree = productType.toLowerCase().indexOf('gratis') >= 0;
+          return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
+            '<div class="flex items-start justify-between gap-3"><strong class="min-w-0 text-text-primary break-words">' + esc(parts[0] || 'Produk FADE') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold ' + (isFree ? 'bg-status-warning/15 text-status-warning' : 'bg-surface-1 text-text-secondary') + '">' + esc(productType) + '</span></div>' +
+            '<div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">' + esc((parts[3] || '-').replace('@', '').trim()) + '</strong></div><div class="text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + esc((parts[2] || '-').replace('qty ', '').trim()) + '</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">' + esc((parts[4] || '-').replace('net ', '').trim()) + '</strong></div></div>' +
+            '</article>';
+        }).join('') : '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2"><div class="flex items-start justify-between gap-3"><strong class="text-text-primary">' + esc(inv.productName || 'FADE Pods Series') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full bg-surface-1 text-text-secondary text-[10px]">Terjual</span></div><div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">Rp ' + Number(inv.unitPrice || inv.unit_price_idr || (qty ? Math.round(state.revenue / qty) : 0)).toLocaleString('id-ID') + '</strong></div><div class="text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div></div></article>';
         var storeKey = store.trim().toLocaleLowerCase('id-ID');
         var rewards = (FADE_STORE.getRewards ? FADE_STORE.getRewards() : []).filter(function (reward) {
           return String(reward.storeName || '').trim().toLocaleLowerCase('id-ID') === storeKey || reward.primaryInvoiceId === invoiceId || String(reward.relatedInvoiceIds || '').split(/[;,|\n]+/).map(function (id) { return id.trim(); }).indexOf(invoiceId) >= 0;
         }).sort(function (a, b) { return String(b.sourceInvoiceMonth || b.programMonth || '').localeCompare(String(a.sourceInvoiceMonth || a.programMonth || ''), 'id'); });
+        var invoiceDocs = [];
+        try {
+          invoiceDocs = JSON.parse(localStorage.getItem('fade_sales_docs_v1') || '[]').filter(function (doc) {
+            return doc.storeName === store || doc.refNumber === invoiceId;
+          });
+        } catch (error) {
+          invoiceDocs = [];
+        }
+        var docsHtml = invoiceDocs.length ? invoiceDocs.map(function (doc) {
+          return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><strong class="block text-text-primary break-words">' + esc(doc.fileName || 'Berkas invoice') + '</strong><span class="text-[10px] text-text-muted">' + esc(doc.sizeLabel || 'Ukuran tidak dicantumkan') + (doc.notes ? ' · ' + esc(doc.notes) : '') + '</span></article>';
+        }).join('') : '<p class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Belum ada berkas pendukung yang terlampir untuk toko/invoice ini.</p>';
 
         drawerTitle.textContent = 'Detail Invoice & Reward Toko';
         drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · Akses sesuai izin Admin';
-        drawerContent.innerHTML = '<section class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">Tanggal</span><strong class="text-text-primary">' + esc(inv.invoice_date || inv.date || '-') + '</strong></div>' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">Sales saat ini</span><strong class="text-text-primary">' + esc(inv.sales_name || inv.salesName || '-') + '</strong></div>' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">QTY</span><strong class="text-text-primary tabular-nums">' + Number(inv.qty || 0).toLocaleString('id-ID') + ' pcs</strong></div>' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">Total invoice</span><strong class="text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div>' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">Terbayar tercatat</span><strong class="text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</strong></div>' +
-          '<div class="flex justify-between gap-3"><span class="text-text-muted">Sisa tagihan</span><strong class="text-status-danger tabular-nums">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong></div>' +
-          '</section><section class="flex flex-col gap-2"><h4 class="font-semibold text-text-primary">Reward Toko &amp; Cashback Favorista</h4><p class="text-[11px] text-text-muted">Mengikuti catatan sumber pada Client_Reward_Tracking; tidak menghitung tier baru.</p>' +
+        drawerContent.innerHTML = '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceInfoTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">receipt_long</span><h4 id="adminInvoiceInfoTitle" class="font-semibold text-text-primary">Informasi Invoice &amp; Pengiriman</h4></div>' +
+          '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nomor invoice</span><strong class="font-mono text-text-primary break-all">' + esc(invoiceId) + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Sales person in charge</span><strong class="text-text-primary">' + esc(inv.sales_name || inv.salesName || '-') + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal terbit</span><strong class="text-text-primary">' + esc(formatShortIdDate(inv.invoice_date || inv.date)) + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal jatuh tempo</span><strong class="text-text-primary">' + esc(formatShortIdDate(dueDate)) + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nama toko mitra</span><strong class="text-text-primary">' + esc(store) + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Total kuantitas pesanan</span><strong class="text-text-primary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div>' +
+          '<div class="sm:col-span-2 flex flex-col gap-0.5"><span class="text-text-muted">Wilayah &amp; alamat pengiriman</span><strong class="text-text-secondary">' + esc(inv.store_address || inv.address || store) + '</strong></div>' +
+          (inv.logistics_note || inv.catatan_logistik ? '<div class="sm:col-span-2 flex flex-col gap-0.5 border-t border-border-subtle pt-2"><span class="text-text-muted">Catatan logistik internal</span><span class="text-text-secondary leading-relaxed">' + esc(inv.logistics_note || inv.catatan_logistik) + '</span></div>' : '') +
+          '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceProductsTitle"><div class="flex items-center justify-between gap-3"><h4 id="adminInvoiceProductsTitle" class="font-semibold text-text-primary">Rincian Produk Pesanan</h4><span class="text-[10px] text-text-muted">' + (productItems.length ? productItems.length + ' item' : qty.toLocaleString('id-ID') + ' pcs') + '</span></div><div class="flex flex-col gap-2">' + productsHtml + '</div><div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-3 text-[11px]"><span class="text-text-secondary">Total nilai tagihan barang</span><strong class="text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div></section>' +
+          '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceRewardTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-accent">loyalty</span><h4 id="adminInvoiceRewardTitle" class="font-semibold text-text-primary">Reward Toko &amp; Cashback Favorista</h4></div><p class="text-[11px] text-text-muted">Mengikuti catatan sumber pada Client_Reward_Tracking; tidak menghitung tier baru.</p>' +
           (rewards.length ? rewards.slice(0, 12).map(function (reward) {
             var mismatch = reward.invoiceMatchCount !== '' && Number(reward.invoiceMatchCount) === 0;
             return '<article class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
@@ -3215,7 +3243,9 @@
               (mismatch ? '<p class="text-[11px] text-status-warning">ID invoice pada catatan sumber belum ditemukan di daftar invoice.</p>' : '') +
               '</article>';
           }).join('') : '<p class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Belum ada data reward toko ini. Impor workbook yang memuat sheet Client_Reward_Tracking.</p>') +
-          '</section>';
+          '</section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceDocsTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">storefront</span><h4 id="adminInvoiceDocsTitle" class="font-semibold text-text-primary">Verifikasi Gerai &amp; Dokumen Pendukung</h4></div><div class="flex flex-col gap-2">' + docsHtml + '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoicePaymentTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">payments</span><h4 id="adminInvoicePaymentTitle" class="font-semibold text-text-primary">Status &amp; Riwayat Pembayaran</h4></div>' +
+          '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-3"><div class="flex items-start justify-between gap-3"><span class="text-text-muted">Total nilai tagihan (gross)</span><strong class="text-lg text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div><div class="flex items-center justify-between gap-3 text-[11px]"><span class="text-text-muted">Pembayaran diterima · ' + paidPercent + '% terealisasi</span><strong class="text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</strong></div><div class="h-1.5 rounded-full bg-surface-1 overflow-hidden"><div class="h-full rounded-full bg-status-success" style="width:' + paidPercent + '%"></div></div><div class="border-t border-border-subtle pt-3 flex items-start justify-between gap-3"><div><span class="block text-[11px] text-status-danger">Sisa tagihan (Outstanding)</span><strong class="block mt-1 text-lg text-text-primary tabular-nums">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong><span class="block mt-1 text-[10px] text-text-muted">Batas waktu pelunasan: ' + esc(formatShortIdDate(dueDate)) + '</span></div><span class="px-2 py-1 rounded-full bg-surface-1 border border-border-default text-[10px] font-semibold text-text-secondary">' + esc(state.status) + '</span></div></div>' +
+          '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><div class="flex justify-between gap-3 text-[11px]"><strong class="text-text-primary">Data Pembayaran pada Master</strong><span class="text-text-muted">' + (paid > 0 ? 'Tercatat' : 'Belum tercatat') + '</span></div>' + (paid > 0 ? '<p class="mt-1 text-[10px] text-text-muted">Total pembayaran tercatat Rp ' + paid.toLocaleString('id-ID') + ' · tanggal terakhir ' + esc(formatShortIdDate(inv.lastPaymentDate || inv.last_payment_date || '-')) + '. Rincian nominal per transaksi tidak tersedia di Master Excel.</p>' : '<p class="mt-1 text-[10px] text-text-muted">Master Excel tidak memuat detail transaksi pembayaran per invoice.</p>') + '</div></section>';
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
         setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
