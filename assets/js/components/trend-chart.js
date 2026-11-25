@@ -627,6 +627,7 @@
       this.setEmptyState(false);
       var b = this.calculateBounds();
       var totalPoints = rawPoints.length;
+      var isBarMode = this.chartType === 'bar';
 
       // Line and Bar both show the value for each displayed bucket.
       // The cumulative total stays in the summary and tooltip as context.
