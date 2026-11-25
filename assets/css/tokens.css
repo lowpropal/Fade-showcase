@@ -295,11 +295,20 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 .chart-selection-close:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
 .chart-date-panel input[type="date"] { color-scheme: dark; }
 html.light .chart-date-panel input[type="date"] { color-scheme: light; }
-@media (max-width: 767.98px) {
-  .chart-controls-row { flex-wrap: wrap; justify-content: flex-start; }
+@media (max-width: 1023.98px) {
+  .chart-controls-row {
+    display: grid;
+    flex: 0 0 min(100%, 21rem);
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: start;
+    justify-content: initial;
+    gap: 0.5rem;
+  }
   .chart-type-group, .chart-timeframe-group { min-width: 0; max-width: 100%; }
-  .chart-timeframe-group { flex: 0 1 auto; gap: 0; }
+  .chart-type-group { grid-column: 1; grid-row: 1; }
+  .chart-timeframe-group { grid-column: 2; grid-row: 1; justify-self: end; flex: 0 1 auto; gap: 0; }
   .chart-timeframe-group > button { flex: 1 1 0; }
   .chart-type-group > button { min-width: 0; }
+  #chartDateWrapper { grid-column: 2; grid-row: 2; justify-self: end; }
   .chart-selection-card { min-width: 0; }
 }
