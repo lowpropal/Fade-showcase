@@ -773,13 +773,16 @@
   <div id="kpiDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity"></div>
   <aside id="kpiDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-50 flex flex-col shadow-2xl transition-transform transform translate-x-full">
     <div class="p-5 border-b border-border-subtle flex items-center justify-between">
-      <div class="flex flex-col">
+      <div class="min-w-0 flex flex-col">
         <h3 id="drawerTitle" class="text-base font-bold text-text-primary tracking-tight">Rincian KPI Drill-down</h3>
         <span id="drawerSubtitle" class="text-xs text-text-muted">Data faktual yang mendasari metrik</span>
       </div>
-      <button id="drawerCloseBtn" type="button" class="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors">
+      <div class="flex items-center gap-2">
+        <button id="drawerBackBtn" type="button" class="hidden shrink-0 cursor-pointer px-3 py-2 rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Kembali ke rincian KPI">← Kembali</button>
+        <button id="drawerCloseBtn" type="button" class="shrink-0 cursor-pointer w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Tutup rincian">
         <span class="material-symbols-outlined text-[18px]">close</span>
-      </button>
+        </button>
+      </div>
     </div>
     <div id="drawerContent" class="flex-1 p-5 overflow-y-auto flex flex-col gap-4 text-xs"></div>
   </aside>
@@ -3221,6 +3224,8 @@
       var drawerTitle = document.getElementById('drawerTitle');
       var drawerSubtitle = document.getElementById('drawerSubtitle');
       var drawerContent = document.getElementById('drawerContent');
+      var drawerBackBtn = document.getElementById('drawerBackBtn');
+      var kpiDrawerReturnState = null;
 
       function openInvoiceRewardDrawer(invoiceId) {
         var inv = FADE_STORE.getInvoices().find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
@@ -3259,6 +3264,7 @@
 
         drawerTitle.textContent = 'Detail Invoice & Reward Toko';
         drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · Akses sesuai izin Admin';
+        drawerBackBtn.classList.toggle('hidden', !kpiDrawerReturnState);
         drawerContent.innerHTML = '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceInfoTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">receipt_long</span><h4 id="adminInvoiceInfoTitle" class="font-semibold text-text-primary">Informasi Invoice &amp; Pengiriman</h4></div>' +
           '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nomor invoice</span><strong class="font-mono text-text-primary break-all">' + esc(invoiceId) + '</strong></div>' +
@@ -3287,9 +3293,12 @@
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
         setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
+        setTimeout(function () { (kpiDrawerReturnState ? drawerBackBtn : drawerCloseBtn).focus(); }, 20);
       }
 
       function openDrawer(kpiType) {
+        kpiDrawerReturnState = null;
+        drawerBackBtn.classList.add('hidden');
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
         setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
@@ -3320,6 +3329,7 @@
               var invNum = inv.invoice_id || inv.id || '-';
               var invDate = inv.invoice_date || inv.date || '-';
               var rincian = inv.rincianProduk || '';
+              card.dataset.invoiceId = invNum;
               var rincianHtml = rincian ? '<div class="text-[10px] text-text-muted truncate mt-0.5" title="' + esc(rincian) + '">' + esc(rincian) + '</div>' : '';
               card.innerHTML =
                 '<div class="flex items-center justify-between font-semibold text-text-primary">' +
@@ -3330,11 +3340,11 @@
                   '<span>' + esc(invNum) + ' · ' + esc(invDate) + '</span>' +
                   '<span>' + esc(st.status) + (st.isPartial ? ' (Sebagian)' : '') + '</span>' +
                 '</div>' + settlHtml + rincianHtml + '<span class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-accent">Detail invoice <span aria-hidden="true">→</span></span>';
-              card.addEventListener('click', function () { openInvoiceRewardDrawer(invNum); });
+              card.addEventListener('click', function () { openKpiInvoiceDetail(invNum, kpiType); });
               card.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  openInvoiceRewardDrawer(invNum);
+                  openKpiInvoiceDetail(invNum, kpiType);
                 }
               });
               drawerContent.appendChild(card);
@@ -3370,6 +3380,7 @@
               var invStore2 = inv.store_name || inv.storeName || '-';
               var invNum2 = inv.invoice_id || inv.id || '-';
               var invDate2 = inv.invoice_date || inv.date || '-';
+              card.dataset.invoiceId = invNum2;
               var qtyValue = Number(inv.qty || 0);
               var paidValue = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
               var contribution = kpiType === 'qty' || kpiType === 'achievement'
@@ -3385,11 +3396,11 @@
                   '<span>' + esc(st.status) + '</span>' +
                 '</div>' +
                 '<span class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-accent">Detail invoice <span aria-hidden="true">→</span></span>';
-              card.addEventListener('click', function () { openInvoiceRewardDrawer(invNum2); });
+              card.addEventListener('click', function () { openKpiInvoiceDetail(invNum2, kpiType); });
               card.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  openInvoiceRewardDrawer(invNum2);
+                  openKpiInvoiceDetail(invNum2, kpiType);
                 }
               });
               drawerContent.appendChild(card);
@@ -3398,7 +3409,26 @@
         }
       }
 
+      function openKpiInvoiceDetail(invoiceId, kpiType) {
+        kpiDrawerReturnState = { kpiType: kpiType, scrollTop: drawerContent.scrollTop, invoiceId: invoiceId };
+        openInvoiceRewardDrawer(invoiceId);
+      }
+
+      function returnToKpiDrawer() {
+        if (!kpiDrawerReturnState) return;
+        var returnState = kpiDrawerReturnState;
+        openDrawer(returnState.kpiType);
+        drawerContent.scrollTop = returnState.scrollTop;
+        var invoiceCards = drawerContent.querySelectorAll('[data-invoice-id]');
+        var returnCard = Array.prototype.find.call(invoiceCards, function (card) {
+          return card.dataset.invoiceId === returnState.invoiceId;
+        });
+        if (returnCard) returnCard.focus();
+      }
+
       function closeDrawer() {
+        kpiDrawerReturnState = null;
+        drawerBackBtn.classList.add('hidden');
         drawer.classList.add('translate-x-full');
         setTimeout(function () {
           drawer.classList.add('hidden');
@@ -3454,6 +3484,7 @@
         });
       }
 
+      drawerBackBtn.addEventListener('click', returnToKpiDrawer);
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
       document.addEventListener('keydown', function (e) {
