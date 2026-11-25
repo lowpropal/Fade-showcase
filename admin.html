@@ -3311,7 +3311,10 @@
             outstandingList.forEach(function (inv) {
               var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
               var card = document.createElement('div');
-              card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1.5';
+              card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1.5 transition-colors hover:border-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent active:border-accent/60';
+              card.tabIndex = 0;
+              card.setAttribute('role', 'button');
+              card.setAttribute('aria-label', 'Buka detail invoice ' + (inv.invoice_id || inv.id || ''));
               var settlHtml = st.penyelesaian > 0 ? '<div class="text-[10px] text-accent font-semibold">Penyelesaian Lain: Rp ' + st.penyelesaian.toLocaleString('id-ID') + '</div>' : '';
               var invStore = inv.store_name || inv.storeName || '-';
               var invNum = inv.invoice_id || inv.id || '-';
@@ -3326,7 +3329,14 @@
                 '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
                   '<span>' + esc(invNum) + ' · ' + esc(invDate) + '</span>' +
                   '<span>' + esc(st.status) + (st.isPartial ? ' (Sebagian)' : '') + '</span>' +
-                '</div>' + settlHtml + rincianHtml;
+                '</div>' + settlHtml + rincianHtml + '<span class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-accent">Detail invoice <span aria-hidden="true">→</span></span>';
+              card.addEventListener('click', function () { openInvoiceRewardDrawer(invNum); });
+              card.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openInvoiceRewardDrawer(invNum);
+                }
+              });
               drawerContent.appendChild(card);
             });
           }
@@ -3353,7 +3363,10 @@
             metricRows.slice(0, 100).forEach(function (inv) {
               var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
               var card = document.createElement('div');
-              card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1';
+              card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1 transition-colors hover:border-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent active:border-accent/60';
+              card.tabIndex = 0;
+              card.setAttribute('role', 'button');
+              card.setAttribute('aria-label', 'Buka detail invoice ' + (inv.invoice_id || inv.id || ''));
               var invStore2 = inv.store_name || inv.storeName || '-';
               var invNum2 = inv.invoice_id || inv.id || '-';
               var invDate2 = inv.invoice_date || inv.date || '-';
@@ -3370,7 +3383,15 @@
                 '<div class="flex items-center justify-between gap-3 text-text-muted text-[11px]">' +
                   '<span>' + esc(invNum2) + ' · ' + esc(invDate2) + '</span>' +
                   '<span>' + esc(st.status) + '</span>' +
-                '</div>';
+                '</div>' +
+                '<span class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-accent">Detail invoice <span aria-hidden="true">→</span></span>';
+              card.addEventListener('click', function () { openInvoiceRewardDrawer(invNum2); });
+              card.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openInvoiceRewardDrawer(invNum2);
+                }
+              });
               drawerContent.appendChild(card);
             });
           }
