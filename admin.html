@@ -428,11 +428,10 @@
                   <circle id="chartActiveNodePip" r="2" fill="#F28C45"></circle>
                 </g>
                 <g id="chartTooltipGroup" class="transition-transform duration-75 ease-out pointer-events-none" style="display: none;" transform="translate(750, 16)">
-                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="50" rx="8" stroke="#39393D" stroke-width="1" width="196"></rect>
-                  <circle cx="16" cy="25" fill="#F28C45" r="3.5"></circle>
+                  <rect fill="#202022" filter="drop-shadow(0 4px 14px rgba(0,0,0,0.5))" height="36" rx="8" stroke="#39393D" stroke-width="1" width="196"></rect>
+                  <circle cx="16" cy="18" fill="#F28C45" r="3.5"></circle>
                   <text id="chartTooltipDate" fill="#B8B8BB" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" x="26" y="21">19 Nov ·</text>
                   <text id="chartTooltipValue" fill="#F5F5F3" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" x="78" y="21">Rp 48,1 jt</text>
-                  <text id="chartTooltipSub" fill="#63C995" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="500" x="26" y="39">+1,9 jt periode ini</text>
                 </g>
                 <g id="chartXAxisLabels"></g>
               </svg>
@@ -449,10 +448,6 @@
                   <div class="flex items-baseline justify-between gap-3">
                     <span id="chartTooltipValLabel" class="mobile-hide text-[11px] text-text-muted font-medium">Nilai:</span>
                     <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-sm tabular-nums tracking-tight">Rp --</span>
-                  </div>
-                  <div id="chartTooltipHtmlSub" class="tooltip-sub-row text-[11px] text-status-success font-medium flex items-center justify-between gap-2 pt-1 border-t border-border-subtle">
-                    <span id="chartTooltipSubLabel" class="mobile-hide text-text-muted text-[10px]">Kumulatif</span>
-                    <span id="chartTooltipSubVal" class="tabular-nums font-semibold">Rp --</span>
                   </div>
                 </div>
                 <button id="chartTooltipCloseBtn" type="button" class="hidden text-text-muted hover:text-text-primary p-0.5 rounded transition-colors shrink-0" aria-label="Tutup info grafik">
@@ -1086,7 +1081,7 @@
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
   <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
   <script src="./assets/js/store.js?v=20261122d"></script>
-  <script src="./assets/js/components/trend-chart.js?v=20261125b"></script>
+  <script src="./assets/js/components/trend-chart.js?v=20261125c"></script>
   <script src="./assets/js/vendor/xlsx-reader.js?v=20261122d"></script>
   <script>
     (function () {

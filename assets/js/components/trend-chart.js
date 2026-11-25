@@ -460,30 +460,17 @@
         var rangeStartMs = rangeEndMs - ((rangeDays - 1) * 24 * 60 * 60 * 1000);
         var rangeStart = new Date(rangeStartMs).toISOString().slice(0, 10);
 
-        if (this.activeTimeframe === '90D') {
-          // Keep the 90 daily observations, grouped into readable seven-day bars.
-          for (var weekStartMs = rangeStartMs; weekStartMs <= rangeEndMs; weekStartMs += 7 * 24 * 60 * 60 * 1000) {
-            var weekEndMs = Math.min(weekStartMs + (6 * 24 * 60 * 60 * 1000), rangeEndMs);
-            var weekStart = new Date(weekStartMs).toISOString().slice(0, 10);
-            var weekEnd = new Date(weekEndMs).toISOString().slice(0, 10);
-            buckets.push({
-              date: weekEnd,
-              label: this.formatShortDate(weekStart) + '–' + this.formatShortDate(weekEnd),
-              startDate: weekStart,
-              endDate: weekEnd
-            });
-          }
-        } else {
-          // 7D and 30D always represent the full selected number of calendar days.
-          for (var dayMs = rangeStartMs; dayMs <= rangeEndMs; dayMs += 24 * 60 * 60 * 1000) {
-            var dayIso = new Date(dayMs).toISOString().slice(0, 10);
-            buckets.push({
-              date: dayIso,
-              label: this.formatShortDate(dayIso),
-              startDate: dayIso,
-              endDate: dayIso
-            });
-          }
+        // 7D/30D/90D control the visible window only. Every plotted point
+        // remains one calendar day so hover, touch, and keyboard selection
+        // always reveal that day's value instead of a weekly aggregate.
+        for (var dayMs = rangeStartMs; dayMs <= rangeEndMs; dayMs += 24 * 60 * 60 * 1000) {
+          var dayIso = new Date(dayMs).toISOString().slice(0, 10);
+          buckets.push({
+            date: dayIso,
+            label: this.formatShortDate(dayIso),
+            startDate: dayIso,
+            endDate: dayIso
+          });
         }
       }
 
@@ -629,8 +616,8 @@
       var totalPoints = rawPoints.length;
       var isBarMode = this.chartType === 'bar';
 
-      // Line and Bar both show the value for each displayed bucket.
-      // The cumulative total stays in the summary and tooltip as context.
+      // Both chart types plot daily revenue. The range total stays in the
+      // summary; it is not used as a plotted or selected daily value.
       var maxBarVal = 0;
       rawPoints.forEach(function (p) {
         if (p.daily > maxBarVal) maxBarVal = p.daily;
@@ -784,7 +771,7 @@
         rect.setAttribute('data-index', idx);
         rect.setAttribute('tabindex', '0');
         rect.setAttribute('role', 'button');
-        rect.setAttribute('aria-label', p.label + ': Rp ' + (p.daily / 1000000).toFixed(1) + ' jt (Kumulatif: Rp ' + (p.cumulative / 1000000).toFixed(1) + ' jt)');
+        rect.setAttribute('aria-label', p.label + ': Penjualan harian Rp ' + (p.daily / 1000000).toFixed(1) + ' jt');
 
         rect.addEventListener('click', function () {
           self.selectPoint(idx);
@@ -919,7 +906,7 @@
         circle.setAttribute('data-index', idx);
         circle.setAttribute('tabindex', '0');
         circle.setAttribute('role', 'button');
-        circle.setAttribute('aria-label', p.label + ': Rp ' + (p.daily / 1000000).toFixed(1) + ' jt (Penjualan per periode)');
+        circle.setAttribute('aria-label', p.label + ': Penjualan harian Rp ' + (p.daily / 1000000).toFixed(1) + ' jt');
 
         circle.addEventListener('click', function () {
           self.selectPoint(idx);
@@ -1100,8 +1087,6 @@
       var isBar = (this.chartType === 'bar');
       // Keep the tooltip's primary metric consistent: sales in the selected bucket.
       var tipFormattedVal = 'Rp ' + (pt.daily / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-      var tipSubText = 'Kumulatif: Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-
       // 1. Primary Polished HTML Tooltip (with Dynamic Viewport Clamping)
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
@@ -1110,11 +1095,8 @@
 
         var tipDate = document.getElementById('chartTooltipHtmlDate');
         var tipVal = document.getElementById('chartTooltipHtmlVal');
-        var tipSub = document.getElementById('chartTooltipHtmlSub');
         var tipBadge = document.getElementById('chartTooltipTypeBadge');
         var tipValLabel = document.getElementById('chartTooltipValLabel');
-        var tipSubLabel = document.getElementById('chartTooltipSubLabel');
-        var tipSubVal = document.getElementById('chartTooltipSubVal');
 
         if (tipDate) tipDate.textContent = pt.label;
         if (tipVal) tipVal.textContent = tipFormattedVal;
@@ -1122,8 +1104,6 @@
           var tipBucketType = 'Harian';
           if (this.currentMode === 'ytd') {
             tipBucketType = 'Bulanan';
-          } else if (this.activeTimeframe === '90D') {
-            tipBucketType = 'Mingguan';
           } else if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
             var customStartMs = new Date(this.customStart + 'T00:00:00Z').getTime();
             var customEndMs = new Date(this.customEnd + 'T00:00:00Z').getTime();
@@ -1135,15 +1115,6 @@
         if (tipValLabel) {
           tipValLabel.textContent = compactTooltipLabels ? 'Jual' : 'Penjualan';
           tipValLabel.setAttribute('aria-label', 'Penjualan');
-        }
-        if (tipSubLabel) {
-          tipSubLabel.textContent = compactTooltipLabels ? 'Kum.' : 'Kumulatif';
-          tipSubLabel.setAttribute('aria-label', 'Kumulatif');
-        }
-        if (tipSubVal) {
-          tipSubVal.textContent = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
-        } else if (tipSub) {
-          tipSub.textContent = tipSubText;
         }
 
         tipHtml.classList.add('chart-docked');
@@ -1176,7 +1147,6 @@
         tooltipGroup.setAttribute('transform', 'translate(' + tipXSvg + ', ' + tipYSvg + ')');
         var svgTipDate = tooltipGroup.querySelector('#chartTooltipDate');
         var svgTipVal = tooltipGroup.querySelector('#chartTooltipValue');
-        var svgTipSub = tooltipGroup.querySelector('#chartTooltipSub');
 
         if (svgTipDate) svgTipDate.textContent = pt.label + ' ·';
         if (svgTipVal) {
@@ -1185,14 +1155,13 @@
           svgTipVal.setAttribute('x', valX);
           svgTipVal.textContent = tipFormattedVal;
         }
-        if (svgTipSub) svgTipSub.textContent = tipSubText;
         // Keep SVG tooltip synchronized; display is hidden while HTML tooltip is active to avoid double boxes
         tooltipGroup.style.display = tipHtml ? 'none' : '';
       }
 
       var liveRegion = document.getElementById('chartLiveRegion');
       if (liveRegion) {
-        liveRegion.textContent = pt.label + ', Penjualan: ' + tipFormattedVal + ', Kumulatif: Rp ' + (pt.cumulative / 1000000).toFixed(1) + ' juta';
+        liveRegion.textContent = pt.label + ', Penjualan harian: ' + tipFormattedVal;
       }
     },
 

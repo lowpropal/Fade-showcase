@@ -284,24 +284,13 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     gap: 2px !important;
     white-space: nowrap !important;
   }
-  #chartTooltip.chart-docked .tooltip-sub-row {
-    flex: 0 1 auto !important;
-    border-top: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 2px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipValLabel,
-  #chartTooltip.chart-docked #chartTooltipSubLabel {
+  #chartTooltip.chart-docked #chartTooltipValLabel {
     display: inline !important;
     font-size: 9px !important;
     line-height: 1.1 !important;
   }
   #chartTooltip.chart-docked #chartTooltipHtmlVal {
     font-size: 11px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipSubVal {
-    font-size: 10px !important;
   }
   #chartTooltip.chart-docked #chartTooltipCloseBtn {
     display: inline-flex !important;
@@ -317,10 +306,8 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   #chartTooltip.chart-docked .tooltip-header-row { gap: 8px !important; }
   #chartTooltip.chart-docked #chartTooltipHtmlDate { font-size: 12px !important; }
   #chartTooltip.chart-docked .tooltip-body-wrapper { gap: 16px !important; }
-  #chartTooltip.chart-docked #chartTooltipValLabel,
-  #chartTooltip.chart-docked #chartTooltipSubLabel { font-size: 11px !important; }
+  #chartTooltip.chart-docked #chartTooltipValLabel { font-size: 11px !important; }
   #chartTooltip.chart-docked #chartTooltipHtmlVal { font-size: 14px !important; }
-  #chartTooltip.chart-docked #chartTooltipSubVal { font-size: 12px !important; }
 }
 
 /* Responsive chart controls; selected values stay docked above the plot on all views. */
@@ -368,8 +355,5 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   }
   #chartTooltip.chart-docked #chartTooltipHtmlVal {
     font-size: 10px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipSubVal {
-    font-size: 9px !important;
   }
 }
