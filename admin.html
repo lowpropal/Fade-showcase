@@ -175,9 +175,9 @@
         </div>
       </div>
 
-      <!-- Toolbar: Period Toggle, Interactive Calendar, Sales Scope & Export -->
+      <!-- Dashboard controls and export -->
       <div class="grid grid-cols-2 gap-2.5 w-full min-w-0 lg:flex lg:items-center lg:justify-between lg:gap-2.5" id="headerToolbar">
-        <div class="contents lg:flex lg:items-center lg:gap-2.5">
+        <div id="dashboardScopeControls" class="contents lg:flex lg:items-center lg:gap-2.5">
           <!-- Segmented Toggle: Bulanan vs YTD -->
           <div aria-label="Periode Tampilan" class="col-span-2 inline-flex w-full lg:w-auto items-center p-1 rounded-xl bg-surface-2 md:bg-surface-1 border border-border-subtle shrink-0 h-12 lg:h-9" role="tablist">
             <button id="tabModeBulanan" type="button" class="relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1">
@@ -624,7 +624,10 @@
               <span class="material-symbols-outlined text-[18px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">search</span>
               <input id="invoiceSearchInput" type="text" placeholder="Cari ID, nama toko, sales..." class="min-h-[44px] w-full pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors">
             </div>
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] sm:flex sm:items-center gap-2 w-full sm:w-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
+              <select id="invoiceSalesFilter" aria-label="Filter sales invoice" class="hidden min-h-[44px] min-w-0 w-full sm:w-auto px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
+                <option value="all">Semua Sales</option>
+              </select>
               <select id="invoiceStatusFilter" aria-label="Filter status tagihan" class="min-h-[44px] min-w-0 w-full sm:w-auto px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
                 <option value="all">Semua Status</option>
                 <option value="OUTSTANDING">Semua Outstanding</option>
@@ -1168,6 +1171,7 @@
       var customStartDate = '2026-11-01';
       var customEndDate = '2026-11-22';
       var currentSalesFilter = session.role === 'sales' ? session.salesName : 'all';
+      var invoiceSalesFilter = 'all';
       var activeCompMetric = 'qty';
       var invoicePage = 1;
       var invoicePageSize = 25;
@@ -1358,6 +1362,17 @@
           arrow.className = 'material-symbols-outlined text-[16px] text-text-muted pointer-events-none absolute right-3 top-1/2 -translate-y-1/2';
           arrow.textContent = 'expand_more';
           salesScopeContainer.appendChild(arrow);
+
+          var invoiceSalesSelect = document.getElementById('invoiceSalesFilter');
+          if (invoiceSalesSelect) {
+            FADE_STORE.getUniqueSalesNames().forEach(function (sName) {
+              var option = document.createElement('option');
+              option.value = sName;
+              option.textContent = sName;
+              invoiceSalesSelect.appendChild(option);
+            });
+            invoiceSalesSelect.classList.remove('hidden');
+          }
         } else {
           pageTitle.textContent = 'Dashboard Sales · ' + session.name;
           if (adminAnalytics) adminAnalytics.classList.remove('hidden');
@@ -1413,7 +1428,7 @@
         return all.filter(function (inv) {
           var sName = inv.sales_name || inv.salesName;
           if (session.role === 'sales' && sName !== session.salesName) return false;
-          if (currentSalesFilter !== 'all' && sName !== currentSalesFilter) return false;
+          if (invoiceSalesFilter !== 'all' && sName !== invoiceSalesFilter) return false;
           var dStr = inv.invoice_date || inv.date || '';
           if (useDate && (dStr < pContext.dari || dStr > pContext.sampai)) return false;
 
@@ -1453,7 +1468,7 @@
         var summary = FADE_ENGINE.calculateSummary(FADE_STORE.getInvoices(), FADE_STORE.getTargets(), {
           role: session.role,
           userSales: session.salesName,
-          selectedSales: currentSalesFilter,
+          selectedSales: invoiceSalesFilter,
           mode: currentMode,
           periode: currentPeriod,
           snapshot: '2026-11-22',
@@ -1487,7 +1502,7 @@
         } else if (format === 'xls') {
           var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>' +
             '<h3>Rekap Penjualan & Invoice FADE Pods (' + summary.period.label + ')</h3>' +
-            '<p>Cakupan: ' + (currentSalesFilter === 'all' ? 'Semua Sales' : currentSalesFilter) + ' | Total QTY: ' + summary.totalQty + ' pcs | Revenue: Rp ' + summary.revenue.toLocaleString('id-ID') + ' | Outstanding: Rp ' + summary.totalOutstanding.toLocaleString('id-ID') + '</p>' +
+            '<p>Cakupan: ' + (invoiceSalesFilter === 'all' ? 'Semua Sales' : invoiceSalesFilter) + ' | Total QTY: ' + summary.totalQty + ' pcs | Revenue: Rp ' + summary.revenue.toLocaleString('id-ID') + ' | Outstanding: Rp ' + summary.totalOutstanding.toLocaleString('id-ID') + '</p>' +
             '<table border="1"><thead><tr><th>No. Invoice</th><th>Tanggal</th><th>Nama Toko</th><th>Sales</th><th>Produk</th><th>QTY</th><th>Total Invoice</th><th>Terbayar</th><th>Outstanding</th><th>Status</th></tr></thead><tbody>';
           rows.forEach(function (inv) {
             var st = FADE_ENGINE.evaluateInvoiceState(inv, summary.period.asOf);
@@ -1499,7 +1514,7 @@
         } else {
           var docHtml = '<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:12px;}table{width:100%;border-collapse:collapse;margin-top:12px;}th,td{border:1px solid #ccc;padding:6px;text-align:left;}</style></head><body>' +
             '<h2>Laporan Ringkasan FADE Pods</h2>' +
-            '<p><strong>Periode:</strong> ' + summary.period.label + '<br><strong>Cakupan:</strong> ' + (currentSalesFilter === 'all' ? 'Semua Sales' : currentSalesFilter) + '<br><strong>Total QTY:</strong> ' + summary.totalQty.toLocaleString('id-ID') + ' pcs<br><strong>Revenue:</strong> Rp ' + summary.revenue.toLocaleString('id-ID') + '<br><strong>Pembayaran Masuk:</strong> Rp ' + summary.pembayaranMasuk.toLocaleString('id-ID') + '<br><strong>Total Outstanding:</strong> Rp ' + summary.totalOutstanding.toLocaleString('id-ID') + '</p>' +
+            '<p><strong>Periode:</strong> ' + summary.period.label + '<br><strong>Cakupan:</strong> ' + (invoiceSalesFilter === 'all' ? 'Semua Sales' : invoiceSalesFilter) + '<br><strong>Total QTY:</strong> ' + summary.totalQty.toLocaleString('id-ID') + ' pcs<br><strong>Revenue:</strong> Rp ' + summary.revenue.toLocaleString('id-ID') + '<br><strong>Pembayaran Masuk:</strong> Rp ' + summary.pembayaranMasuk.toLocaleString('id-ID') + '<br><strong>Total Outstanding:</strong> Rp ' + summary.totalOutstanding.toLocaleString('id-ID') + '</p>' +
             '<table><thead><tr><th>No. Invoice</th><th>Tanggal</th><th>Toko</th><th>Sales</th><th>QTY</th><th>Total</th><th>Sisa</th><th>Status</th></tr></thead><tbody>';
           rows.forEach(function (inv) {
             var st = FADE_ENGINE.evaluateInvoiceState(inv, summary.period.asOf);
@@ -2042,10 +2057,10 @@
 
               actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 shadow-[-4px_0_8px_rgba(0,0,0,0.08)] z-10 w-[240px] min-w-[240px]">' +
                 '<div class="inline-flex items-center justify-center gap-1.5 w-full">' +
-                '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Buka detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn min-h-[40px] px-3 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-accent text-[11px] font-semibold inline-flex items-center justify-center gap-1 transition-colors cursor-pointer shrink-0"><span>Detail</span><span aria-hidden="true">→</span></button>' +
                   paySlot +
                   '<button type="button" data-action="edit" data-id="' + esc(invId) + '" title="Edit Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-surface-hover text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">edit</span></button>' +
                   '<button type="button" data-action="delete" data-id="' + esc(invId) + '" title="Hapus Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-status-danger/20 text-text-muted hover:text-status-danger flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">delete</span></button>' +
+                  '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Buka detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn px-2.5 py-1.5 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-semibold transition-colors cursor-pointer shrink-0">Detail →</button>' +
                 '</div>' +
               '</td>';
             }
@@ -2084,9 +2099,9 @@
                         '<span class="material-symbols-outlined text-[20px]">more_vert</span>' +
                       '</button>' +
                       '<div class="inv-more-dropdown hidden absolute right-0 bottom-full mb-1.5 w-40 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-1 z-30 flex flex-col gap-0.5">' +
-                        '<button type="button" data-action="detail" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-accent hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px]">receipt_long</span><span>Detail Invoice &amp; Reward</span></button>' +
                         '<button type="button" data-action="edit" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-text-primary hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-text-secondary">edit</span><span>Edit Invoice</span></button>' +
                         '<button type="button" data-action="delete" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-status-danger hover:bg-status-danger/10 flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-status-danger">delete</span><span>Hapus Invoice</span></button>' +
+                        '<button type="button" data-action="detail" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-text-primary hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px]">receipt_long</span><span>Detail Invoice &amp; Reward</span></button>' +
                       '</div>' +
                     '</div>' +
                   '</div>';
@@ -2913,6 +2928,7 @@
         if (expMenu) expMenu.classList.add('hidden');
 
         var headerToolbar = document.getElementById('headerToolbar');
+        var dashboardScopeControls = document.getElementById('dashboardScopeControls');
         var pageTitle = document.getElementById('pageTitle');
         var statusBadgeContainer = document.getElementById('statusBadgeContainer');
         var statusBadgeText = document.getElementById('statusBadgeText');
@@ -2923,6 +2939,9 @@
           customEndDate = '2026-11-22';
           if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
+          if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
+          if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
+          if (dashboardScopeControls) { dashboardScopeControls.classList.remove('hidden'); dashboardScopeControls.classList.add('contents', 'lg:flex'); }
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
           updatePeriodTabs();
           viewDashboard.classList.remove('hidden');
@@ -2933,6 +2952,9 @@
           customEndDate = '2026-11-22';
           if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
+          if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
+          if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
+          if (dashboardScopeControls) { dashboardScopeControls.classList.remove('hidden'); dashboardScopeControls.classList.add('contents', 'lg:flex'); }
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
           setActiveNavHighlight('dashboard');
           updatePeriodTabs();
@@ -2943,7 +2965,13 @@
           if (statusBadgeText) statusBadgeText.textContent = 'Daftar & Riwayat Pembayaran Invoice';
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
           if (headerToolbar) headerToolbar.classList.remove('hidden');
+          if (headerToolbar) { headerToolbar.classList.remove('grid-cols-2'); headerToolbar.classList.add('grid-cols-1'); }
+          if (exportActionContainer) exportActionContainer.classList.add('justify-self-end');
+          if (dashboardScopeControls) { dashboardScopeControls.classList.add('hidden'); dashboardScopeControls.classList.remove('contents', 'lg:flex'); }
           viewInvoices.classList.remove('hidden');
+          invoiceSalesFilter = 'all';
+          var invoiceSalesSelect = document.getElementById('invoiceSalesFilter');
+          if (invoiceSalesSelect) invoiceSalesSelect.value = 'all';
           renderInvoicesTable();
         } else if (hash === 'upload') {
           if (pageTitle) pageTitle.textContent = 'Upload Master Excel';
@@ -2955,6 +2983,9 @@
         } else if (hash === 'profile') {
           if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
+          if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
+          if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
+          if (dashboardScopeControls) { dashboardScopeControls.classList.remove('hidden'); dashboardScopeControls.classList.add('contents', 'lg:flex'); }
           viewDashboard.classList.remove('hidden');
           openProfileModal();
         }
@@ -3087,11 +3118,18 @@
       document.getElementById('invoiceStatusFilter').addEventListener('change', function () {
         invoicePage = 1; renderInvoicesTable();
       });
+      document.getElementById('invoiceSalesFilter').addEventListener('change', function () {
+        invoiceSalesFilter = this.value;
+        invoicePage = 1;
+        renderInvoicesTable();
+      });
       document.getElementById('invoiceDateScopeCheckbox').addEventListener('change', function () {
         invoicePage = 1; renderInvoicesTable();
       });
       document.getElementById('resetInvoiceFilterBtn').addEventListener('click', function () {
         document.getElementById('invoiceSearchInput').value = '';
+        document.getElementById('invoiceSalesFilter').value = 'all';
+        invoiceSalesFilter = 'all';
         document.getElementById('invoiceStatusFilter').value = 'all';
         document.getElementById('invoiceDateScopeCheckbox').checked = false;
         invoicePage = 1;
