@@ -31,7 +31,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261125d">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261125f">
   <style>
     @media print {
       aside, header, nav, #toastContainer, .no-print { display: none !important; }
@@ -402,7 +402,9 @@
               </div>
             </div>
 
-              <div id="chartTooltip" class="chart-selection-card hidden">
+            <div id="chartInteractiveContainer" class="chart-interactive-container relative w-full h-[270px] md:h-[374px] lg:h-[394px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+              <div class="chart-selection-layer">
+              <div id="chartTooltip" class="chart-selection-card hidden" aria-live="polite">
                 <div class="tooltip-header-row">
                   <div class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
@@ -424,8 +426,8 @@
                   <span class="material-symbols-outlined text-[16px] block leading-none">close</span>
                 </button>
               </div>
-            <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
-            <div id="chartInteractiveContainer" class="relative w-full h-[270px] md:h-[374px] lg:h-[394px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
+              </div>
+              <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
               <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
                 <defs>
                   <linearGradient id="fadeChartGrad" x1="0" y1="0" x2="0" y2="1">
@@ -1175,7 +1177,7 @@
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
   <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
   <script src="./assets/js/store.js?v=20261122d"></script>
-  <script src="./assets/js/components/trend-chart.js?v=20261125d"></script>
+  <script src="./assets/js/components/trend-chart.js?v=20261125f"></script>
   <script>
     (function () {
       'use strict';

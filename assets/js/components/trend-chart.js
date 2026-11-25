@@ -98,7 +98,7 @@
       var yAxisSpace = isMobile ? 38 : 50;
       var rightMargin = 8;
       // Reserve a consistent top lane for the selected-value tooltip on every viewport.
-      var topMargin = 56;
+      var topMargin = 12;
       var bottomMargin = isMobile ? 32 : 42;
 
       this.BOUNDS = {
@@ -1105,6 +1105,27 @@
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
         tipHtml.classList.remove('hidden');
+        var chartContainer = document.getElementById('chartInteractiveContainer');
+        if (chartContainer) {
+          var containerRect = chartContainer.getBoundingClientRect();
+          var svg = document.getElementById('trendChartSvg');
+          var svgRect = svg ? svg.getBoundingClientRect() : containerRect;
+          var scaleX = svgRect.width / b.viewBoxWidth;
+          var scaleY = svgRect.height / b.viewBoxHeight;
+          var pointerX = svgRect.left + pt.x * scaleX;
+          var pointerY = svgRect.top + pt.y * scaleY;
+          var cardWidth = tipHtml.offsetWidth || Math.min(352, containerRect.width - 16);
+          var cardHeight = tipHtml.offsetHeight || 150;
+          var cardLeft = pointerX - containerRect.left + 18;
+          if (cardLeft + cardWidth > containerRect.width - 8) {
+            cardLeft = pointerX - containerRect.left - cardWidth - 18;
+          }
+          cardLeft = Math.max(8, Math.min(containerRect.width - cardWidth - 8, cardLeft));
+          var cardTop = (pointerY - containerRect.top) - cardHeight / 2;
+          cardTop = Math.max(8, Math.min(containerRect.height - cardHeight - 8, cardTop));
+          tipHtml.style.left = cardLeft + 'px';
+          tipHtml.style.top = cardTop + 'px';
+        }
 
         var tipDate = document.getElementById('chartTooltipHtmlDate');
         var tipVal = document.getElementById('chartTooltipHtmlVal');
