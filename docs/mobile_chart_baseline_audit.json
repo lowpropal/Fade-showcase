@@ -1,0 +1,2354 @@
+{
+  "admin_375_dark": {
+    "untouched": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 1128,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": true
+    },
+    "point0": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 303,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": true
+    },
+    "pointMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 256,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": true
+    },
+    "pointLast": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 243,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": true
+    },
+    "barMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_375_light": {
+    "untouched": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 1050,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 224,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 211,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_375_dark": {
+    "untouched": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_375_light": {
+    "untouched": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 126,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 343,
+      "containerWidth": 309,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 309,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 297,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 3,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_390_dark": {
+    "untouched": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 1050,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 224,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 211,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_390_light": {
+    "untouched": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 1050,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 224,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 211,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_390_dark": {
+    "untouched": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_390_light": {
+    "untouched": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 141,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 358,
+      "containerWidth": 324,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 324,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 312,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_430_dark": {
+    "untouched": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 1050,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 224,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 211,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_430_light": {
+    "untouched": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 1050,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 224,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 211,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 242,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_430_dark": {
+    "untouched": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_430_light": {
+    "untouched": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 1034,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 93,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 181,
+        "top": 241,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 398,
+      "containerWidth": 364,
+      "containerHeight": 260,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 364,
+        "viewBoxHeight": 260,
+        "xMin": 46,
+        "xMax": 352,
+        "yMin": 22,
+        "yMax": 224,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 41,
+        "top": 271,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_834_dark": {
+    "untouched": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 1023,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 349,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 256,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 238,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 334,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "admin_834_light": {
+    "untouched": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 1023,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 349,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 256,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 238,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 334,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_834_dark": {
+    "untouched": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 1019,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 349,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 280,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 280,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  },
+  "sales_834_light": {
+    "untouched": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": null,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 1019,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "point0": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 0,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 349,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 280,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "pointLast": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "line",
+      "timeframe": "30D",
+      "activeIdx": 21,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 569,
+        "top": 280,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 4,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    },
+    "barMid": {
+      "cardWidth": 546,
+      "containerWidth": 496,
+      "containerHeight": 340,
+      "chartType": "bar",
+      "timeframe": "30D",
+      "activeIdx": 11,
+      "pointsCount": 22,
+      "bounds": {
+        "viewBoxWidth": 496,
+        "viewBoxHeight": 340,
+        "xMin": 46,
+        "xMax": 484,
+        "yMin": 22,
+        "yMax": 304,
+        "isMobile": true
+      },
+      "tooltip": {
+        "left": 469,
+        "top": 375,
+        "width": 190,
+        "height": 106,
+        "overlapsPlot": true,
+        "overlapsActivePoint": false
+      },
+      "xLabelsCount": 5,
+      "xCollisions": [],
+      "hasHorizontalOverflow": false
+    }
+  }
+}

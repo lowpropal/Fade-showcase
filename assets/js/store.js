@@ -249,6 +249,30 @@
     return Array.from(set).sort();
   }
 
+  function getUniqueProductNames() {
+    var set = new Set();
+    [
+      'FADE Core Pod 2ml',
+      'FADE Plus Pod 2ml',
+      'FADE Device Mini',
+      'FADE Device Pro',
+      'FADE - Cartridge Lite 3 In 1 V1',
+      'FADE Ultra Single - Misty Sand',
+      'FADE Fresh Series - Mint Fuel 30ml',
+      'FADE Fruity Series - Mango Lush 30ml',
+      'FADE Fruity Series - Lychee Breeze',
+      'FADE Fruity Series - Grape Frost 30ml',
+      'FADE Fruity Series - Kiwi Verde 30ml',
+      'FADE Aero Bundling Kit - Ice Chrome'
+    ].forEach(function (p) { set.add(p); });
+
+    getInvoices().forEach(function (i) {
+      var p = (i.productName || i.product_name || '').trim();
+      if (p) set.add(p);
+    });
+    return Array.from(set).sort();
+  }
+
   function getStoresList() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.STORES);
@@ -463,6 +487,7 @@
     getSalesList: getSalesList,
     getUniqueSalesNames: getUniqueSalesNames,
     getUniqueStoreNames: getUniqueStoreNames,
+    getUniqueProductNames: getUniqueProductNames,
     getStoresList: getStoresList,
     getActiveSession: getActiveSession,
     setActiveSession: setActiveSession,

@@ -1,0 +1,4436 @@
+{
+  "results": [
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 390,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "SPAN",
+          "id": "mobileThemeIcon",
+          "cls": "material-symbols-outlined text-[18px]",
+          "left": 316,
+          "right": 397,
+          "w": 81,
+          "pos": "static"
+        },
+        {
+          "tag": "SPAN",
+          "id": "",
+          "cls": "material-symbols-outlined text-[20px]",
+          "left": -2,
+          "right": 80,
+          "w": 82,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [
+        {
+          "tag": "BUTTON",
+          "id": "mobileNotifBtn",
+          "text": "notifications",
+          "cw": 34,
+          "sw": 62
+        },
+        {
+          "tag": "BUTTON",
+          "id": "mobileThemeBtn",
+          "text": "dark_mode",
+          "cw": 34,
+          "sw": 58
+        },
+        {
+          "tag": "BUTTON",
+          "id": "exportMenuBtn",
+          "text": "download Ekspor expand_more",
+          "cw": 172,
+          "sw": 187
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "trending_up YTD",
+          "cw": 78,
+          "sw": 87
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "receipt_long Invoice",
+          "cw": 78,
+          "sw": 89
+        },
+        {
+          "tag": "A",
+          "id": "",
+          "text": "cloud_upload Upload",
+          "cw": 78,
+          "sw": 93
+        }
+      ],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 390,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 834,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 834,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1440,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 390,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 390,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 834,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 834,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "ytd",
+      "width": 1440,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#ytd",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 390,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 390,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 834,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[70px]",
+          "left": 810,
+          "right": 880,
+          "w": 70,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[130px]",
+          "left": 880,
+          "right": 1010,
+          "w": 130,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[115px]",
+          "left": 1010,
+          "right": 1125,
+          "w": 115,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[125px]",
+          "left": 1125,
+          "right": 1250,
+          "w": 125,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center min-w-[170px]",
+          "left": 1250,
+          "right": 1420,
+          "w": 170,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 834,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1556,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[70px]",
+          "left": 810,
+          "right": 880,
+          "w": 70,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[130px]",
+          "left": 880,
+          "right": 1010,
+          "w": 130,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[115px]",
+          "left": 1010,
+          "right": 1125,
+          "w": 115,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[125px]",
+          "left": 1125,
+          "right": 1250,
+          "w": 125,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center min-w-[170px]",
+          "left": 1250,
+          "right": 1420,
+          "w": 170,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "invoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "invoices",
+      "width": 1440,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "invoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1564,
+          "w": 1270,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 390,
+      "theme": "dark",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 390,
+      "theme": "light",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 834,
+      "theme": "dark",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 834,
+      "docWidth": 834,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 792,
+          "right": 878,
+          "w": 86,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 878,
+          "right": 948,
+          "w": 70,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px]",
+          "left": 948,
+          "right": 1025,
+          "w": 77,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px]",
+          "left": 1025,
+          "right": 1151,
+          "w": 126,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "uploadHistoryBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 834,
+      "theme": "light",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 834,
+      "docWidth": 834,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 792,
+          "right": 878,
+          "w": 86,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 878,
+          "right": 948,
+          "w": 70,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px]",
+          "left": 948,
+          "right": 1025,
+          "w": 77,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px]",
+          "left": 1025,
+          "right": 1151,
+          "w": 126,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "uploadHistoryBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 290,
+          "right": 1266,
+          "w": 976,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 1440,
+      "docWidth": 1440,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "upload",
+      "width": 1440,
+      "theme": "light",
+      "title": "Upload Master Excel",
+      "hash": "#upload",
+      "viewport": 1440,
+      "docWidth": 1440,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewUpload"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 390,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 390,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 834,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 834,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 776,
+          "right": 872,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "profile",
+      "width": 1440,
+      "theme": "light",
+      "title": "Dashboard Admin",
+      "hash": "#profile",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 390,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 390,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 834,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center",
+          "left": 864,
+          "right": 1003,
+          "w": 139,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "dashInvoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors cursor-pointer",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 834,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center",
+          "left": 864,
+          "right": 1003,
+          "w": 139,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "dashInvoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors cursor-pointer",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1440,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 390,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 390,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 358,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 173,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 173,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 358,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 834,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 755,
+          "right": 860,
+          "w": 105,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center",
+          "left": 860,
+          "right": 932,
+          "w": 72,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "dashInvoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors cursor-pointer",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs",
+          "left": 755,
+          "right": 860,
+          "w": 105,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 834,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 755,
+          "right": 860,
+          "w": 105,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center",
+          "left": 860,
+          "right": 932,
+          "w": 72,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "dashInvoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors cursor-pointer",
+          "left": 286,
+          "right": 932,
+          "w": 646,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs",
+          "left": 755,
+          "right": 860,
+          "w": 105,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 541,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 263,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 263,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 541,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "ytd",
+      "width": 1440,
+      "theme": "light",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#ytd",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 366,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 366,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 366,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 390,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 390,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 834,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[130px]",
+          "left": 780,
+          "right": 910,
+          "w": 130,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[115px]",
+          "left": 910,
+          "right": 1025,
+          "w": 115,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[125px]",
+          "left": 1025,
+          "right": 1150,
+          "w": 125,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center min-w-[170px]",
+          "left": 1150,
+          "right": 1320,
+          "w": 170,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "invoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 834,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[130px]",
+          "left": 780,
+          "right": 910,
+          "w": 130,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[115px]",
+          "left": 910,
+          "right": 1025,
+          "w": 115,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right min-w-[125px]",
+          "left": 1025,
+          "right": 1150,
+          "w": 125,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center min-w-[170px]",
+          "left": 1150,
+          "right": 1320,
+          "w": 170,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "invoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 1430,
+          "w": 1144,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "invoices",
+      "width": 1440,
+      "theme": "light",
+      "title": "Invoice & Pembayaran",
+      "hash": "#invoices",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewInvoices"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 390,
+      "theme": "dark",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 390,
+      "theme": "light",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 834,
+      "theme": "dark",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 834,
+      "docWidth": 834,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 834,
+      "theme": "light",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 834,
+      "docWidth": 834,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 1440,
+      "docWidth": 1440,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "profile",
+      "width": 1440,
+      "theme": "light",
+      "title": "Profil Sales · Aru",
+      "hash": "#profile",
+      "viewport": 1440,
+      "docWidth": 1440,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewProfile"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 390,
+      "theme": "dark",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 348,
+          "right": 495,
+          "w": 148,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 495,
+          "right": 611,
+          "w": 116,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 611,
+          "right": 723,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 723,
+          "right": 855,
+          "w": 132,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 855,
+          "right": 1010,
+          "w": 155,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 390,
+      "theme": "light",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 390,
+      "docWidth": 390,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 34,
+          "right": 1286,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 348,
+          "right": 495,
+          "w": 148,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 495,
+          "right": 611,
+          "w": 116,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 611,
+          "right": 723,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 723,
+          "right": 855,
+          "w": 132,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 855,
+          "right": 1010,
+          "w": 155,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 834,
+      "theme": "dark",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 747,
+          "right": 863,
+          "w": 116,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 863,
+          "right": 975,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 975,
+          "right": 1107,
+          "w": 132,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 1107,
+          "right": 1262,
+          "w": 155,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1262,
+          "right": 1445,
+          "w": 183,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 834,
+      "theme": "light",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 834,
+      "docWidth": 829,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1538,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5",
+          "left": 747,
+          "right": 863,
+          "w": 116,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 863,
+          "right": 975,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 975,
+          "right": 1107,
+          "w": 132,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right",
+          "left": 1107,
+          "right": 1262,
+          "w": 155,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1262,
+          "right": 1445,
+          "w": 183,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 1440,
+      "theme": "dark",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1270,
+          "right": 1453,
+          "w": 183,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1453,
+          "right": 1546,
+          "w": 93,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "drillTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1270,
+          "right": 1453,
+          "w": 183,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "kpi-outstanding",
+      "width": 1440,
+      "theme": "light",
+      "title": "Drill-down KPI · Aru",
+      "hash": "#kpi-outstanding",
+      "viewport": 1440,
+      "docWidth": 1435,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1270,
+          "right": 1453,
+          "w": 183,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1453,
+          "right": 1546,
+          "w": 93,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "drillTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors",
+          "left": 294,
+          "right": 1546,
+          "w": 1252,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-center",
+          "left": 1270,
+          "right": 1453,
+          "w": 183,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [],
+      "routeVis": [
+        "viewKpiDrilldown"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 360,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 360,
+      "docWidth": 360,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 328,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 158,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 158,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 158,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 158,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 328,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 375,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 375,
+      "docWidth": 375,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 343,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 166,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 166,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 166,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 166,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 343,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 430,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 430,
+      "docWidth": 430,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 398,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 193,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 193,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 193,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 193,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 398,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 768,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 768,
+      "docWidth": 763,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "comp-metric-tab px-3 py-1 rounded-md text-text-secondary hover:text-text-primary text-xs f",
+          "left": 736,
+          "right": 832,
+          "w": 97,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 475,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 230,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 230,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 230,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 230,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 475,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1024,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1024,
+      "docWidth": 1019,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "REVENUE",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 228,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 228,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 228,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1280,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1280,
+      "docWidth": 1275,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 313,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 313,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 313,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1728,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1728,
+      "docWidth": 1723,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 462,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 462,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 462,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 1920,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 1920,
+      "docWidth": 1915,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 526,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 526,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 526,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "admin",
+      "route": "dashboard",
+      "width": 2560,
+      "theme": "dark",
+      "title": "Dashboard Admin",
+      "hash": "#dashboard",
+      "viewport": 2560,
+      "docWidth": 2555,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 740,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 740,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 740,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 360,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 360,
+      "docWidth": 360,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 328,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 158,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 158,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 158,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 158,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 328,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 375,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 375,
+      "docWidth": 375,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 343,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 166,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 166,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 166,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 166,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 343,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 430,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 430,
+      "docWidth": 430,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 398,
+          "h": 123
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 193,
+          "h": 100
+        },
+        {
+          "label": "REVENUE",
+          "w": 193,
+          "h": 100
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 193,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 193,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 398,
+          "h": 111
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "flex"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 768,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 768,
+      "docWidth": 763,
+      "overflow": true,
+      "overflowElements": [
+        {
+          "tag": "TABLE",
+          "id": "",
+          "cls": "w-full text-left text-xs whitespace-nowrap",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "THEAD",
+          "id": "",
+          "cls": "bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-right",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        },
+        {
+          "tag": "TH",
+          "id": "",
+          "cls": "py-3 px-3.5 text-[11px] text-center",
+          "left": 864,
+          "right": 1003,
+          "w": 139,
+          "pos": "static"
+        },
+        {
+          "tag": "TBODY",
+          "id": "dashInvoiceTableBody",
+          "cls": "divide-y divide-border-subtle/35 text-xs",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TR",
+          "id": "",
+          "cls": "group hover:bg-surface-2/40 transition-colors cursor-pointer",
+          "left": 286,
+          "right": 1003,
+          "w": 717,
+          "pos": "static"
+        },
+        {
+          "tag": "TD",
+          "id": "",
+          "cls": "py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs",
+          "left": 752,
+          "right": 864,
+          "w": 112,
+          "pos": "static"
+        }
+      ],
+      "clippedControls": [
+        {
+          "tag": "H1",
+          "id": "pageTitle",
+          "text": "Dashboard Sales · Aru",
+          "cw": 214,
+          "sw": 258
+        }
+      ],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 475,
+          "h": 131
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 230,
+          "h": 118
+        },
+        {
+          "label": "REVENUE",
+          "w": 230,
+          "h": 118
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 230,
+          "h": 149
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 230,
+          "h": 149
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 475,
+          "h": 119
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1024,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1024,
+      "docWidth": 1019,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "REVENUE",
+          "w": 228,
+          "h": 167
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 228,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 228,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 228,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1280,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1280,
+      "docWidth": 1275,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 313,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 313,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 313,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 313,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1728,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1728,
+      "docWidth": 1723,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 462,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 462,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 462,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 462,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 1920,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 1920,
+      "docWidth": 1915,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 526,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 526,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 526,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 526,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "dashboard",
+      "width": 2560,
+      "theme": "dark",
+      "title": "Dashboard Sales · Aru",
+      "hash": "#dashboard",
+      "viewport": 2560,
+      "docWidth": 2555,
+      "overflow": false,
+      "overflowElements": [],
+      "clippedControls": [],
+      "kpiCards": [
+        {
+          "label": "ACHIEVEMENT & TARGET",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "QTY PENJUALAN",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "REVENUE",
+          "w": 740,
+          "h": 135
+        },
+        {
+          "label": "PEMBAYARAN",
+          "w": 740,
+          "h": 153
+        },
+        {
+          "label": "OUTSTANDING",
+          "w": 740,
+          "h": 153
+        },
+        {
+          "label": "INVOICE & OUTLET",
+          "w": 740,
+          "h": 153
+        }
+      ],
+      "routeVis": [
+        "viewDashboard"
+      ],
+      "navDisplay": "none"
+    },
+    {
+      "role": "sales",
+      "route": "invoice-detail",
+      "width": 390,
+      "theme": "dark",
+      "title": "Detail Invoice",
+      "hash": "#invoice-SI.2026.11.00005",
+      "docWidth": 390,
+      "viewport": 390,
+      "head": "SI.2026.11.00005",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}
