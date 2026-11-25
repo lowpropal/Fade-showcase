@@ -659,7 +659,7 @@
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[115px]">Terbayar</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[125px]">Outstanding</th>
                 <th class="py-3 px-3.5 text-[11px] text-center min-w-[170px]">Status</th>
-                <th id="invoiceActionHeader" class="py-3 px-3.5 text-[11px] text-center sticky right-0 bg-surface-2 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10 w-[130px] min-w-[130px]">Aksi</th>
+                <th id="invoiceActionHeader" class="py-3 px-3.5 text-[11px] text-center sticky right-0 bg-surface-2 border-l border-border-subtle shadow-[-4px_0_8px_rgba(0,0,0,0.12)] z-10 w-[180px] min-w-[180px]">Aksi</th>
               </tr>
             </thead>
             <tbody id="invoiceTableBody" class="divide-y divide-border-subtle/35 text-xs"></tbody>
@@ -1116,7 +1116,6 @@
       var NAV_CONFIG = {
         admin: [
           { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
-          { id: 'ytd', label: 'Dashboard YTD', icon: 'trending_up', href: '#ytd' },
           { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' },
           { id: 'upload', label: 'Upload Master Excel', icon: 'upload_file', href: '#upload' }
         ],
@@ -1130,7 +1129,6 @@
       var MOBILE_NAV_CONFIG = {
         admin: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
-          { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'upload', label: 'Upload', icon: 'cloud_upload', href: '#upload' },
           { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
@@ -1893,13 +1891,21 @@
 
           if (tbody) {
             var tr = document.createElement('tr');
-            tr.className = 'group hover:bg-surface-2/40 transition-colors cursor-pointer';
+            tr.className = 'group hover:bg-surface-2/40 focus-visible:bg-surface-2/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors cursor-pointer';
+            tr.tabIndex = 0;
+            tr.setAttribute('aria-label', 'Lihat kinerja ' + r.sales + ' dan filter dashboard ke sales ini');
             tr.addEventListener('click', function () {
               var sel = document.getElementById('salesFilterSelect');
               if (sel) {
                 sel.value = r.sales;
                 currentSalesFilter = r.sales;
                 renderAll();
+              }
+            });
+            tr.addEventListener('keydown', function (event) {
+              if (event.target === tr && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                tr.click();
               }
             });
 
@@ -1918,14 +1924,23 @@
 
           if (mList) {
             var card = document.createElement('div');
-            card.className = 'p-3.5 rounded-xl bg-surface-2/60 border border-border-subtle flex flex-col gap-2.5 hover:border-accent/40 transition-colors cursor-pointer';
+            card.className = 'p-3.5 rounded-xl bg-surface-2/60 border border-border-subtle flex flex-col gap-2.5 hover:border-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors cursor-pointer';
+            card.tabIndex = 0;
+            card.setAttribute('role', 'button');
             card.title = 'Filter menurut ' + r.sales;
+            card.setAttribute('aria-label', 'Filter dashboard menurut ' + r.sales);
             card.addEventListener('click', function () {
               var sel = document.getElementById('salesFilterSelect');
               if (sel) {
                 sel.value = r.sales;
                 currentSalesFilter = r.sales;
                 renderAll();
+              }
+            });
+            card.addEventListener('keydown', function (event) {
+              if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                card.click();
               }
             });
 
@@ -2025,8 +2040,9 @@
                 ? '<button type="button" data-action="pay" data-id="' + esc(invId) + '" title="Catat Pembayaran" class="inv-action-btn w-8 h-8 rounded-lg bg-status-success/10 hover:bg-status-success/20 text-status-success flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">payments</span></button>'
                 : '<span class="w-8 h-8 rounded-lg flex items-center justify-center text-status-success/40 shrink-0" title="Tagihan Lunas"><span class="material-symbols-outlined text-[16px]">check_circle</span></span>';
 
-              actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 shadow-[-4px_0_8px_rgba(0,0,0,0.08)] z-10 w-[130px] min-w-[130px]">' +
+              actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 shadow-[-4px_0_8px_rgba(0,0,0,0.08)] z-10 w-[180px] min-w-[180px]">' +
                 '<div class="inline-flex items-center justify-center gap-1.5 w-full">' +
+                  '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-surface-hover text-accent flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">visibility</span></button>' +
                   paySlot +
                   '<button type="button" data-action="edit" data-id="' + esc(invId) + '" title="Edit Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-surface-hover text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">edit</span></button>' +
                   '<button type="button" data-action="delete" data-id="' + esc(invId) + '" title="Hapus Invoice" class="inv-action-btn w-8 h-8 rounded-lg bg-surface-2 hover:bg-status-danger/20 text-text-muted hover:text-status-danger flex items-center justify-center transition-colors cursor-pointer shrink-0"><span class="material-symbols-outlined text-[16px]">delete</span></button>' +
@@ -2068,6 +2084,7 @@
                         '<span class="material-symbols-outlined text-[20px]">more_vert</span>' +
                       '</button>' +
                       '<div class="inv-more-dropdown hidden absolute right-0 bottom-full mb-1.5 w-40 rounded-xl bg-surface-1 border border-border-default shadow-2xl p-1 z-30 flex flex-col gap-0.5">' +
+                        '<button type="button" data-action="detail" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-accent hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px]">visibility</span><span>Detail &amp; Reward</span></button>' +
                         '<button type="button" data-action="edit" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-text-primary hover:bg-surface-hover flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-text-secondary">edit</span><span>Edit Invoice</span></button>' +
                         '<button type="button" data-action="delete" data-id="' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 py-2 rounded-lg text-xs font-medium text-status-danger hover:bg-status-danger/10 flex items-center gap-2 text-left cursor-pointer"><span class="material-symbols-outlined text-[17px] text-status-danger">delete</span><span>Hapus Invoice</span></button>' +
                       '</div>' +
@@ -2132,7 +2149,8 @@
               document.querySelectorAll('.inv-more-btn').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
               var act = btn.getAttribute('data-action');
               var id = btn.getAttribute('data-id');
-              if (act === 'edit') openInvoiceFormModal('edit', id, btn);
+              if (act === 'detail') openInvoiceRewardDrawer(id);
+              else if (act === 'edit') openInvoiceFormModal('edit', id, btn);
               else if (act === 'pay') openPaymentModal(id, btn);
               else if (act === 'delete') openDeleteModal(id, btn);
             };
@@ -2509,10 +2527,58 @@
         defectsContainer.classList.add('hidden');
 
         try {
-          var rawRows = await FADE_XLSX_READER.parseXlsxFile(file);
+          var workbookRows = await FADE_XLSX_READER.parseXlsxWorkbook(file);
+          var rawRows = workbookRows.Invoice_Collection || workbookRows.Sheet1 || workbookRows[Object.keys(workbookRows)[0]];
           var result = FADE_IMPORTER.processParsedRows(rawRows, { cutoff: '2026-11-22' });
 
           if (result.success && result.isClean) {
+            var rewardRows = workbookRows.Client_Reward_Tracking;
+            var newRewards = null;
+            if (Array.isArray(rewardRows) && rewardRows.length > 1) {
+              var rewardHeaders = (rewardRows[0] || []).map(function (h) { return String(h || '').trim().toLowerCase(); });
+              function rewardValue(row, key) {
+                var idx = rewardHeaders.indexOf(key.toLowerCase());
+                return idx >= 0 ? row[idx] : '';
+              }
+              function rewardNumber(value) {
+                var parsed = Number(value);
+                if (Number.isFinite(parsed)) return parsed;
+                return Number(String(value || '').replace(/[^0-9.-]/g, '')) || 0;
+              }
+              newRewards = rewardRows.slice(1).filter(function (row) {
+                return row && row.some(function (cell) { return String(cell || '').trim() !== ''; });
+              }).map(function (row) {
+                return {
+                  rewardId: String(rewardValue(row, 'Reward_ID') || '').trim(),
+                  storeName: String(rewardValue(row, 'Nama_Toko') || '').trim(),
+                  primaryInvoiceId: String(rewardValue(row, 'Invoice_ID_Utama') || '').trim(),
+                  relatedInvoiceIds: String(rewardValue(row, 'Nomor_Invoice_Terkait') || '').trim(),
+                  invoiceCount: rewardNumber(rewardValue(row, 'Jumlah_Invoice')),
+                  collectionPic: String(rewardValue(row, 'PIC_Collection') || '').trim(),
+                  programMonth: String(rewardValue(row, 'Bulan_Program') || '').trim(),
+                  sourceInvoiceMonth: String(rewardValue(row, 'Bulan_Invoice_Sumber') || '').trim(),
+                  sourceInvoiceValue: rewardNumber(rewardValue(row, 'Nilai_Invoice_Sumber_IDR')),
+                  qtyDevice: rewardNumber(rewardValue(row, 'Qty_Device')),
+                  qtyLiquid: rewardNumber(rewardValue(row, 'Qty_Liquid')),
+                  qtyCartridge: rewardNumber(rewardValue(row, 'Qty_Cartridge')),
+                  storeRebate: rewardNumber(rewardValue(row, 'Rebate_Toko_IDR')),
+                  vaporistIncentive: rewardNumber(rewardValue(row, 'Insentif_Vaporista_IDR')),
+                  extraIncentive: rewardNumber(rewardValue(row, 'Xtra_Incentive_IDR')),
+                  totalReward: rewardNumber(rewardValue(row, 'Total_Reward_IDR')),
+                  sourceStatus: String(rewardValue(row, 'Status_Reward_Sumber') || '').trim(),
+                  invoiceMatchCount: rewardValue(row, 'Invoice_Ditemukan'),
+                  outstanding: rewardNumber(rewardValue(row, 'Outstanding_Invoice_IDR')),
+                  paidDate: String(rewardValue(row, 'Tanggal_Pelunasan') || '').trim(),
+                  payoutSchedule: String(rewardValue(row, 'Jadwal_Pencairan') || '').trim(),
+                  salesStatus: String(rewardValue(row, 'Status_Reward_Untuk_Sales') || '').trim(),
+                  statusNote: String(rewardValue(row, 'Catatan_Status') || '').trim(),
+                  payoutDate: String(rewardValue(row, 'Tanggal_Cair_Aktual') || '').trim(),
+                  rewardMethod: String(rewardValue(row, 'Metode_Reward') || '').trim(),
+                  sourceNote: String(rewardValue(row, 'Catatan_Sumber') || '').trim(),
+                  clientId: String(rewardValue(row, 'Client_ID') || '').trim()
+                };
+              });
+            }
             var newInvoices = result.records.map(function (r) {
               return {
                 id: r.invoice_id,
@@ -2545,14 +2611,14 @@
               uploadedBy: session.name + ' (Admin)',
               status: 'Success',
               hasSnapshot: true,
-              notes: 'Header Baris ' + (result.headerRowIndex + 1)
-            });
+              notes: 'Header Baris ' + (result.headerRowIndex + 1) + (newRewards ? ' · ' + newRewards.length + ' data reward' : '')
+            }, newRewards);
 
             banner.className = 'rounded-xl p-4 flex flex-col gap-3 bg-status-success/10 border border-status-success/30';
             bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-success">check_circle</span><span class="text-status-success">Impor Berhasil (100% Bersih)</span>';
             bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-success text-white';
             bannerBadge.textContent = 'PASSED';
-            bannerDesc.textContent = 'Berhasil memproses ' + result.validCount + ' baris transaksi tanpa kesalahan. Data dashboard dan tabel invoice telah diperbarui.';
+            bannerDesc.textContent = 'Berhasil memproses ' + result.validCount + ' baris transaksi tanpa kesalahan. Data dashboard dan tabel invoice telah diperbarui.' + (newRewards ? ' ' + newRewards.length + ' catatan reward toko ikut diperbarui.' : ' Sheet Client_Reward_Tracking tidak ditemukan; data reward sebelumnya tetap digunakan.');
             defectsContainer.classList.add('hidden');
 
             renderUploadHistory();
@@ -2868,6 +2934,7 @@
           if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
+          setActiveNavHighlight('dashboard');
           updatePeriodTabs();
           viewDashboard.classList.remove('hidden');
           renderMetrics();
@@ -3117,6 +3184,43 @@
       var drawerSubtitle = document.getElementById('drawerSubtitle');
       var drawerContent = document.getElementById('drawerContent');
 
+      function openInvoiceRewardDrawer(invoiceId) {
+        var inv = FADE_STORE.getInvoices().find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
+        if (!inv) return;
+        var store = inv.store_name || inv.storeName || '-';
+        var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
+        var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+        var storeKey = store.trim().toLocaleLowerCase('id-ID');
+        var rewards = (FADE_STORE.getRewards ? FADE_STORE.getRewards() : []).filter(function (reward) {
+          return String(reward.storeName || '').trim().toLocaleLowerCase('id-ID') === storeKey || reward.primaryInvoiceId === invoiceId || String(reward.relatedInvoiceIds || '').split(/[;,|\n]+/).map(function (id) { return id.trim(); }).indexOf(invoiceId) >= 0;
+        }).sort(function (a, b) { return String(b.sourceInvoiceMonth || b.programMonth || '').localeCompare(String(a.sourceInvoiceMonth || a.programMonth || ''), 'id'); });
+
+        drawerTitle.textContent = 'Detail Invoice & Reward Toko';
+        drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · Akses sesuai izin Admin';
+        drawerContent.innerHTML = '<section class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">Tanggal</span><strong class="text-text-primary">' + esc(inv.invoice_date || inv.date || '-') + '</strong></div>' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">Sales saat ini</span><strong class="text-text-primary">' + esc(inv.sales_name || inv.salesName || '-') + '</strong></div>' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">QTY</span><strong class="text-text-primary tabular-nums">' + Number(inv.qty || 0).toLocaleString('id-ID') + ' pcs</strong></div>' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">Total invoice</span><strong class="text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div>' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">Terbayar tercatat</span><strong class="text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</strong></div>' +
+          '<div class="flex justify-between gap-3"><span class="text-text-muted">Sisa tagihan</span><strong class="text-status-danger tabular-nums">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong></div>' +
+          '</section><section class="flex flex-col gap-2"><h4 class="font-semibold text-text-primary">Reward Toko &amp; Cashback Favorista</h4><p class="text-[11px] text-text-muted">Mengikuti catatan sumber pada Client_Reward_Tracking; tidak menghitung tier baru.</p>' +
+          (rewards.length ? rewards.slice(0, 12).map(function (reward) {
+            var mismatch = reward.invoiceMatchCount !== '' && Number(reward.invoiceMatchCount) === 0;
+            return '<article class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
+              '<div class="flex items-start justify-between gap-3"><div><strong class="text-text-primary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</strong><p class="text-[11px] text-text-muted">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><span class="text-right"><span class="block text-[10px] text-text-muted">Reward/cashback dari sumber</span><strong class="text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></span></div>' +
+              '<div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-2 border-t border-border-subtle"><div class="text-[10px] text-text-muted">Nilai pembelian sumber (' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + ')<strong class="block text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div class="text-[10px] text-text-muted">Qty sumber<strong class="block text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+              '<span class="w-fit px-2 py-1 rounded-full bg-surface-1 border border-border-default text-[10px] font-semibold text-text-secondary">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum diisi di sumber') + '</span>' +
+              (reward.statusNote ? '<p class="text-[11px] text-text-secondary leading-relaxed">' + esc(reward.statusNote) + '</p>' : '') +
+              (mismatch ? '<p class="text-[11px] text-status-warning">ID invoice pada catatan sumber belum ditemukan di daftar invoice.</p>' : '') +
+              '</article>';
+          }).join('') : '<p class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Belum ada data reward toko ini. Impor workbook yang memuat sheet Client_Reward_Tracking.</p>') +
+          '</section>';
+        drawerBackdrop.classList.remove('hidden');
+        drawer.classList.remove('hidden');
+        setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
+      }
+
       function openDrawer(kpiType) {
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
@@ -3159,28 +3263,43 @@
             });
           }
         } else {
-          drawerTitle.textContent = 'Rincian Transaksi: ' + kpiType.toUpperCase();
-          drawerSubtitle.textContent = 'Transaksi pada periode ' + pContext.label;
-          var inRange = invoices.filter(function (i) {
+          var metricTitles = {
+            achievement: 'Rincian Achievement & Target', qty: 'Rincian QTY Penjualan',
+            revenue: 'Rincian Revenue', pembayaran: 'Rincian Pembayaran Tercatat', invoices: 'Rincian Invoice & Outlet'
+          };
+          drawerTitle.textContent = metricTitles[kpiType] || 'Rincian Transaksi';
+          var metricRows = invoices.filter(function (i) {
             var d = i.invoice_date || i.date || '';
+            if (kpiType === 'pembayaran') {
+              var paidDate = i.last_payment_date || i.lastPaymentDate || '';
+              return paidDate >= pContext.dari && paidDate <= pContext.sampai && Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal || 0)) > 0;
+            }
             return d >= pContext.dari && d <= pContext.sampai;
           });
-          if (inRange.length === 0) {
-            drawerContent.innerHTML = '<p class="text-text-muted">Tidak ada transaksi pada rentang tanggal ini.</p>';
+          drawerSubtitle.textContent = kpiType === 'pembayaran'
+            ? 'Invoice dengan tanggal pembayaran terakhir pada periode ' + pContext.label + '. Sumber hanya menyimpan total terbayar per invoice, bukan nominal tiap transaksi.'
+            : 'Invoice pembentuk metrik pada periode ' + pContext.label + ' · ' + metricRows.length + ' invoice';
+          if (metricRows.length === 0) {
+            drawerContent.innerHTML = '<p class="text-text-muted">Tidak ada invoice yang membentuk metrik ini pada rentang tanggal terpilih.</p>';
           } else {
-            inRange.slice(0, 20).forEach(function (inv) {
+            metricRows.slice(0, 100).forEach(function (inv) {
               var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
               var card = document.createElement('div');
               card.className = 'p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-1';
               var invStore2 = inv.store_name || inv.storeName || '-';
               var invNum2 = inv.invoice_id || inv.id || '-';
               var invDate2 = inv.invoice_date || inv.date || '-';
+              var qtyValue = Number(inv.qty || 0);
+              var paidValue = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
+              var contribution = kpiType === 'qty' || kpiType === 'achievement'
+                ? qtyValue.toLocaleString('id-ID') + ' pcs'
+                : (kpiType === 'pembayaran' ? 'Total tercatat Rp ' + paidValue.toLocaleString('id-ID') : 'Rp ' + st.revenue.toLocaleString('id-ID'));
               card.innerHTML =
-                '<div class="flex items-center justify-between font-semibold text-text-primary">' +
-                  '<span>' + esc(invStore2) + ' (' + (inv.qty || 0) + ' pcs)</span>' +
-                  '<span>Rp ' + st.revenue.toLocaleString('id-ID') + '</span>' +
+                '<div class="flex items-center justify-between gap-3 font-semibold text-text-primary">' +
+                  '<span class="min-w-0 truncate">' + esc(invStore2) + ' · ' + qtyValue.toLocaleString('id-ID') + ' pcs</span>' +
+                  '<span class="shrink-0 tabular-nums">' + contribution + '</span>' +
                 '</div>' +
-                '<div class="flex items-center justify-between text-text-muted text-[11px]">' +
+                '<div class="flex items-center justify-between gap-3 text-text-muted text-[11px]">' +
                   '<span>' + esc(invNum2) + ' · ' + esc(invDate2) + '</span>' +
                   '<span>' + esc(st.status) + '</span>' +
                 '</div>';
@@ -3199,7 +3318,17 @@
       }
 
       document.querySelectorAll('.kpi-card').forEach(function (card) {
+        card.tabIndex = 0;
+        card.classList.add('focus-visible:outline', 'focus-visible:outline-2', 'focus-visible:outline-accent', 'active:scale-[.99]', 'active:border-accent/50', 'focus-within:border-accent/50');
+        card.setAttribute('role', card.getAttribute('data-kpi') === 'outstanding' ? 'group' : 'button');
+        card.setAttribute('aria-label', 'Buka rincian ' + (card.querySelector('span') ? card.querySelector('span').textContent.trim() : 'metrik dashboard'));
         card.addEventListener('click', function () { openDrawer(card.getAttribute('data-kpi')); });
+        card.addEventListener('keydown', function (event) {
+          if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            openDrawer(card.getAttribute('data-kpi'));
+          }
+        });
       });
 
       var elBisaDitagih = document.getElementById('kpiBisaDitagihSub');

@@ -96,7 +96,7 @@
 
       var lowerName = name.toLowerCase();
       // Only extract worksheets and shared strings to conserve memory
-      if (!lowerName.startsWith('xl/worksheets/') && lowerName !== 'xl/sharedstrings.xml') {
+      if (!lowerName.startsWith('xl/worksheets/') && lowerName !== 'xl/sharedstrings.xml' && lowerName !== 'xl/workbook.xml' && lowerName !== 'xl/_rels/workbook.xml.rels') {
         continue;
       }
       if (lowerName.includes('/_rels/')) {
@@ -115,7 +115,27 @@
     return n - 1;
   }
 
-  async function parseXlsxFile(file) {
+  function parseWorksheetRows(xmlBytes, shared) {
+    var dom = new DOMParser();
+    var sh = dom.parseFromString(new TextDecoder('utf-8').decode(xmlBytes), 'application/xml');
+    return [].slice.call(sh.getElementsByTagName('row')).map(function (r) {
+      var arr = [];
+      [].slice.call(r.getElementsByTagName('c')).forEach(function (c) {
+        var idx = colIndexFromRef(c.getAttribute('r'));
+        var t = c.getAttribute('t');
+        var v = '';
+        var vn = c.getElementsByTagName('v')[0];
+        var isn = c.getElementsByTagName('t')[0];
+        if (t === 's' && vn) v = shared[+vn.textContent] || '';
+        else if (t === 'inlineStr' && isn) v = isn.textContent;
+        else if (vn) v = vn.textContent;
+        arr[idx] = v;
+      });
+      return arr;
+    });
+  }
+
+  async function parseXlsxWorkbook(file) {
     if (!file) throw new Error('File tidak ditemukan.');
 
     var fileName = (file.name || '').toLowerCase();
@@ -123,7 +143,7 @@
     // 1. Check if file is CSV
     if (fileName.endsWith('.csv') || file.type === 'text/csv' || file.type === 'text/plain') {
       var csvText = await file.text();
-      return parseCsvText(csvText);
+      return { Sheet1: parseCsvText(csvText) };
     }
 
     // 2. Parse as XLSX (ZIP archive)
@@ -136,7 +156,7 @@
       try {
         var fallbackText = new TextDecoder('utf-8').decode(buffer);
         var parsed = parseCsvText(fallbackText);
-        if (parsed.length > 1) return parsed;
+        if (parsed.length > 1) return { Sheet1: parsed };
       } catch (ignored) {}
       throw zipErr;
     }
@@ -153,42 +173,47 @@
       });
     }
 
-    // Locate primary worksheet (prefer sheet1.xml, otherwise first sheet found)
-    var sheetKey = Object.keys(zip).find(function (k) { return k.endsWith('sheet1.xml'); });
-    if (!sheetKey) {
-      sheetKey = Object.keys(zip).find(function (k) { return k.startsWith('xl/worksheets/sheet') && k.endsWith('.xml'); });
-    }
-    if (!sheetKey || !zip[sheetKey]) {
+    var workbookKey = 'xl/workbook.xml';
+    var relsKey = 'xl/_rels/workbook.xml.rels';
+    var worksheetKeys = Object.keys(zip).filter(function (k) { return /^xl\/worksheets\/sheet\d+\.xml$/.test(k); });
+    if (!worksheetKeys.length) {
       throw new Error('Worksheet XML tidak ditemukan di dalam dokumen XLSX.');
     }
-
-    var sh = dom.parseFromString(new TextDecoder('utf-8').decode(zip[sheetKey]), 'application/xml');
-    var rows = [].slice.call(sh.getElementsByTagName('row')).map(function (r) {
-      var arr = [];
-      [].slice.call(r.getElementsByTagName('c')).forEach(function (c) {
-        var idx = colIndexFromRef(c.getAttribute('r'));
-        var t = c.getAttribute('t');
-        var v = '';
-        var vn = c.getElementsByTagName('v')[0];
-        var isn = c.getElementsByTagName('t')[0];
-
-        if (t === 's' && vn) {
-          v = shared[+vn.textContent] || '';
-        } else if (t === 'inlineStr' && isn) {
-          v = isn.textContent;
-        } else if (vn) {
-          v = vn.textContent;
-        }
-        arr[idx] = v;
+    worksheetKeys.sort(function (a, b) { return Number(a.match(/sheet(\d+)\.xml$/)[1]) - Number(b.match(/sheet(\d+)\.xml$/)[1]); });
+    var sheetNames = [];
+    var relationTargets = {};
+    if (zip[workbookKey]) {
+      var wb = dom.parseFromString(new TextDecoder('utf-8').decode(zip[workbookKey]), 'application/xml');
+      sheetNames = [].slice.call(wb.getElementsByTagName('sheet')).map(function (sheet) {
+        return { name: sheet.getAttribute('name'), id: sheet.getAttribute('r:id') || sheet.getAttribute('id') };
       });
-      return arr;
+    }
+    if (zip[relsKey]) {
+      var rels = dom.parseFromString(new TextDecoder('utf-8').decode(zip[relsKey]), 'application/xml');
+      [].slice.call(rels.getElementsByTagName('Relationship')).forEach(function (rel) {
+        var target = String(rel.getAttribute('Target') || '').replace(/^\//, '');
+        if (target.indexOf('xl/') !== 0) target = 'xl/' + target.replace(/^\.\//, '');
+        relationTargets[rel.getAttribute('Id')] = target.replace(/\/+/g, '/');
+      });
+    }
+    var out = {};
+    sheetNames.forEach(function (sheet, index) {
+      var key = relationTargets[sheet.id] || worksheetKeys[index];
+      if (key && zip[key]) out[sheet.name || ('Sheet' + (index + 1))] = parseWorksheetRows(zip[key], shared);
     });
+    if (!Object.keys(out).length) out.Sheet1 = parseWorksheetRows(zip[worksheetKeys[0]], shared);
+    return out;
+  }
 
-    return rows;
+  async function parseXlsxFile(file) {
+    var workbook = await parseXlsxWorkbook(file);
+    var firstSheet = Object.keys(workbook)[0];
+    return firstSheet ? workbook[firstSheet] : [];
   }
 
   var XlsxReader = {
     parseXlsxFile: parseXlsxFile,
+    parseXlsxWorkbook: parseXlsxWorkbook,
     parseCsvText: parseCsvText
   };
 

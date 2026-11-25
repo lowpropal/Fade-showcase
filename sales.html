@@ -632,7 +632,7 @@
             <p id="drillBannerDesc" class="text-xs text-text-muted leading-relaxed">Akumulasi piutang tak tertagih per siklus cut-off aktif.</p>
           </div>
 
-          <div class="lg:col-span-4 flex flex-col gap-2.5">
+          <div id="drillOutstandingTiles" class="lg:col-span-4 flex flex-col gap-2.5">
             <div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-2">
               <div class="flex flex-col">
                 <span id="drillTile1Title" class="text-xs font-semibold text-text-primary flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-danger"></span>Bisa Ditagihkan (Terlambat)</span>
@@ -937,6 +937,15 @@
               </div>
             </div>
 
+            <section class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-3 shadow-sm" aria-labelledby="detRewardTitle">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-accent text-[18px]">loyalty</span>
+                <h2 id="detRewardTitle" class="text-sm font-bold text-text-primary">Reward Toko &amp; Cashback Favorista</h2>
+              </div>
+              <p class="text-[11px] text-text-muted leading-relaxed">Riwayat dan nilai ditampilkan sesuai Master Excel. Nilai ini mengikuti status sumber dan bukan hasil kalkulasi tier baru.</p>
+              <div id="detRewardHistory" class="flex flex-col gap-2.5"></div>
+            </section>
+
             <!-- Verifikasi Gerai & Dokumen Terkait -->
             <div class="bg-surface-1 border border-border-subtle rounded-xl p-5 flex flex-col gap-3 shadow-sm">
               <div class="flex items-center justify-between gap-2">
@@ -1002,7 +1011,7 @@
               <!-- Log Transaksi Pembayaran -->
               <div class="flex flex-col gap-2 pt-2 border-t border-border-subtle">
                 <div class="flex items-center justify-between text-xs">
-                  <span class="font-semibold text-text-primary">Log Transaksi Pembayaran</span>
+                  <span class="font-semibold text-text-primary">Data Pembayaran pada Master</span>
                   <span id="detPayLogCount" class="text-text-muted">0 Transaksi</span>
                 </div>
                 <div id="detPayLogContainer" class="p-4 rounded-xl bg-surface-2 border border-border-subtle text-center text-xs text-text-muted"></div>
@@ -1712,6 +1721,12 @@
             var d = i.invoice_date || i.date || '';
             return d <= pContext.asOf && FADE_ENGINE.evaluateInvoiceState(i, pContext.asOf).sisa > 0;
           });
+        } else if (kpiType === 'pembayaran') {
+          baseList = scopedAll.filter(function (i) {
+            var paidDate = i.last_payment_date || i.lastPaymentDate || '';
+            var paid = Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal || 0));
+            return paidDate >= pContext.dari && paidDate <= pContext.sampai && paid > 0;
+          });
         } else {
           baseList = scopedAll.filter(function (i) {
             var d = i.invoice_date || i.date || '';
@@ -1722,7 +1737,7 @@
         var metaMap = {
           outstanding: { title: 'Outstanding', val: formatRpShort(summary.totalOutstanding), label: 'TOTAL OUTSTANDING', badge: summary.bisaDitagihkan > 0 ? 'PERLU TINDAK LANJUT' : 'TERKENDALI', desc: 'Akumulasi piutang tak tertagih per siklus cut-off ' + pContext.asOf + '.' },
           revenue: { title: 'Revenue', val: formatRpShort(summary.revenue), label: 'TOTAL REVENUE', badge: 'AKTIF', desc: 'Total nilai tagihan kotor yang diterbitkan pada periode ' + pContext.label + '.' },
-          pembayaran: { title: 'Pembayaran Diterima', val: formatRpShort(summary.pembayaranMasuk), label: 'PEMBAYARAN MASUK', badge: 'TERVERIFIKASI', desc: 'Akumulasi kas masuk berdasarkan tanggal pembayaran pada periode aktif.' },
+          pembayaran: { title: 'Pembayaran Diterima', val: formatRpShort(summary.pembayaranMasuk), label: 'PEMBAYARAN TERCATAT', badge: 'RINGKASAN MASTER', desc: 'Nilai tercatat pada invoice yang tanggal pembayaran terakhirnya berada dalam periode. Nominal tiap transaksi tidak tersedia di Master Excel.' },
           qty: { title: 'QTY Penjualan', val: summary.totalQty.toLocaleString('id-ID') + ' pcs', label: 'TOTAL VOLUME PENJUALAN', badge: 'ON TRACK', desc: 'Total kuantitas fisik produk terjual pada periode aktif.' },
           achievement: { title: 'Achievement & Target', val: (summary.achievement != null ? summary.achievement.toFixed(1) + '%' : 'N/A'), label: 'PENCAPAIAN TARGET', badge: (summary.achievement >= 80 ? 'ON TRACK' : 'PERLU DORONGAN'), desc: 'Realisasi ' + summary.totalQty.toLocaleString('id-ID') + ' pcs dari target ' + (summary.target || 0).toLocaleString('id-ID') + ' pcs.' },
           invoices: { title: 'Invoice & Outlet', val: summary.totalDataTerinput + ' Invoice', label: 'VOLUME INVOICE & OUTLET', badge: summary.tokoUnikCount + ' TOKO UNIK', desc: 'Daftar seluruh invoice dan gerai aktif dalam periode terpilih.' }
@@ -1730,7 +1745,7 @@
         var m = metaMap[kpiType] || metaMap.outstanding;
 
         document.getElementById('drillTitle').textContent = 'Drill-down KPI: ' + m.title + ' (' + m.val + ')';
-        document.getElementById('drillSubtitle').textContent = 'Periode: ' + filterDateLabel.textContent + ' · Scope: ' + session.salesName + ' (Sales) · ' + baseList.length + ' Invoice Berkontribusi';
+        document.getElementById('drillSubtitle').textContent = 'Periode: ' + filterDateLabel.textContent + ' · Scope: ' + session.salesName + ' (Sales) · ' + baseList.length + ' Invoice Berkontribusi' + (kpiType === 'pembayaran' ? ' · sumber hanya menyimpan total terbayar per invoice dan tanggal terakhir, bukan nominal per transaksi' : '');
         document.getElementById('drillBannerLabel').textContent = m.label;
         document.getElementById('drillBannerValue').textContent = m.val;
         document.getElementById('drillBannerBadge').textContent = m.badge;
@@ -1746,6 +1761,7 @@
         document.getElementById('drillTile1Val').textContent = formatRpShort(summary.bisaDitagihkan);
         document.getElementById('drillTile2Sub').textContent = tempoCount + ' invoice dalam termin aktif';
         document.getElementById('drillTile2Val').textContent = formatRpShort(summary.belumJatuhTempo);
+        document.getElementById('drillOutstandingTiles').classList.toggle('hidden', kpiType !== 'outstanding');
 
         var ratio = summary.revenue > 0 ? ((summary.totalOutstanding / summary.revenue) * 100) : 0;
         if (kpiType === 'achievement' && summary.achievement != null) {
@@ -1753,6 +1769,11 @@
           document.getElementById('drillRatioVal').textContent = summary.achievement.toFixed(1) + '%';
           document.getElementById('drillRatioBar').style.width = Math.min(100, summary.achievement) + '%';
           document.getElementById('drillRatioHint').textContent = 'Target periode ini: ' + (summary.target || 0).toLocaleString('id-ID') + ' pcs';
+        } else if (kpiType === 'pembayaran') {
+          document.getElementById('drillRatioLabel').textContent = 'BATAS DATA PEMBAYARAN';
+          document.getElementById('drillRatioVal').textContent = 'Per invoice';
+          document.getElementById('drillRatioBar').style.width = '100%';
+          document.getElementById('drillRatioHint').textContent = 'Nominal tiap pembayaran dan tanggal transaksinya tidak tersedia pada Master Excel.';
         } else {
           document.getElementById('drillRatioLabel').textContent = 'PORSI OUTSTANDING DARI REVENUE';
           document.getElementById('drillRatioVal').textContent = ratio.toFixed(1).replace('.', ',') + '%';
@@ -1966,6 +1987,40 @@
         var unitPrice = Number(inv.unitPrice || inv.unit_price_idr || (qty > 0 ? Math.round(st.revenue / qty) : 0));
         var paidPct = st.revenue > 0 ? Math.round((paid / st.revenue) * 100) : 0;
 
+        var rewardContainer = document.getElementById('detRewardHistory');
+        if (rewardContainer) {
+          var invoiceIdSet = [invoiceId];
+          var storeKey = store.trim().toLocaleLowerCase('id-ID');
+          var rewardRecords = (FADE_STORE.getRewards ? FADE_STORE.getRewards() : []).filter(function (reward) {
+            var rewardStore = String(reward.storeName || '').trim().toLocaleLowerCase('id-ID');
+            var linked = String(reward.relatedInvoiceIds || '').split(/[;,|\n]+/).map(function (id) { return id.trim(); });
+            return rewardStore === storeKey || reward.primaryInvoiceId === invoiceId || linked.some(function (id) { return invoiceIdSet.indexOf(id) >= 0; });
+          }).sort(function (a, b) { return String(b.sourceInvoiceMonth || b.programMonth || '').localeCompare(String(a.sourceInvoiceMonth || a.programMonth || ''), 'id'); });
+          if (!rewardRecords.length) {
+            rewardContainer.innerHTML = '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-muted">Belum ada riwayat reward untuk toko ini di data Master Excel yang diimpor.</div>';
+          } else {
+            rewardContainer.innerHTML = rewardRecords.slice(0, 12).map(function (reward) {
+              var matchedInvoice = reward.invoiceMatchCount;
+              var matchWarning = matchedInvoice !== '' && Number(matchedInvoice) === 0
+                ? '<p class="mt-2 text-[11px] text-status-warning">ID invoice pada catatan sumber belum ditemukan di daftar invoice.</p>'
+                : '';
+              var status = reward.salesStatus || reward.sourceStatus || 'Status belum diisi di sumber';
+              var components = [
+                ['Rebate toko', reward.storeRebate],
+                ['Insentif vaporista', reward.vaporistIncentive],
+                ['Insentif tambahan', reward.extraIncentive]
+              ].filter(function (item) { return Number(item[1]) > 0; });
+              return '<article class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
+                '<div class="flex items-start justify-between gap-3"><div class="min-w-0"><h3 class="font-semibold text-text-primary text-xs">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</h3><p class="text-[11px] text-text-muted mt-0.5">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><span class="shrink-0 text-right"><span class="block text-[10px] uppercase tracking-wider text-text-muted">Reward/cashback dari sumber</span><strong class="text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></span></div>' +
+                '<div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-2 border-t border-border-subtle"><div class="text-[10px] text-text-muted">Nilai pembelian sumber (' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + ')<strong class="block text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div class="text-[10px] text-text-muted">Qty sumber<strong class="block text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+                '<div class="flex flex-wrap items-center gap-1.5"><span class="px-2 py-1 rounded-full bg-surface-1 border border-border-default text-[10px] font-semibold text-text-secondary">' + esc(status) + '</span>' + (reward.payoutSchedule ? '<span class="text-[10px] text-text-muted">Jadwal: ' + esc(reward.payoutSchedule) + '</span>' : '') + '</div>' +
+                (components.length ? '<div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 pt-2 border-t border-border-subtle">' + components.map(function (item) { return '<div class="text-[10px] text-text-muted">' + esc(item[0]) + '<strong class="block text-text-secondary tabular-nums">Rp ' + Number(item[1]).toLocaleString('id-ID') + '</strong></div>'; }).join('') + '</div>' : '') +
+                (reward.statusNote ? '<p class="text-[11px] leading-relaxed text-text-secondary">' + esc(reward.statusNote) + '</p>' : '') + matchWarning +
+                '</article>';
+            }).join('');
+          }
+        }
+
         document.getElementById('detailBackLabel').textContent = detailReturnHash.indexOf('#kpi-') === 0 ? 'Kembali ke Drill-down KPI' : (detailReturnHash === '#dashboard' ? 'Kembali ke Dashboard Sales' : 'Kembali ke Invoice & Pembayaran');
         document.getElementById('detailBackBtn').onclick = function () { window.location.hash = detailReturnHash || '#invoices'; };
 
@@ -2174,15 +2229,15 @@
         // Payment Log
         var payLogBox = document.getElementById('detPayLogContainer');
         if (paid > 0) {
-          document.getElementById('detPayLogCount').textContent = '1 Transaksi';
-          payLogBox.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex items-center justify-between text-xs';
+          document.getElementById('detPayLogCount').textContent = 'Ringkasan invoice';
+          payLogBox.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-1 text-xs';
           payLogBox.innerHTML =
-            '<div class="text-left"><div class="font-semibold text-text-primary">Transfer Bank Terverifikasi</div><div class="text-[11px] text-text-muted">' + formatShortIdDate(inv.lastPaymentDate || inv.last_payment_date || inv.date) + '</div></div>' +
-            '<span class="font-bold text-status-success tabular-nums">+ Rp ' + paid.toLocaleString('id-ID') + '</span>';
+            '<div class="flex items-center justify-between gap-3"><span class="font-semibold text-text-primary">Total terbayar tercatat</span><span class="font-bold text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</span></div>' +
+            '<div class="text-[11px] text-text-muted">Tanggal bayar terakhir: ' + formatShortIdDate(inv.lastPaymentDate || inv.last_payment_date || '-') + '. Rincian nominal per transaksi tidak tersedia di Master Excel.</div>';
         } else {
-          document.getElementById('detPayLogCount').textContent = '0 Transaksi';
+          document.getElementById('detPayLogCount').textContent = 'Belum tercatat';
           payLogBox.className = 'p-5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col items-center gap-1.5 text-center text-xs text-text-muted';
-          payLogBox.innerHTML = '<span class="material-symbols-outlined text-[22px] opacity-60">receipt_long</span><strong class="text-text-secondary">Tidak Ada Riwayat</strong><span>Belum ada riwayat pembayaran tercatat untuk invoice ini.</span>';
+          payLogBox.innerHTML = '<span class="material-symbols-outlined text-[22px] opacity-60">receipt_long</span><strong class="text-text-secondary">Belum ada nilai pembayaran tercatat</strong><span>Master Excel tidak memuat detail transaksi pembayaran per invoice.</span>';
         }
 
         // Related uploaded docs
@@ -2523,7 +2578,17 @@
       });
 
       document.querySelectorAll('.kpi-card').forEach(function (card) {
+        card.tabIndex = 0;
+        card.classList.add('focus-visible:outline', 'focus-visible:outline-2', 'focus-visible:outline-accent', 'active:scale-[.99]', 'active:border-accent/50', 'focus-within:border-accent/50');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'Buka rincian ' + (card.querySelector('span') ? card.querySelector('span').textContent.trim() : 'metrik dashboard'));
         card.addEventListener('click', function () { openKpiDrilldownPage(card.getAttribute('data-kpi')); });
+        card.addEventListener('keydown', function (event) {
+          if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            openKpiDrilldownPage(card.getAttribute('data-kpi'));
+          }
+        });
       });
 
       var elBisaDitagih = document.getElementById('kpiBisaDitagihSub');

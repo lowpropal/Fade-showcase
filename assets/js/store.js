@@ -7,6 +7,7 @@
 
   var STORAGE_KEYS = {
     INVOICES: 'fade_showcase_invoices_v021',
+    REWARDS: 'fade_showcase_client_rewards_v1',
     TARGETS: 'fade_showcase_targets_v021',
     SALES: 'fade_showcase_sales_v021',
     STORES: 'fade_showcase_stores_v021',
@@ -14,6 +15,7 @@
     THEME: 'fade_showcase_theme_v02',
     UPLOAD_LOG: 'fade_showcase_upload_history_v021',
     SNAPSHOTS: 'fade_showcase_upload_snapshots_v021',
+    REWARD_SNAPSHOTS: 'fade_showcase_reward_snapshots_v1',
     AUDIT_LOG: 'fade_showcase_audit_log_v021',
     INITIALIZED: 'fade_showcase_initialized_v021'
   };
@@ -96,6 +98,25 @@
       return true;
     } catch (e) {
       console.error('Failed to save invoices', e);
+      return false;
+    }
+  }
+
+  function getRewards() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEYS.REWARDS);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveRewards(rewards) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.REWARDS, JSON.stringify(Array.isArray(rewards) ? rewards : []));
+      return true;
+    } catch (e) {
+      console.error('Failed to save client rewards', e);
       return false;
     }
   }
@@ -367,7 +388,7 @@
     } catch (e) {}
   }
 
-  function saveUploadWithSnapshot(newInvoices, entry) {
+  function saveUploadWithSnapshot(newInvoices, entry, newRewards) {
     try {
       var currentInvoices = getInvoices();
       var uploadId = entry.id || ('upl_' + Date.now());
@@ -379,6 +400,13 @@
       var snapshots = getSnapshots();
       snapshots[uploadId] = currentInvoices;
       localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
+
+      if (Array.isArray(newRewards)) {
+        var rewardSnapshots = JSON.parse(localStorage.getItem(STORAGE_KEYS.REWARD_SNAPSHOTS) || '{}');
+        rewardSnapshots[uploadId] = getRewards();
+        localStorage.setItem(STORAGE_KEYS.REWARD_SNAPSHOTS, JSON.stringify(rewardSnapshots));
+        saveRewards(newRewards);
+      }
 
       // Save new invoices and add history
       saveInvoices(newInvoices);
@@ -419,6 +447,12 @@
 
       // Restore invoices
       saveInvoices(snapshot);
+      var rewardSnapshots = JSON.parse(localStorage.getItem(STORAGE_KEYS.REWARD_SNAPSHOTS) || '{}');
+      if (Object.prototype.hasOwnProperty.call(rewardSnapshots, key)) {
+        saveRewards(rewardSnapshots[key]);
+        delete rewardSnapshots[key];
+        localStorage.setItem(STORAGE_KEYS.REWARD_SNAPSHOTS, JSON.stringify(rewardSnapshots));
+      }
 
       // Save internal audit log
       addAuditLog({
@@ -478,6 +512,8 @@
     resetToDefault: resetToDefault,
     getInvoices: getInvoices,
     saveInvoices: saveInvoices,
+    getRewards: getRewards,
+    saveRewards: saveRewards,
     addInvoice: addInvoice,
     updateInvoice: updateInvoice,
     deleteInvoice: deleteInvoice,
