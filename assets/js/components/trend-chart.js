@@ -8,12 +8,12 @@
 
   var FADE_TREND_CHART = {
     chartType: 'line', // 'line' | 'bar'
-    activeTimeframe: '30D', // '7D' | '30D' | '90D'
+    activeTimeframe: '30D', // '30D' | '90D' | 'CUSTOM'
     activePointIndex: null,
     points: [],
     invoices: [],
     currentSalesFilter: 'all',
-    currentMode: 'bulan', // 'bulan' | 'ytd' | 'custom'
+    currentMode: 'bulan', // Chart-only mode; never follows the dashboard filter.
     customStart: null,
     customEnd: null,
     _initialized: false,
@@ -123,7 +123,7 @@
       var self = this;
       var btnLine = document.getElementById('chartBtnLine');
       var btnBar = document.getElementById('chartBtnBar');
-      var btn7D = document.getElementById('chartBtn7D');
+      var btnCustom = document.getElementById('chartBtnCustom');
       var btn30D = document.getElementById('chartBtn30D');
       var btn90D = document.getElementById('chartBtn90D');
 
@@ -138,11 +138,45 @@
         });
       }
 
-      if (btn7D) {
-        btn7D.addEventListener('click', function () {
-          self.setTimeframe('7D');
-        });
-      }
+      if (btnCustom) btnCustom.addEventListener('click', function () {
+        var panel = document.getElementById('chartDatePanel');
+        if (!panel) return;
+        panel.classList.toggle('hidden');
+        btnCustom.setAttribute('aria-expanded', String(!panel.classList.contains('hidden')));
+      });
+      var closeDate = document.getElementById('chartDateClose');
+      if (closeDate) closeDate.addEventListener('click', function () {
+        var panel = document.getElementById('chartDatePanel');
+        if (panel) panel.classList.add('hidden');
+        if (btnCustom) btnCustom.setAttribute('aria-expanded', 'false');
+        if (btnCustom) btnCustom.focus();
+      });
+      var dateForm = document.getElementById('chartDatePanel');
+      if (dateForm) dateForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var start = document.getElementById('chartDateStart').value;
+        var end = document.getElementById('chartDateEnd').value;
+        var error = document.getElementById('chartDateError');
+        var valid = /^\d{4}-\d{2}-\d{2}$/.test(start) && /^\d{4}-\d{2}-\d{2}$/.test(end) && start <= end;
+        if (!valid) {
+          if (error) error.textContent = 'Tanggal akhir harus sama atau setelah tanggal awal.';
+          return;
+        }
+        var spanDays = Math.round((Date.parse(end + 'T00:00:00Z') - Date.parse(start + 'T00:00:00Z')) / 86400000);
+        if (spanDays > 3653) {
+          if (error) error.textContent = 'Pilih rentang maksimal 10 tahun agar setiap hari tetap terbaca.';
+          return;
+        }
+        if (error) error.textContent = '';
+        self.customStart = start;
+        self.customEnd = end;
+        self.setTimeframe('CUSTOM', true);
+        var label = document.getElementById('chartCustomLabel');
+        if (label) label.textContent = self.formatCustomRange();
+        var panel = document.getElementById('chartDatePanel');
+        if (panel) panel.classList.add('hidden');
+        btnCustom.setAttribute('aria-expanded', 'false');
+      });
       if (btn30D) {
         btn30D.addEventListener('click', function () {
           self.setTimeframe('30D');
@@ -192,7 +226,15 @@
       // Outside tap listener: dismiss tooltip & indicators when tapping outside chart on mobile/desktop
       this._boundOutsidePointer = function (e) {
         var chartBox = document.getElementById('chartInteractiveContainer');
-        if (chartBox && !chartBox.contains(e.target)) {
+        var tipBox = document.getElementById('chartTooltip');
+        var dateWrapper = document.getElementById('chartDateWrapper');
+        if (dateWrapper && !dateWrapper.contains(e.target)) {
+          var datePanel = document.getElementById('chartDatePanel');
+          var dateButton = document.getElementById('chartBtnCustom');
+          if (datePanel) datePanel.classList.add('hidden');
+          if (dateButton) dateButton.setAttribute('aria-expanded', 'false');
+        }
+        if (chartBox && !chartBox.contains(e.target) && !(tipBox && tipBox.contains(e.target))) {
           self.dismissTooltip();
         }
       };
@@ -211,6 +253,15 @@
       // Escape key listener to close active tooltip / focus
       var escHandler = function (e) {
         if (e.key === 'Escape' || e.keyCode === 27) {
+          var datePanel = document.getElementById('chartDatePanel');
+          var dateButton = document.getElementById('chartBtnCustom');
+          if (datePanel && !datePanel.classList.contains('hidden')) {
+            datePanel.classList.add('hidden');
+            if (dateButton) {
+              dateButton.setAttribute('aria-expanded', 'false');
+              dateButton.focus();
+            }
+          }
           self.activePointIndex = null;
           self.dismissTooltip();
         }
@@ -261,8 +312,6 @@
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
         tipHtml.classList.add('hidden');
-        tipHtml.classList.remove('chart-docked');
-        tipHtml.style.display = 'none';
       }
       var guideLine = document.getElementById('chartGuideLine');
       if (guideLine) guideLine.style.display = 'none';
@@ -293,9 +342,10 @@
       this.render();
     },
 
-    setTimeframe: function (tf) {
-      if (this.activeTimeframe === tf) return;
+    setTimeframe: function (tf, force) {
+      if (this.activeTimeframe === tf && !force) return;
       this.activeTimeframe = tf;
+      this.currentMode = tf === 'CUSTOM' ? 'custom' : 'bulan';
       this.activePointIndex = null;
       this.updateButtonStyles();
       this.render();
@@ -306,14 +356,9 @@
       var cType = this.chartType;
       var btnLine = document.getElementById('chartBtnLine');
       var btnBar = document.getElementById('chartBtnBar');
-      var btn7D = document.getElementById('chartBtn7D');
+      var btnCustom = document.getElementById('chartBtnCustom');
       var btn30D = document.getElementById('chartBtn30D');
       var btn90D = document.getElementById('chartBtn90D');
-      var tfGroup = document.getElementById('chartTimeframeGroup');
-
-      if (tfGroup) {
-        tfGroup.style.display = this.currentMode === 'bulan' ? 'flex' : 'none';
-      }
 
       var activeClass = 'h-full px-3 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer flex items-center justify-center';
       var inactiveClass = 'h-full px-3 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer flex items-center justify-center';
@@ -330,9 +375,9 @@
         btnBar.setAttribute('aria-pressed', cType === 'bar');
       }
 
-      if (btn7D) {
-        btn7D.className = tf === '7D' ? activeClass : inactiveClass;
-        btn7D.setAttribute('aria-selected', tf === '7D');
+      if (btnCustom) {
+        btnCustom.classList.toggle('border-accent', tf === 'CUSTOM');
+        btnCustom.setAttribute('aria-pressed', String(tf === 'CUSTOM'));
       }
       if (btn30D) {
         btn30D.className = tf === '30D' ? activeClass : inactiveClass;
@@ -344,12 +389,9 @@
       }
     },
 
-    setData: function (invoices, salesFilter, mode, startDate, endDate) {
+    setData: function (invoices, salesFilter) {
       this.invoices = invoices || [];
       this.currentSalesFilter = salesFilter || 'all';
-      this.currentMode = mode || 'bulan';
-      this.customStart = startDate || null;
-      this.customEnd = endDate || null;
       this.activePointIndex = null;
       this.updateButtonStyles();
       this.render();
@@ -374,23 +416,17 @@
       return parts[2] + ' ' + (months[mIdx] || parts[1]);
     },
 
-    buildCustomMilestones: function (startIso, endIso) {
-      var startMs = new Date(startIso + 'T00:00:00Z').getTime();
-      var endMs = new Date(endIso + 'T00:00:00Z').getTime();
-      if (isNaN(startMs) || isNaN(endMs) || startMs >= endMs) {
-        return [
-          { date: startIso, label: this.formatShortDate(startIso) },
-          { date: endIso || startIso, label: this.formatShortDate(endIso || startIso) }
-        ];
-      }
-      var steps = 6;
-      var result = [];
-      for (var i = 0; i < steps; i++) {
-        var t = startMs + ((endMs - startMs) * (i / (steps - 1)));
-        var iso = new Date(t).toISOString().slice(0, 10);
-        result.push({ date: iso, label: this.formatShortDate(iso) });
-      }
-      return result;
+    formatCustomRange: function () {
+      if (!this.customStart || !this.customEnd) return '';
+      var crossYear = this.customStart.slice(0, 4) !== this.customEnd.slice(0, 4);
+      return this.formatShortDate(this.customStart) + (crossYear ? ' ' + this.customStart.slice(0, 4) : '') +
+        ' – ' + this.formatShortDate(this.customEnd) + (crossYear ? ' ' + this.customEnd.slice(0, 4) : '');
+    },
+
+    formatSelectedDate: function (iso) {
+      var crossYear = this.currentMode === 'custom' && this.customStart && this.customEnd &&
+        this.customStart.slice(0, 4) !== this.customEnd.slice(0, 4);
+      return this.formatShortDate(iso) + (crossYear ? ' ' + iso.slice(0, 4) : '');
     },
 
     aggregatePoints: function (filtered) {
@@ -429,38 +465,19 @@
         var startMs = new Date(this.customStart + 'T00:00:00Z').getTime();
         var endMs = new Date(this.customEnd + 'T00:00:00Z').getTime();
         var diffDays = Math.max(0, Math.round((endMs - startMs) / (24 * 3600 * 1000)));
-        if (diffDays <= 31) {
-          for (var cd = 0; cd <= diffDays; cd++) {
-            var cIso = new Date(startMs + cd * 24 * 3600 * 1000).toISOString().slice(0, 10);
-            buckets.push({
-              date: cIso,
-              label: this.formatShortDate(cIso),
-              startDate: cIso,
-              endDate: cIso
-            });
-          }
-        } else {
-          var milestones = this.buildCustomMilestones(this.customStart, this.customEnd);
-          for (var cm = 0; cm < milestones.length; cm++) {
-            var bucketStart = cm > 0
-              ? new Date(new Date(milestones[cm - 1].date + 'T00:00:00Z').getTime() + 24 * 3600 * 1000).toISOString().slice(0, 10)
-              : milestones[0].date;
-            buckets.push({
-              date: milestones[cm].date,
-              label: milestones[cm].label,
-              startDate: bucketStart,
-              endDate: milestones[cm].date
-            });
-          }
+        if (!isFinite(startMs) || !isFinite(endMs) || startMs > endMs) return [];
+        for (var cd = 0; cd <= diffDays; cd++) {
+          var cIso = new Date(startMs + cd * 24 * 3600 * 1000).toISOString().slice(0, 10);
+          buckets.push({ date: cIso, label: this.formatShortDate(cIso), startDate: cIso, endDate: cIso });
         }
       } else {
-        var rangeEnd = this.customEnd || '2026-11-22';
-        var rangeDays = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+        var rangeEnd = '2026-11-22';
+        var rangeDays = this.activeTimeframe === '90D' ? 90 : 30;
         var rangeEndMs = new Date(rangeEnd + 'T00:00:00Z').getTime();
         var rangeStartMs = rangeEndMs - ((rangeDays - 1) * 24 * 60 * 60 * 1000);
         var rangeStart = new Date(rangeStartMs).toISOString().slice(0, 10);
 
-        // 7D/30D/90D control the visible window only. Every plotted point
+        // 30D/90D control the visible window only. Every plotted point
         // remains one calendar day so hover, touch, and keyboard selection
         // always reveal that day's value instead of a weekly aggregate.
         for (var dayMs = rangeStartMs; dayMs <= rangeEndMs; dayMs += 24 * 60 * 60 * 1000) {
@@ -474,15 +491,14 @@
         }
       }
 
+      var revenueByDay = Object.create(null);
+      filtered.forEach(function (inv) {
+        var day = inv.date || inv.invoice_date || '';
+        revenueByDay[day] = (revenueByDay[day] || 0) + Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
+      });
       var runningTotal = 0;
-      return buckets.map(function (b, idx) {
-        var bucketRev = 0;
-        filtered.forEach(function (inv) {
-          var d = inv.date || inv.invoice_date || '';
-          if (d >= b.startDate && d <= b.endDate) {
-            bucketRev += Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
-          }
-        });
+      return buckets.map(function (b) {
+        var bucketRev = revenueByDay[b.date] || 0;
         runningTotal += bucketRev;
         return {
           date: b.date,
@@ -560,18 +576,18 @@
         if (titleEl) {
           if (this.currentMode === 'ytd') titleEl.textContent = 'Tren Penjualan YTD';
           else if (this.currentMode === 'custom') titleEl.textContent = 'Tren Penjualan (Rentang Kustom)';
-          else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '7D' ? '7 Hari' : (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari'));
+          else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari');
         }
 
         var periodEl = document.getElementById('chartPeriodLabel');
         if (periodEl) {
           if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
-            periodEl.textContent = this.formatShortDate(this.customStart) + ' – ' + this.formatShortDate(this.customEnd);
+            periodEl.textContent = this.formatCustomRange();
           } else if (this.currentMode === 'ytd') {
             periodEl.textContent = 'Jun – Nov 2026 (YTD)';
           } else {
-            var periodEnd = this.customEnd || '2026-11-22';
-            var dayCount = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+            var periodEnd = '2026-11-22';
+            var dayCount = this.activeTimeframe === '90D' ? 90 : 30;
             var periodStart = new Date(new Date(periodEnd + 'T00:00:00Z').getTime() - ((dayCount - 1) * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10);
             periodEl.textContent = this.formatShortDate(periodStart) + ' – ' + this.formatShortDate(periodEnd) + ' (' + dayCount + ' Hari)';
           }
@@ -605,7 +621,7 @@
       });
 
       if (!hasTransactionsInRange) {
-        var tfName = this.currentMode === 'custom' ? 'rentang tanggal ini' : (this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'rentang waktu ini'));
+        var tfName = this.currentMode === 'custom' ? 'rentang tanggal ini' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : '30 hari terakhir');
         var emptyHint = this.currentMode === 'custom' ? 'Pilih tanggal lain untuk melihat transaksi.' : 'Pilih rentang 30D atau 90D untuk melihat riwayat penjualan lainnya.';
         this.setEmptyState(true, 'Tidak ada transaksi pada ' + tfName, emptyHint);
         return;
@@ -708,7 +724,7 @@
       if (titleEl) {
         if (this.currentMode === 'ytd') titleEl.textContent = 'Tren Penjualan YTD';
         else if (this.currentMode === 'custom') titleEl.textContent = 'Tren Penjualan (Rentang Kustom)';
-        else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '7D' ? '7 Hari' : (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari'));
+        else titleEl.textContent = 'Tren Penjualan ' + (this.activeTimeframe === '90D' ? '90 Hari' : '30 Hari');
       }
 
       var periodEl = document.getElementById('chartPeriodLabel');
@@ -716,10 +732,10 @@
         if (this.currentMode === 'ytd') {
           periodEl.textContent = 'Jun – Nov 2026 (YTD)';
         } else if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
-          periodEl.textContent = this.formatShortDate(this.customStart) + ' – ' + this.formatShortDate(this.customEnd);
+          periodEl.textContent = this.formatCustomRange();
         } else {
-          var periodEnd = this.customEnd || '2026-11-22';
-          var dayCount = this.activeTimeframe === '7D' ? 7 : (this.activeTimeframe === '90D' ? 90 : 30);
+          var periodEnd = '2026-11-22';
+          var dayCount = this.activeTimeframe === '90D' ? 90 : 30;
           var periodStart = new Date(new Date(periodEnd + 'T00:00:00Z').getTime() - ((dayCount - 1) * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10);
           periodEl.textContent = this.formatShortDate(periodStart) + ' – ' + this.formatShortDate(periodEnd) + ' (' + dayCount + ' Hari)';
         }
@@ -727,7 +743,7 @@
 
       var growthEl = document.getElementById('chartTrendGrowth');
       if (growthEl) {
-        var timeLabel = this.activeTimeframe === '7D' ? '7 hari terakhir' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : 'tersinkron');
+        var timeLabel = this.currentMode === 'custom' ? 'rentang kustom' : (this.activeTimeframe === '90D' ? '90 hari terakhir' : '30 hari terakhir');
         if (totalRev === 0) {
           growthEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-text-muted">info</span><span class="text-text-muted">Tidak ada transaksi</span>';
         } else {
@@ -746,7 +762,7 @@
       var availableWidth = (self.BOUNDS.xMax - self.BOUNDS.xMin);
       var slotWidth = count > 0 ? (availableWidth / count) : availableWidth;
       var barW = Math.max(8, Math.min(44, Math.round(slotWidth * 0.52)));
-      if (count > 15) barW = Math.max(6, Math.min(22, Math.round(slotWidth * 0.58)));
+      if (count > 15) barW = Math.max(1, Math.min(22, slotWidth * 0.58));
       else if (count <= 7) barW = Math.max(16, Math.min(44, Math.round(slotWidth * 0.44)));
 
       var activeIdx = self.activePointIndex;
@@ -771,7 +787,7 @@
         rect.setAttribute('data-index', idx);
         rect.setAttribute('tabindex', '0');
         rect.setAttribute('role', 'button');
-        rect.setAttribute('aria-label', p.label + ': Penjualan harian Rp ' + (p.daily / 1000000).toFixed(1) + ' jt');
+        rect.setAttribute('aria-label', self.formatSelectedDate(p.date) + ': Penjualan harian Rp ' + (p.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt');
 
         rect.addEventListener('click', function () {
           self.selectPoint(idx);
@@ -906,7 +922,7 @@
         circle.setAttribute('data-index', idx);
         circle.setAttribute('tabindex', '0');
         circle.setAttribute('role', 'button');
-        circle.setAttribute('aria-label', p.label + ': Penjualan harian Rp ' + (p.daily / 1000000).toFixed(1) + ' jt');
+        circle.setAttribute('aria-label', self.formatSelectedDate(p.date) + ': Penjualan harian Rp ' + (p.daily / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt');
 
         circle.addEventListener('click', function () {
           self.selectPoint(idx);
@@ -932,10 +948,8 @@
       // Keep the selected range's detail while preventing labels from colliding.
       var displayIndices = [];
       var maxLabels;
-      if (this.currentMode === 'ytd' || (this.currentMode !== 'custom' && this.activeTimeframe === '7D')) {
-        maxLabels = count;
-      } else if (this.currentMode === 'custom') {
-        maxLabels = count <= 8 ? count : (count > 15 ? 5 : 4);
+      if (this.currentMode === 'custom') {
+        maxLabels = count <= 8 ? count : (count > 60 ? 4 : 5);
       } else if (this.activeTimeframe === '90D') {
         maxLabels = 4;
       } else {
@@ -957,8 +971,8 @@
       if (activePoint && candidates.indexOf(activeIdx) < 0) candidates.push(activeIdx);
 
       var tickFontSize = b.isMobile ? 11 : 12;
-      var useCompactDailyTicks = b.isMobile && this.currentMode !== 'custom' && this.currentMode !== 'ytd' && this.activeTimeframe === '7D';
-      var useCompactWeeklyTicks = b.isMobile && this.currentMode !== 'custom' && this.currentMode !== 'ytd' && this.activeTimeframe === '90D';
+      var useCompactDailyTicks = false;
+      var useCompactWeeklyTicks = false;
       var prioritizedTicks = candidates.map(function (idx) {
         var point = points[idx];
         var fullLabel = String(point.label || '');
@@ -1091,25 +1105,19 @@
       var tipHtml = document.getElementById('chartTooltip');
       if (tipHtml) {
         tipHtml.classList.remove('hidden');
-        tipHtml.style.display = 'block';
 
         var tipDate = document.getElementById('chartTooltipHtmlDate');
         var tipVal = document.getElementById('chartTooltipHtmlVal');
+        var tipCum = document.getElementById('chartTooltipCumulativeVal');
         var tipBadge = document.getElementById('chartTooltipTypeBadge');
         var tipValLabel = document.getElementById('chartTooltipValLabel');
 
-        if (tipDate) tipDate.textContent = pt.label;
+        if (tipDate) tipDate.textContent = this.formatSelectedDate(pt.date);
         if (tipVal) tipVal.textContent = tipFormattedVal;
+        var cumulativeFormatted = 'Rp ' + (pt.cumulative / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' jt';
+        if (tipCum) tipCum.textContent = cumulativeFormatted;
         if (tipBadge) {
-          var tipBucketType = 'Harian';
-          if (this.currentMode === 'ytd') {
-            tipBucketType = 'Bulanan';
-          } else if (this.currentMode === 'custom' && this.customStart && this.customEnd) {
-            var customStartMs = new Date(this.customStart + 'T00:00:00Z').getTime();
-            var customEndMs = new Date(this.customEnd + 'T00:00:00Z').getTime();
-            if (Math.round((customEndMs - customStartMs) / (24 * 3600 * 1000)) > 31) tipBucketType = 'Mingguan';
-          }
-          tipBadge.textContent = tipBucketType;
+          tipBadge.textContent = 'Harian';
         }
         var compactTooltipLabels = ((window.innerWidth || document.documentElement.clientWidth) < 360);
         if (tipValLabel) {
@@ -1117,12 +1125,6 @@
           tipValLabel.setAttribute('aria-label', 'Penjualan');
         }
 
-        tipHtml.classList.add('chart-docked');
-        tipHtml.style.left = '0px';
-        tipHtml.style.right = '0px';
-        tipHtml.style.top = '4px';
-        tipHtml.style.width = 'auto';
-        tipHtml.style.maxWidth = 'none';
       }
 
       // 2. Synchronized SVG Tooltip (Fallback & Accessible SVG Parity)
@@ -1161,7 +1163,7 @@
 
       var liveRegion = document.getElementById('chartLiveRegion');
       if (liveRegion) {
-        liveRegion.textContent = pt.label + ', Penjualan harian: ' + tipFormattedVal;
+        liveRegion.textContent = this.formatSelectedDate(pt.date) + ', Penjualan harian: ' + tipFormattedVal + ', Kumulatif: ' + cumulativeFormatted;
       }
     },
 

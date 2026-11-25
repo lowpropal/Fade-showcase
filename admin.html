@@ -56,7 +56,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261124b">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261125d">
 </head>
 <body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
 
@@ -376,9 +376,9 @@
                   </span>
                 </div>
 
-                <div id="chartControlsRow" class="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
+                <div id="chartControlsRow" class="chart-controls-row flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
                   <!-- Chart Switcher (Line vs Bar) -->
-                  <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle h-9" role="group">
+                  <div id="chartTypeGroup" aria-label="Pilihan Tampilan Grafik" class="chart-type-group flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle h-9" role="group">
                     <button id="chartBtnLine" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-caption font-label bg-surface-1 text-accent font-semibold border border-border-default shadow-sm transition-colors cursor-pointer h-full" title="Tampilan Garis" type="button" aria-pressed="true">
                       <span class="material-symbols-outlined text-[15px] text-accent">show_chart</span>
                       <span class="font-medium text-text-primary text-xs">Line</span>
@@ -389,15 +389,56 @@
                     </button>
                   </div>
                   <!-- Timeframe Selector -->
-                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs h-9">
-                    <button id="chartBtn7D" type="button" role="tab" aria-selected="false" class="px-3 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer text-xs h-full flex items-center justify-center">7D</button>
+                  <div id="chartTimeframeGroup" role="tablist" aria-label="Rentang Waktu Grafik" class="chart-timeframe-group flex items-center gap-1 p-0.5 rounded-lg bg-surface-2 border border-border-subtle text-xs h-9">
                     <button id="chartBtn30D" type="button" role="tab" aria-selected="true" class="px-3 py-1 rounded-md bg-surface-1 text-text-primary font-semibold border border-border-default shadow-sm transition-colors cursor-pointer text-xs h-full flex items-center justify-center">30D</button>
                     <button id="chartBtn90D" type="button" role="tab" aria-selected="false" class="px-3 py-1 rounded-md text-text-muted hover:text-text-primary transition-colors cursor-pointer text-xs h-full flex items-center justify-center">90D</button>
+                  </div>
+                  <div id="chartDateWrapper" class="relative shrink-0">
+                    <button id="chartBtnCustom" type="button" aria-pressed="false" aria-expanded="false" aria-controls="chartDatePanel" class="inline-flex min-h-[44px] md:min-h-0 md:h-9 items-center gap-1.5 px-3 rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm">
+                      <span class="material-symbols-outlined text-[16px] text-accent" aria-hidden="true">calendar_today</span>
+                      <span id="chartCustomLabel">Kustom</span>
+                      <span class="material-symbols-outlined text-[16px] text-text-muted" aria-hidden="true">expand_more</span>
+                    </button>
+                    <form id="chartDatePanel" class="chart-date-panel hidden absolute -left-[17px] right-auto w-[calc(100vw-2rem)] sm:left-auto sm:right-0 sm:w-[380px] mt-2 max-w-[calc(100vw-2rem)] rounded-xl border border-border-default bg-surface-1 shadow-2xl p-4 z-40" aria-label="Rentang tanggal khusus grafik">
+                      <div class="flex items-center justify-between border-b border-border-subtle pb-2 mb-3">
+                        <span class="text-sm font-bold text-text-primary">Rentang Tanggal Grafik</span>
+                        <button id="chartDateClose" type="button" class="min-w-11 min-h-11 inline-flex items-center justify-center rounded-lg text-text-muted hover:bg-surface-hover" aria-label="Tutup kalender grafik"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">close</span></button>
+                      </div>
+                      <div class="grid grid-cols-2 gap-3">
+                        <label class="block min-w-0 text-xs text-text-secondary">Dari<input id="chartDateStart" type="date" value="2026-11-01" required class="mt-1 w-full min-w-0 min-h-11 px-2 rounded-lg border border-border-default bg-surface-2 text-text-primary focus:border-accent"></label>
+                        <label class="block min-w-0 text-xs text-text-secondary">Sampai<input id="chartDateEnd" type="date" value="2026-11-22" required class="mt-1 w-full min-w-0 min-h-11 px-2 rounded-lg border border-border-default bg-surface-2 text-text-primary focus:border-accent"></label>
+                      </div>
+                      <p id="chartDateError" class="mt-2 text-xs text-red-400" role="alert"></p>
+                      <button type="submit" class="mt-3 w-full min-h-11 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] font-semibold text-xs hover:opacity-90">Terapkan Rentang</button>
+                      <p class="mt-2 text-[11px] text-text-muted">Hanya mengubah grafik.</p>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
 
+              <div id="chartTooltip" class="chart-selection-card hidden">
+                <div class="tooltip-header-row">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
+                    <span id="chartTooltipHtmlDate" class="text-[11px] font-medium text-text-muted">--</span>
+                  </div>
+                  <span id="chartTooltipTypeBadge" class="mobile-hide text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary border border-border-subtle">Harian</span>
+                </div>
+                <div class="tooltip-body-wrapper">
+                  <div class="flex items-baseline justify-between gap-3">
+                    <span id="chartTooltipValLabel" class="text-text-muted font-medium">Penjualan</span>
+                    <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-sm tabular-nums tracking-tight">Rp --</span>
+                  </div>
+                  <div class="flex items-baseline justify-between gap-3">
+                    <span class="text-[11px] text-text-muted font-medium">Kumulatif</span>
+                    <span id="chartTooltipCumulativeVal" class="chart-selection-cumulative font-semibold text-sm tabular-nums">Rp --</span>
+                  </div>
+                </div>
+                <button id="chartTooltipCloseBtn" type="button" class="chart-selection-close" aria-label="Tutup info grafik">
+                  <span class="material-symbols-outlined text-[16px] block leading-none">close</span>
+                </button>
+              </div>
             <!-- Larger Interactive Spline Area Chart (SVG Container-Aware) -->
             <div id="chartInteractiveContainer" class="relative w-full h-[270px] md:h-[374px] lg:h-[394px] pt-2 pb-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-lg" tabindex="0" role="region" aria-label="Grafik Tren Penjualan. Gunakan tombol panah kiri dan kanan untuk memilih titik data.">
               <svg id="trendChartSvg" aria-label="Grafik Interaktif Tren Penjualan" class="w-full h-full overflow-visible select-none" style="touch-action: pan-y;" viewBox="0 0 1000 340">
@@ -435,25 +476,6 @@
                 </g>
                 <g id="chartXAxisLabels"></g>
               </svg>
-              <!-- Polished Desktop & Mobile Floating HTML Tooltip -->
-              <div id="chartTooltip" class="pointer-events-none absolute hidden p-3 rounded-xl bg-surface-1/95 backdrop-blur-md border border-border-default shadow-2xl text-xs z-30 transition-all duration-75 min-w-[190px] max-w-[240px]">
-                <div class="tooltip-header-row flex items-center justify-between gap-2 border-b border-border-subtle pb-1.5 mb-1.5">
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
-                    <span id="chartTooltipHtmlDate" class="text-[11px] font-medium text-text-muted">--</span>
-                  </div>
-                  <span id="chartTooltipTypeBadge" class="mobile-hide text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-surface-2 text-text-secondary border border-border-subtle">Harian</span>
-                </div>
-                <div class="tooltip-body-wrapper flex flex-col gap-1">
-                  <div class="flex items-baseline justify-between gap-3">
-                    <span id="chartTooltipValLabel" class="mobile-hide text-[11px] text-text-muted font-medium">Nilai:</span>
-                    <span id="chartTooltipHtmlVal" class="font-bold text-text-primary text-sm tabular-nums tracking-tight">Rp --</span>
-                  </div>
-                </div>
-                <button id="chartTooltipCloseBtn" type="button" class="hidden text-text-muted hover:text-text-primary p-0.5 rounded transition-colors shrink-0" aria-label="Tutup info grafik">
-                  <span class="material-symbols-outlined text-[16px] block leading-none">close</span>
-                </button>
-              </div>
               <div id="chartPointerOverlay" class="absolute inset-0 cursor-crosshair z-10" style="touch-action: pan-y;"></div>
               <div id="chartLiveRegion" class="sr-only" aria-live="polite"></div>
             </div>
@@ -1081,7 +1103,7 @@
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
   <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
   <script src="./assets/js/store.js?v=20261122d"></script>
-  <script src="./assets/js/components/trend-chart.js?v=20261125c"></script>
+  <script src="./assets/js/components/trend-chart.js?v=20261125d"></script>
   <script src="./assets/js/vendor/xlsx-reader.js?v=20261122d"></script>
   <script>
     (function () {
@@ -1698,7 +1720,7 @@
 
       function renderAdminAnalytics(summary, invoices) {
         if (window.FADE_TREND_CHART) {
-          window.FADE_TREND_CHART.setData(invoices, currentSalesFilter, currentMode, customStartDate, customEndDate);
+          window.FADE_TREND_CHART.setData(invoices, currentSalesFilter);
         } else {
           var elMonthlyRevenue = document.getElementById('chartMonthlyRevenue');
           if (elMonthlyRevenue) {

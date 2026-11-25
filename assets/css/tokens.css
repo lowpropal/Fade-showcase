@@ -228,132 +228,64 @@ tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
 .dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
 html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 
-/* Shared chart summary tooltip for Admin and Sales at every viewport. */
-  #chartTooltip.chart-docked:not(.hidden) {
-    position: absolute !important;
-    top: 4px !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    padding: 4px 8px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 6px !important;
-    pointer-events: auto !important;
-    border-radius: 10px !important;
-    background: var(--bg-surface-1, #18181B) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
-    border: 1px solid var(--border-default, #39393D) !important;
-    z-index: 30 !important;
-  }
-  #chartTooltip.hidden {
-    display: none !important;
-  }
-  #chartTooltip.chart-docked .tooltip-header-row {
-    flex: 0 0 auto !important;
-    border-bottom: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 4px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipHtmlDate {
-    font-size: 10px !important;
-    white-space: nowrap !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipTypeBadge {
-    display: none !important;
-  }
-  #chartTooltip.chart-docked .tooltip-body-wrapper {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 5px !important;
-    white-space: nowrap !important;
-  }
-  #chartTooltip.chart-docked .tooltip-body-wrapper > div {
-    min-width: 0 !important;
-    display: inline-flex !important;
-    align-items: baseline !important;
-    justify-content: flex-start !important;
-    gap: 2px !important;
-    white-space: nowrap !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipValLabel {
-    display: inline !important;
-    font-size: 9px !important;
-    line-height: 1.1 !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipHtmlVal {
-    font-size: 11px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipCloseBtn {
-    display: inline-flex !important;
-    flex: 0 0 44px !important;
-    width: 44px !important;
-    height: 44px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    pointer-events: auto !important;
-  }
-@media (min-width: 768px) {
-  #chartTooltip.chart-docked .tooltip-header-row { gap: 8px !important; }
-  #chartTooltip.chart-docked #chartTooltipHtmlDate { font-size: 12px !important; }
-  #chartTooltip.chart-docked .tooltip-body-wrapper { gap: 16px !important; }
-  #chartTooltip.chart-docked #chartTooltipValLabel { font-size: 11px !important; }
-  #chartTooltip.chart-docked #chartTooltipHtmlVal { font-size: 14px !important; }
+/* Chart point details stay in their own row above the plot. */
+.chart-selection-card.hidden { display: none; }
+.chart-selection-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.75rem;
+  grid-template-areas: "date close" "values close";
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  width: min(100%, 24.375rem);
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-default);
+  border-radius: 0.625rem;
+  background: var(--bg-surface-1);
+  color: var(--text-primary);
 }
-
-/* Responsive chart controls; selected values stay docked above the plot on all views. */
+.chart-selection-card .tooltip-header-row {
+  grid-area: date;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.chart-selection-card .tooltip-body-wrapper {
+  grid-area: values;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.1875rem;
+}
+.chart-selection-card .tooltip-body-wrapper > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+.chart-selection-card .tooltip-body-wrapper span:last-child { font-variant-numeric: tabular-nums; }
+.chart-selection-cumulative { color: var(--status-success); }
+.chart-selection-close {
+  grid-area: close;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.5rem;
+  color: var(--text-muted);
+}
+.chart-selection-close:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+.chart-date-panel input[type="date"] { color-scheme: dark; }
+html.light .chart-date-panel input[type="date"] { color-scheme: light; }
 @media (max-width: 767.98px) {
-  #trendChartCard #chartControlsRow {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-  #trendChartCard #chartTypeGroup,
-  #trendChartCard #chartTimeframeGroup {
-    min-width: 0;
-    max-width: 100%;
-  }
-  #trendChartCard #chartTimeframeGroup {
-    flex: 0 1 auto;
-    max-width: 100%;
-    gap: 0;
-  }
-  #trendChartCard #chartTimeframeGroup > button {
-    flex: 1 1 0;
-  }
-  #trendChartCard #chartTypeGroup > button {
-    min-width: 0;
-    padding-left: clamp(0.5rem, 2.2vw, 0.75rem);
-    padding-right: clamp(0.5rem, 2.2vw, 0.75rem);
-  }
-
-}
-@media (max-width: 359.98px) {
-  #chartTooltip.chart-docked:not(.hidden) {
-    gap: 4px !important;
-    padding: 3px 5px !important;
-  }
-  #chartTooltip.chart-docked .tooltip-header-row {
-    gap: 3px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipHtmlDate {
-    font-size: 9px !important;
-  }
-  #chartTooltip.chart-docked .tooltip-body-wrapper {
-    gap: 3px !important;
-  }
-  #chartTooltip.chart-docked .tooltip-body-wrapper > div {
-    gap: 1px !important;
-  }
-  #chartTooltip.chart-docked #chartTooltipHtmlVal {
-    font-size: 10px !important;
-  }
+  .chart-controls-row { flex-wrap: wrap; justify-content: flex-start; }
+  .chart-type-group, .chart-timeframe-group { min-width: 0; max-width: 100%; }
+  .chart-timeframe-group { flex: 0 1 auto; gap: 0; }
+  .chart-timeframe-group > button { flex: 1 1 0; }
+  .chart-type-group > button { min-width: 0; }
+  .chart-selection-card { width: 100%; }
 }
