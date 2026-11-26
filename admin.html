@@ -1375,11 +1375,52 @@
         document.body.classList.remove('overflow-hidden');
         if (storeSearchReturnFocus && document.contains(storeSearchReturnFocus)) storeSearchReturnFocus.focus();
       }
+      function getIndependentPageRange(prefix) {
+        var context = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var follow = document.getElementById(prefix + 'FollowDashboard');
+        var start = document.getElementById(prefix + 'StartDate');
+        var end = document.getElementById(prefix + 'EndDate');
+        if (follow && follow.checked) {
+          if (start) start.value = context.dari;
+          if (end) end.value = context.sampai;
+          return { start: context.dari, end: context.sampai, asOf: context.asOf };
+        }
+        var from = start && start.value || context.dari;
+        var to = end && end.value || context.sampai;
+        if (from > to) { var swap = from; from = to; to = swap; }
+        if (start) start.value = from;
+        if (end) end.value = to;
+        return { start: from, end: to, asOf: context.asOf };
+      }
+
+      function pageInvoiceStatusMatches(invoice, status, asOf) {
+        if (status === 'all') return true;
+        var state = FADE_ENGINE.evaluateInvoiceState(invoice, asOf);
+        if (status === 'PAID') return state.sisa <= 0;
+        if (status === 'OUTSTANDING') return state.sisa > 0;
+        if (status === 'OVERDUE') return state.status === 'Terlambat Bayar';
+        return true;
+      }
+
       function renderStoreSearch(selectedName, selectedId, openDetail, returnFocus) {
         if (arguments.length > 1) selectedStoreSearchId = arguments[1] || '';
         if (selectedName) selectedStoreSearchName = selectedName;
         else selectedName = selectedStoreSearchName;
         var accessible = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, 'all');
+        var salesFilter = document.getElementById('storeSearchSalesFilter');
+        var statusFilter = document.getElementById('storeSearchStatusFilter');
+        var range = getIndependentPageRange('storeSearch');
+        if (session.role === 'admin' || session.role === 'sales_manager') {
+          var salesOptions = Array.from(new Set(accessible.map(function (inv) { return inv.sales_name || inv.salesName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+          if (salesFilter && salesFilter.options.length <= 1) salesOptions.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; salesFilter.appendChild(option); });
+        }
+        var selectedSales = salesFilter ? salesFilter.value : 'all';
+        var selectedStatus = statusFilter ? statusFilter.value : 'all';
+        accessible = accessible.filter(function (inv) {
+          var salesName = inv.sales_name || inv.salesName || '';
+          var date = inv.invoice_date || inv.date || '';
+          return (selectedSales === 'all' || salesName === selectedSales) && date >= range.start && date <= range.end && pageInvoiceStatusMatches(inv, selectedStatus, range.asOf);
+        });
         function storeIdentity(invoice) {
           var name = String(invoice.store_name || invoice.storeName || '').trim();
           var id = String(invoice.store_id || invoice.storeId || '').trim();
@@ -4006,6 +4047,23 @@
         button.addEventListener('click', function () { runExport(button.getAttribute('data-page-export')); });
       });
       document.getElementById('storeSearchInput').addEventListener('input', function () { renderStoreSearch(selectedStoreSearchName); });
+      ['storeSearchSalesFilter', 'storeSearchStatusFilter'].forEach(function (id) { document.getElementById(id).addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); }); });
+      document.getElementById('storeSearchFollowDashboard').addEventListener('change', function () {
+        document.getElementById('storeSearchStartDate').disabled = this.checked;
+        document.getElementById('storeSearchEndDate').disabled = this.checked;
+        renderStoreSearch(selectedStoreSearchName);
+      });
+      ['storeSearchStartDate', 'storeSearchEndDate'].forEach(function (id) { document.getElementById(id).addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); }); });
+      document.getElementById('storeSearchReset').addEventListener('click', function () {
+        document.getElementById('storeSearchInput').value = '';
+        document.getElementById('storeSearchSalesFilter').value = 'all';
+        document.getElementById('storeSearchStatusFilter').value = 'all';
+        document.getElementById('storeSearchFollowDashboard').checked = true;
+        document.getElementById('storeSearchStartDate').disabled = true;
+        document.getElementById('storeSearchEndDate').disabled = true;
+        selectedStoreSearchName = ''; selectedStoreSearchId = '';
+        renderStoreSearch('');
+      });
       document.getElementById('consignmentSearch').addEventListener('input', renderConsignment);
       document.getElementById('consignmentStoreFilter').addEventListener('change', renderConsignment);
       document.getElementById('consignmentFileInput').addEventListener('change', async function () {
