@@ -258,7 +258,7 @@
       <section id="viewDashboard" class="flex flex-col gap-6">
         
         <!-- KPI Grid (Hybrid Mobile Hierarchy: Card 1 Full -> QTY/Rev Pair -> Bayar/Tempo Pair -> Card 6 Full) -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div id="dashboardKpiGrid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <!-- Card 1: Achievement & Target (Full width on mobile) -->
           <div data-kpi="achievement" class="col-span-2 lg:col-span-1 kpi-card group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle hover:border-accent/40 transition-colors cursor-pointer shadow-sm">
             <div class="flex items-center justify-between gap-2">
@@ -324,18 +324,19 @@
               <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Outstanding</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
-            <div class="mt-2 flex items-baseline gap-2 min-w-0">
-              <span id="kpiOutstandingVal" class="text-[14px] xs:text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
-            </div>
-            <div class="mt-3 pt-1.5 sm:pt-2 border-t border-border-subtle flex flex-col gap-1.5 text-[11px] sm:text-xs text-text-secondary min-w-0">
-              <div id="kpiBisaDitagihSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Bisa Ditagihkan">
-                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Bisa Ditagih</span>
-                <span id="kpiBisaDitagihVal" class="font-semibold text-status-danger tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
-              </div>
-              <div id="kpiBelumJatuhTempoSub" class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between hover:text-accent cursor-pointer transition-colors leading-tight" title="Filter tagihan Belum Jatuh Tempo">
-                <span class="text-text-muted text-[10px] sm:text-[11px] font-medium">Tempo</span>
-                <span id="kpiBelumJatuhTempoVal" class="font-semibold text-text-secondary tabular-nums text-[11px] sm:text-xs whitespace-nowrap">Rp --</span>
-              </div>
+            <button id="kpiBisaDitagihSub" type="button" class="mt-2 flex flex-col items-start gap-1 text-left hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded-md transition-colors" title="Lihat piutang jatuh tempo yang siap ditagih">
+              <span class="text-[11px] sm:text-xs font-semibold text-status-danger">Piutang Jatuh Tempo · Siap Ditagih</span>
+              <span id="kpiBisaDitagihVal" class="text-xl sm:text-2xl lg:text-3xl font-bold text-status-danger tabular-nums tracking-tight">Rp --</span>
+            </button>
+            <div class="mt-3 pt-2 border-t border-border-subtle flex flex-col gap-1.5 text-[11px] sm:text-xs text-text-secondary min-w-0">
+              <button id="kpiBelumJatuhTempoSub" type="button" class="w-full flex items-baseline justify-between text-left hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded-md transition-colors" title="Lihat piutang yang belum jatuh tempo">
+                <span class="text-text-muted font-medium">Piutang Tempo Berjalan</span>
+                <span id="kpiBelumJatuhTempoVal" class="font-semibold text-text-secondary tabular-nums whitespace-nowrap">Rp --</span>
+              </button>
+              <button id="kpiOutstandingTotalFilter" type="button" class="w-full flex items-baseline justify-between text-left hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded-md transition-colors" title="Lihat total seluruh piutang">
+                <span class="text-text-muted font-medium">Total Outstanding</span>
+                <span id="kpiOutstandingVal" class="font-semibold text-text-primary tabular-nums whitespace-nowrap">Rp --</span>
+              </button>
             </div>
           </div>
 
@@ -490,10 +491,11 @@
                 <h2 class="text-base font-semibold text-text-primary tracking-tight">Status Pembayaran</h2>
                 <p id="chartStatusSub" class="text-xs text-text-muted mt-0.5">Distribusi dari total invoice periode ini</p>
               </div>
-              <div class="flex items-center gap-4 text-xs text-text-muted">
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
                 <span class="tabular-nums"><span id="chartStatusTotalInv" class="text-text-primary font-medium">--</span> total invoice</span>
                 <span>·</span>
-                <span class="tabular-nums">Tingkat tertagih <span id="chartStatusCollectedRate" class="text-status-success font-medium">--%</span></span>
+                <span class="tabular-nums">Pembayaran masuk ÷ tagihan periode <span id="chartStatusCollectedRate" class="text-status-success font-medium">--%</span></span>
+                <span class="text-[10px] text-text-muted">Pembayaran dihitung menurut tanggal bayar, tagihan menurut tanggal terbit; rasio bisa melebihi 100%.</span>
               </div>
             </div>
 
@@ -624,13 +626,14 @@
               <span class="material-symbols-outlined text-[18px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">search</span>
               <input id="invoiceSearchInput" type="text" placeholder="Cari ID, nama toko, sales..." class="min-h-[44px] w-full pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors">
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 w-full sm:w-auto">
               <select id="invoiceSalesFilter" aria-label="Filter sales invoice" class="hidden min-h-[44px] min-w-0 w-full sm:w-auto px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
                 <option value="all">Semua Sales</option>
               </select>
               <select id="invoiceStatusFilter" aria-label="Filter status tagihan" class="min-h-[44px] min-w-0 w-full sm:w-auto px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
                 <option value="all">Semua Status</option>
                 <option value="OUTSTANDING">Semua Outstanding</option>
+                <option value="TEMPO">Piutang Tempo Berjalan</option>
                 <option value="PAID">Lunas</option>
                 <option value="PARTIAL">Sebagian</option>
                 <option value="UNPAID">Belum Jatuh Tempo</option>
@@ -638,7 +641,13 @@
               </select>
               <label class="inline-flex items-center justify-center gap-2 min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-secondary cursor-pointer select-none whitespace-nowrap">
                 <input id="invoiceDateScopeCheckbox" type="checkbox" checked class="accent-[#F28C45] w-4 h-4 rounded">
-                <span class="truncate">Ikuti Tanggal</span>
+                <span class="truncate">Ikuti tanggal dashboard</span>
+              </label>
+              <label class="flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Dari tanggal
+                <input id="invoiceStartDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
+              </label>
+              <label class="flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Sampai tanggal
+                <input id="invoiceEndDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
               </label>
             </div>
           </div>
@@ -656,7 +665,7 @@
                 <th class="py-3 px-3.5 text-[11px] min-w-[110px]">No. Invoice</th>
                 <th class="py-3 px-3.5 text-[11px] min-w-[100px]">Tanggal</th>
                 <th class="py-3 px-3.5 text-[11px] min-w-[190px]">Nama Toko</th>
-                <th class="py-3 px-3.5 text-[11px] min-w-[100px]">Sales</th>
+                <th class="py-3 px-3.5 text-[11px] min-w-[170px]">PIC Historis → Sekarang</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[70px]">QTY</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[130px]">Total Invoice</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[115px]">Terbayar</th>
@@ -1192,6 +1201,8 @@
       var currentPeriod = '2026-11';
       var customStartDate = '2026-11-01';
       var customEndDate = '2026-11-22';
+      var invoiceRangeStart = '';
+      var invoiceRangeEnd = '';
       var currentSalesFilter = session.role === 'sales' ? session.salesName : 'all';
       var invoiceSalesFilter = 'all';
       var activeCompMetric = 'qty';
@@ -1229,6 +1240,14 @@
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
+      }
+
+      function getInvoicePicHandover(invoice) {
+        var fallback = invoice.sales_name || invoice.salesName || '-';
+        return {
+          historical: invoice.salesHistoris || invoice.sales_historis || invoice.sales_lama || fallback,
+          current: invoice.salesSaatIni || invoice.sales_saat_ini || fallback
+        };
       }
 
       function showToast(msg, type) {
@@ -1422,7 +1441,7 @@
         }
 
         // Real Export Dropdown (Primary Monochrome Action Token Style)
-        exportActionContainer.innerHTML =
+        exportActionContainer.innerHTML = session.role === 'admin' ?
           '<button id="exportMenuBtn" type="button" class="inline-flex w-full lg:w-auto min-h-[48px] lg:min-h-0 lg:h-9 items-center justify-center gap-2 lg:gap-1.5 px-3.5 rounded-xl lg:rounded-lg border border-transparent bg-[var(--action-bg)] text-[var(--action-fg)] hover:bg-accent hover:text-[#111112] hover:border-accent active:bg-accent active:text-[#111112] active:border-accent focus-visible:bg-accent focus-visible:text-[#111112] focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent text-xs font-semibold transition-colors shadow-sm cursor-pointer">' +
             '<span class="material-symbols-outlined text-[16px]">download</span>' +
             '<span>Ekspor</span>' +
@@ -1432,11 +1451,11 @@
             '<button type="button" data-export="xls" class="export-opt-btn min-h-[44px] lg:min-h-0 w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-status-success">table_view</span><span>Excel (.xls)</span></button>' +
             '<button type="button" data-export="csv" class="export-opt-btn min-h-[44px] lg:min-h-0 w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-accent">csv</span><span>CSV (.csv)</span></button>' +
             '<button type="button" data-export="doc" class="export-opt-btn min-h-[44px] lg:min-h-0 w-full text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-text-secondary">description</span><span>Rekap Dokumen (.doc)</span></button>' +
-          '</div>';
+          '</div>' : '';
 
         exportMenuBtn = document.getElementById('exportMenuBtn');
         exportDropdownMenu = document.getElementById('exportDropdownMenu');
-        exportMenuBtn.addEventListener('click', function (e) {
+        if (exportMenuBtn && exportDropdownMenu) exportMenuBtn.addEventListener('click', function (e) {
           e.stopPropagation();
           exportDropdownMenu.classList.toggle('hidden');
         });
@@ -1457,14 +1476,14 @@
         var useDateEl = document.getElementById('invoiceDateScopeCheckbox');
         var search = searchEl ? searchEl.value.toLowerCase().trim() : '';
         var statusFilter = statusEl ? statusEl.value : 'all';
-        var useDate = useDateEl ? useDateEl.checked : true;
+        var dateRange = getInvoiceDateRange(pContext, useDateEl && useDateEl.checked);
 
         return all.filter(function (inv) {
           var sName = inv.sales_name || inv.salesName;
           if (session.role === 'sales' && sName !== session.salesName) return false;
           if (invoiceSalesFilter !== 'all' && sName !== invoiceSalesFilter) return false;
           var dStr = inv.invoice_date || inv.date || '';
-          if (useDate && (dStr < pContext.dari || dStr > pContext.sampai)) return false;
+          if (dStr < dateRange.start || dStr > dateRange.end) return false;
 
           var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
           var out = evalState.sisa;
@@ -1472,6 +1491,7 @@
           if (statusFilter === 'OUTSTANDING' && out <= 0) return false;
           if (statusFilter === 'PAID' && out > 0) return false;
           if (statusFilter === 'PARTIAL' && !(out > 0 && paid > 0)) return false;
+          if (statusFilter === 'TEMPO' && !(out > 0 && !evalState.bisaDitagihkan)) return false;
           if (statusFilter === 'UNPAID' && !(out > 0 && evalState.status === 'Belum Jatuh Tempo')) return false;
           if (statusFilter === 'OVERDUE' && evalState.status !== 'Terlambat Bayar') return false;
 
@@ -1483,6 +1503,25 @@
           }
           return true;
         });
+      }
+
+      function getInvoiceDateRange(period, followDashboard) {
+        var startInput = document.getElementById('invoiceStartDate');
+        var endInput = document.getElementById('invoiceEndDate');
+        if (followDashboard) {
+          invoiceRangeStart = period.dari;
+          invoiceRangeEnd = period.sampai;
+          if (startInput) startInput.value = invoiceRangeStart;
+          if (endInput) endInput.value = invoiceRangeEnd;
+          return { start: period.dari, end: period.sampai };
+        }
+        var start = startInput && startInput.value || invoiceRangeStart || period.dari;
+        var end = endInput && endInput.value || invoiceRangeEnd || period.sampai;
+        invoiceRangeStart = start <= end ? start : end;
+        invoiceRangeEnd = start <= end ? end : start;
+        if (startInput) startInput.value = invoiceRangeStart;
+        if (endInput) endInput.value = invoiceRangeEnd;
+        return { start: invoiceRangeStart, end: invoiceRangeEnd };
       }
 
       function triggerDownload(filename, content, mimeType) {
@@ -2067,6 +2106,7 @@
             var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
             var outstanding = evalState.sisa;
             var sName = inv.sales_name || inv.salesName || '-';
+            var picHandover = getInvoicePicHandover(inv);
             var store = inv.store_name || inv.storeName || '-';
             var dStr = inv.invoice_date || inv.date || '-';
             var invId = inv.invoice_id || inv.id || '-';
@@ -2110,7 +2150,7 @@
                 '<td class="py-3 px-3.5 min-w-[110px]"><span class="font-mono font-semibold text-text-primary text-[11px]">' + esc(invId) + '</span></td>' +
                 '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[100px]">' + esc(dStr) + '</td>' +
                 '<td class="py-3 px-3.5 text-xs text-text-primary font-medium min-w-[190px] max-w-[220px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
-                '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[100px]">' + esc(sName) + '</td>' +
+                '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[170px]"><span class="text-text-muted">' + esc(picHandover.historical) + '</span><span class="mx-1 text-accent" aria-hidden="true">→</span><span class="font-medium text-text-primary">' + esc(picHandover.current) + '</span></td>' +
                 '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-medium min-w-[70px]">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
                 '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-semibold text-text-primary min-w-[130px]">Rp ' + total.toLocaleString('id-ID') + '</td>' +
                 '<td class="py-3 px-3.5 text-right tabular-nums text-xs text-status-success font-medium min-w-[115px]">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
@@ -2154,7 +2194,7 @@
                     '<div class="flex flex-col items-start gap-0.5 mt-1">' +
                       '<span class="font-mono text-xs font-semibold text-text-primary break-all">' + esc(invId) + '</span>' +
                       '<span class="text-xs text-text-secondary">' + esc(formatShortIdDate(dStr)) + '</span>' +
-                      '<span class="text-[11px] text-text-muted">Sales · ' + esc(sName) + '</span>' +
+                      '<span class="text-[11px] text-text-muted">PIC Historis → Sekarang · ' + esc(picHandover.historical) + ' → ' + esc(picHandover.current) + '</span>' +
                     '</div>' +
                   '</div>' +
                   '<div class="shrink-0 max-w-[45%]">' + statusBadge + '</div>' +
@@ -3082,6 +3122,10 @@
       }
 
       function updatePeriodTabs() {
+        var ytdOnly = currentMode === 'ytd';
+        document.querySelectorAll('#dashboardKpiGrid [data-kpi="achievement"], #dashboardKpiGrid [data-kpi="qty"]').forEach(function (card) {
+          card.classList.toggle('hidden', ytdOnly);
+        });
         if (currentMode === 'bulan') {
           tabModeBulanan.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorBulanan.classList.remove('hidden');
@@ -3214,14 +3258,27 @@
         renderInvoicesTable();
       });
       document.getElementById('invoiceDateScopeCheckbox').addEventListener('change', function () {
+        var dateInputsDisabled = this.checked;
+        document.getElementById('invoiceStartDate').disabled = dateInputsDisabled;
+        document.getElementById('invoiceEndDate').disabled = dateInputsDisabled;
         invoicePage = 1; renderInvoicesTable();
+      });
+      ['invoiceStartDate', 'invoiceEndDate'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', function () {
+          invoiceRangeStart = document.getElementById('invoiceStartDate').value;
+          invoiceRangeEnd = document.getElementById('invoiceEndDate').value;
+          invoicePage = 1;
+          renderInvoicesTable();
+        });
       });
       document.getElementById('resetInvoiceFilterBtn').addEventListener('click', function () {
         document.getElementById('invoiceSearchInput').value = '';
         document.getElementById('invoiceSalesFilter').value = 'all';
         invoiceSalesFilter = 'all';
         document.getElementById('invoiceStatusFilter').value = 'all';
-        document.getElementById('invoiceDateScopeCheckbox').checked = false;
+        document.getElementById('invoiceDateScopeCheckbox').checked = true;
+        document.getElementById('invoiceStartDate').disabled = true;
+        document.getElementById('invoiceEndDate').disabled = true;
         invoicePage = 1;
         renderInvoicesTable();
       });
@@ -3357,7 +3414,7 @@
         drawerContent.innerHTML = '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceInfoTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">receipt_long</span><h4 id="adminInvoiceInfoTitle" class="font-semibold text-text-primary">Informasi Invoice &amp; Pengiriman</h4></div>' +
           '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nomor invoice</span><strong class="font-mono text-text-primary break-all">' + esc(invoiceId) + '</strong></div>' +
-          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Sales person in charge</span><strong class="text-text-primary">' + esc(inv.sales_name || inv.salesName || '-') + '</strong></div>' +
+          '<div class="flex flex-col gap-1"><span class="text-text-muted">PIC Sales</span><span class="text-xs text-text-secondary">Historis: <strong class="text-text-primary">' + esc(getInvoicePicHandover(inv).historical) + '</strong></span><span class="text-xs text-text-secondary">Sekarang: <strong class="text-text-primary">' + esc(getInvoicePicHandover(inv).current) + '</strong></span></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal terbit</span><strong class="text-text-primary">' + esc(formatShortIdDate(inv.invoice_date || inv.date)) + '</strong></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal jatuh tempo</span><strong class="text-text-primary">' + esc(formatShortIdDate(dueDate)) + '</strong></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nama toko mitra</span><strong class="text-text-primary">' + esc(store) + '</strong></div>' +
@@ -3534,7 +3591,30 @@
 
       function openKpiInvoiceDetail(invoiceId, kpiType) {
         kpiDrawerReturnState = { kpiType: kpiType, scrollTop: drawerContent.scrollTop, invoiceId: invoiceId };
-        openInvoiceRewardDrawer(invoiceId);
+        var invoice = FADE_STORE.getInvoices().find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
+        if (!invoice) return;
+        var state = FADE_ENGINE.evaluateInvoiceState(invoice, '2026-11-22');
+        var pic = getInvoicePicHandover(invoice);
+        drawerTitle.textContent = 'Ringkasan Invoice';
+        drawerSubtitle.textContent = invoiceId + ' · ' + (invoice.store_name || invoice.storeName || '-');
+        drawerBackBtn.setAttribute('aria-label', 'Kembali ke rincian KPI');
+        drawerContent.innerHTML = '<section class="flex flex-col gap-3" aria-label="Ringkasan invoice dari dashboard">' +
+          '<div class="grid grid-cols-2 gap-3 p-3.5 rounded-lg bg-surface-2 border border-border-subtle text-xs">' +
+          '<div><span class="block text-text-muted">PIC Historis</span><strong class="text-text-primary">' + esc(pic.historical) + '</strong></div>' +
+          '<div><span class="block text-text-muted">PIC Sekarang</span><strong class="text-text-primary">' + esc(pic.current) + '</strong></div>' +
+          '<div><span class="block text-text-muted">Tanggal invoice</span><strong class="text-text-primary">' + esc(formatShortIdDate(invoice.invoice_date || invoice.date)) + '</strong></div>' +
+          '<div><span class="block text-text-muted">Status</span><strong class="text-text-primary">' + esc(state.status) + '</strong></div>' +
+          '<div><span class="block text-text-muted">Total invoice</span><strong class="text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div>' +
+          '<div><span class="block text-text-muted">Sisa tagihan</span><strong class="text-status-danger">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong></div>' +
+          '</div><p class="text-[11px] text-text-muted">Ringkasan dari dashboard. Produk dan reward tersedia di rincian invoice lengkap.</p>' +
+          '<button id="kpiFullInvoiceDetailBtn" type="button" class="min-h-[44px] w-full rounded-lg bg-surface-2 border border-border-default text-accent font-semibold text-xs hover:bg-surface-hover">Buka detail lengkap &amp; reward</button></section>';
+        document.getElementById('kpiStoreDirectoryBtn').classList.add('hidden');
+        drawer.classList.remove('hidden');
+        drawerBackdrop.classList.remove('hidden');
+        requestAnimationFrame(function () { drawer.classList.remove('translate-x-full'); });
+        document.getElementById('kpiFullInvoiceDetailBtn').addEventListener('click', function () {
+          openInvoiceRewardDrawer(invoiceId);
+        });
       }
 
       function returnToKpiDrawer() {
@@ -3599,12 +3679,12 @@
           e.stopPropagation();
           window.location.hash = '#invoices';
           var sel = document.getElementById('invoiceStatusFilter');
-          if (sel) sel.value = 'UNPAID';
+          if (sel) sel.value = 'TEMPO';
           invoicePage = 1;
           renderInvoicesTable();
         });
       }
-      var elOutVal = document.getElementById('kpiOutstandingVal');
+      var elOutVal = document.getElementById('kpiOutstandingTotalFilter');
       if (elOutVal) {
         elOutVal.addEventListener('click', function (e) {
           e.stopPropagation();

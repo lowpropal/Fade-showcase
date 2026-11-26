@@ -474,9 +474,10 @@
               <div class="flex items-center gap-4 text-xs text-text-muted">
                 <span class="tabular-nums"><span id="chartStatusTotalInv" class="text-text-primary font-medium">--</span> total invoice</span>
                 <span>·</span>
-                <span class="tabular-nums">Tingkat tertagih <span id="chartStatusCollectedRate" class="text-status-success font-medium">--%</span></span>
+                <span class="tabular-nums">Pembayaran masuk ÷ tagihan periode <span id="chartStatusCollectedRate" class="text-status-success font-medium">--%</span></span>
               </div>
             </div>
+            <p class="text-[10px] text-text-muted -mt-2 mb-4">Pembayaran dihitung menurut tanggal bayar, tagihan menurut tanggal terbit; rasio bisa melebihi 100%.</p>
 
             <!-- 4-Column Horizontal Cards for Payment Status -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -773,6 +774,7 @@
                 <select id="invoiceStatusFilter" aria-label="Filter status tagihan" class="min-h-[44px] flex-1 sm:flex-initial px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
                   <option value="all">Semua Status</option>
                   <option value="OUTSTANDING">Semua Outstanding</option>
+                  <option value="TEMPO">Piutang Tempo Berjalan</option>
                   <option value="PAID">Lunas</option>
                   <option value="PARTIAL">Sebagian</option>
                   <option value="UNPAID">Belum Jatuh Tempo</option>
@@ -782,7 +784,13 @@
 
               <label class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-secondary cursor-pointer select-none w-full sm:w-auto">
                 <input id="invoiceDateScopeCheckbox" type="checkbox" checked class="accent-[#F28C45] w-4 h-4 rounded">
-                <span>Ikuti Filter Tanggal</span>
+                <span>Ikuti tanggal dashboard</span>
+              </label>
+              <label class="flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Dari tanggal
+                <input id="invoiceStartDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary disabled:opacity-50" disabled>
+              </label>
+              <label class="flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Sampai tanggal
+                <input id="invoiceEndDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary disabled:opacity-50" disabled>
               </label>
             </div>
 
@@ -800,6 +808,7 @@
                   <th class="py-3 px-3.5 text-[11px] min-w-[110px]">No. Invoice</th>
                   <th class="py-3 px-3.5 text-[11px] min-w-[100px]">Tanggal</th>
                   <th class="py-3 px-3.5 text-[11px] min-w-[190px]">Nama Toko</th>
+                  <th class="py-3 px-3.5 text-[11px] min-w-[170px]">PIC Historis → Sekarang</th>
                   <th class="py-3 px-3.5 text-[11px] text-right min-w-[70px]">QTY</th>
                   <th class="py-3 px-3.5 text-[11px] text-right min-w-[130px]">Total Invoice</th>
                   <th class="py-3 px-3.5 text-[11px] text-right min-w-[115px]">Terbayar</th>
@@ -877,8 +886,8 @@
                   <span id="detFieldInvId" class="font-mono font-bold text-text-primary">-</span>
                 </div>
                 <div class="flex flex-col gap-0.5">
-                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">SALES PERSON IN CHARGE</span>
-                  <span id="detFieldSalesPic" class="font-semibold text-text-primary flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>-</span>
+                  <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">PIC SALES HISTORIS &amp; SEKARANG</span>
+                  <span id="detFieldSalesPic" class="font-semibold text-text-primary flex items-center gap-1.5">-</span>
                 </div>
                 <div class="flex flex-col gap-0.5">
                   <span class="text-[10px] font-semibold uppercase tracking-wider text-text-muted">TANGGAL TERBIT</span>
@@ -1182,6 +1191,24 @@
   </div>
 
   <!-- Toast Container -->
+  <dialog id="dashboardInvoicePreview" class="w-[min(92vw,32rem)] max-w-none rounded-2xl bg-surface-1 border border-border-default p-0 text-text-primary shadow-2xl backdrop:bg-black/70">
+    <div class="flex items-start justify-between gap-4 p-5 border-b border-border-subtle">
+      <div><h2 class="text-lg font-bold">Ringkasan Invoice</h2><p id="dashboardPreviewInvoiceId" class="mt-1 text-xs font-mono text-text-muted"></p></div>
+      <button id="dashboardPreviewClose" type="button" class="min-h-[44px] min-w-[44px] rounded-lg bg-surface-2 text-text-secondary hover:text-text-primary" aria-label="Tutup ringkasan invoice">×</button>
+    </div>
+    <div class="p-5 flex flex-col gap-3">
+      <div><span class="text-[10px] uppercase tracking-wider text-text-muted">Nama Toko</span><p id="dashboardPreviewStore" class="font-semibold"></p></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><span class="text-[10px] uppercase tracking-wider text-text-muted">Tanggal</span><p id="dashboardPreviewDate" class="text-sm"></p></div>
+        <div><span class="text-[10px] uppercase tracking-wider text-text-muted">Status</span><p id="dashboardPreviewStatus" class="text-sm"></p></div>
+        <div><span class="text-[10px] uppercase tracking-wider text-text-muted">Total Tagihan</span><p id="dashboardPreviewTotal" class="font-semibold tabular-nums"></p></div>
+        <div><span class="text-[10px] uppercase tracking-wider text-text-muted">Sisa Tagihan</span><p id="dashboardPreviewOutstanding" class="font-semibold tabular-nums"></p></div>
+      </div>
+      <p class="text-[11px] text-text-muted">Ringkasan dari Dashboard. Detail lengkap dan reward tersedia di menu Invoice.</p>
+      <button id="dashboardPreviewFullDetail" type="button" class="min-h-[44px] w-full rounded-lg bg-accent text-[#111112] font-semibold text-sm hover:bg-accent-hover">Buka detail lengkap</button>
+    </div>
+  </dialog>
+
   <div id="toastContainer" class="fixed bottom-20 lg:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- ==================================================================== -->
@@ -1222,6 +1249,8 @@
       var currentPeriod = '2026-11';
       var customStartDate = '2026-11-01';
       var customEndDate = '2026-11-22';
+      var invoiceRangeStart = '';
+      var invoiceRangeEnd = '';
       var invoicePage = 1;
       var invoicePageSize = 25;
       var activeDrillKpi = 'outstanding';
@@ -1251,6 +1280,15 @@
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
+      }
+
+
+      function getInvoicePicHandover(invoice) {
+        var fallback = invoice.sales_name || invoice.salesName || session.salesName || '-';
+        return {
+          historical: invoice.salesHistoris || invoice.sales_historis || invoice.sales_lama || fallback,
+          current: invoice.salesSaatIni || invoice.sales_saat_ini || fallback
+        };
       }
 
       function showToast(msg, type) {
@@ -1596,6 +1634,7 @@
       function getScopedInvoices(useDateCheckbox, searchVal, statusVal) {
         var all = FADE_STORE.getInvoices();
         var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var dateRange = getInvoiceDateRange(pContext, useDateCheckbox);
         var search = (searchVal || '').toLowerCase().trim();
 
         return all.filter(function (inv) {
@@ -1603,7 +1642,7 @@
           if (sName !== session.salesName) return false;
 
           var dStr = inv.invoice_date || inv.date || '';
-          if (useDateCheckbox && (dStr < pContext.dari || dStr > pContext.sampai)) return false;
+          if (dStr < dateRange.start || dStr > dateRange.end) return false;
 
           var evalState = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
           var out = evalState.sisa;
@@ -1612,6 +1651,7 @@
           if (statusVal === 'OUTSTANDING' && out <= 0) return false;
           if (statusVal === 'PAID' && out > 0) return false;
           if (statusVal === 'PARTIAL' && !(out > 0 && paid > 0)) return false;
+          if (statusVal === 'TEMPO' && !(out > 0 && !evalState.bisaDitagihkan)) return false;
           if (statusVal === 'UNPAID' && !(out > 0 && evalState.status === 'Belum Jatuh Tempo')) return false;
           if (statusVal === 'OVERDUE' && evalState.status !== 'Terlambat Bayar') return false;
 
@@ -1622,6 +1662,25 @@
           }
           return true;
         });
+      }
+
+      function getInvoiceDateRange(period, followDashboard) {
+        var startInput = document.getElementById('invoiceStartDate');
+        var endInput = document.getElementById('invoiceEndDate');
+        if (followDashboard) {
+          invoiceRangeStart = period.dari;
+          invoiceRangeEnd = period.sampai;
+          if (startInput) startInput.value = invoiceRangeStart;
+          if (endInput) endInput.value = invoiceRangeEnd;
+          return { start: period.dari, end: period.sampai };
+        }
+        var start = startInput && startInput.value || invoiceRangeStart || period.dari;
+        var end = endInput && endInput.value || invoiceRangeEnd || period.sampai;
+        invoiceRangeStart = start <= end ? start : end;
+        invoiceRangeEnd = start <= end ? end : start;
+        if (startInput) startInput.value = invoiceRangeStart;
+        if (endInput) endInput.value = invoiceRangeEnd;
+        return { start: invoiceRangeStart, end: invoiceRangeEnd };
       }
 
       function renderDashboardInvoices() {
@@ -1651,10 +1710,13 @@
           var badge = getStatusBadgeHtml(evalState, paid);
 
           var tr = document.createElement('tr');
-          tr.className = 'group hover:bg-surface-2/40 transition-colors cursor-pointer';
-          tr.addEventListener('click', function () {
-            detailReturnHash = '#dashboard';
-            openInvoiceDetailPage(invId);
+          tr.className = 'group hover:bg-surface-2/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors cursor-pointer';
+          tr.tabIndex = 0;
+          tr.setAttribute('role', 'button');
+          tr.setAttribute('aria-label', 'Buka ringkasan invoice ' + invId);
+          tr.addEventListener('click', function () { openDashboardInvoicePreview(invId); });
+          tr.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardInvoicePreview(invId); }
           });
           tr.innerHTML =
             '<td class="py-3 px-3.5"><span class="font-mono font-semibold text-text-primary text-[11px]">' + esc(invId) + '</span></td>' +
@@ -1667,10 +1729,13 @@
 
           if (mList) {
             var card = document.createElement('div');
-            card.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2.5 cursor-pointer hover:border-border-default transition-colors';
-            card.addEventListener('click', function () {
-              detailReturnHash = '#dashboard';
-              openInvoiceDetailPage(invId);
+            card.className = 'p-3.5 rounded-xl bg-surface-2 border border-border-subtle flex flex-col gap-2.5 cursor-pointer hover:border-border-default focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors';
+            card.tabIndex = 0;
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', 'Buka ringkasan invoice ' + invId);
+            card.addEventListener('click', function () { openDashboardInvoicePreview(invId); });
+            card.addEventListener('keydown', function (event) {
+              if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardInvoicePreview(invId); }
             });
             card.innerHTML =
               '<div class="flex items-start justify-between gap-2">' +
@@ -1686,6 +1751,24 @@
             mList.appendChild(card);
           }
         });
+      }
+
+      var dashboardPreviewReturnHash = '#dashboard';
+      function openDashboardInvoicePreview(invoiceId, returnHash) {
+        var invoice = FADE_STORE.getInvoices().find(function (item) {
+          return (item.invoice_id || item.id) === invoiceId;
+        });
+        if (!invoice) return;
+        var state = FADE_ENGINE.evaluateInvoiceState(invoice, '2026-11-22');
+        document.getElementById('dashboardPreviewInvoiceId').textContent = invoiceId;
+        document.getElementById('dashboardPreviewStore').textContent = invoice.store_name || invoice.storeName || '-';
+        document.getElementById('dashboardPreviewDate').textContent = formatShortIdDate(invoice.invoice_date || invoice.date);
+        document.getElementById('dashboardPreviewStatus').textContent = state.status;
+        document.getElementById('dashboardPreviewTotal').textContent = 'Rp ' + state.revenue.toLocaleString('id-ID');
+        document.getElementById('dashboardPreviewOutstanding').textContent = 'Rp ' + state.sisa.toLocaleString('id-ID');
+        activeDetailInvoiceId = invoiceId;
+        dashboardPreviewReturnHash = returnHash || '#dashboard';
+        document.getElementById('dashboardInvoicePreview').showModal();
       }
 
       // FULL-PAGE KPI DRILL-DOWN RENDERER
@@ -1804,7 +1887,7 @@
         var tbody = document.getElementById('drillTableBody');
         tbody.innerHTML = '';
         if (filtered.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-text-muted">Tidak ada invoice berkontribusi untuk filter ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-text-muted">Tidak ada invoice berkontribusi untuk filter ini.</td></tr>';
         } else {
           filtered.forEach(function (inv) {
             var st = FADE_ENGINE.evaluateInvoiceState(inv, pContext.asOf);
@@ -1828,8 +1911,7 @@
           });
           tbody.querySelectorAll('.drill-detail-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
-              detailReturnHash = '#kpi-' + activeDrillKpi;
-              openInvoiceDetailPage(btn.getAttribute('data-inv'));
+              openDashboardInvoicePreview(btn.getAttribute('data-inv'), '#kpi-' + activeDrillKpi);
             });
           });
         }
@@ -1881,7 +1963,7 @@
         mobileList.innerHTML = '';
 
         if (pageItems.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-text-muted">Tidak ada invoice yang cocok dengan filter saat ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-text-muted">Tidak ada invoice yang cocok dengan filter saat ini.</td></tr>';
           mobileList.innerHTML =
             '<div class="py-8 px-4 rounded-xl bg-surface-2 border border-border-subtle flex flex-col items-center justify-center text-center gap-2.5">' +
               '<span class="material-symbols-outlined text-[28px] text-text-muted">search_off</span>' +
@@ -1902,6 +1984,7 @@
             var invId = inv.invoice_id || inv.id || '-';
             var store = inv.store_name || inv.storeName || '-';
             var dStr = inv.invoice_date || inv.date || '-';
+            var picHandover = getInvoicePicHandover(inv);
             var badge = getStatusBadgeHtml(evalState, paid);
 
             var tr = document.createElement('tr');
@@ -1910,6 +1993,7 @@
               '<td class="py-3 px-3.5 min-w-[110px]"><span class="font-mono font-semibold text-text-primary text-[11px]">' + esc(invId) + '</span></td>' +
               '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[100px]">' + esc(dStr) + '</td>' +
               '<td class="py-3 px-3.5 text-xs text-text-primary font-medium min-w-[190px] max-w-[220px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
+              '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[170px]">' + esc(picHandover.historical) + '<span class="mx-1 text-accent" aria-hidden="true">→</span>' + esc(picHandover.current) + '</td>' +
               '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-medium min-w-[70px]">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
               '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-semibold text-text-primary min-w-[130px]">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
               '<td class="py-3 px-3.5 text-right tabular-nums text-xs text-status-success font-medium min-w-[115px]">Rp ' + paid.toLocaleString('id-ID') + '</td>' +
@@ -1928,6 +2012,7 @@
                     '<span class="font-mono font-semibold text-text-primary break-all">' + esc(invId) + '</span>' +
                     '<span>·</span>' +
                     '<span>' + esc(formatShortIdDate(dStr)) + '</span>' +
+                    '<span class="text-[11px] text-text-muted">PIC Historis → Sekarang · ' + esc(picHandover.historical) + ' → ' + esc(picHandover.current) + '</span>' +
                   '</div>' +
                 '</div>' +
                 '<div class="max-w-[48%] flex flex-wrap justify-end gap-1 text-right [&>span]:whitespace-normal [&>span]:text-center [&>span]:leading-tight">' + badge + '</div>' +
@@ -2028,7 +2113,8 @@
         document.getElementById('detStatusBadge').innerHTML = getStatusBadgeHtml(st, paid);
 
         document.getElementById('detFieldInvId').textContent = invoiceId;
-        document.getElementById('detFieldSalesPic').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> ' + session.salesName + ' (@' + session.salesName.split(' ')[0].toLowerCase() + ')';
+        var picHandover = getInvoicePicHandover(inv);
+        document.getElementById('detFieldSalesPic').innerHTML = '<span class="flex flex-col gap-1"><span>Historis: ' + esc(picHandover.historical) + '</span><span>Sekarang: ' + esc(picHandover.current) + '</span></span>';
         document.getElementById('detFieldDate').textContent = formatShortIdDate(inv.date || inv.invoice_date);
         document.getElementById('detFieldDueDate').innerHTML = formatShortIdDate(inv.dueDate || inv.due_date) + (st.hariTerlambat > 0 ? ' <span class="ml-1 px-1.5 py-0.5 rounded bg-status-danger/15 text-status-danger text-[10px] font-bold">Telat ' + st.hariTerlambat + ' hari</span>' : '');
         document.getElementById('detFieldStore').textContent = store;
@@ -2592,7 +2678,7 @@
           e.stopPropagation();
           window.location.hash = '#invoices';
           var sel = document.getElementById('invoiceStatusFilter');
-          if (sel) sel.value = 'UNPAID';
+        if (sel) sel.value = 'TEMPO';
           invoicePage = 1;
           renderInvoicesTable();
         });
@@ -2637,13 +2723,42 @@
 
       document.getElementById('prevPageBtn').addEventListener('click', function () { if (invoicePage > 1) { invoicePage--; renderInvoicesTable(); } });
       document.getElementById('nextPageBtn').addEventListener('click', function () { invoicePage++; renderInvoicesTable(); });
+      document.getElementById('dashboardPreviewClose').addEventListener('click', function () {
+        document.getElementById('dashboardInvoicePreview').close();
+      });
+      document.getElementById('dashboardInvoicePreview').addEventListener('click', function (event) {
+        if (event.target === this) this.close();
+      });
+      document.getElementById('dashboardPreviewFullDetail').addEventListener('click', function () {
+        var invoiceId = activeDetailInvoiceId;
+        document.getElementById('dashboardInvoicePreview').close();
+        detailReturnHash = dashboardPreviewReturnHash;
+        if (invoiceId) openInvoiceDetailPage(invoiceId);
+      });
+
       document.getElementById('invoiceSearchInput').addEventListener('input', function () { invoicePage = 1; renderInvoicesTable(); });
       document.getElementById('invoiceStatusFilter').addEventListener('change', function () { invoicePage = 1; renderInvoicesTable(); });
-      document.getElementById('invoiceDateScopeCheckbox').addEventListener('change', function () { invoicePage = 1; renderInvoicesTable(); });
+      document.getElementById('invoiceDateScopeCheckbox').addEventListener('change', function () {
+        var disabled = this.checked;
+        document.getElementById('invoiceStartDate').disabled = disabled;
+        document.getElementById('invoiceEndDate').disabled = disabled;
+        invoicePage = 1;
+        renderInvoicesTable();
+      });
+      ['invoiceStartDate', 'invoiceEndDate'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', function () {
+          invoiceRangeStart = document.getElementById('invoiceStartDate').value;
+          invoiceRangeEnd = document.getElementById('invoiceEndDate').value;
+          invoicePage = 1;
+          renderInvoicesTable();
+        });
+      });
       document.getElementById('resetInvoiceFilterBtn').addEventListener('click', function () {
         document.getElementById('invoiceSearchInput').value = '';
         document.getElementById('invoiceStatusFilter').value = 'all';
-        document.getElementById('invoiceDateScopeCheckbox').checked = false;
+        document.getElementById('invoiceDateScopeCheckbox').checked = true;
+        document.getElementById('invoiceStartDate').disabled = true;
+        document.getElementById('invoiceEndDate').disabled = true;
         invoicePage = 1; renderInvoicesTable();
       });
 

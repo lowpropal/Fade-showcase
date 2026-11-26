@@ -35,6 +35,12 @@
       aliases: ['store_id', 'client_id', 'id_toko', 'id_client']
     },
     {
+      key: 'sales_historis',
+      mandatory: false,
+      aliases: ['sales_historis', 'sales_historis_name', 'sales_lama', 'sales_sebelumnya', 'pic_historis', 'historical_sales'],
+      exclude: ['id']
+    },
+    {
       key: 'sales_name',
       mandatory: true,
       aliases: ['sales_name', 'sales_saat_ini', 'sales_kpi', 'sales', 'penjual', 'nama_sales'],
@@ -269,6 +275,7 @@
         store_name: String(raw.store_name || raw.store_id || '').trim(),
         store_id: raw.store_id ? String(raw.store_id).trim() : null,
         sales_name: String(raw.sales_name || raw.sales_id || '').trim(),
+        sales_historis: raw.sales_historis ? String(raw.sales_historis).trim() : null,
         sales_id: raw.sales_id ? String(raw.sales_id).trim() : null,
         product_name: raw.product_name ? String(raw.product_name).trim() : null,
         qty: qty,
