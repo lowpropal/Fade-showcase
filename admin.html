@@ -102,6 +102,9 @@
         <button id="mobileThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors cursor-pointer">
           <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
+        <button id="mobileProfileBtn" type="button" aria-label="Buka profil" title="Profil Saya" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-accent border border-border-default bg-surface-2 transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">person</span>
+        </button>
       </div>
     </div>
   </header>
@@ -703,7 +706,7 @@
 
       <section id="viewConsignment" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div><h2 class="text-base font-bold text-text-primary">Saldo Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Snapshot barang titipan per toko dan SKU.</p></div>
+          <div><h2 class="text-base font-bold text-text-primary">Saldo Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Snapshot saldo Consignment per toko dan SKU.</p></div>
           <label id="consignmentUploadLabel" class="hidden min-h-[44px] px-4 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:bg-accent hover:text-[#111112] inline-flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer">
             <span class="material-symbols-outlined text-[17px]">upload_file</span><span>Impor Master Consignment</span>
             <input id="consignmentFileInput" type="file" accept=".xlsx" class="sr-only">
@@ -1220,23 +1223,20 @@
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
-          { id: 'consignment', label: 'Titipan', icon: 'inventory_2', href: '#consignment' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' },
           { id: 'export', label: 'Export', icon: 'download', href: '#export' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
-          { id: 'consignment', label: 'Titipan', icon: 'inventory_2', href: '#consignment' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' },
         ],
         sales_manager: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
-          { id: 'consignment', label: 'Titipan', icon: 'inventory_2', href: '#consignment' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' },
         ]
       };
 
@@ -3492,6 +3492,8 @@
       if (btnSidebarProfile) btnSidebarProfile.addEventListener('click', openProfileModal);
       var btnHeaderProfile = document.getElementById('headerProfileChip');
       if (btnHeaderProfile) btnHeaderProfile.addEventListener('click', openProfileModal);
+      var btnMobileProfile = document.getElementById('mobileProfileBtn');
+      if (btnMobileProfile) btnMobileProfile.addEventListener('click', openProfileModal);
 
       var profileModal = document.getElementById('profileModal');
       var profileModalBackdrop = document.getElementById('profileModalBackdrop');
