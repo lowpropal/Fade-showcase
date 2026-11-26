@@ -1043,7 +1043,7 @@
           <span class="material-symbols-outlined text-[20px]">logout</span>
         </div>
         <div class="flex flex-col">
-          <h3 class="text-sm font-bold text-text-primary">Keluar dari Sesi Admin?</h3>
+          <h3 id="logoutConfirmTitle" class="text-sm font-bold text-text-primary">Keluar dari Sesi Admin?</h3>
           <p class="text-text-muted mt-0.5">Anda akan mengakhiri sesi dan kembali ke halaman login.</p>
         </div>
       </div>
@@ -3300,10 +3300,14 @@
       if (mThemeBtn) mThemeBtn.addEventListener('click', toggleTheme);
 
       var logoutConfirmModalBackdrop = document.getElementById('logoutConfirmModalBackdrop');
+      var logoutConfirmTitle = document.getElementById('logoutConfirmTitle');
       var cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
       var confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
 
       function openLogoutModal() {
+        var activeSession = window.FADE_STORE && window.FADE_STORE.getActiveSession ? window.FADE_STORE.getActiveSession() : null;
+        var roleLabel = activeSession && activeSession.role === 'sales_manager' ? 'Sales Manager' : 'Admin';
+        if (logoutConfirmTitle) logoutConfirmTitle.textContent = 'Keluar dari Sesi ' + roleLabel + '?';
         if (logoutConfirmModalBackdrop) logoutConfirmModalBackdrop.classList.remove('hidden');
       }
       function closeLogoutModal() {
