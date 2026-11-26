@@ -154,7 +154,8 @@
       var sku = String(row.sku || '').trim();
       var salesName = String(row.sales_saat_ini || '').trim();
       var salesId = salesByName.get(normalizeName(salesName));
-      if (!salesId) throw new Error('Sales_Saat_Ini tidak cocok dengan akun pada baris ' + (rowIndex + 1) + ': ' + (salesName || '(kosong)'));
+      var unassignedTemporaryStore = /^TMP[-_]/i.test(clientId) && !salesName;
+      if (!salesId && !unassignedTemporaryStore) throw new Error('Sales_Saat_Ini tidak cocok dengan akun pada baris ' + (rowIndex + 1) + ': ' + (salesName || '(kosong)'));
       var quantities = [row.qty_titip, row.qty_terbayar, row.qty_retur_rusak, row.qty_sisa];
       if (quantities.some(function (value) { return value != null && String(value).trim() !== '' && (!Number.isFinite(Number(value)) || Number(value) < 0); })) {
         throw new Error('Qty Consignment tidak valid pada baris ' + (rowIndex + 1) + '.');
@@ -163,8 +164,8 @@
         id: clientId + ':' + sku + ':' + (rowIndex + 1),
         clientId: clientId,
         storeName: String(row.nama_toko || '').trim(),
-        salesName: salesName,
-        salesId: salesId,
+        salesName: unassignedTemporaryStore ? 'Belum ditentukan' : salesName,
+        salesId: salesId || null,
         sku: sku,
         productName: String(row.nama_produk || '').trim(),
         category: String(row.kategori || '').trim(),
