@@ -2,7 +2,7 @@
 <html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FADE Pods Showcase v0.2 · Panel Sales</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23F28C45%22/><text y=%22.9em%22 font-size=%2290%22 font-family=%22sans-serif%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 x=%2250%22>F</text></svg>">
 
@@ -792,8 +792,8 @@
             </button>
           </div>
 
-          <!-- Desktop Table (>= 1280px) -->
-          <div class="hidden xl:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
+          <!-- Tabel invoice untuk layar desktop. -->
+          <div class="hidden lg:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
             <table class="w-full text-left text-xs whitespace-nowrap">
               <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                 <tr>
@@ -812,8 +812,8 @@
             </table>
           </div>
 
-          <!-- Responsive Card List (< 1280px) -->
-          <div id="invoiceMobileList" class="xl:hidden flex flex-col gap-3"></div>
+          <!-- Kartu invoice untuk layar sempit. -->
+          <div id="invoiceMobileList" class="lg:hidden flex flex-col gap-3"></div>
 
           <!-- Pagination -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-text-secondary pt-3 border-t border-border-subtle">
