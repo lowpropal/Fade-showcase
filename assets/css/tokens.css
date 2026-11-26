@@ -284,50 +284,62 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   }
 }
 
-/* Keep the invoice filters aligned on desktop regardless of input type. */
+/* Keep desktop invoice filters grouped by task without stretching across empty space. */
 @media (min-width: 80rem) {
-  .invoice-filter-toolbar {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    align-items: end;
+  div.invoice-filter-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 0.75rem;
   }
 
-  .invoice-filter-controls,
-  .invoice-filter-selects {
-    display: contents;
+  .invoice-filter-toolbar .invoice-filter-controls {
+    display: flex;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    min-width: 0;
   }
 
-  .invoice-filter-search {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-    width: 100%;
+  .invoice-filter-toolbar .invoice-filter-search {
+    flex: 0 1 26rem;
+    width: 26rem;
+    max-width: 100%;
+  }
+
+  .invoice-filter-toolbar .invoice-filter-selects {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: flex-end;
+    gap: 0.625rem;
+    width: auto;
   }
 
   .invoice-filter-status,
   .invoice-filter-sales {
-    width: 100%;
+    width: 14rem;
+    max-width: 100%;
     min-width: 0;
   }
 
   .invoice-filter-follow {
-    grid-column: 1 / span 2;
-    grid-row: 2;
+    flex: 0 0 auto;
     justify-content: flex-start;
   }
 
   .invoice-filter-date {
-    grid-row: 2;
+    flex: 0 1 12.25rem;
+    width: 12.25rem;
+    max-width: 100%;
     min-width: 0;
   }
 
-  .invoice-filter-date-start { grid-column: 3; }
-  .invoice-filter-date-end { grid-column: 4; }
-
-  .invoice-filter-reset {
-    grid-column: 5;
-    grid-row: 2;
-    justify-self: end;
-    width: 100%;
+  .invoice-filter-toolbar .invoice-filter-reset {
+    flex: 0 0 auto;
+    width: auto;
+    margin-left: auto;
   }
 }
 
@@ -493,4 +505,93 @@ html.light .chart-date-panel input[type="date"] { color-scheme: light; }
   .chart-type-group > button { min-width: 0; }
   #chartDateWrapper { grid-column: 2; grid-row: 2; justify-self: end; }
   .chart-selection-card { min-width: 0; }
+}
+
+@media (max-width: 767px) {
+  .kpi-card[data-kpi="achievement"],
+  .kpi-card[data-kpi="pembayaran"],
+  .kpi-card[data-kpi="outstanding"],
+  .kpi-card[data-kpi="invoices"] {
+    grid-column: 1 / -1;
+  }
+
+  .kpi-card[data-kpi="outstanding"] > button,
+  .kpi-card[data-kpi="outstanding"] > div > button {
+    min-height: 2.75rem;
+  }
+
+  .chart-controls-row {
+    display: grid;
+    flex: 0 0 100%;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .chart-type-group {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: max-content;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .chart-type-group > button {
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+  }
+
+  .chart-timeframe-group {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+
+  .chart-timeframe-group > button {
+    min-width: 0;
+    min-height: 2.75rem;
+    flex: 1 1 0;
+  }
+
+  #chartDateWrapper {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: end;
+  }
+
+  #chartBtnCustom { min-height: 2.75rem; }
+
+  .chart-interactive-container {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .chart-selection-layer {
+    position: static;
+    inset: auto;
+    order: 0;
+    width: 100%;
+    overflow: visible;
+    flex: none;
+  }
+
+  .chart-selection-card {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin-bottom: 0.5rem;
+    transition: none;
+  }
+
+  #trendChartSvg {
+    display: block;
+    width: 100%;
+    height: 16.875rem;
+    aspect-ratio: auto;
+    flex: none;
+  }
 }

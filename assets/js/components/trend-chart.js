@@ -1106,7 +1106,10 @@
       if (tipHtml) {
         tipHtml.classList.remove('hidden');
         var chartContainer = document.getElementById('chartInteractiveContainer');
-        if (chartContainer) {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          tipHtml.style.left = '';
+          tipHtml.style.top = '';
+        } else if (chartContainer) {
           var containerRect = chartContainer.getBoundingClientRect();
           var svg = document.getElementById('trendChartSvg');
           var svgRect = svg ? svg.getBoundingClientRect() : containerRect;
