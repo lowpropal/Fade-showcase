@@ -34,21 +34,35 @@
   function prepareInvoiceRows(rawRows, salesList) {
     if (!Array.isArray(rawRows)) throw new Error('Sheet Invoice_Collection tidak terbaca.');
     var rows = rawRows.map(function (row) { return Array.isArray(row) ? row.slice() : []; });
-    var header = findHeader(rows, ['invoice_id', 'sales_kpi', 'kpi_id']);
+    var header = findHeader(rows, ['invoice_id']);
     if (!header) return rows;
-    if (header.indexes.sales_id != null) return rows;
-
     var salesMap = buildSalesMap(salesList);
-    var kpiIndex = header.indexes.kpi_id;
-    var salesNameIndex = header.indexes.sales_kpi;
-    rows[header.rowIndex][kpiIndex] = 'Sales_ID';
+    var salesNameIndex = header.indexes.sales_kpi != null ? header.indexes.sales_kpi : (header.indexes.sales_saat_ini != null ? header.indexes.sales_saat_ini : (header.indexes.sales_name != null ? header.indexes.sales_name : header.indexes.sales));
+    var salesIdIndex = header.indexes.sales_id != null ? header.indexes.sales_id : header.indexes.kpi_id;
+    if (salesNameIndex == null) {
+      if (salesIdIndex != null) return rows;
+      throw new Error('Kolom Sales_KPI atau Sales_Saat_Ini tidak ditemukan di Invoice_Collection.');
+    }
+    if (salesIdIndex == null) {
+      salesIdIndex = rows[header.rowIndex].length;
+      rows[header.rowIndex][salesIdIndex] = 'Sales_ID';
+    } else if (header.indexes.kpi_id != null && header.indexes.sales_id == null) {
+      rows[header.rowIndex][salesIdIndex] = 'Sales_ID';
+    }
     for (var i = header.rowIndex + 1; i < rows.length; i++) {
       var row = rows[i];
       if (!row || !row.some(function (value) { return String(value == null ? '' : value).trim() !== ''; })) continue;
+      var existingSalesId = String(row[salesIdIndex] == null ? '' : row[salesIdIndex]).trim();
+      var mappedExistingId = salesMap.get(normalizeName(existingSalesId));
+      if (existingSalesId && !mappedExistingId) continue;
+      if (mappedExistingId) {
+        row[salesIdIndex] = mappedExistingId;
+        continue;
+      }
       var salesName = normalizeName(row[salesNameIndex]);
       var salesId = salesMap.get(salesName);
       if (!salesId) throw new Error('Nama Sales pada Invoice_Collection tidak ditemukan di daftar akun: ' + String(row[salesNameIndex] || '(kosong)'));
-      row[kpiIndex] = salesId;
+      row[salesIdIndex] = salesId;
     }
     return rows;
   }
@@ -99,8 +113,81 @@
     return targets;
   }
 
+  function readSheetObjects(rawRows, requiredHeaders) {
+    if (!Array.isArray(rawRows)) throw new Error('Sheet tidak terbaca.');
+    var header = findHeader(rawRows, requiredHeaders);
+    if (!header) throw new Error('Header sheet tidak sesuai dengan Master FADE.');
+    return rawRows.slice(header.rowIndex + 1).filter(function (row) {
+      return row && row.some(function (value) { return String(value == null ? '' : value).trim() !== ''; });
+    }).map(function (row) {
+      var item = {};
+      Object.keys(header.indexes).forEach(function (key) { item[key] = row[header.indexes[key]]; });
+      return item;
+    });
+  }
+
+  function parseInvoiceDetails(rawRows) {
+    var items = readSheetObjects(rawRows, ['invoice_id', 'sku', 'qty', 'net_idr']);
+    var byInvoice = {};
+    items.forEach(function (item) {
+      var id = String(item.invoice_id || '').trim();
+      if (!id) return;
+      if (!byInvoice[id]) byInvoice[id] = [];
+      byInvoice[id].push({
+        sku: String(item.sku || '').trim(),
+        name: String(item.nama_produk || '').trim(),
+        category: String(item.kategori || '').trim(),
+        status: String(item.status_baris || 'Terjual').trim(),
+        qty: Number(item.qty || 0),
+        unitPrice: Number(item.harga_satuan_idr || 0),
+        subtotal: Number(item.net_idr || 0),
+        discount: Number(item.potongan_baris_idr || 0),
+        note: String(item.catatan || '').trim()
+      });
+    });
+    return byInvoice;
+  }
+
+  function parseConsignmentBalances(rawRows, salesList) {
+    var rows = readSheetObjects(rawRows, ['client_id', 'nama_toko', 'sku', 'qty_sisa']);
+    var salesByName = buildSalesMap(salesList);
+    return rows.map(function (row, rowIndex) {
+      var clientId = String(row.client_id || '').trim();
+      var sku = String(row.sku || '').trim();
+      var salesName = String(row.sales_saat_ini || '').trim();
+      var salesId = salesByName.get(normalizeName(salesName));
+      if (!salesId) throw new Error('Sales_Saat_Ini tidak cocok dengan akun pada baris ' + (rowIndex + 1) + ': ' + (salesName || '(kosong)'));
+      var quantities = [row.qty_titip, row.qty_terbayar, row.qty_retur_rusak, row.qty_sisa];
+      if (quantities.some(function (value) { return value != null && String(value).trim() !== '' && (!Number.isFinite(Number(value)) || Number(value) < 0); })) {
+        throw new Error('Qty Consignment tidak valid pada baris ' + (rowIndex + 1) + '.');
+      }
+      return {
+        id: clientId + ':' + sku + ':' + (rowIndex + 1),
+        clientId: clientId,
+        storeName: String(row.nama_toko || '').trim(),
+        salesName: salesName,
+        salesId: salesId,
+        sku: sku,
+        productName: String(row.nama_produk || '').trim(),
+        category: String(row.kategori || '').trim(),
+        qtyConsigned: Number(row.qty_titip || 0),
+        qtyPaid: Number(row.qty_terbayar || 0),
+        qtyReturned: Number(row.qty_retur_rusak || 0),
+        qtyRemaining: Number(row.qty_sisa || 0),
+        remainingValue: Number(row.subtotal_sisa_idr || 0),
+        physicalQty: row.qty_hitung_fisik == null ? null : Number(row.qty_hitung_fisik),
+        stockStatus: String(row.status_stok || '').trim(),
+        sourceNote: String(row.catatan || '').trim(),
+        temporaryStoreId: /^TMP[-_]/i.test(clientId),
+        source: 'FADE_Master_Consignment_FINAL'
+      };
+    }).filter(function (row) { return row.clientId && row.sku && row.storeName; });
+  }
+
   root.FADE_MASTER_IMPORTER = {
     prepareInvoiceRows: prepareInvoiceRows,
-    parseSalesTargets: parseSalesTargets
+    parseSalesTargets: parseSalesTargets,
+    parseInvoiceDetails: parseInvoiceDetails,
+    parseConsignmentBalances: parseConsignmentBalances
   };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

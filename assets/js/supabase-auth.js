@@ -17,7 +17,8 @@
       loadDataset: async function () { throw new Error('Data dashboard belum bisa dimuat.'); },
       persistInvoices: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
       persistRewards: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
-      persistTargets: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); }
+      persistTargets: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
+      persistConsignmentBalances: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); }
     };
     return;
   }
@@ -120,7 +121,11 @@
       fetchAllRows(function () { return client.from('fade_targets').select('*').order('period').order('sales_id'); }),
       fetchAllRows(function () { return client.from('fade_sales').select('*').order('name').order('id'); }),
       fetchAllRows(function () { return client.from('fade_stores').select('*').order('name').order('id'); }),
-      fetchAllRows(function () { return client.from('fade_rewards').select('*').order('period', { ascending: false }).order('id'); })
+      fetchAllRows(function () { return client.from('fade_rewards').select('*').order('period', { ascending: false }).order('id'); }),
+      fetchAllRows(function () { return client.from('fade_consignment_balances').select('*').order('store_name').order('sku'); }).catch(function (error) {
+        if (error && (error.code === '42P01' || error.code === 'PGRST205')) return [];
+        throw error;
+      })
     ]);
 
     return {
@@ -169,6 +174,22 @@
           sourceStatus: source.sourceStatus || source.Status_Reward_Sumber || source.status_reward_sumber || '',
           salesStatus: source.salesStatus || source.Status_Reward_Untuk_Sales || source.status_reward_untuk_sales || '',
           totalReward: source.totalReward != null ? source.totalReward : (source.Total_Reward_IDR != null ? source.Total_Reward_IDR : source.total_reward_idr)
+        });
+      }),
+      consignment: results[5].map(function (row) {
+        return Object.assign({}, row.data || {}, {
+          id: row.id,
+          clientId: row.client_id,
+          storeName: row.store_name,
+          salesId: row.sales_id,
+          sku: row.sku,
+          productName: row.product_name,
+          qtyConsigned: Number(row.qty_consigned || 0),
+          qtyPaid: Number(row.qty_paid || 0),
+          qtyReturned: Number(row.qty_returned || 0),
+          qtyRemaining: Number(row.qty_remaining || 0),
+          remainingValue: Number(row.remaining_value || 0),
+          stockStatus: row.stock_status || ''
         });
       })
     };
@@ -313,6 +334,35 @@
     });
   }
 
+  function persistConsignmentBalances(rows) {
+    var session = root.FADE_STORE.getActiveSession();
+    if (!session || session.role !== 'admin') return Promise.reject(new Error('Impor saldo consignment hanya dapat dilakukan oleh Admin.'));
+    return enqueueWrite(async function () {
+      var payload = (rows || []).map(function (row) {
+        return {
+          id: row.id,
+          client_id: row.clientId,
+          store_name: row.storeName,
+          sales_id: row.salesId || null,
+          sales_name: row.salesName || '',
+          sku: row.sku,
+          product_name: row.productName || '',
+          category: row.category || '',
+          qty_consigned: Number(row.qtyConsigned || 0),
+          qty_paid: Number(row.qtyPaid || 0),
+          qty_returned: Number(row.qtyReturned || 0),
+          qty_remaining: Number(row.qtyRemaining || 0),
+          remaining_value: Number(row.remainingValue || 0),
+          physical_qty: row.physicalQty == null ? null : Number(row.physicalQty),
+          stock_status: row.stockStatus || '',
+          data: row
+        };
+      });
+      var result = await client.rpc('fade_replace_consignment_balances', { payload: payload });
+      if (result.error) throw result.error;
+    });
+  }
+
   function routeForRole(role) {
     return role === 'sales' ? './sales.html#dashboard' : './admin.html#dashboard';
   }
@@ -326,6 +376,7 @@
     loadDataset: loadDataset,
     persistInvoices: persistInvoices,
     persistRewards: persistRewards,
-    persistTargets: persistTargets
+    persistTargets: persistTargets,
+    persistConsignmentBalances: persistConsignmentBalances
   };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
