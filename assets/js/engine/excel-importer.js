@@ -55,7 +55,7 @@
     {
       key: 'sales_id',
       mandatory: false,
-      aliases: ['sales_id', 'id_sales', 'kpi_id']
+      aliases: ['sales_id', 'id_sales']
     },
     {
       key: 'qty',
