@@ -3,6 +3,18 @@
 Seluruh perubahan penting pada proyek *FADE Pods Showcase v0.2* didokumentasikan di sini.
 Format berbasis [Keep a Changelog](https://keepachangelog.com/id/1.0.0/).
 
+## [Unreleased] — 2026-11-26
+
+### Diperbaiki
+- **Angka tingkat tertagih dashboard Admin:** pembayaran kini dihitung untuk invoice yang terbit pada periode terpilih dan telah dibayar sampai tanggal snapshot. Pembilang pembayaran dan revenue memakai kelompok invoice yang sama.
+- **Tindakan muat ulang data:** tombol Upload Admin diganti menjadi “Muat Ulang Data dari Server”; dialog menjelaskan bahwa data tersimpan dimuat ulang dari Supabase dan perubahan yang belum tersimpan tidak dipulihkan.
+- **Keterangan role:** teks login kini menyebut Admin, Sales Manager, dan Sales. Tooltip profil di Admin menyesuaikan role Sales Manager.
+- Perbaikan dipublikasikan ke GitHub Pages melalui commit `9790f82` pada branch `develop`; workflow deployment #49 berhasil.
+
+### Catatan QA
+- Verifikasi langsung memastikan teks login baru dan label/dialog muat ulang data tampil di GitHub Pages.
+- Pembaruan metrik mengikuti kelompok tanggal invoice agar angka tingkat tertagih tidak mencampur tanggal terbit dan tanggal pembayaran lintas periode.
+
 ---
 
 ## [0.2.0-alpha] — 2026-11-22
