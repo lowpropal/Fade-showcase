@@ -2974,9 +2974,10 @@
 
         document.querySelectorAll('#desktopNavContainer .nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
+          var activeRoute = hash === 'ytd' ? 'dashboard' : hash;
           var indicator = el.querySelector('.nav-indicator');
           var icon = el.querySelector('.material-symbols-outlined');
-          if (route === hash) {
+          if (route === activeRoute) {
             el.className = 'nav-item relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-surface-2 text-text-primary h-10 overflow-hidden';
             if (indicator) indicator.classList.remove('hidden');
             if (icon) icon.className = 'material-symbols-outlined text-[18px] text-accent shrink-0';
@@ -2989,8 +2990,9 @@
 
         document.querySelectorAll('#mobileNavContainer .mobile-nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
+          var activeRoute = hash === 'ytd' ? 'dashboard' : hash;
           var indicator = el.querySelector('.mobile-nav-indicator');
-          if (route === hash) {
+          if (route === activeRoute) {
             el.classList.add('text-accent', 'font-semibold');
             el.classList.remove('text-text-muted');
             if (indicator) indicator.classList.remove('hidden');
@@ -3043,7 +3045,6 @@
           if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
           if (dashboardScopeControls) { dashboardScopeControls.classList.remove('hidden'); dashboardScopeControls.classList.add('contents', 'lg:flex'); }
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
-          setActiveNavHighlight('dashboard');
           updatePeriodTabs();
           viewDashboard.classList.remove('hidden');
           renderMetrics();
