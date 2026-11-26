@@ -102,6 +102,9 @@
         <button id="mobileThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors cursor-pointer">
           <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
+        <button id="mobileProfileBtn" type="button" aria-label="Buka profil" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-accent border border-border-default bg-surface-2 transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">person</span>
+        </button>
       </div>
     </div>
   </header>
@@ -611,6 +614,9 @@
             <p id="invoiceCountSummary" class="mt-1 text-xs leading-relaxed text-text-muted">Menampilkan seluruh invoice dalam cakupan data aktif</p>
           </div>
           <div class="flex w-full sm:w-auto flex-wrap items-center gap-2">
+            <a id="invoicePageExportLink" href="#export" class="hidden inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 px-4 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">download</span><span>Ekspor</span>
+            </a>
             <button id="addInvoiceBtn" type="button" class="hidden inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 px-4 rounded-lg border border-transparent bg-[var(--action-bg)] text-[var(--action-fg)] hover:bg-accent hover:text-[#111112] hover:border-accent active:bg-accent active:text-[#111112] active:border-accent focus-visible:bg-accent focus-visible:text-[#111112] focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent text-xs font-semibold transition-colors cursor-pointer">
               <span class="material-symbols-outlined text-[16px]">add</span>
               <span>Tambah Invoice</span>
@@ -692,10 +698,61 @@
         </div>
       </section>
 
+      <section id="viewStoreSearch" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"><div><h2 class="text-base font-bold text-text-primary">Pencarian Toko</h2><p class="mt-1 text-xs text-text-muted">Pilih satu toko untuk melihat riwayat invoice dan status reward dari data yang dapat Anda akses.</p></div><div id="storeSearchExportActions" class="hidden flex-wrap gap-2"><button type="button" data-directory-export="csv" class="min-h-11 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60">Ekspor CSV</button></div></div>
+        <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, toko, atau Sales<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko, nama toko, Sales" autocomplete="off"></label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="storeSearchSalesFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Sales</option></select></label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Status invoice<select id="storeSearchStatusFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="PAID">Lunas</option><option value="OUTSTANDING">Outstanding</option><option value="OVERDUE">Terlambat</option></select></label>
+          <label class="min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="storeSearchFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Dari tanggal<input id="storeSearchStartDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Sampai tanggal<input id="storeSearchEndDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <button id="storeSearchReset" type="button" class="min-h-[44px] px-3 rounded-lg text-xs font-semibold text-text-muted hover:text-accent sm:col-span-2 xl:col-span-5 xl:justify-self-end">Reset Filter</button>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-[minmax(220px,0.7fr)_minmax(0,1.3fr)] gap-4">
+          <div id="storeSearchList" class="flex flex-col gap-2"></div>
+          <div id="storeSearchDetail" class="min-h-48 rounded-lg border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted">Pilih toko untuk melihat riwayat pembelian.</div>
+        </div>
+      </section>
+
+      <section id="viewConsignment" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div><h2 class="text-base font-bold text-text-primary">Saldo Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Snapshot barang titipan per toko dan SKU.</p></div>
+          <div class="flex flex-wrap gap-2"><div id="consignmentExportActions" class="hidden"><button type="button" data-consignment-export="csv" class="min-h-[44px] px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60">Ekspor CSV</button></div><label id="consignmentUploadLabel" class="hidden min-h-[44px] px-4 rounded-lg bg-[var(--action-bg)] text-[var(--action-fg)] hover:bg-accent hover:text-[#111112] inline-flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer">
+            <span class="material-symbols-outlined text-[17px]">upload_file</span><span>Impor Master Consignment</span>
+            <input id="consignmentFileInput" type="file" accept=".xlsx" class="sr-only">
+          </label></div>
+        </div>
+        <p class="rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-[11px] leading-relaxed text-text-secondary">Data mengikuti sheet <strong>Consignment_Saldo</strong> dari file FINAL. Tampilan ini baca-saja; ID toko TMP ditandai perlu pencocokan manual.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, toko, Sales, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko, nama toko, Sales, SKU"></label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Toko<select id="consignmentStoreFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Toko</option></select></label>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="consignmentSalesFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Sales</option></select></label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Status stok<select id="consignmentStatusFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="remaining">Ada saldo</option><option value="empty">Saldo nol</option><option value="mapping">Perlu cocokkan ID toko</option></select></label>
+          <label class="min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="consignmentFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Dari tanggal SO<input id="consignmentStartDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <label class="flex flex-col gap-1 text-[10px] text-text-muted">Sampai tanggal SO<input id="consignmentEndDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <p class="sm:col-span-2 xl:col-span-5 self-center text-[11px] text-text-muted">Rentang tanggal memilih toko menurut SO terakhir; saldo yang ditampilkan tetap snapshot terbaru.</p>
+          <button id="consignmentReset" type="button" class="min-h-[44px] px-3 rounded-lg text-xs font-semibold text-text-muted hover:text-accent sm:col-span-2 xl:col-span-5 xl:justify-self-end">Reset Filter</button>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Toko</th><th class="p-3">Sales</th><th class="p-3">SKU / Produk</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3 text-right">Nilai sisa</th><th class="p-3">Status</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div>
+        <div id="consignmentMobileList" class="flex flex-col gap-2 lg:hidden"></div>
+      </section>
+
       <!-- ================================================================ -->
       <!-- VIEW 3: UPLOAD MASTER EXCEL MODULE (Admin Only)                  -->
       <!-- ================================================================ -->
       <section id="viewUpload" class="hidden flex flex-col gap-6">
+        <div class="bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-4 shadow-sm">
+          <div><h2 class="text-base font-bold text-text-primary">Ekspor data invoice</h2><p class="mt-1 text-xs text-text-muted">Atur pencarian, Sales, status, dan rentang tanggal di <a href="#invoices" class="font-semibold text-accent hover:underline">halaman Invoice &amp; Pembayaran</a>, lalu kembali ke sini untuk mengunduh rekap.</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button type="button" data-page-export="xls" class="min-h-11 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Ekspor Excel (.xls)</button>
+            <button type="button" data-page-export="csv" class="min-h-11 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Ekspor CSV (.csv)</button>
+            <button type="button" data-page-export="doc" class="min-h-11 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Ekspor dokumen (.doc)</button>
+          </div>
+        </div>
         <div class="bg-surface-1 border border-border-subtle rounded-xl p-6 flex flex-col gap-5 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -799,7 +856,7 @@
         <span id="drawerSubtitle" class="text-xs text-text-muted">Data faktual yang mendasari metrik</span>
       </div>
       <div class="flex items-center gap-2">
-        <button id="kpiStoreDirectoryBtn" type="button" class="hidden min-h-11 px-3 rounded-lg border border-border-subtle text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Cari berdasarkan toko">Cari toko</button>
+        <button id="kpiStoreDirectoryBtn" type="button" class="hidden min-h-11 px-3 rounded-lg border border-border-subtle text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Buka Pencarian Toko">Pencarian Toko</button>
         <button id="drawerBackBtn" type="button" class="shrink-0 min-h-11 cursor-pointer px-3 py-2 rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Kembali ke halaman">← Kembali</button>
         <button id="drawerCloseBtn" type="button" class="shrink-0 cursor-pointer w-11 h-11 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Tutup rincian">
         <span class="material-symbols-outlined text-[18px]">close</span>
@@ -1163,15 +1220,21 @@
         admin: [
           { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' },
-          { id: 'upload', label: 'Upload Master Excel', icon: 'upload_file', href: '#upload' }
+          { id: 'store-search', label: 'Pencarian Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' },
+          { id: 'export', label: 'Export Data', icon: 'download', href: '#export' }
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
-          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' }
+          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' },
+          { id: 'store-search', label: 'Pencarian Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' }
         ],
         sales_manager: [
           { id: 'dashboard', label: 'Dashboard Tim', icon: 'dashboard', href: '#dashboard' },
-          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' }
+          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' },
+          { id: 'store-search', label: 'Pencarian Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' }
         ]
       };
 
@@ -1179,18 +1242,21 @@
         admin: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
-          { id: 'upload', label: 'Upload', icon: 'cloud_upload', href: '#upload' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+          { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' },
+          { id: 'export', label: 'Export', icon: 'download', href: '#export' },
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+          { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' }
         ],
         sales_manager: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
-          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+          { id: 'store-search', label: 'Toko', icon: 'storefront', href: '#store-search' },
+          { id: 'consignment', label: 'Consignment', icon: 'inventory_2', href: '#consignment' }
         ]
       };
 
@@ -1230,7 +1296,13 @@
       var viewDashboard = document.getElementById('viewDashboard');
       var viewInvoices = document.getElementById('viewInvoices');
       var viewUpload = document.getElementById('viewUpload');
+      var viewStoreSearch = document.getElementById('viewStoreSearch');
+      var viewConsignment = document.getElementById('viewConsignment');
       var salesComparisonSection = document.getElementById('salesComparisonSection');
+      var selectedStoreSearchName = '';
+      var selectedStoreSearchId = '';
+      var filteredStoreSearchInvoices = [];
+      var filteredConsignmentRows = [];
 
       function esc(str) {
         if (str == null) return '';
@@ -1280,6 +1352,158 @@
         renderMetrics();
         renderInvoicesTable();
         populateFormDropdowns();
+        if (!viewStoreSearch.classList.contains('hidden')) renderStoreSearch(selectedStoreSearchName);
+        if (!viewConsignment.classList.contains('hidden')) renderConsignment();
+      }
+
+      function getIndependentPageRange(prefix) {
+        var context = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var follow = document.getElementById(prefix + 'FollowDashboard');
+        var start = document.getElementById(prefix + 'StartDate');
+        var end = document.getElementById(prefix + 'EndDate');
+        if (follow && follow.checked) {
+          if (start) start.value = context.dari;
+          if (end) end.value = context.sampai;
+          return { start: context.dari, end: context.sampai, asOf: context.asOf };
+        }
+        var from = start && start.value || context.dari;
+        var to = end && end.value || context.sampai;
+        if (from > to) { var swap = from; from = to; to = swap; }
+        if (start) start.value = from;
+        if (end) end.value = to;
+        return { start: from, end: to, asOf: context.asOf };
+      }
+
+      function pageInvoiceStatusMatches(invoice, status, asOf) {
+        if (status === 'all') return true;
+        var state = FADE_ENGINE.evaluateInvoiceState(invoice, asOf);
+        if (status === 'PAID') return state.sisa <= 0;
+        if (status === 'OUTSTANDING') return state.sisa > 0;
+        if (status === 'OVERDUE') return state.status === 'Terlambat Bayar';
+        return true;
+      }
+
+      function renderStoreSearch(selectedName) {
+        if (arguments.length > 1) selectedStoreSearchId = arguments[1] || '';
+        if (selectedName) selectedStoreSearchName = selectedName;
+        else selectedName = selectedStoreSearchName;
+        var accessible = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, 'all');
+        var salesFilter = document.getElementById('storeSearchSalesFilter');
+        var statusFilter = document.getElementById('storeSearchStatusFilter');
+        var range = getIndependentPageRange('storeSearch');
+        if (session.role === 'admin' || session.role === 'sales_manager') {
+          var salesOptions = Array.from(new Set(accessible.map(function (inv) { return inv.sales_name || inv.salesName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+          if (salesFilter && salesFilter.options.length <= 1) salesOptions.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; salesFilter.appendChild(option); });
+        }
+        var selectedSales = salesFilter ? salesFilter.value : 'all';
+        var selectedStatus = statusFilter ? statusFilter.value : 'all';
+        accessible = accessible.filter(function (inv) {
+          var salesName = inv.sales_name || inv.salesName || '';
+          var date = inv.invoice_date || inv.date || '';
+          return (selectedSales === 'all' || salesName === selectedSales) && date >= range.start && date <= range.end && pageInvoiceStatusMatches(inv, selectedStatus, range.asOf);
+        });
+        filteredStoreSearchInvoices = accessible;
+        function storeIdentity(invoice) {
+          var name = String(invoice.store_name || invoice.storeName || '').trim();
+          var id = String(invoice.store_id || invoice.storeId || '').trim();
+          return { id: id, key: id ? 'id:' + id : 'name:' + name.toLocaleLowerCase('id-ID'), name: name };
+        }
+        var groupsByKey = new Map();
+        accessible.forEach(function (invoice) {
+          var identity = storeIdentity(invoice);
+          if (identity.name && !groupsByKey.has(identity.key)) groupsByKey.set(identity.key, identity);
+        });
+        var stores = Array.from(groupsByKey.values()).sort(function (a, b) { return a.name.localeCompare(b.name, 'id') || a.id.localeCompare(b.id, 'id'); });
+        var query = String((document.getElementById('storeSearchInput') || {}).value || '').trim().toLocaleLowerCase('id-ID');
+        var list = document.getElementById('storeSearchList');
+        var detail = document.getElementById('storeSearchDetail');
+        if (!list || !detail) return;
+        var matches = stores.filter(function (store) {
+          if (!query) return true;
+          var storeInvoices = accessible.filter(function (inv) { return storeIdentity(inv).key === store.key; });
+          var searchable = [store.name, store.id].concat(storeInvoices.map(function (inv) { return inv.sales_name || inv.salesName || ''; })).join(' ').toLocaleLowerCase('id-ID');
+          return searchable.includes(query);
+        });
+        list.innerHTML = matches.length ? '' : '<p class="p-4 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-muted">Tidak ada toko yang cocok dengan pencarian.</p>';
+        matches.forEach(function (store) {
+          var invoices = accessible.filter(function (inv) { return storeIdentity(inv).key === store.key; });
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'w-full min-h-14 px-3 py-2 rounded-lg border text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ' + (store.name === selectedName && store.id === selectedStoreSearchId ? 'border-accent bg-accent/5' : 'border-border-subtle bg-surface-2 hover:border-accent/60');
+          button.innerHTML = '<span class="block truncate text-xs font-semibold text-text-primary">' + esc(store.name) + '</span><span class="mt-1 block text-[10px] text-text-muted">' + invoices.length + ' invoice · Rp ' + invoices.reduce(function (sum, inv) { return sum + Number(inv.invoiceTotal || inv.invoice_total_idr || 0); }, 0).toLocaleString('id-ID') + (store.id ? ' · ID ' + esc(store.id) : '') + '</span>';
+          button.addEventListener('click', function () { renderStoreSearch(store.name, store.id); });
+          list.appendChild(button);
+        });
+        var selectedStore = stores.find(function (store) { return store.name === selectedName && store.id === selectedStoreSearchId; }) || stores.find(function (store) { return store.name === selectedName; });
+        if (!selectedStore) {
+          detail.innerHTML = '<p>Pilih toko untuk melihat riwayat pembelian.</p>';
+          return;
+        }
+        selectedStoreSearchId = selectedStore.id;
+        var storeInvoices = accessible.filter(function (inv) { return storeIdentity(inv).key === selectedStore.key; }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
+        var monthly = {};
+        storeInvoices.forEach(function (inv) {
+          var month = String(inv.invoice_date || inv.date || '').slice(0, 7) || 'Tidak diketahui';
+          if (!monthly[month]) monthly[month] = { qty: 0, total: 0, count: 0 };
+          monthly[month].qty += Number(inv.qty || 0);
+          monthly[month].total += Number(inv.invoiceTotal || inv.invoice_total_idr || 0);
+          monthly[month].count += 1;
+        });
+        var rewards = (FADE_STORE.getRewards() || []).filter(function (reward) {
+          var rewardStoreId = String(reward.storeId || reward.store_id || reward.clientId || reward.client_id || '').trim();
+          if (selectedStore.id) return rewardStoreId === selectedStore.id;
+          return String(reward.storeName || '').trim().toLocaleLowerCase('id-ID') === selectedName.toLocaleLowerCase('id-ID');
+        });
+        var monthRows = Object.keys(monthly).sort().reverse().map(function (month) {
+          var row = monthly[month];
+          return '<tr><td class="p-2.5 text-text-primary">' + esc(month) + '</td><td class="p-2.5 text-right">' + row.count + '</td><td class="p-2.5 text-right">' + row.qty.toLocaleString('id-ID') + ' pcs</td><td class="p-2.5 text-right">Rp ' + row.total.toLocaleString('id-ID') + '</td></tr>';
+        }).join('');
+        var invoiceRows = storeInvoices.map(function (inv) {
+          var id = inv.invoice_id || inv.id;
+          var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
+          return '<tr><td class="p-2.5 font-mono text-text-primary">' + esc(id) + '</td><td class="p-2.5">' + esc(inv.invoice_date || inv.date || '-') + '</td><td class="p-2.5 text-right">Rp ' + state.revenue.toLocaleString('id-ID') + '</td><td class="p-2.5">' + esc(state.status) + '</td><td class="p-2.5 text-right"><button type="button" data-store-invoice="' + esc(id) + '" class="text-accent font-semibold hover:underline">Detail</button></td></tr>';
+        }).join('');
+        var invoiceCards = storeInvoices.map(function (inv) {
+          var id = inv.invoice_id || inv.id;
+          var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
+          return '<article class="p-3 rounded-lg border border-border-subtle bg-surface-1"><div class="flex items-start justify-between gap-2"><strong class="font-mono text-[10px] text-text-primary break-all">' + esc(id) + '</strong><span class="text-[10px] text-text-muted">' + esc(state.status) + '</span></div><p class="mt-1 text-[10px] text-text-muted">' + esc(inv.invoice_date || inv.date || '-') + '</p><div class="mt-2 flex items-center justify-between gap-2"><strong class="text-xs text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong><button type="button" data-store-invoice="' + esc(id) + '" class="min-h-10 px-3 rounded-lg border border-border-subtle text-[11px] font-semibold text-accent">Detail</button></div></article>';
+        }).join('');
+        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedName) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '</span><span class="text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden lg:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="lg:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
+        detail.querySelectorAll('[data-store-invoice]').forEach(function (button) { button.addEventListener('click', function () { openInvoiceRewardDrawer(button.getAttribute('data-store-invoice')); }); });
+      }
+
+      function renderConsignment() {
+        var rows = FADE_STORE.getConsignmentBalances ? FADE_STORE.getConsignmentBalances() : [];
+        var search = String((document.getElementById('consignmentSearch') || {}).value || '').trim().toLocaleLowerCase('id-ID');
+        var storeSelect = document.getElementById('consignmentStoreFilter');
+        var selectedStore = storeSelect ? storeSelect.value : 'all';
+        var stores = Array.from(new Set(rows.map(function (row) { return row.storeName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+        if (storeSelect && storeSelect.options.length <= 1) stores.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; storeSelect.appendChild(option); });
+        var salesFilter = document.getElementById('consignmentSalesFilter');
+        var statusFilter = document.getElementById('consignmentStatusFilter');
+        if (salesFilter && salesFilter.options.length <= 1) {
+          Array.from(new Set(rows.map(function (row) { return row.salesName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); }).forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; salesFilter.appendChild(option); });
+        }
+        var selectedSales = salesFilter ? salesFilter.value : 'all';
+        var selectedStatus = statusFilter ? statusFilter.value : 'all';
+        var range = getIndependentPageRange('consignment');
+        rows = rows.filter(function (row) {
+          var matchSearch = !search || [row.clientId, row.storeName, row.sku, row.productName, row.salesName].join(' ').toLocaleLowerCase('id-ID').includes(search);
+          var latestSODate = row.latestSODate || '';
+          var matchDate = !latestSODate || (latestSODate >= range.start && latestSODate <= range.end);
+          var matchSales = selectedSales === 'all' || row.salesName === selectedSales;
+          var matchStatus = selectedStatus === 'all' || (selectedStatus === 'remaining' && Number(row.qtyRemaining) > 0) || (selectedStatus === 'empty' && Number(row.qtyRemaining) <= 0) || (selectedStatus === 'mapping' && (row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || '')));
+          return matchSearch && matchDate && matchSales && matchStatus && (selectedStore === 'all' || row.storeName === selectedStore);
+        });
+        filteredConsignmentRows = rows;
+        var body = document.getElementById('consignmentTableBody');
+        var mobile = document.getElementById('consignmentMobileList');
+        var summary = document.getElementById('consignmentSummary');
+        if (!body || !mobile) return;
+        summary.textContent = rows.length ? rows.length.toLocaleString('id-ID') + ' SKU tampil · ' + Array.from(new Set(rows.map(function (row) { return row.storeName; }))).length + ' toko · snapshot Master Consignment' : (FADE_STORE.getConsignmentBalances().length ? 'Tidak ada item yang cocok dengan filter.' : 'Belum ada snapshot Consignment di server. Admin dapat mengimpor file Master Consignment_FINAL.xlsx.');
+        var fmt = function (value) { return Number(value || 0).toLocaleString('id-ID'); };
+        body.innerHTML = rows.length ? rows.map(function (row) { var warning = row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || '') ? 'Perlu cocokkan ID toko' : (row.stockStatus || ''); return '<tr><td class="p-3 text-text-primary">' + '<span class="block">' + esc(row.storeName) + (row.temporaryStoreId ? '<span class="ml-1 text-[10px] text-status-warning">ID sementara</span>' : '') + '</span>' + (row.latestSODate ? '<span class="mt-1 block text-[10px] text-text-muted">SO terakhir ' + esc(row.latestSODate) + '</span>' : '') + '</td><td class="p-3">' + esc(row.salesName || '-') + '</td><td class="p-3"><span class="font-mono text-text-primary">' + esc(row.sku) + '</span><span class="ml-2 text-text-secondary">' + esc(row.productName || '-') + '</span></td><td class="p-3 text-right">' + fmt(row.qtyConsigned) + '</td><td class="p-3 text-right">' + fmt(row.qtyPaid) + '</td><td class="p-3 text-right">' + fmt(row.qtyReturned) + '</td><td class="p-3 text-right font-semibold text-text-primary">' + fmt(row.qtyRemaining) + '</td><td class="p-3 text-right">Rp ' + fmt(row.remainingValue) + '</td><td class="p-3 text-status-warning">' + esc(warning) + '</td></tr>'; }).join('') : '<tr><td colspan="9" class="p-6 text-center text-text-muted">' + (FADE_STORE.getConsignmentBalances().length ? 'Tidak ada item yang cocok dengan filter.' : 'Data Consignment belum dimuat dari server.') + '</td></tr>';
+        mobile.innerHTML = rows.map(function (row) { return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><div class="flex justify-between gap-2"><strong class="text-text-primary">' + esc(row.storeName) + '</strong><span class="text-[10px] text-status-warning">' + (row.temporaryStoreId ? 'ID sementara' : esc(row.stockStatus || '')) + '</span></div>' + (row.latestSODate ? '<p class="mt-1 text-[10px] text-text-muted">SO terakhir ' + esc(row.latestSODate) + '</p>' : '') + '<p class="mt-1 text-[11px] text-text-secondary">' + esc(row.sku) + ' · ' + esc(row.productName || '-') + '</p><div class="mt-2 grid grid-cols-2 gap-1 text-[11px] text-text-muted"><span>Sales: ' + esc(row.salesName || '-') + '</span><span class="text-right">Sisa: <strong class="text-text-primary">' + fmt(row.qtyRemaining) + ' pcs</strong></span><span>Titip: ' + fmt(row.qtyConsigned) + ' · Terbayar: ' + fmt(row.qtyPaid) + '</span><span class="text-right">Rp ' + fmt(row.remainingValue) + '</span></div></article>'; }).join('');
       }
 
       var lastActiveTrigger = null;
@@ -1364,17 +1588,26 @@
         });
 
         var mNavItems = MOBILE_NAV_CONFIG[session.role] || MOBILE_NAV_CONFIG.admin;
+        mobileNavContainer.className = 'flex w-full h-16';
         mobileNavContainer.innerHTML = '';
         mNavItems.forEach(function (item) {
           var a = document.createElement('a');
           a.href = item.href;
           a.setAttribute('data-route', item.id);
-          a.className = 'mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none';
+          a.className = 'mobile-nav-item relative flex flex-1 min-w-0 flex-col items-center justify-center gap-1 h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none';
           a.innerHTML =
             '<span class="material-symbols-outlined text-[20px]">' + item.icon + '</span>' +
             '<span class="text-[10px] font-medium tracking-tight">' + item.label + '</span>' +
             '<span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-2 h-[2px] bg-accent rounded-full"></span>';
           mobileNavContainer.appendChild(a);
+        });
+        var consignmentUploadLabel = document.getElementById('consignmentUploadLabel');
+        if (consignmentUploadLabel) consignmentUploadLabel.classList.toggle('hidden', session.role !== 'admin');
+        var invoicePageExportLink = document.getElementById('invoicePageExportLink');
+        if (invoicePageExportLink) invoicePageExportLink.classList.toggle('hidden', session.role !== 'admin');
+        ['storeSearchExportActions', 'consignmentExportActions'].forEach(function (id) {
+          var actions = document.getElementById(id);
+          if (actions) actions.classList.toggle('hidden', session.role !== 'admin');
         });
 
         salesScopeContainer.innerHTML = '';
@@ -1981,15 +2214,9 @@
             var tr = document.createElement('tr');
             tr.className = 'comparison-selectable group hover:bg-surface-2/40 focus-visible:bg-surface-2/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors cursor-pointer';
             tr.tabIndex = 0;
-            tr.setAttribute('aria-label', 'Lihat kinerja ' + r.sales + ' dan filter dashboard ke sales ini');
-            tr.addEventListener('click', function () {
-              var sel = document.getElementById('salesFilterSelect');
-              if (sel) {
-                sel.value = r.sales;
-                currentSalesFilter = r.sales;
-                renderAll();
-              }
-            });
+            tr.setAttribute('role', 'button');
+            tr.setAttribute('aria-label', 'Buka rincian kinerja ' + r.sales);
+            tr.addEventListener('click', function () { openSalesPerformance(r.sales); });
             tr.addEventListener('keydown', function (event) {
               if (event.target === tr && (event.key === 'Enter' || event.key === ' ')) {
                 event.preventDefault();
@@ -2015,16 +2242,9 @@
             card.className = 'comparison-selectable p-3.5 rounded-xl bg-surface-2/60 border border-border-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors cursor-pointer';
             card.tabIndex = 0;
             card.setAttribute('role', 'button');
-            card.title = 'Filter menurut ' + r.sales;
-            card.setAttribute('aria-label', 'Filter dashboard menurut ' + r.sales);
-            card.addEventListener('click', function () {
-              var sel = document.getElementById('salesFilterSelect');
-              if (sel) {
-                sel.value = r.sales;
-                currentSalesFilter = r.sales;
-                renderAll();
-              }
-            });
+            card.title = 'Lihat rincian kinerja ' + r.sales;
+            card.setAttribute('aria-label', 'Buka rincian kinerja ' + r.sales);
+            card.addEventListener('click', function () { openSalesPerformance(r.sales); });
             card.addEventListener('keydown', function (event) {
               if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
                 event.preventDefault();
@@ -2663,6 +2883,9 @@
           var result = FADE_IMPORTER.processParsedRows(rawRows, { cutoff: '2026-11-22' });
 
           if (result.success && result.isClean) {
+            var invoiceDetails = Array.isArray(workbookRows.Invoice_Detail)
+              ? FADE_MASTER_IMPORTER.parseInvoiceDetails(workbookRows.Invoice_Detail)
+              : {};
             var rewardRows = workbookRows.Client_Reward_Tracking;
             var newRewards = null;
             if (Array.isArray(rewardRows) && rewardRows.length > 1) {
@@ -2720,6 +2943,10 @@
               }
             }
             var newInvoices = result.records.map(function (r) {
+              var productItems = invoiceDetails[r.invoice_id] || [];
+              var productText = productItems.map(function (item) {
+                return [item.name || item.sku, item.status, 'qty ' + item.qty, '@Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'), 'net Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID')].join(' | ');
+              }).join('; ');
               return {
                 id: r.invoice_id,
                 date: r.invoice_date,
@@ -2727,7 +2954,11 @@
                 storeName: r.store_name,
                 salesId: r.sales_id,
                 salesName: r.sales_name,
+                salesHistoris: r.sales_historis,
+                salesSaatIni: r.sales_saat_ini || r.sales_name,
                 productName: r.product_name || 'FADE Pod Kit 2ml',
+                productItems: productItems,
+                rincianProduk: productText,
                 qty: r.qty,
                 unitPrice: r.unit_price_idr,
                 invoiceTotal: r.invoice_total_idr,
@@ -3008,8 +3239,8 @@
           window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
           previousNavRoute = hash;
         }
-        if (session.role !== 'admin' && hash === 'upload') {
-          showToast('Fitur Upload Master Excel hanya untuk Admin', 'error');
+        if (session.role !== 'admin' && (hash === 'upload' || hash === 'export')) {
+          showToast('Halaman Export Data hanya tersedia untuk Admin', 'error');
           window.location.hash = '#dashboard';
           return;
         }
@@ -3048,6 +3279,8 @@
         viewDashboard.classList.add('hidden');
         viewInvoices.classList.add('hidden');
         viewUpload.classList.add('hidden');
+        viewStoreSearch.classList.add('hidden');
+        viewConsignment.classList.add('hidden');
 
         if (typeof closeInvoiceFormModal === 'function') closeInvoiceFormModal();
         if (typeof closePaymentModal === 'function') closePaymentModal();
@@ -3103,13 +3336,25 @@
           var invoiceSalesSelect = document.getElementById('invoiceSalesFilter');
           if (invoiceSalesSelect) invoiceSalesSelect.value = 'all';
           renderInvoicesTable();
-        } else if (hash === 'upload') {
-          if (pageTitle) pageTitle.textContent = 'Upload Master Excel';
-          if (statusBadgeText) statusBadgeText.textContent = 'Impor Dataset Canonical Schema v1.0';
+        } else if (hash === 'export' || hash === 'upload') {
+          if (pageTitle) pageTitle.textContent = 'Export Data';
+          if (statusBadgeText) statusBadgeText.textContent = 'Ekspor invoice dan kelola master data';
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
           if (headerToolbar) headerToolbar.classList.add('hidden');
           viewUpload.classList.remove('hidden');
           renderUploadHistory();
+        } else if (hash === 'store-search') {
+          if (pageTitle) pageTitle.textContent = 'Pencarian Toko';
+          if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
+          if (headerToolbar) headerToolbar.classList.add('hidden');
+          viewStoreSearch.classList.remove('hidden');
+          renderStoreSearch();
+        } else if (hash === 'consignment') {
+          if (pageTitle) pageTitle.textContent = 'Consignment';
+          if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
+          if (headerToolbar) headerToolbar.classList.add('hidden');
+          viewConsignment.classList.remove('hidden');
+          renderConsignment();
         } else if (hash === 'profile') {
           if (pageTitle) pageTitle.textContent = session.role === 'admin' ? 'Profil Admin' : 'Profil Sales Manager';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
@@ -3123,9 +3368,10 @@
 
       function updatePeriodTabs() {
         var ytdOnly = currentMode === 'ytd';
-        document.querySelectorAll('#dashboardKpiGrid [data-kpi="achievement"], #dashboardKpiGrid [data-kpi="qty"]').forEach(function (card) {
-          card.classList.toggle('hidden', ytdOnly);
-        });
+        var achievementCard = document.querySelector('#dashboardKpiGrid [data-kpi="achievement"]');
+        var qtyCard = document.querySelector('#dashboardKpiGrid [data-kpi="qty"]');
+        if (achievementCard) achievementCard.classList.toggle('hidden', ytdOnly);
+        if (qtyCard) qtyCard.classList.remove('hidden');
         if (currentMode === 'bulan') {
           tabModeBulanan.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorBulanan.classList.remove('hidden');
@@ -3336,6 +3582,8 @@
       if (btnSidebarProfile) btnSidebarProfile.addEventListener('click', openProfileModal);
       var btnHeaderProfile = document.getElementById('headerProfileChip');
       if (btnHeaderProfile) btnHeaderProfile.addEventListener('click', openProfileModal);
+      var btnMobileProfile = document.getElementById('mobileProfileBtn');
+      if (btnMobileProfile) btnMobileProfile.addEventListener('click', openProfileModal);
 
       var profileModal = document.getElementById('profileModal');
       var profileModalBackdrop = document.getElementById('profileModalBackdrop');
@@ -3386,14 +3634,16 @@
         var qty = Number(inv.qty || 0);
         var dueDate = inv.due_date || inv.dueDate || '-';
         var paidPercent = state.revenue > 0 ? Math.min(100, Math.round((paid / state.revenue) * 100)) : 0;
-        var productItems = String(inv.rincianProduk || inv.rincian_produk || '').split(';').map(function (item) { return item.trim(); }).filter(Boolean);
-        var productsHtml = productItems.length ? productItems.map(function (item) {
+        var productItems = Array.isArray(inv.productItems) && inv.productItems.length ? inv.productItems : String(inv.rincianProduk || inv.rincian_produk || '').split(';').map(function (item) {
           var parts = item.split('|').map(function (part) { return part.trim(); });
-          var productType = parts[1] || 'Terjual';
+          return { name: parts[0], status: parts[1] || 'Terjual', qty: Number((parts[2] || '').replace('qty ', '')) || 0, unitPriceLabel: (parts[3] || '-').replace('@', '').trim(), subtotalLabel: (parts[4] || '-').replace('net ', '').trim() };
+        }).filter(function (item) { return item.name; });
+        var productsHtml = productItems.length ? productItems.map(function (item) {
+          var productType = item.status || 'Terjual';
           var isFree = productType.toLowerCase().indexOf('gratis') >= 0;
           return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
-            '<div class="flex items-start justify-between gap-3"><strong class="min-w-0 text-text-primary break-words">' + esc(parts[0] || 'Produk FADE') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold ' + (isFree ? 'bg-status-warning/15 text-status-warning' : 'bg-surface-1 text-text-secondary') + '">' + esc(productType) + '</span></div>' +
-            '<div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">' + esc((parts[3] || '-').replace('@', '').trim()) + '</strong></div><div class="text-center text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + esc((parts[2] || '-').replace('qty ', '').trim()) + '</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">' + esc((parts[4] || '-').replace('net ', '').trim()) + '</strong></div></div>' +
+            '<div class="flex items-start justify-between gap-3"><strong class="min-w-0 text-text-primary break-words">' + esc(item.name || item.sku || 'Produk FADE') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold ' + (isFree ? 'bg-status-warning/15 text-status-warning' : 'bg-surface-1 text-text-secondary') + '">' + esc(productType) + '</span></div>' +
+            '<div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">' + esc(item.unitPriceLabel || ('Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'))) + '</strong></div><div class="text-center text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + Number(item.qty || 0).toLocaleString('id-ID') + '</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">' + esc(item.subtotalLabel || ('Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID'))) + '</strong></div></div>' +
             '</article>';
         }).join('') : '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2"><div class="flex items-start justify-between gap-3"><strong class="text-text-primary">' + esc(inv.productName || 'FADE Pods Series') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full bg-surface-1 text-text-secondary text-[10px]">Terjual</span></div><div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">Rp ' + Number(inv.unitPrice || inv.unit_price_idr || (qty ? Math.round(state.revenue / qty) : 0)).toLocaleString('id-ID') + '</strong></div><div class="text-center text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div></div></article>';
         var storeKey = store.trim().toLocaleLowerCase('id-ID');
@@ -3562,6 +3812,61 @@
         if (focusBack !== false) setTimeout(function () { drawerBackBtn.focus(); }, 20);
       }
 
+      function openSalesPerformance(salesName, focusBack) {
+        if (!salesName || (session.role !== 'admin' && session.role !== 'sales_manager')) return;
+        if (drawer.classList.contains('hidden')) drawerOpener = document.activeElement;
+        kpiDrawerReturnState = null;
+        document.getElementById('kpiStoreDirectoryBtn').classList.add('hidden');
+        drawerBackBtn.setAttribute('aria-label', 'Kembali ke dashboard');
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var allInvoices = FADE_STORE.getInvoices();
+        var summary = FADE_ENGINE.calculateSummary(allInvoices, FADE_STORE.getTargets(), {
+          role: session.role,
+          userSales: session.salesName,
+          selectedSales: salesName,
+          mode: currentMode,
+          periode: currentPeriod,
+          snapshot: '2026-11-22',
+          startDate: customStartDate,
+          endDate: customEndDate
+        });
+        var invoices = FADE_ENGINE.filterByScope(allInvoices, session.role, session.salesName, salesName).filter(function (invoice) {
+          var date = invoice.invoice_date || invoice.date || '';
+          var state = FADE_ENGINE.evaluateInvoiceState(invoice, pContext.asOf);
+          if (activeCompMetric === 'outstanding') return date <= pContext.asOf && state.sisa > 0;
+          if (date < pContext.dari || date > pContext.sampai) return false;
+          if (activeCompMetric === 'pembayaran') {
+            var paid = Number(invoice.paid_total_idr != null ? invoice.paid_total_idr : (invoice.paidTotal || 0));
+            var lastPayment = invoice.last_payment_date || invoice.lastPaymentDate || '';
+            return paid > 0 && lastPayment && lastPayment <= pContext.asOf;
+          }
+          return true;
+        }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
+        var metric = activeCompMetric === 'qty' ? summary.totalQty : activeCompMetric === 'revenue' ? summary.revenue : activeCompMetric === 'pembayaran' ? summary.pembayaranMasuk : summary.totalOutstanding;
+        var metricLabel = activeCompMetric === 'qty' ? 'Qty' : activeCompMetric === 'revenue' ? 'Revenue' : activeCompMetric === 'pembayaran' ? 'Pembayaran' : 'Outstanding';
+        var formatMoney = function (value) { return 'Rp ' + Number(value || 0).toLocaleString('id-ID'); };
+        drawerTitle.textContent = 'Performa Sales · ' + salesName;
+        drawerSubtitle.textContent = (activeCompMetric === 'outstanding' ? 'Posisi per ' + pContext.asOf : 'Periode ' + pContext.label) + ' · ' + invoices.length + ' invoice pembentuk ' + metricLabel.toLowerCase();
+        var invoiceCards = invoices.length ? invoices.map(function (invoice) {
+          var id = invoice.invoice_id || invoice.id || '';
+          var state = FADE_ENGINE.evaluateInvoiceState(invoice, pContext.asOf);
+          var contribution = activeCompMetric === 'qty' ? Number(invoice.qty || 0).toLocaleString('id-ID') + ' pcs' : activeCompMetric === 'pembayaran' ? formatMoney(invoice.paid_total_idr != null ? invoice.paid_total_idr : invoice.paidTotal) : activeCompMetric === 'outstanding' ? formatMoney(state.sisa) : formatMoney(state.revenue);
+          return '<button type="button" data-sales-invoice="' + esc(id) + '" class="w-full p-3 rounded-lg bg-surface-2 border border-border-subtle text-left hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors"><span class="flex items-center justify-between gap-3"><strong class="min-w-0 truncate text-text-primary">' + esc(invoice.store_name || invoice.storeName || 'Toko') + '</strong><strong class="shrink-0 text-text-primary tabular-nums">' + contribution + '</strong></span><span class="mt-1 flex items-center justify-between gap-3 text-[11px] text-text-muted"><span class="truncate">' + esc(id) + ' · ' + esc(invoice.invoice_date || invoice.date || '-') + '</span><span>' + esc(state.status) + '</span></span><span class="mt-1 block text-[10px] font-semibold text-accent">Detail invoice →</span></button>';
+        }).join('') : '<p class="p-4 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Tidak ada invoice untuk Sales ini pada periode yang dipilih.</p>';
+        drawerContent.innerHTML = '<section class="grid grid-cols-2 gap-2" aria-label="Ringkasan performa Sales"><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">' + metricLabel + '</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (activeCompMetric === 'qty' ? Number(metric || 0).toLocaleString('id-ID') + ' pcs' : formatMoney(metric)) + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Invoice</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + invoices.length.toLocaleString('id-ID') + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Target</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (summary.target ? Number(summary.target).toLocaleString('id-ID') + ' pcs' : '—') + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Achievement</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (summary.achievement == null ? '—' : summary.achievement.toFixed(1) + '%') + '</strong></article></section><section class="flex flex-col gap-2"><h4 class="font-semibold text-text-primary">Invoice pembentuk metrik</h4>' + invoiceCards + '</section>';
+        drawerBackdrop.classList.remove('hidden');
+        drawer.classList.remove('hidden');
+        requestAnimationFrame(function () { drawer.classList.remove('translate-x-full'); });
+        drawerContent.querySelectorAll('[data-sales-invoice]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            kpiDrawerReturnState = { kpiType: 'sales-performance', salesName: salesName, invoiceId: button.getAttribute('data-sales-invoice'), scrollTop: drawerContent.scrollTop };
+            var target = FADE_STORE.getInvoices().find(function (invoice) { return (invoice.invoice_id || invoice.id) === kpiDrawerReturnState.invoiceId; });
+            if (target && (session.role === 'admin' || session.role === 'sales_manager' || (target.sales_name || target.salesName) === session.salesName)) openInvoiceRewardDrawer(kpiDrawerReturnState.invoiceId);
+          });
+        });
+        if (focusBack !== false) setTimeout(function () { drawerBackBtn.focus(); }, 20);
+      }
+
       function openStoreDirectory() {
         var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
         var allInvoices = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, currentSalesFilter);
@@ -3624,6 +3929,13 @@
       function returnToKpiDrawer() {
         if (!kpiDrawerReturnState) return;
         var returnState = kpiDrawerReturnState;
+        if (returnState.kpiType === 'sales-performance') {
+          openSalesPerformance(returnState.salesName, false);
+          drawerContent.scrollTop = returnState.scrollTop;
+          var invoiceButton = Array.prototype.find.call(drawerContent.querySelectorAll('[data-sales-invoice]'), function (button) { return button.getAttribute('data-sales-invoice') === returnState.invoiceId; });
+          if (invoiceButton) invoiceButton.focus();
+          return;
+        }
         if (returnState.kpiType === 'store') {
           kpiDrawerReturnState = null;
           closeDrawer();
@@ -3701,7 +4013,91 @@
       }
 
       drawerBackBtn.addEventListener('click', function () { if (kpiDrawerReturnState) returnToKpiDrawer(); else closeDrawer(); });
-      document.getElementById('kpiStoreDirectoryBtn').addEventListener('click', openStoreDirectory);
+      document.getElementById('kpiStoreDirectoryBtn').addEventListener('click', function () { window.location.hash = '#store-search'; });
+      document.querySelectorAll('[data-page-export]').forEach(function (button) {
+        button.addEventListener('click', function () { runExport(button.getAttribute('data-page-export')); });
+      });
+      document.getElementById('storeSearchInput').addEventListener('input', function () { renderStoreSearch(selectedStoreSearchName); });
+      ['storeSearchSalesFilter', 'storeSearchStatusFilter'].forEach(function (id) { document.getElementById(id).addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); }); });
+      document.getElementById('storeSearchFollowDashboard').addEventListener('change', function () {
+        var disabled = this.checked;
+        document.getElementById('storeSearchStartDate').disabled = disabled;
+        document.getElementById('storeSearchEndDate').disabled = disabled;
+        renderStoreSearch(selectedStoreSearchName);
+      });
+      ['storeSearchStartDate', 'storeSearchEndDate'].forEach(function (id) { document.getElementById(id).addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); }); });
+      document.getElementById('storeSearchReset').addEventListener('click', function () {
+        document.getElementById('storeSearchInput').value = '';
+        document.getElementById('storeSearchSalesFilter').value = 'all';
+        document.getElementById('storeSearchStatusFilter').value = 'all';
+        document.getElementById('storeSearchFollowDashboard').checked = true;
+        document.getElementById('storeSearchStartDate').disabled = true;
+        document.getElementById('storeSearchEndDate').disabled = true;
+        selectedStoreSearchName = ''; selectedStoreSearchId = '';
+        renderStoreSearch('');
+      });
+      document.getElementById('consignmentSearch').addEventListener('input', renderConsignment);
+      document.getElementById('consignmentStoreFilter').addEventListener('change', renderConsignment);
+      ['consignmentSalesFilter', 'consignmentStatusFilter'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderConsignment); });
+      document.getElementById('consignmentFollowDashboard').addEventListener('change', function () {
+        document.getElementById('consignmentStartDate').disabled = this.checked;
+        document.getElementById('consignmentEndDate').disabled = this.checked;
+        renderConsignment();
+      });
+      ['consignmentStartDate', 'consignmentEndDate'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderConsignment); });
+      document.getElementById('consignmentReset').addEventListener('click', function () {
+        document.getElementById('consignmentSearch').value = '';
+        document.getElementById('consignmentStoreFilter').value = 'all';
+        document.getElementById('consignmentSalesFilter').value = 'all';
+        document.getElementById('consignmentStatusFilter').value = 'all';
+        document.getElementById('consignmentFollowDashboard').checked = true;
+        document.getElementById('consignmentStartDate').disabled = true;
+        document.getElementById('consignmentEndDate').disabled = true;
+        renderConsignment();
+      });
+      function exportRowsCsv(filename, headers, rows) {
+        function quote(value) { return '"' + String(value == null ? '' : value).replace(/"/g, '""') + '"'; }
+        var csv = [headers.map(quote).join(',')].concat(rows.map(function (row) { return row.map(quote).join(','); })).join('\r\n');
+        triggerDownload(filename, csv, 'text/csv;charset=utf-8;');
+        showToast('CSV berhasil diunduh.');
+      }
+      document.querySelectorAll('[data-directory-export="csv"]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (session.role !== 'admin') { showToast('Ekspor hanya dapat dilakukan Admin.', 'error'); return; }
+          var range = getIndependentPageRange('storeSearch');
+          exportRowsCsv('FADE_Pencarian_Toko_' + new Date().toISOString().slice(0, 10) + '.csv', ['No. Invoice', 'Tanggal', 'Toko', 'Sales', 'Qty', 'Total Invoice', 'Terbayar', 'Outstanding', 'Status'], filteredStoreSearchInvoices.map(function (inv) {
+            var state = FADE_ENGINE.evaluateInvoiceState(inv, range.asOf);
+            return [inv.invoice_id || inv.id, inv.invoice_date || inv.date, inv.store_name || inv.storeName, inv.sales_name || inv.salesName, inv.qty, state.revenue, state.dibayar, state.sisa, state.status];
+          }));
+        });
+      });
+      document.querySelectorAll('[data-consignment-export="csv"]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (session.role !== 'admin') { showToast('Ekspor hanya dapat dilakukan Admin.', 'error'); return; }
+          exportRowsCsv('FADE_Consignment_' + new Date().toISOString().slice(0, 10) + '.csv', ['Toko', 'Sales', 'SKU', 'Produk', 'Qty Titip', 'Terbayar', 'Retur', 'Qty Sisa', 'Nilai Sisa', 'Status'], filteredConsignmentRows.map(function (row) {
+            return [row.storeName, row.salesName, row.sku, row.productName, row.qtyConsigned, row.qtyPaid, row.qtyReturned, row.qtyRemaining, row.remainingValue, row.stockStatus];
+          }));
+        });
+      });
+      document.getElementById('consignmentFileInput').addEventListener('change', async function () {
+        var input = this;
+        var file = input.files && input.files[0];
+        if (!file) return;
+        if (session.role !== 'admin') { showToast('Impor Consignment hanya dapat dilakukan Admin.', 'error'); return; }
+        try {
+          var workbook = await FADE_XLSX_READER.parseXlsxWorkbook(file);
+          var rows = FADE_MASTER_IMPORTER.parseConsignmentBalances(workbook.Consignment_Saldo, FADE_STORE.getSalesList(), workbook.Ringkasan_Toko);
+          if (!rows.length) throw new Error('Sheet Consignment_Saldo tidak memuat baris saldo.');
+          if (!FADE_STORE.saveConsignmentBalances(rows)) throw new Error('Snapshot gagal disimpan.');
+          await FADE_STORE.waitForPendingWrites();
+          input.value = '';
+          renderConsignment();
+          showToast(rows.length.toLocaleString('id-ID') + ' baris saldo berhasil diimpor.');
+        } catch (error) {
+          console.error('Consignment import failed', error);
+          showToast(error.message || 'File Consignment gagal diproses.', 'error');
+        }
+      });
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
       drawer.addEventListener('keydown', function (e) {

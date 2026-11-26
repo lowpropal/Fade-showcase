@@ -11,6 +11,7 @@
     TARGETS: 'fade_showcase_targets_v021',
     SALES: 'fade_showcase_sales_v021',
     STORES: 'fade_showcase_stores_v021',
+    CONSIGNMENT: 'fade_showcase_consignment_v1',
     SESSION: 'fade_showcase_session_v021',
     THEME: 'fade_showcase_theme_v02',
     UPLOAD_LOG: 'fade_showcase_upload_history_v021',
@@ -120,6 +121,30 @@
     }
   }
 
+  function getConsignmentBalances() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEYS.CONSIGNMENT);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveConsignmentBalances(rows, options) {
+    options = options || {};
+    var normalized = Array.isArray(rows) ? rows : [];
+    try {
+      localStorage.setItem(STORAGE_KEYS.CONSIGNMENT, JSON.stringify(normalized));
+      if (!options.skipBackend && root.FADE_AUTH && root.FADE_STORE.getActiveSession()) {
+        trackBackendWrite(root.FADE_AUTH.persistConsignmentBalances(normalized), 'consignment');
+      }
+      return true;
+    } catch (e) {
+      console.error('Failed to save consignment balances', e);
+      return false;
+    }
+  }
+
   function saveRewards(rewards, options) {
     options = options || {};
     try {
@@ -160,6 +185,7 @@
       salesHistoris: data.salesHistoris || data.sales_historis || data.sales_lama || sName,
       salesSaatIni: data.salesSaatIni || data.sales_saat_ini || sName,
       salesKpi: sName,
+      productItems: Array.isArray(data.productItems) ? data.productItems : (Array.isArray(data.product_items) ? data.product_items : []),
       productName: (data.productName || data.product_name || 'FADE Products').trim(),
       qty: qty,
       qtyGratis: Number(data.qtyGratis || data.qty_gratis_pcs || 0),
@@ -364,6 +390,7 @@
     localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(targets));
     localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(dataset.sales || []));
     localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(dataset.stores || []));
+    localStorage.setItem(STORAGE_KEYS.CONSIGNMENT, JSON.stringify(dataset.consignment || []));
     localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
   }
 
@@ -376,6 +403,7 @@
         STORAGE_KEYS.TARGETS,
         STORAGE_KEYS.SALES,
         STORAGE_KEYS.STORES,
+        STORAGE_KEYS.CONSIGNMENT,
         STORAGE_KEYS.UPLOAD_LOG,
         STORAGE_KEYS.SNAPSHOTS,
         STORAGE_KEYS.REWARD_SNAPSHOTS,
@@ -649,6 +677,8 @@
     getInvoices: getInvoices,
     saveInvoices: saveInvoices,
     getRewards: getRewards,
+    getConsignmentBalances: getConsignmentBalances,
+    saveConsignmentBalances: saveConsignmentBalances,
     saveRewards: saveRewards,
     saveTargets: saveTargets,
     addInvoice: addInvoice,

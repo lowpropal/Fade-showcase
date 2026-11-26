@@ -43,7 +43,13 @@
     {
       key: 'sales_name',
       mandatory: true,
-      aliases: ['sales_name', 'sales_saat_ini', 'sales_kpi', 'sales', 'penjual', 'nama_sales'],
+      aliases: ['sales_name', 'sales_kpi', 'sales', 'penjual', 'nama_sales'],
+      exclude: ['id']
+    },
+    {
+      key: 'sales_saat_ini',
+      mandatory: false,
+      aliases: ['sales_saat_ini', 'pic_sekarang', 'sales_current'],
       exclude: ['id']
     },
     {
@@ -276,6 +282,7 @@
         store_id: raw.store_id ? String(raw.store_id).trim() : null,
         sales_name: String(raw.sales_name || raw.sales_id || '').trim(),
         sales_historis: raw.sales_historis ? String(raw.sales_historis).trim() : null,
+        sales_saat_ini: raw.sales_saat_ini ? String(raw.sales_saat_ini).trim() : String(raw.sales_name || '').trim(),
         sales_id: raw.sales_id ? String(raw.sales_id).trim() : null,
         product_name: raw.product_name ? String(raw.product_name).trim() : null,
         qty: qty,
