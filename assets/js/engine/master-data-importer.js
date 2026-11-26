@@ -37,8 +37,8 @@
     var header = findHeader(rows, ['invoice_id']);
     if (!header) return rows;
     var salesMap = buildSalesMap(salesList);
-    var salesNameIndex = header.indexes.sales_kpi != null ? header.indexes.sales_kpi : (header.indexes.sales_saat_ini != null ? header.indexes.sales_saat_ini : (header.indexes.sales_name != null ? header.indexes.sales_name : header.indexes.sales));
-    var salesIdIndex = header.indexes.sales_id != null ? header.indexes.sales_id : header.indexes.kpi_id;
+    var salesNameIndex = header.indexes.sales_saat_ini != null ? header.indexes.sales_saat_ini : (header.indexes.sales_kpi != null ? header.indexes.sales_kpi : (header.indexes.sales_name != null ? header.indexes.sales_name : header.indexes.sales));
+    var salesIdIndex = header.indexes.sales_id;
     if (salesNameIndex == null) {
       if (salesIdIndex != null) return rows;
       throw new Error('Kolom Sales_KPI atau Sales_Saat_Ini tidak ditemukan di Invoice_Collection.');
@@ -46,19 +46,17 @@
     if (salesIdIndex == null) {
       salesIdIndex = rows[header.rowIndex].length;
       rows[header.rowIndex][salesIdIndex] = 'Sales_ID';
-    } else if (header.indexes.kpi_id != null && header.indexes.sales_id == null) {
-      rows[header.rowIndex][salesIdIndex] = 'Sales_ID';
     }
     for (var i = header.rowIndex + 1; i < rows.length; i++) {
       var row = rows[i];
       if (!row || !row.some(function (value) { return String(value == null ? '' : value).trim() !== ''; })) continue;
       var existingSalesId = String(row[salesIdIndex] == null ? '' : row[salesIdIndex]).trim();
       var mappedExistingId = salesMap.get(normalizeName(existingSalesId));
-      if (existingSalesId && !mappedExistingId) continue;
       if (mappedExistingId) {
         row[salesIdIndex] = mappedExistingId;
         continue;
       }
+      if (existingSalesId && (salesList || []).some(function (sales) { return sales && String(sales.id || '') === existingSalesId; })) continue;
       var salesName = normalizeName(row[salesNameIndex]);
       var salesId = salesMap.get(salesName);
       if (!salesId) throw new Error('Nama Sales pada Invoice_Collection tidak ditemukan di daftar akun: ' + String(row[salesNameIndex] || '(kosong)'));
