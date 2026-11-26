@@ -166,6 +166,7 @@
         var source = row.data || {};
         return Object.assign({}, source, {
           id: row.id,
+          rewardId: source.rewardId || source.Reward_ID || source.reward_id || null,
           storeId: row.store_id || source.Client_ID || source.clientId || null,
           storeName: source.storeName || source.Nama_Toko || source.nama_toko || '',
           period: row.period || source.Bulan_Program || source.programMonth || null,

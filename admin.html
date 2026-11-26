@@ -58,7 +58,7 @@
   </script>
   <link rel="stylesheet" href="./assets/css/tokens.css?v=20261126j">
 </head>
-<body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
+<body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white" style="visibility:hidden">
 
   <!-- ==================================================================== -->
   <!-- 1. DESKTOP SIDEBAR (Master Desktop Design: 240px Fixed)               -->
@@ -729,7 +729,7 @@
           <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari toko, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Nama toko, SKU, produk"></label>
           <label class="flex flex-col gap-1 text-[10px] text-text-muted">Toko<select id="consignmentStoreFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Toko</option></select></label>
         </div>
-        <div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Toko</th><th class="p-3">Sales</th><th class="p-3">SKU / Produk</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3 text-right">Nilai sisa</th><th class="p-3">Status</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div>
+        <div class="hidden lg:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Toko</th><th class="p-3">Sales</th><th class="p-3">SKU / Produk</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3 text-right">Nilai sisa</th><th class="p-3">Status</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div>
         <div id="consignmentMobileList" class="flex flex-col gap-2 lg:hidden"></div>
       </section>
 
@@ -1192,8 +1192,8 @@
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./assets/js/store.js?v=20261126a"></script>
-  <script src="./assets/js/supabase-auth.js?v=20261126a"></script>
-  <script src="./assets/js/components/store-drawer.js?v=20261125a"></script>
+  <script src="./assets/js/supabase-auth.js?v=20261126b"></script>
+  <script src="./assets/js/components/store-drawer.js?v=20261126b"></script>
   <script src="./assets/js/components/trend-chart.js?v=20261126a"></script>
   <script src="./assets/js/vendor/xlsx-reader.js?v=20261122d"></script>
   <script>
@@ -1501,7 +1501,7 @@
         }).join('');
         document.getElementById('storeSearchDrawerTitle').textContent = selectedStore.name;
         document.getElementById('storeSearchDrawerSubtitle').textContent = storeInvoices.length.toLocaleString('id-ID') + ' invoice dalam cakupan data yang dapat diakses';
-        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '</span><span class="text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
+        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { var sourceInvoices = reward.relatedInvoiceIds || reward.primaryInvoiceId || 'Invoice sumber tidak dicantumkan'; var rewardCode = reward.rewardId || reward.Reward_ID || reward.reward_id || ''; return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="min-w-0 text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '<small class="mt-1 block text-[10px] text-text-muted">' + (rewardCode ? 'Catatan ' + esc(rewardCode) + ' · ' : '') + esc(sourceInvoices) + '</small></span><span class="shrink-0 text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
         detail.querySelectorAll('[data-store-invoice]').forEach(function (button) { button.addEventListener('click', function () { closeStoreSearchDrawer(); openInvoiceRewardDrawer(button.getAttribute('data-store-invoice')); }); });
         if (openDetail) openStoreSearchDrawer(returnFocus);
       }
@@ -4113,6 +4113,7 @@
       setupRoleInterface();
       applyTheme(FADE_STORE.getTheme());
       handleRouting();
+      document.body.style.visibility = 'visible';
 
       window._getInvoicePageSize = function () { return invoicePageSize; };
       window._openInvoiceFormModal = openInvoiceFormModal;

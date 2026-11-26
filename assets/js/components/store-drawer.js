@@ -153,8 +153,10 @@
     var rewardRows = rewards.length ? rewards.map(function (reward) {
       var status = reward.salesStatus || reward.sourceStatus || 'Status belum diisi di sumber';
       var month = reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan';
+      var sourceInvoices = reward.relatedInvoiceIds || reward.primaryInvoiceId || 'Invoice sumber tidak dicantumkan';
+      var rewardCode = reward.rewardId || reward.Reward_ID || reward.reward_id || '';
       var amount = reward.totalReward != null && reward.totalReward !== '' ? '<span class="shrink-0 text-right text-text-secondary tabular-nums">' + money(reward.totalReward) + '<small class="block text-text-muted">reward tercatat</small></span>' : '';
-      return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-3"><div class="min-w-0"><strong class="block text-text-primary">' + esc(month) + '</strong><span class="block mt-1 text-[11px] text-text-muted">' + esc(status) + '</span></div>' + amount + '</article>';
+      return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-3"><div class="min-w-0"><strong class="block text-text-primary">' + esc(month) + '</strong><span class="mt-1 block text-[10px] text-text-muted">' + (rewardCode ? 'Catatan ' + esc(rewardCode) + ' · ' : '') + esc(sourceInvoices) + '</span><span class="block mt-1 text-[11px] text-text-muted">' + esc(status) + '</span></div>' + amount + '</article>';
     }).join('') : '<p class="text-text-muted">Belum ada catatan reward untuk toko ini di Master Excel.</p>';
     var invoiceRows = invoices.length ? invoices.map(function (invoice) {
       var status = evaluate(invoice);
