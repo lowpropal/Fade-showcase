@@ -56,7 +56,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261126h">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261126j">
 </head>
 <body class="bg-canvas text-text-primary min-h-screen antialiased flex flex-col selection:bg-accent selection:text-white">
 
@@ -647,10 +647,10 @@
                 <span class="truncate">Ikuti tanggal dashboard</span>
               </label>
               <label class="invoice-filter-date invoice-filter-date-start flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Dari tanggal
-                <input id="invoiceStartDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
+                <input id="invoiceStartDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
               </label>
               <label class="invoice-filter-date invoice-filter-date-end flex flex-col gap-1 min-w-[140px] text-[10px] text-text-muted">Sampai tanggal
-                <input id="invoiceEndDate" type="date" class="min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
+                <input id="invoiceEndDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled>
               </label>
             </div>
           </div>
@@ -698,7 +698,7 @@
       <section id="viewStoreSearch" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"><div><h2 class="text-base font-bold text-text-primary">Pencarian Toko</h2><p class="mt-1 text-xs text-text-muted">Pilih satu toko untuk melihat riwayat invoice dan status reward dari data yang dapat Anda akses.</p></div><div id="storeSearchExportActions" class="hidden flex-wrap gap-2"><button type="button" data-directory-export="csv" class="min-h-11 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs font-semibold text-text-primary hover:border-accent/60">Ekspor CSV</button></div></div>
         <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, nama toko, atau Sales<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko/invoice, nama toko, Sales" autocomplete="off"></label>
-        <div class="grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
+        <div class="store-search-filters grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="storeSearchSalesFilter" class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Sales</option></select></label>
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Status invoice<select id="storeSearchStatusFilter" class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="PAID">Lunas</option><option value="OUTSTANDING">Outstanding</option><option value="OVERDUE">Terlambat</option></select></label>
           <label class="col-span-2 xl:col-span-1 min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="storeSearchFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>

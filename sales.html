@@ -31,7 +31,7 @@
       }
     };
   </script>
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261126h">
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=20261126j">
   <style>
     @media print {
       aside, header, nav, #toastContainer, .no-print { display: none !important; }
@@ -844,7 +844,7 @@
       <section id="viewStoreSearch" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
         <div><h2 class="text-base font-bold text-text-primary">Pencarian Toko</h2><p class="mt-1 text-xs text-text-muted">Riwayat invoice dan reward untuk toko dalam cakupan akun Sales.</p></div>
         <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, nama toko, atau Sales<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko/invoice, nama toko, Sales" autocomplete="off"></label>
-        <div class="grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
+        <div class="store-search-filters grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="storeSearchSalesFilter" aria-label="Cakupan Sales" disabled class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-muted"><option value="self">Sales saya</option></select></label>
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Status invoice<select id="storeSearchStatusFilter" class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="PAID">Lunas</option><option value="OUTSTANDING">Outstanding</option><option value="OVERDUE">Terlambat</option></select></label>
           <label class="col-span-2 xl:col-span-1 min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="storeSearchFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>

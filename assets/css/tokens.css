@@ -322,20 +322,22 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     min-width: 0;
   }
 
-  .invoice-filter-follow {
-    grid-column: 1 / span 4;
+  .invoice-filter-toolbar .invoice-filter-follow {
+    grid-column: 1 / span 2;
     grid-row: 2;
     justify-content: flex-start;
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: start;
   }
 
   .invoice-filter-toolbar .invoice-filter-date-start {
-    grid-column: 5 / span 3;
+    grid-column: 3 / span 4;
     grid-row: 2;
   }
 
   .invoice-filter-toolbar .invoice-filter-date-end {
-    grid-column: 8 / span 3;
+    grid-column: 7 / span 4;
     grid-row: 2;
   }
 
@@ -375,11 +377,13 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     min-width: 0;
   }
 
-  .invoice-filter-follow {
+  .invoice-filter-toolbar .invoice-filter-follow {
     grid-column: 1 / -1;
     grid-row: 3;
     justify-content: flex-start;
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: start;
   }
 
   .invoice-filter-date {
@@ -394,6 +398,67 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     grid-column: 2;
     grid-row: 5;
     justify-self: end;
+  }
+}
+
+/* Keep store filters aligned with invoice filters across all role shells. */
+.store-search-filters > label:nth-child(3) {
+  width: fit-content;
+  max-width: 100%;
+  justify-self: start;
+  justify-content: flex-start;
+}
+
+.store-search-filters input[type="date"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.invoice-filter-date input[type="date"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.invoice-filter-follow span {
+  min-width: 0;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+@media (min-width: 80rem) {
+  #viewStoreSearch .store-search-filters {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .store-search-filters > :nth-child(1) { grid-column: 1 / span 2; }
+  .store-search-filters > :nth-child(2) { grid-column: 3 / span 2; }
+  .store-search-filters > :nth-child(3) { grid-column: 5 / span 2; }
+  .store-search-filters > :nth-child(4) { grid-column: 7 / span 3; }
+  .store-search-filters > :nth-child(5) { grid-column: 10 / span 3; }
+  .store-search-filters > :nth-child(6) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 79.999rem) {
+  .invoice-filter-toolbar .invoice-filter-follow {
+    width: fit-content;
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .invoice-filter-date {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .invoice-filter-date input[type="date"] {
+    width: 100%;
+    min-width: 0;
   }
 }
 
