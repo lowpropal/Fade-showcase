@@ -9,6 +9,10 @@
   --color-accent: #F28C45;
   --color-accent-hover: #FF9E5C;
   --color-accent-wash: rgba(242, 140, 69, 0.12);
+  --shadow-interactive-row: inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 15%, transparent),
+    inset 0 0 14px color-mix(in srgb, var(--color-accent) 5%, transparent);
+  --shadow-interactive-table-row: inset 0 1px 0 color-mix(in srgb, var(--color-accent) 18%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-accent) 18%, transparent);
 
   /* Status Colors */
   --status-success: #63C995;
@@ -227,6 +231,184 @@ tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
 /* Keep the native date picker icon and calendar legible in each theme. */
 .dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
 html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
+
+/* Desktop-only interaction cues for dashboard and invoice navigation. */
+@media (min-width: 80rem) and (hover: hover) and (pointer: fine) {
+  .kpi-card {
+    transition: border-color 160ms ease;
+  }
+
+  .kpi-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 58%, var(--border-subtle));
+  }
+
+  .outstanding-filter-link:hover,
+  .outstanding-filter-link:focus-visible {
+    color: var(--color-accent);
+  }
+
+  .outstanding-filter-link:hover .outstanding-filter-label,
+  .outstanding-filter-link:hover .outstanding-filter-value,
+  .outstanding-filter-link:hover > span,
+  .outstanding-filter-link:focus-visible .outstanding-filter-label,
+  .outstanding-filter-link:focus-visible .outstanding-filter-value,
+  .outstanding-filter-link:focus-visible > span {
+    color: var(--color-accent);
+  }
+
+  .comparison-selectable {
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .comparison-selectable:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 38%, var(--border-subtle));
+    box-shadow: var(--shadow-interactive-row);
+  }
+
+  #comparisonTableBody .comparison-selectable:hover > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 94%, var(--color-accent));
+    box-shadow: var(--shadow-interactive-table-row);
+  }
+
+  .invoice-data-row > td {
+    transition: background-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .invoice-data-row:hover > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 95%, var(--color-accent));
+    box-shadow: var(--shadow-interactive-table-row);
+  }
+
+  .invoice-data-row:hover > td:last-child {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 92%, var(--color-accent));
+  }
+}
+
+/* Keep the invoice filters aligned on desktop regardless of input type. */
+@media (min-width: 80rem) {
+  .invoice-filter-toolbar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .invoice-filter-controls,
+  .invoice-filter-selects {
+    display: contents;
+  }
+
+  .invoice-filter-search {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    width: 100%;
+  }
+
+  .invoice-filter-status,
+  .invoice-filter-sales {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .invoice-filter-follow {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+
+  .invoice-filter-date {
+    grid-row: 2;
+    min-width: 0;
+  }
+
+  .invoice-filter-date-start { grid-column: 3; }
+  .invoice-filter-date-end { grid-column: 4; }
+
+  .invoice-filter-reset {
+    grid-column: 5;
+    grid-row: 2;
+    justify-self: end;
+    width: 100%;
+  }
+}
+
+/* Tablet invoice filters use a compact two-column layout. */
+@media (min-width: 48rem) and (max-width: 79.999rem) {
+  .invoice-filter-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .invoice-filter-controls,
+  .invoice-filter-selects {
+    display: contents;
+  }
+
+  .invoice-filter-search {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
+  }
+
+  .invoice-filter-sales,
+  .invoice-filter-status {
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .invoice-filter-follow {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .invoice-filter-date {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .invoice-filter-date-start { grid-column: 1; grid-row: 4; }
+  .invoice-filter-date-end { grid-column: 2; grid-row: 4; }
+
+  .invoice-filter-reset {
+    grid-column: 2;
+    grid-row: 5;
+    justify-self: end;
+  }
+}
+
+/* Touch feedback replaces hover on phones and tablets. */
+@media (max-width: 79.999rem) {
+  .comparison-selectable,
+  .invoice-mobile-card,
+  .outstanding-filter-link {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .comparison-selectable:active,
+  .invoice-mobile-card:has(.inv-action-btn:active) {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 94%, var(--color-accent));
+    border-color: color-mix(in srgb, var(--color-accent) 38%, var(--border-subtle));
+  }
+
+  .outstanding-filter-link:active,
+  .outstanding-filter-link:active > span,
+  .outstanding-filter-link:active .outstanding-filter-label,
+  .outstanding-filter-link:active .outstanding-filter-value {
+    color: var(--color-accent);
+  }
+
+  .invoice-mobile-card {
+    transition: background-color 140ms ease, border-color 140ms ease;
+  }
+
+  #comparisonTableBody .comparison-selectable:active > td,
+  .invoice-data-row:active > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 96%, var(--color-accent));
+  }
+}
 
 /* Keep chart point details beside the selected point, like the original chart. */
 .chart-selection-card.hidden { display: none; }
