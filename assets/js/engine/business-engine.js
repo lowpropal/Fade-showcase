@@ -170,12 +170,13 @@
       if (store) uniqueStores.add(store);
     });
 
-    // Payments attributed to period
+    // Payments attributed to the invoice period so collected rate compares
+    // payments and revenue from the same invoice cohort.
     var totalPayments = 0;
-    scopedInvoices.forEach(function (i) {
+    inRangeInvoices.forEach(function (i) {
       var lastPay = i.last_payment_date || i.lastPaymentDate || i.tglBayarTerakhir || i.lp;
       var paid = Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal != null ? i.paidTotal : (i.terbayar || i.p || 0)));
-      if (paid > 0 && lastPay && lastPay >= pContext.dari && lastPay <= pContext.sampai) {
+      if (paid > 0 && lastPay && lastPay <= pContext.asOf) {
         totalPayments += paid;
       }
     });

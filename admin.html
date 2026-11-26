@@ -695,7 +695,7 @@
             </div>
             <button id="resetDemoDataBtn" type="button" class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-border-default bg-surface-2 hover:bg-surface-hover text-xs font-medium text-text-secondary hover:text-text-primary transition-colors shrink-0">
               <span class="material-symbols-outlined text-[16px]">restore</span>
-              <span>Reset Data Demo</span>
+              <span>Muat Ulang Data dari Server</span>
             </button>
           </div>
 
@@ -1055,8 +1055,8 @@
           <span class="material-symbols-outlined text-[20px]">restart_alt</span>
         </div>
         <div class="flex flex-col">
-          <h3 class="text-sm font-bold text-text-primary">Reset Data Master?</h3>
-          <p class="text-text-muted mt-0.5">Kembalikan seluruh data ke 395 transaksi Master Excel asli (Cut-off 18 Nov 2026). Perubahan manual akan direset.</p>
+          <h3 class="text-sm font-bold text-text-primary">Muat Ulang Data Master dari Server?</h3>
+          <p class="text-text-muted mt-0.5">Data invoice, target, dan reward yang tersimpan akan dimuat ulang dari Supabase. Perubahan yang belum tersimpan di server tidak akan dipulihkan.</p>
         </div>
       </div>
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
@@ -1319,8 +1319,10 @@
       function setupRoleInterface() {
         var hName = document.getElementById('headerUserName');
         var hRole = document.getElementById('headerUserRole');
+        var profileChip = document.getElementById('headerProfileChip');
         if (hName) hName.textContent = session.name;
         if (hRole) hRole.textContent = session.title;
+        if (profileChip) profileChip.title = session.role === 'sales_manager' ? 'Profil Sales Manager' : 'Profil Admin';
         var sName = document.getElementById('sidebarUserName');
         var sRole = document.getElementById('sidebarUserRole');
         if (sName) sName.textContent = session.name;
