@@ -843,8 +843,23 @@
 
       <section id="viewStoreSearch" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
         <div><h2 class="text-base font-bold text-text-primary">Pencarian Toko</h2><p class="mt-1 text-xs text-text-muted">Riwayat invoice dan reward untuk toko dalam cakupan akun Sales.</p></div>
-        <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari nama toko<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Contoh: Fin Vapor" autocomplete="off"></label>
-        <div class="grid grid-cols-1 xl:grid-cols-[minmax(220px,0.7fr)_minmax(0,1.3fr)] gap-4"><div id="storeSearchList" class="flex flex-col gap-2"></div><div id="storeSearchDetail" class="min-h-48 rounded-lg border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted">Pilih toko untuk melihat riwayat pembelian.</div></div>
+        <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, nama toko, atau Sales<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko/invoice, nama toko, Sales" autocomplete="off"></label>
+        <div class="grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
+          <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="storeSearchSalesFilter" aria-label="Cakupan Sales" disabled class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-muted"><option value="self">Sales saya</option></select></label>
+          <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Status invoice<select id="storeSearchStatusFilter" class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="PAID">Lunas</option><option value="OUTSTANDING">Outstanding</option><option value="OVERDUE">Terlambat</option></select></label>
+          <label class="col-span-2 xl:col-span-1 min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="storeSearchFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>
+          <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Dari tanggal<input id="storeSearchStartDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sampai tanggal<input id="storeSearchEndDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
+          <button id="storeSearchReset" type="button" class="col-span-2 xl:col-span-5 min-h-[44px] px-3 rounded-lg text-xs font-semibold text-text-muted hover:text-accent xl:justify-self-end">Reset Filter</button>
+        </div>
+        <p id="storeSearchSummary" class="text-xs text-text-muted" aria-live="polite"></p>
+        <div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle">
+          <table class="w-full min-w-[760px] text-left text-xs">
+            <thead class="bg-surface-2 text-[10px] uppercase tracking-wide text-text-muted"><tr><th class="px-4 py-3">Nama toko</th><th class="px-4 py-3">ID toko</th><th class="px-4 py-3 text-right">Invoice</th><th class="px-4 py-3 text-right">Qty</th><th class="px-4 py-3 text-right">Total pembelian</th><th class="px-4 py-3">Invoice terakhir</th><th class="px-4 py-3 text-right">Aksi</th></tr></thead>
+            <tbody id="storeSearchTableBody" class="divide-y divide-border-subtle/50"></tbody>
+          </table>
+        </div>
+        <div id="storeSearchList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 xl:hidden"></div>
       </section>
 
       <section id="viewConsignment" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
@@ -1179,6 +1194,15 @@
       <button id="storeDrawerCloseBtn" type="button" class="min-h-11 min-w-11 shrink-0 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Tutup detail toko"><span class="material-symbols-outlined text-[18px]">close</span></button>
     </header>
     <div id="storeDrawerContent" class="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4 text-xs"></div>
+  </aside>
+  <div id="storeSearchDrawerBackdrop" class="hidden fixed inset-0 z-[70] bg-black/65" aria-hidden="true"></div>
+  <aside id="storeSearchDrawer" class="hidden fixed inset-y-0 right-0 z-[71] flex w-full max-w-3xl flex-col border-l border-border-subtle bg-surface-1 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="storeSearchDrawerTitle" aria-hidden="true" tabindex="-1">
+    <header class="flex items-center gap-3 border-b border-border-subtle p-4 sm:p-5">
+      <button id="storeSearchDrawerBack" type="button" class="min-h-11 min-w-11 rounded-lg border border-border-subtle text-text-secondary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Tutup detail dan kembali ke daftar"><span class="material-symbols-outlined text-[18px]">arrow_back</span></button>
+      <div class="min-w-0 flex-1"><h2 id="storeSearchDrawerTitle" class="truncate text-base font-bold text-text-primary">Detail toko</h2><p id="storeSearchDrawerSubtitle" class="mt-0.5 text-xs text-text-muted">Riwayat pembelian dan reward</p></div>
+      <button id="storeSearchDrawerClose" type="button" class="min-h-11 min-w-11 rounded-lg border border-border-subtle text-text-muted hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Tutup detail toko"><span class="material-symbols-outlined text-[18px]">close</span></button>
+    </header>
+    <div id="storeSearchDetail" class="min-h-0 flex-1 overflow-y-auto p-4 pb-8 sm:p-5"></div>
   </aside>
 
   <!-- ==================================================================== -->
@@ -1670,7 +1694,29 @@
         });
       }
 
-      function renderStoreSearch(selectedName) {
+      var storeSearchReturnFocus = null;
+      function openStoreSearchDrawer(returnFocus) {
+        var drawer = document.getElementById('storeSearchDrawer');
+        var backdrop = document.getElementById('storeSearchDrawerBackdrop');
+        if (!drawer || !backdrop) return;
+        storeSearchReturnFocus = returnFocus || document.activeElement;
+        drawer.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('overflow-hidden');
+        document.getElementById('storeSearchDrawerClose').focus();
+      }
+      function closeStoreSearchDrawer() {
+        var drawer = document.getElementById('storeSearchDrawer');
+        var backdrop = document.getElementById('storeSearchDrawerBackdrop');
+        if (!drawer || drawer.classList.contains('hidden')) return;
+        drawer.classList.add('hidden');
+        backdrop.classList.add('hidden');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('overflow-hidden');
+        if (storeSearchReturnFocus && document.contains(storeSearchReturnFocus)) storeSearchReturnFocus.focus();
+      }
+      function renderStoreSearch(selectedName, selectedId, openDetail, returnFocus) {
         if (arguments.length > 1) selectedStoreSearchId = arguments[1] || '';
         if (selectedName) selectedStoreSearchName = selectedName;
         else selectedName = selectedStoreSearchName;
@@ -1690,19 +1736,39 @@
         var query = String(input.value || '').trim().toLocaleLowerCase('id-ID');
         var list = document.getElementById('storeSearchList');
         var detail = document.getElementById('storeSearchDetail');
-        var matches = stores.filter(function (store) { return !query || store.name.toLocaleLowerCase('id-ID').includes(query); });
-        list.innerHTML = matches.length ? '' : '<p class="p-4 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-muted">Tidak ada toko yang cocok dengan pencarian.</p>';
-        matches.forEach(function (store) {
+        var tableBody = document.getElementById('storeSearchTableBody');
+        var summary = document.getElementById('storeSearchSummary');
+        var matches = stores.filter(function (store) {
+          if (!query) return true;
           var storeInvoices = invoices.filter(function (inv) { return storeIdentity(inv).key === store.key; });
-          var button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'w-full min-h-14 px-3 py-2 rounded-lg border text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ' + (store.name === selectedName && store.id === selectedStoreSearchId ? 'border-accent bg-accent/5' : 'border-border-subtle bg-surface-2 hover:border-accent/60');
-          button.innerHTML = '<span class="block truncate text-xs font-semibold text-text-primary">' + esc(store.name) + '</span><span class="mt-1 block text-[10px] text-text-muted">' + storeInvoices.length + ' invoice · Rp ' + storeInvoices.reduce(function (sum, inv) { return sum + Number(inv.invoiceTotal || inv.invoice_total_idr || 0); }, 0).toLocaleString('id-ID') + (store.id ? ' · ID ' + esc(store.id) : '') + '</span>';
-          button.addEventListener('click', function () { renderStoreSearch(store.name, store.id); });
-          list.appendChild(button);
+          var searchable = [store.name, store.id].concat(storeInvoices.map(function (inv) { return [inv.invoice_id || inv.id || '', inv.sales_name || inv.salesName || inv.salesSaatIni || ''].join(' '); })).join(' ').toLocaleLowerCase('id-ID');
+          return searchable.includes(query);
         });
-        var selectedStore = stores.find(function (store) { return store.name === selectedName && store.id === selectedStoreSearchId; }) || stores.find(function (store) { return store.name === selectedName; });
-        if (!selectedStore) { detail.textContent = 'Pilih toko untuk melihat riwayat pembelian.'; return; }
+        var summaries = matches.map(function (store) {
+          var storeInvoices = invoices.filter(function (inv) { return storeIdentity(inv).key === store.key; });
+          var total = storeInvoices.reduce(function (sum, inv) { return sum + Number(inv.invoiceTotal || inv.invoice_total_idr || 0); }, 0);
+          var qty = storeInvoices.reduce(function (sum, inv) { return sum + Number(inv.qty || 0); }, 0);
+          var latest = storeInvoices.map(function (inv) { return inv.invoice_date || inv.date || ''; }).sort().reverse()[0] || '—';
+          var selectButton = function (classes) { return '<button type="button" aria-haspopup="dialog" aria-controls="storeSearchDrawer" data-open-store="' + esc(store.id) + '" data-store-name="' + esc(store.name) + '" class="' + classes + '">Detail<span class="sr-only"> ' + esc(store.name) + '</span></button>'; };
+          return { store: store, invoices: storeInvoices, total: total, qty: qty, latest: latest, selectButton: selectButton };
+        });
+        summary.textContent = summaries.length.toLocaleString('id-ID') + ' toko · ' + summaries.reduce(function (sum, item) { return sum + item.invoices.length; }, 0).toLocaleString('id-ID') + ' invoice';
+        tableBody.innerHTML = summaries.length ? summaries.map(function (item) {
+          return '<tr class="transition-colors hover:bg-accent/5"><td class="px-4 py-3 font-semibold text-text-primary">' + esc(item.store.name) + '</td><td class="px-4 py-3 font-mono text-[11px] text-text-muted">' + esc(item.store.id || '—') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.invoices.length.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.qty.toLocaleString('id-ID') + ' pcs</td><td class="px-4 py-3 text-right tabular-nums">Rp ' + item.total.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-text-secondary">' + esc(item.latest) + '</td><td class="px-4 py-3 text-right">' + item.selectButton('min-h-10 min-w-24 rounded-lg border border-border-subtle px-3 font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</td></tr>';
+        }).join('') : '<tr><td colspan="7" class="p-6 text-center text-text-muted">Tidak ada toko yang cocok dengan filter.</td></tr>';
+        list.innerHTML = summaries.length ? summaries.map(function (item) {
+          return '<article class="flex min-w-0 flex-col justify-between gap-3 rounded-lg border border-border-subtle bg-surface-2 p-3 transition-colors hover:border-accent/50"><div class="min-w-0"><h3 class="truncate text-sm font-semibold text-text-primary">' + esc(item.store.name) + '</h3><p class="mt-1 font-mono text-[10px] text-text-muted">' + esc(item.store.id || 'ID toko tidak tercatat') + '</p><div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-text-secondary"><span>' + item.invoices.length.toLocaleString('id-ID') + ' invoice</span><span>' + item.qty.toLocaleString('id-ID') + ' pcs</span><strong class="col-span-2 text-text-primary">Rp ' + item.total.toLocaleString('id-ID') + '</strong><span class="col-span-2">Terakhir: ' + esc(item.latest) + '</span></div></div>' + item.selectButton('min-h-11 w-full rounded-lg border border-border-subtle px-3 text-xs font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</article>';
+        }).join('') : '<p class="rounded-lg border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted sm:col-span-2">Tidak ada toko yang cocok dengan filter. Ubah pencarian atau reset filter.</p>';
+        Array.prototype.forEach.call(document.querySelectorAll('[data-open-store]'), function (button) {
+          button.addEventListener('click', function () { renderStoreSearch(button.getAttribute('data-store-name'), button.getAttribute('data-open-store'), true, button); });
+        });
+        var selectedStore = matches.find(function (store) { return store.name === selectedName && store.id === selectedStoreSearchId; }) || matches.find(function (store) { return store.name === selectedName && store.id === (selectedId || ''); });
+        if (!selectedStore) {
+          selectedStoreSearchName = ''; selectedStoreSearchId = '';
+          detail.innerHTML = '';
+          if (!document.getElementById('storeSearchDrawer').classList.contains('hidden')) closeStoreSearchDrawer();
+          return;
+        }
         selectedStoreSearchId = selectedStore.id;
         var selectedInvoices = invoices.filter(function (inv) { return storeIdentity(inv).key === selectedStore.key; }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
         var monthly = {};
@@ -1717,9 +1783,13 @@
           return String(reward.storeName || '').trim().toLocaleLowerCase('id-ID') === selectedName.toLocaleLowerCase('id-ID');
         });
         var history = Object.keys(monthly).sort().reverse().map(function (month) { var row = monthly[month]; return '<tr><td class="p-2.5 text-text-primary">' + esc(month) + '</td><td class="p-2.5 text-right">' + row.count + '</td><td class="p-2.5 text-right">' + row.qty.toLocaleString('id-ID') + ' pcs</td><td class="p-2.5 text-right">Rp ' + row.total.toLocaleString('id-ID') + '</td></tr>'; }).join('');
-        var invoiceRows = selectedInvoices.map(function (inv) { var id = inv.invoice_id || inv.id; var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22'); return '<tr><td class="p-2.5 font-mono text-text-primary">' + esc(id) + '</td><td class="p-2.5">' + esc(inv.invoice_date || inv.date || '-') + '</td><td class="p-2.5 text-right">Rp ' + state.revenue.toLocaleString('id-ID') + '</td><td class="p-2.5">' + esc(state.status) + '</td><td class="p-2.5 text-right"><button type="button" data-store-invoice="' + esc(id) + '" class="text-accent font-semibold hover:underline">Detail</button></td></tr>'; }).join('');
-        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedName) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + selectedInvoices.length + ' invoice · data sesuai cakupan Anda</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + history + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewardRows.length ? '<div class="flex flex-col gap-2">' + rewardRows.map(function (reward) { return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '</span><span class="text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div></section></div>';
-        detail.querySelectorAll('[data-store-invoice]').forEach(function (button) { button.addEventListener('click', function () { detailReturnHash = '#store-search'; openInvoiceDetailPage(button.getAttribute('data-store-invoice')); }); });
+        var invoiceRows = selectedInvoices.map(function (inv) { var id = inv.invoice_id || inv.id; var state = FADE_ENGINE.evaluateInvoiceState(inv, range.asOf); return '<tr><td class="p-2.5 font-mono text-text-primary">' + esc(id) + '</td><td class="p-2.5">' + esc(inv.invoice_date || inv.date || '-') + '</td><td class="p-2.5 text-right">Rp ' + state.revenue.toLocaleString('id-ID') + '</td><td class="p-2.5">' + esc(state.status) + '</td><td class="p-2.5 text-right"><button type="button" data-store-invoice="' + esc(id) + '" class="text-accent font-semibold hover:underline">Detail</button></td></tr>'; }).join('');
+        var invoiceCards = selectedInvoices.map(function (inv) { var id = inv.invoice_id || inv.id; var state = FADE_ENGINE.evaluateInvoiceState(inv, range.asOf); return '<article class="rounded-lg border border-border-subtle bg-surface-1 p-3"><div class="flex items-start justify-between gap-2"><strong class="break-all font-mono text-[10px] text-text-primary">' + esc(id) + '</strong><span class="text-[10px] text-text-muted">' + esc(state.status) + '</span></div><p class="mt-1 text-[10px] text-text-muted">' + esc(inv.invoice_date || inv.date || '-') + '</p><div class="mt-2 flex items-center justify-between gap-2"><strong class="text-xs text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong><button type="button" data-store-invoice="' + esc(id) + '" class="min-h-11 rounded-lg border border-border-subtle px-3 text-[11px] font-semibold text-accent hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Detail</button></div></article>'; }).join('');
+        document.getElementById('storeSearchDrawerTitle').textContent = selectedStore.name;
+        document.getElementById('storeSearchDrawerSubtitle').textContent = selectedInvoices.length.toLocaleString('id-ID') + ' invoice dalam cakupan data yang dapat diakses';
+        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + selectedInvoices.length + ' invoice · data sesuai cakupan Anda</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + history + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewardRows.length ? '<div class="flex flex-col gap-2">' + rewardRows.map(function (reward) { return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '</span><span class="text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
+        detail.querySelectorAll('[data-store-invoice]').forEach(function (button) { button.addEventListener('click', function () { closeStoreSearchDrawer(); detailReturnHash = '#store-search'; openInvoiceDetailPage(button.getAttribute('data-store-invoice')); }); });
+        if (openDetail) openStoreSearchDrawer(returnFocus);
       }
 
       function renderConsignment() {
@@ -2786,6 +2856,20 @@
 
       document.getElementById('dashInvSearch').addEventListener('input', renderDashboardInvoices);
       document.getElementById('dashInvStatus').addEventListener('change', renderDashboardInvoices);
+      document.getElementById('storeSearchDrawerBack').addEventListener('click', closeStoreSearchDrawer);
+      document.getElementById('storeSearchDrawerClose').addEventListener('click', closeStoreSearchDrawer);
+      document.getElementById('storeSearchDrawerBackdrop').addEventListener('click', closeStoreSearchDrawer);
+      document.addEventListener('keydown', function (event) {
+        var drawer = document.getElementById('storeSearchDrawer');
+        if (!drawer || drawer.classList.contains('hidden')) return;
+        if (event.key === 'Escape') { event.preventDefault(); closeStoreSearchDrawer(); return; }
+        if (event.key !== 'Tab') return;
+        var focusable = drawer.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]');
+        if (!focusable.length) return;
+        var first = focusable[0], last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      });
       document.getElementById('storeSearchInput').addEventListener('input', function () { renderStoreSearch(selectedStoreSearchName); });
       document.getElementById('consignmentSearch').addEventListener('input', renderConsignment);
       document.getElementById('consignmentStoreFilter').addEventListener('change', renderConsignment);
