@@ -19,15 +19,26 @@
     AUDIT_LOG: 'fade_showcase_audit_log_v021',
     INITIALIZED: 'fade_showcase_initialized_v021'
   };
+  var pendingBackendWrites = Promise.resolve();
 
-  function getSeed() {
-    return root.FADE_SYNTHETIC_SEED || {
-      meta: { isSynthetic: false },
-      sales: [],
-      stores: [],
-      targets: {},
-      invoices: []
-    };
+  function trackBackendWrite(write, resource) {
+    pendingBackendWrites = Promise.all([
+      pendingBackendWrites.catch(function () {}),
+      write
+    ]).then(function () {
+      return true;
+    }).catch(async function () {
+      try {
+        hydrateFromBackend(await root.FADE_AUTH.loadDataset());
+      } catch (reloadError) {
+        clearSession();
+        if (root.location) root.location.replace('./index.html?error=backend');
+      }
+      root.dispatchEvent(new CustomEvent('fade:backend-save-error', { detail: { resource: resource } }));
+      throw new Error('Perubahan gagal disimpan ke server.');
+    });
+    pendingBackendWrites.catch(function () {});
+    return pendingBackendWrites;
   }
 
   function init() {
@@ -59,24 +70,16 @@
   }
 
   function resetToDefault() {
-    var seed = getSeed();
+    if (root.FADE_AUTH) {
+      return root.FADE_AUTH.loadDataset().then(hydrateFromBackend);
+    }
     try {
-      localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(seed.invoices));
-      localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(seed.targets));
-      localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(seed.sales));
-      localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(seed.stores));
-      localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify([
-        {
-          timestamp: '2026-11-18T17:00:00Z',
-          filename: 'FADE_Master_2_Sheet_18Nov2026.xlsx',
-          rowsIngested: seed.invoices.length,
-          validCount: seed.invoices.length,
-          invalidCount: 0,
-          uploadedBy: 'Administrator',
-          status: 'Success',
-          notes: 'Master Data Cut-off 18 Nov 2026 (Sheet 1: Invoice_Collection, Sheet 2: Sales_Monthly)'
-        }
-      ]));
+      localStorage.setItem(STORAGE_KEYS.INVOICES, '[]');
+      localStorage.setItem(STORAGE_KEYS.REWARDS, '[]');
+      localStorage.setItem(STORAGE_KEYS.TARGETS, '{}');
+      localStorage.setItem(STORAGE_KEYS.SALES, '[]');
+      localStorage.setItem(STORAGE_KEYS.STORES, '[]');
+      localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, '[]');
       localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
     } catch (e) {
       console.error('Failed to reset store', e);
@@ -86,15 +89,21 @@
   function getInvoices() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.INVOICES);
-      return raw ? JSON.parse(raw) : getSeed().invoices;
+      return raw ? JSON.parse(raw) : [];
     } catch (e) {
-      return getSeed().invoices;
+      return [];
     }
   }
 
-  function saveInvoices(invoices) {
+  function saveInvoices(invoices, options) {
+    options = options || {};
     try {
+      var previous = localStorage.getItem(STORAGE_KEYS.INVOICES);
+      var previousIds = previous ? JSON.parse(previous).map(function (invoice) { return invoice.id || invoice.invoice_id; }) : [];
       localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(invoices));
+      if (!options.skipBackend && root.FADE_AUTH && root.FADE_STORE.getActiveSession()) {
+        trackBackendWrite(root.FADE_AUTH.persistInvoices(invoices, previousIds), 'invoice');
+      }
       return true;
     } catch (e) {
       console.error('Failed to save invoices', e);
@@ -111,9 +120,16 @@
     }
   }
 
-  function saveRewards(rewards) {
+  function saveRewards(rewards, options) {
+    options = options || {};
     try {
-      localStorage.setItem(STORAGE_KEYS.REWARDS, JSON.stringify(Array.isArray(rewards) ? rewards : []));
+      var previous = localStorage.getItem(STORAGE_KEYS.REWARDS);
+      var previousIds = previous ? JSON.parse(previous).map(function (reward) { return reward.id || reward.reward_id; }) : [];
+      var normalized = Array.isArray(rewards) ? rewards : [];
+      localStorage.setItem(STORAGE_KEYS.REWARDS, JSON.stringify(normalized));
+      if (!options.skipBackend && root.FADE_AUTH && root.FADE_STORE.getActiveSession()) {
+        trackBackendWrite(root.FADE_AUTH.persistRewards(normalized, previousIds), 'reward');
+      }
       return true;
     } catch (e) {
       console.error('Failed to save client rewards', e);
@@ -229,18 +245,36 @@
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.TARGETS);
       var parsed = raw ? JSON.parse(raw) : {};
-      return Object.assign({}, getSeed().targets, parsed);
+      return parsed;
     } catch (e) {
-      return getSeed().targets;
+      return {};
+    }
+  }
+
+  function saveTargets(records, options) {
+    options = options || {};
+    try {
+      var previous = getTargets();
+      var next = {};
+      (records || []).forEach(function (record) {
+        if (record && record.key) next[record.key] = Number(record.target || 0);
+      });
+      localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(next));
+      if (!options.skipBackend && root.FADE_AUTH && root.FADE_STORE.getActiveSession()) {
+        trackBackendWrite(root.FADE_AUTH.persistTargets(records || [], Object.keys(previous)), 'target');
+      }
+      return { success: true, previous: previous, current: next };
+    } catch (e) {
+      return { success: false, reason: e.message };
     }
   }
 
   function getSalesList() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.SALES);
-      return raw ? JSON.parse(raw) : getSeed().sales;
+      return raw ? JSON.parse(raw) : [];
     } catch (e) {
-      return getSeed().sales;
+      return [];
     }
   }
 
@@ -297,9 +331,9 @@
   function getStoresList() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.STORES);
-      return raw ? JSON.parse(raw) : getSeed().stores;
+      return raw ? JSON.parse(raw) : [];
     } catch (e) {
-      return getSeed().stores;
+      return [];
     }
   }
 
@@ -320,9 +354,35 @@
     }
   }
 
+  function hydrateFromBackend(dataset) {
+    var targets = {};
+    (dataset.targets || []).forEach(function (target) {
+      targets[target.key] = target.target;
+    });
+    localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(dataset.invoices || []));
+    localStorage.setItem(STORAGE_KEYS.REWARDS, JSON.stringify(dataset.rewards || []));
+    localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(targets));
+    localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(dataset.sales || []));
+    localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(dataset.stores || []));
+    localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
+  }
+
   function clearSession() {
     try {
       localStorage.removeItem(STORAGE_KEYS.SESSION);
+      [
+        STORAGE_KEYS.INVOICES,
+        STORAGE_KEYS.REWARDS,
+        STORAGE_KEYS.TARGETS,
+        STORAGE_KEYS.SALES,
+        STORAGE_KEYS.STORES,
+        STORAGE_KEYS.UPLOAD_LOG,
+        STORAGE_KEYS.SNAPSHOTS,
+        STORAGE_KEYS.REWARD_SNAPSHOTS,
+        STORAGE_KEYS.AUDIT_LOG,
+        'fade_sales_docs_v1',
+        STORAGE_KEYS.INITIALIZED
+      ].forEach(function (key) { localStorage.removeItem(key); });
     } catch (e) {}
   }
 
@@ -388,7 +448,7 @@
     } catch (e) {}
   }
 
-  function saveUploadWithSnapshot(newInvoices, entry, newRewards) {
+  function prepareUploadWithSnapshot(newInvoices, entry, newRewards, newTargets) {
     try {
       var currentInvoices = getInvoices();
       var uploadId = entry.id || ('upl_' + Date.now());
@@ -400,35 +460,97 @@
       var snapshots = getSnapshots();
       snapshots[uploadId] = currentInvoices;
       localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
+      var currentTargets = getTargets();
+      if (Array.isArray(newTargets)) {
+        var targetSnapshots = JSON.parse(localStorage.getItem(STORAGE_KEYS.SNAPSHOTS) || '{}');
+        targetSnapshots[uploadId + ':targets'] = currentTargets;
+        localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(targetSnapshots));
+      }
 
       if (Array.isArray(newRewards)) {
         var rewardSnapshots = JSON.parse(localStorage.getItem(STORAGE_KEYS.REWARD_SNAPSHOTS) || '{}');
         rewardSnapshots[uploadId] = getRewards();
         localStorage.setItem(STORAGE_KEYS.REWARD_SNAPSHOTS, JSON.stringify(rewardSnapshots));
-        saveRewards(newRewards);
+        saveRewards(newRewards, { skipBackend: true });
       }
 
-      // Save new invoices and add history
-      saveInvoices(newInvoices);
-      addUploadHistory(entry);
-
-      addAuditLog({
-        action: 'UPLOAD_SUCCESS',
+      saveInvoices(newInvoices, { skipBackend: true });
+      if (Array.isArray(newTargets)) saveTargets(newTargets, { skipBackend: true });
+      return {
+        success: true,
         uploadId: uploadId,
-        filename: entry.filename,
-        timestamp: new Date().toISOString(),
-        rowsIngested: newInvoices.length,
-        previousCount: currentInvoices.length
-      });
-
-      return { success: true, uploadId: uploadId };
+        entry: entry,
+        previousInvoiceIds: currentInvoices.map(function (invoice) { return invoice.id || invoice.invoice_id; }),
+        previousRewardIds: Array.isArray(newRewards) ? (JSON.parse(localStorage.getItem(STORAGE_KEYS.REWARD_SNAPSHOTS) || '{}')[uploadId] || []).map(function (reward) { return reward.id || reward.reward_id || reward.rewardId; }) : [],
+        previousTargets: currentTargets,
+        previousTargetKeys: Object.keys(currentTargets)
+      };
     } catch (e) {
       console.error('Failed to save upload with snapshot', e);
       return { success: false, reason: e.message };
     }
   }
 
-  function rollbackUpload(uploadId) {
+  function finalizeUpload(entry, newInvoices, previousCount) {
+    addUploadHistory(entry);
+    addAuditLog({
+      action: 'UPLOAD_SUCCESS',
+      uploadId: entry.id,
+      filename: entry.filename,
+      timestamp: new Date().toISOString(),
+      rowsIngested: newInvoices.length,
+      previousCount: previousCount
+    });
+  }
+
+  function saveUploadWithSnapshot(newInvoices, entry, newRewards, newTargets) {
+    var prepared = prepareUploadWithSnapshot(newInvoices, entry, newRewards, newTargets);
+    if (!prepared.success) return prepared;
+    var previousCount = entry.previousCount;
+    finalizeUpload(entry, newInvoices, previousCount);
+    return { success: true, uploadId: prepared.uploadId };
+  }
+
+  async function saveUploadWithSnapshotAsync(newInvoices, entry, newRewards, newTargets) {
+    var prepared = prepareUploadWithSnapshot(newInvoices, entry, newRewards, newTargets);
+    if (!prepared.success) return prepared;
+    if (!root.FADE_AUTH || !getActiveSession()) {
+      finalizeUpload(entry, newInvoices, entry.previousCount);
+      return { success: true, uploadId: prepared.uploadId };
+    }
+
+    try {
+      var writes = [root.FADE_AUTH.persistInvoices(newInvoices, prepared.previousInvoiceIds)];
+      if (Array.isArray(newRewards)) writes.push(root.FADE_AUTH.persistRewards(newRewards, prepared.previousRewardIds));
+      if (Array.isArray(newTargets)) writes.push(root.FADE_AUTH.persistTargets(newTargets, prepared.previousTargetKeys));
+      var results = await Promise.all(writes.map(function (write) {
+        return write.then(function () { return null; }, function (error) { return error; });
+      }));
+      var writeError = results.find(function (error) { return error; });
+      if (writeError) throw writeError;
+      finalizeUpload(entry, newInvoices, entry.previousCount);
+      return { success: true, uploadId: prepared.uploadId };
+    } catch (error) {
+      try {
+        hydrateFromBackend(await root.FADE_AUTH.loadDataset());
+      } catch (reloadError) {
+        clearSession();
+        window.location.replace('./index.html?error=backend');
+      }
+      var snapshots = getSnapshots();
+      delete snapshots[prepared.uploadId];
+      delete snapshots[prepared.uploadId + ':targets'];
+      localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
+      var rewardSnapshots = JSON.parse(localStorage.getItem(STORAGE_KEYS.REWARD_SNAPSHOTS) || '{}');
+      delete rewardSnapshots[prepared.uploadId];
+      localStorage.setItem(STORAGE_KEYS.REWARD_SNAPSHOTS, JSON.stringify(rewardSnapshots));
+      var backendError = error instanceof Error ? error : new Error(String(error));
+      backendError.backendSave = true;
+      throw backendError;
+    }
+  }
+
+  async function rollbackUpload(uploadId) {
     try {
       var history = getUploadHistory();
       var entryIndex = history.findIndex(function (h) {
@@ -453,6 +575,18 @@
         delete rewardSnapshots[key];
         localStorage.setItem(STORAGE_KEYS.REWARD_SNAPSHOTS, JSON.stringify(rewardSnapshots));
       }
+      var targetSnapshotKey = key + ':targets';
+      if (Object.prototype.hasOwnProperty.call(snapshots, targetSnapshotKey)) {
+        var targetSnapshot = snapshots[targetSnapshotKey];
+        var targetRecords = Object.keys(targetSnapshot).map(function (targetKey) {
+          var parts = targetKey.split('|');
+          return { key: targetKey, target: targetSnapshot[targetKey], salesId: parts[0], period: parts[1] };
+        });
+        saveTargets(targetRecords);
+        delete snapshots[targetSnapshotKey];
+      }
+
+      await pendingBackendWrites;
 
       // Save internal audit log
       addAuditLog({
@@ -470,6 +604,7 @@
 
       // Remove snapshot
       delete snapshots[key];
+      delete snapshots[targetSnapshotKey];
       localStorage.setItem(STORAGE_KEYS.SNAPSHOTS, JSON.stringify(snapshots));
 
       return {
@@ -509,17 +644,20 @@
 
   var Store = {
     init: init,
+    hydrateFromBackend: hydrateFromBackend,
     resetToDefault: resetToDefault,
     getInvoices: getInvoices,
     saveInvoices: saveInvoices,
     getRewards: getRewards,
     saveRewards: saveRewards,
+    saveTargets: saveTargets,
     addInvoice: addInvoice,
     updateInvoice: updateInvoice,
     deleteInvoice: deleteInvoice,
     recordPayment: recordPayment,
     generateNextInvoiceId: generateNextInvoiceId,
     getTargets: getTargets,
+    waitForPendingWrites: function () { return pendingBackendWrites; },
     getSalesList: getSalesList,
     getUniqueSalesNames: getUniqueSalesNames,
     getUniqueStoreNames: getUniqueStoreNames,
@@ -533,6 +671,7 @@
     getUploadHistory: getUploadHistory,
     addUploadHistory: addUploadHistory,
     saveUploadWithSnapshot: saveUploadWithSnapshot,
+    saveUploadWithSnapshotAsync: saveUploadWithSnapshotAsync,
     rollbackUpload: rollbackUpload,
     deleteFailedUpload: deleteFailedUpload,
     hasSnapshot: hasSnapshot,

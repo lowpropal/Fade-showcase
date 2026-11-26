@@ -577,8 +577,8 @@
             </div>
           </div>
 
-          <!-- Desktop Table (>= 768px) -->
-          <div class="hidden md:block overflow-x-auto">
+          <!-- Desktop Table (>= 1280px) -->
+          <div class="hidden xl:block overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="border-b border-border-subtle text-text-muted font-semibold uppercase tracking-wider bg-surface-2/60">
                 <tr>
@@ -593,8 +593,8 @@
             </table>
           </div>
 
-          <!-- Mobile Cards (< 768px, zero horizontal scroll) -->
-          <div id="comparisonMobileList" class="md:hidden flex flex-col gap-3"></div>
+          <!-- Responsive Cards (< 1280px, zero horizontal scroll) -->
+          <div id="comparisonMobileList" class="xl:hidden flex flex-col gap-3"></div>
         </div>
 
       </section>
@@ -648,8 +648,8 @@
           </button>
         </div>
 
-        <!-- Invoices Table (Desktop >= 768px) -->
-        <div class="hidden md:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
+        <!-- Invoices Table (Desktop >= 1280px) -->
+        <div class="hidden xl:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
           <table class="w-full text-left text-xs whitespace-nowrap">
             <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
               <tr>
@@ -669,8 +669,8 @@
           </table>
         </div>
 
-        <!-- Invoices Mobile Cards (< 768px) -->
-        <div id="invoiceMobileList" class="md:hidden flex flex-col gap-3"></div>
+        <!-- Invoices Responsive Cards (< 1280px) -->
+        <div id="invoiceMobileList" class="xl:hidden flex flex-col gap-3"></div>
 
         <!-- Pagination Controls -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-text-secondary pt-3 border-t border-border-subtle">
@@ -733,8 +733,8 @@
 
           <div class="border-t border-border-subtle pt-5 flex flex-col gap-3">
             <h3 class="text-sm font-bold text-text-primary">Riwayat Unggahan Terakhir</h3>
-            <!-- Desktop Table (>= 768px) -->
-            <div class="hidden md:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
+            <!-- Desktop Table (>= 1280px) -->
+            <div class="hidden xl:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
               <table class="w-full text-left text-xs whitespace-nowrap">
                 <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                   <tr>
@@ -751,8 +751,8 @@
                 <tbody id="uploadHistoryBody" class="divide-y divide-border-subtle/35 text-xs"></tbody>
               </table>
             </div>
-            <!-- Mobile Card List (< 768px) -->
-            <div id="uploadHistoryMobileList" class="md:hidden flex flex-col gap-3"></div>
+            <!-- Responsive Card List (< 1280px) -->
+            <div id="uploadHistoryMobileList" class="xl:hidden flex flex-col gap-3"></div>
           </div>
         </div>
       </section>
@@ -770,6 +770,18 @@
   <!-- ==================================================================== -->
   <!-- 5. SLIDE-IN KPI DRILL-DOWN DRAWER                                    -->
   <!-- ==================================================================== -->
+  <div id="storeDetailBackdrop" class="hidden fixed inset-0 z-[55] bg-black/70 transition-opacity"></div>
+  <aside id="storeDetailDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-[60] flex flex-col shadow-2xl transition-transform transform translate-x-full" role="dialog" aria-modal="true" aria-labelledby="storeDrawerTitle" aria-hidden="true" tabindex="-1">
+    <header class="p-4 sm:p-5 border-b border-border-subtle flex items-center gap-3">
+      <button id="storeDrawerBackBtn" type="button" class="hidden min-h-11 min-w-11 shrink-0 rounded-lg border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Kembali ke daftar toko"><span class="material-symbols-outlined text-[18px]">arrow_back</span></button>
+      <div class="min-w-0 flex-1">
+        <h2 id="storeDrawerTitle" class="text-base font-bold text-text-primary truncate">Detail toko</h2>
+        <p id="storeDrawerSubtitle" class="mt-0.5 text-xs text-text-muted"></p>
+      </div>
+      <button id="storeDrawerCloseBtn" type="button" class="min-h-11 min-w-11 shrink-0 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Tutup detail toko"><span class="material-symbols-outlined text-[18px]">close</span></button>
+    </header>
+    <div id="storeDrawerContent" class="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4 text-xs"></div>
+  </aside>
   <div id="kpiDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity"></div>
   <aside id="kpiDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-50 flex flex-col shadow-2xl transition-transform transform translate-x-full">
     <div class="p-5 border-b border-border-subtle flex items-center justify-between">
@@ -778,6 +790,7 @@
         <span id="drawerSubtitle" class="text-xs text-text-muted">Data faktual yang mendasari metrik</span>
       </div>
       <div class="flex items-center gap-2">
+        <button id="kpiStoreDirectoryBtn" type="button" class="hidden min-h-11 px-3 rounded-lg border border-border-subtle text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Cari berdasarkan toko">Cari toko</button>
         <button id="drawerBackBtn" type="button" class="hidden shrink-0 min-h-11 cursor-pointer px-3 py-2 rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Kembali ke rincian KPI">← Kembali</button>
         <button id="drawerCloseBtn" type="button" class="shrink-0 cursor-pointer w-11 h-11 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Tutup rincian">
         <span class="material-symbols-outlined text-[18px]">close</span>
@@ -1108,16 +1121,34 @@
   <!-- ==================================================================== -->
   <script src="./assets/js/engine/validator.js?v=20261122d"></script>
   <script src="./assets/js/engine/excel-importer.js?v=20261122d"></script>
+  <script src="./assets/js/engine/master-data-importer.js?v=20261126a"></script>
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
-  <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
-  <script src="./assets/js/store.js?v=20261122d"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/js/store.js?v=20261126a"></script>
+  <script src="./assets/js/supabase-auth.js?v=20261126a"></script>
+  <script src="./assets/js/components/store-drawer.js?v=20261125a"></script>
   <script src="./assets/js/components/trend-chart.js?v=20261125f"></script>
   <script src="./assets/js/vendor/xlsx-reader.js?v=20261122d"></script>
   <script>
-    (function () {
+    (async function () {
       'use strict';
 
+      var session = await FADE_AUTH.restoreSession();
+      if (!session) {
+        window.location.replace('./index.html');
+        return;
+      }
+      if (session.role !== 'admin' && session.role !== 'sales_manager') {
+        window.location.replace('./sales.html' + (window.location.hash || '#dashboard'));
+        return;
+      }
       FADE_STORE.init();
+      try {
+        FADE_STORE.hydrateFromBackend(await FADE_AUTH.loadDataset());
+      } catch (error) {
+        window.location.replace('./index.html?error=backend');
+        return;
+      }
 
       var NAV_CONFIG = {
         admin: [
@@ -1127,7 +1158,10 @@
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard Bulanan', icon: 'dashboard', href: '#dashboard' },
-          { id: 'ytd', label: 'Dashboard YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' }
+        ],
+        sales_manager: [
+          { id: 'dashboard', label: 'Dashboard Tim', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice & Pembayaran', icon: 'receipt_long', href: '#invoices' }
         ]
       };
@@ -1141,7 +1175,11 @@
         ],
         sales: [
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
-          { id: 'ytd', label: 'YTD', icon: 'trending_up', href: '#ytd' },
+          { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
+          { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
+        ],
+        sales_manager: [
+          { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: '#dashboard' },
           { id: 'invoices', label: 'Invoice', icon: 'receipt_long', href: '#invoices' },
           { id: 'profile', label: 'Profil', icon: 'person', href: '#profile' }
         ]
@@ -1149,25 +1187,6 @@
 
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('theme')) FADE_STORE.setTheme(urlParams.get('theme'));
-
-      if (urlParams.get('demo') === '1' && urlParams.get('role') === 'admin') {
-        FADE_STORE.setActiveSession({ role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null });
-      }
-
-      var session = FADE_STORE.getActiveSession();
-      if (!session) {
-        if (urlParams.get('demo') === '1' || urlParams.get('role') === 'admin') {
-          session = { role: 'admin', name: 'Raka Pratama', title: 'Head of Operations', salesName: null };
-          FADE_STORE.setActiveSession(session);
-        } else {
-          window.location.replace('./index.html');
-          return;
-        }
-      }
-      if (session.role !== 'admin') {
-        window.location.replace('./sales.html' + (window.location.hash || '#dashboard'));
-        return;
-      }
 
       var currentMode = 'bulan';
       var currentPeriod = '2026-11';
@@ -1225,6 +1244,10 @@
           setTimeout(function () { el.remove(); }, 250);
         }, 2800);
       }
+
+      window.addEventListener('fade:backend-save-error', function () {
+        showToast('Server menolak perubahan. Data dimuat ulang dari server.', 'error');
+      });
 
       function formatShortIdDate(iso) {
         if (!iso) return '-';
@@ -1302,7 +1325,7 @@
         var sRole = document.getElementById('sidebarUserRole');
         if (sName) sName.textContent = session.name;
         if (sRole) sRole.textContent = session.title;
-        if (mobileRoleBadge) mobileRoleBadge.textContent = 'ADMIN';
+        if (mobileRoleBadge) mobileRoleBadge.textContent = session.role === 'admin' ? 'ADMIN' : 'MANAGER';
 
         var dNavItems = NAV_CONFIG[session.role] || NAV_CONFIG.admin;
         desktopNavContainer.innerHTML = '';
@@ -1338,12 +1361,18 @@
         var addInvoiceBtn = document.getElementById('addInvoiceBtn');
         var actionHeader = document.getElementById('invoiceActionHeader');
 
-        if (session.role === 'admin') {
-          pageTitle.textContent = 'Dashboard Admin';
+        if (session.role === 'admin' || session.role === 'sales_manager') {
+          pageTitle.textContent = session.role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sales Manager';
           if (adminAnalytics) adminAnalytics.classList.remove('hidden');
           salesComparisonSection.classList.remove('hidden');
-          if (addInvoiceBtn) addInvoiceBtn.classList.remove('hidden');
-          if (actionHeader) actionHeader.classList.remove('hidden');
+          if (addInvoiceBtn) addInvoiceBtn.classList.toggle('hidden', session.role !== 'admin');
+          if (actionHeader) {
+            actionHeader.classList.remove('hidden');
+            actionHeader.classList.toggle('w-[120px]', session.role === 'sales_manager');
+            actionHeader.classList.toggle('min-w-[120px]', session.role === 'sales_manager');
+            actionHeader.classList.toggle('w-[240px]', session.role === 'admin');
+            actionHeader.classList.toggle('min-w-[240px]', session.role === 'admin');
+          }
 
           var sel = document.createElement('select');
           sel.id = 'salesFilterSelect';
@@ -1731,7 +1760,7 @@
         document.getElementById('kpiInvoicesSub').textContent = summary.tokoUnikCount + ' Toko Unik Terlayani';
 
         renderAdminAnalytics(summary, invoices);
-        if (session.role === 'admin') {
+        if (session.role === 'admin' || session.role === 'sales_manager') {
           renderComparison(invoices, targets);
         }
       }
@@ -1805,7 +1834,7 @@
         allInvs.forEach(function (inv) {
           var sTxt = inv.sales_name || inv.salesName || 'Sales';
           if (session.role === 'sales' && sTxt !== session.salesName) return;
-          if (session.role === 'admin' && currentSalesFilter !== 'all' && sTxt !== currentSalesFilter) return;
+          if ((session.role === 'admin' || session.role === 'sales_manager') && currentSalesFilter !== 'all' && sTxt !== currentSalesFilter) return;
 
           var dStr = inv.invoice_date || inv.date || '';
           if (dStr < pContext.dari || dStr > pContext.sampai) return;
@@ -1821,7 +1850,7 @@
             criticalList.push({
               type: 'danger',
               title: 'Terlambat ' + (evalState.hariTerlambat ? '(' + evalState.hariTerlambat + ' hari)' : 'Bayar'),
-              desc: id + ' · ' + store + (session.role === 'admin' ? ' (' + sTxt + ')' : ''),
+              desc: id + ' · ' + store + (session.role !== 'sales' ? ' (' + sTxt + ')' : ''),
               amount: remainingJt,
               date: evalState.dueDate || dStr,
               invoiceId: id
@@ -1830,7 +1859,7 @@
             criticalList.push({
               type: 'warning',
               title: 'Jatuh Tempo Hari Ini',
-              desc: id + ' · ' + store + (session.role === 'admin' ? ' (' + sTxt + ')' : ''),
+              desc: id + ' · ' + store + (session.role !== 'sales' ? ' (' + sTxt + ')' : ''),
               amount: remainingJt,
               date: evalState.dueDate || dStr,
               invoiceId: id
@@ -1847,7 +1876,7 @@
           container.innerHTML =
             '<div class="py-6 text-center text-xs text-text-muted flex flex-col items-center gap-1.5">' +
               '<span class="material-symbols-outlined text-[24px] text-status-success">check_circle</span>' +
-              '<span>' + (session.role === 'admin' ? 'Tidak ada tagihan kritis pada periode ini. Semua tagihan aman atau telah lunas.' : 'Semua tagihan toko Anda aman atau telah lunas untuk periode ini.') + '</span>' +
+              '<span>' + (session.role !== 'sales' ? 'Tidak ada tagihan kritis pada periode ini. Semua tagihan aman atau telah lunas.' : 'Semua tagihan toko Anda aman atau telah lunas untuk periode ini.') + '</span>' +
             '</div>';
           return;
         }
@@ -1996,7 +2025,7 @@
       }
 
       function renderInvoicesTable() {
-        invoicePageSize = window.innerWidth < 768 ? 10 : 25;
+        invoicePageSize = window.innerWidth < 1280 ? 10 : 25;
         var filtered = getFilteredInvoicesForExport();
         var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
         var totalCount = filtered.length;
@@ -2011,7 +2040,7 @@
         if (tbody) tbody.innerHTML = '';
         if (mobileList) mobileList.innerHTML = '';
 
-        var colSpan = session.role === 'admin' ? 10 : 9;
+        var colSpan = session.role === 'sales' ? 9 : 10;
         if (pageItems.length === 0) {
           if (tbody) tbody.innerHTML = '<tr><td colspan="' + colSpan + '" class="py-8 text-center text-text-muted">Tidak ada rekaman invoice yang cocok dengan filter saat ini.</td></tr>';
           if (mobileList) {
@@ -2066,6 +2095,10 @@
                   '<button type="button" data-action="detail" data-id="' + esc(invId) + '" title="Detail Invoice & Reward" aria-label="Buka detail invoice ' + esc(invId) + ' dan reward toko" class="inv-action-btn px-2.5 py-1.5 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-[11px] font-semibold transition-colors cursor-pointer shrink-0">Detail →</button>' +
                 '</div>' +
               '</td>';
+            } else if (session.role === 'sales_manager') {
+              actionsHtml = '<td class="py-3 px-3.5 text-center sticky right-0 bg-surface-1 group-hover:bg-surface-2/40 border-l border-border-subtle/60 z-10 w-[120px] min-w-[120px]">' +
+                '<button type="button" data-action="detail" data-id="' + esc(invId) + '" aria-label="Buka detail invoice ' + esc(invId) + '" class="inv-action-btn min-h-[40px] px-3 rounded-lg bg-surface-2 hover:bg-surface-hover border border-border-default text-text-primary text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Detail →</button>' +
+              '</td>';
             }
 
             if (tbody) {
@@ -2108,6 +2141,8 @@
                       '</div>' +
                     '</div>' +
                   '</div>';
+              } else if (session.role === 'sales_manager') {
+                mobileActionsHtml = '<div class="pt-3 border-t border-border-subtle"><button type="button" data-action="detail" data-id="' + esc(invId) + '" aria-label="Buka detail invoice ' + esc(invId) + '" class="inv-action-btn min-h-[44px] w-full px-3 rounded-lg bg-surface-1 hover:bg-surface-hover border border-border-default text-text-primary font-semibold text-xs flex items-center justify-center gap-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"><span>Detail Invoice</span><span aria-hidden="true">→</span></button></div>';
               }
 
               card.innerHTML =
@@ -2187,7 +2222,7 @@
       window.addEventListener('resize', function () {
         clearTimeout(invoiceResizeTimer);
         invoiceResizeTimer = setTimeout(function () {
-          var newPageSize = window.innerWidth < 768 ? 10 : 25;
+          var newPageSize = window.innerWidth < 1280 ? 10 : 25;
           if (newPageSize !== invoicePageSize) {
             invoicePageSize = newPageSize;
             invoicePage = 1;
@@ -2328,7 +2363,7 @@
       document.getElementById('closeInvoiceFormBtn').addEventListener('click', closeInvoiceFormModal);
       document.getElementById('cancelInvoiceFormBtn').addEventListener('click', closeInvoiceFormModal);
 
-      invoiceForm.addEventListener('submit', function (e) {
+      invoiceForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (!session || session.role !== 'admin') {
           showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
@@ -2370,7 +2405,6 @@
           inv.status = evalSt.status === 'Lunas' ? 'PAID' : (evalSt.hariTerlambat ? 'OVERDUE' : 'UNPAID');
 
           FADE_STORE.updateInvoice(invId, inv);
-          showToast('Invoice ' + invId + ' berhasil diperbarui');
         } else {
           var payload = {
             id: invId,
@@ -2385,7 +2419,22 @@
           };
           payload.invoiceTotal = payload.qty * payload.unitPrice;
           var created = FADE_STORE.addInvoice(payload);
+          try {
+            await FADE_STORE.waitForPendingWrites();
+          } catch (error) {
+            renderAll();
+            return;
+          }
           showToast('Invoice ' + created.id + ' berhasil ditambahkan');
+        }
+        if (mode === 'edit') {
+          try {
+            await FADE_STORE.waitForPendingWrites();
+          } catch (error) {
+            renderAll();
+            return;
+          }
+          showToast('Invoice ' + invId + ' berhasil diperbarui');
         }
         closeInvoiceFormModal();
         renderAll();
@@ -2422,7 +2471,7 @@
       document.getElementById('closePaymentModalBtn').addEventListener('click', closePaymentModal);
       document.getElementById('cancelPaymentModalBtn').addEventListener('click', closePaymentModal);
 
-      document.getElementById('paymentForm').addEventListener('submit', function (e) {
+      document.getElementById('paymentForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         if (!session || session.role !== 'admin') {
           showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
@@ -2432,6 +2481,12 @@
         var amt = Number(document.getElementById('payAmountInput').value || 0);
         var dt = document.getElementById('payDateInput').value || '2026-11-22';
         FADE_STORE.recordPayment(id, amt, dt);
+        try {
+          await FADE_STORE.waitForPendingWrites();
+        } catch (error) {
+          renderAll();
+          return;
+        }
         closePaymentModal();
         renderAll();
         showToast('Pembayaran untuk ' + id + ' berhasil dicatat');
@@ -2457,7 +2512,7 @@
       }
 
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
-      document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+      document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
         if (!session || session.role !== 'admin') {
           showToast('Akses ditolak: Operasi membutuhkan role Admin', 'error');
           return;
@@ -2465,6 +2520,13 @@
         if (!pendingDeleteId) return;
         var targetId = pendingDeleteId;
         FADE_STORE.deleteInvoice(targetId);
+        try {
+          await FADE_STORE.waitForPendingWrites();
+        } catch (error) {
+          renderAll();
+          closeDeleteModal();
+          return;
+        }
         closeDeleteModal();
         renderAll();
         showToast('Invoice ' + targetId + ' berhasil dihapus');
@@ -2499,12 +2561,17 @@
 
       var confirmResetBtn = document.getElementById('confirmResetBtn');
       if (confirmResetBtn) {
-        confirmResetBtn.addEventListener('click', function () {
+        confirmResetBtn.addEventListener('click', async function () {
           closeResetModal();
-          FADE_STORE.resetToDefault();
+          try {
+            await FADE_STORE.resetToDefault();
+          } catch (error) {
+            showToast('Data gagal dimuat dari server.', 'error');
+            return;
+          }
           renderAll();
           renderUploadHistory();
-          showToast('Data master berhasil direset ke kondisi awal (395 transaksi)');
+          showToast('Data master berhasil dimuat ulang dari server.');
         });
       }
 
@@ -2547,6 +2614,10 @@
         try {
           var workbookRows = await FADE_XLSX_READER.parseXlsxWorkbook(file);
           var rawRows = workbookRows.Invoice_Collection || workbookRows.Sheet1 || workbookRows[Object.keys(workbookRows)[0]];
+          rawRows = FADE_MASTER_IMPORTER.prepareInvoiceRows(rawRows, FADE_STORE.getSalesList());
+          var newTargets = Array.isArray(workbookRows.Sales_Monthly)
+            ? FADE_MASTER_IMPORTER.parseSalesTargets(workbookRows.Sales_Monthly, FADE_STORE.getSalesList())
+            : null;
           var result = FADE_IMPORTER.processParsedRows(rawRows, { cutoff: '2026-11-22' });
 
           if (result.success && result.isClean) {
@@ -2563,6 +2634,12 @@
                 if (Number.isFinite(parsed)) return parsed;
                 return Number(String(value || '').replace(/[^0-9.-]/g, '')) || 0;
               }
+              function rewardMonth(value) {
+                var raw = String(value || '').trim();
+                if (/^\d{4}-\d{2}/.test(raw)) return raw.slice(0, 7);
+                var date = FADE_VALIDATOR.parseDateIso(raw);
+                return date ? date.slice(0, 7) : raw;
+              }
               newRewards = rewardRows.slice(1).filter(function (row) {
                 return row && row.some(function (cell) { return String(cell || '').trim() !== ''; });
               }).map(function (row) {
@@ -2574,7 +2651,7 @@
                   invoiceCount: rewardNumber(rewardValue(row, 'Jumlah_Invoice')),
                   collectionPic: String(rewardValue(row, 'PIC_Collection') || '').trim(),
                   programMonth: String(rewardValue(row, 'Bulan_Program') || '').trim(),
-                  sourceInvoiceMonth: String(rewardValue(row, 'Bulan_Invoice_Sumber') || '').trim(),
+                  sourceInvoiceMonth: rewardMonth(rewardValue(row, 'Bulan_Invoice_Sumber')),
                   sourceInvoiceValue: rewardNumber(rewardValue(row, 'Nilai_Invoice_Sumber_IDR')),
                   qtyDevice: rewardNumber(rewardValue(row, 'Qty_Device')),
                   qtyLiquid: rewardNumber(rewardValue(row, 'Qty_Liquid')),
@@ -2596,6 +2673,9 @@
                   clientId: String(rewardValue(row, 'Client_ID') || '').trim()
                 };
               });
+              if (newRewards.some(function (reward) { return !reward.rewardId || !reward.storeName || !reward.clientId || !/^\d{4}-\d{2}$/.test(reward.sourceInvoiceMonth); })) {
+                throw new Error('Sheet Client_Reward_Tracking memiliki Reward_ID, toko, Client_ID, atau bulan invoice sumber yang tidak valid.');
+              }
             }
             var newInvoices = result.records.map(function (r) {
               return {
@@ -2619,7 +2699,7 @@
             });
 
             var uploadId = 'upl_' + Date.now();
-            FADE_STORE.saveUploadWithSnapshot(newInvoices, {
+            var uploadResult = await FADE_STORE.saveUploadWithSnapshotAsync(newInvoices, {
               id: uploadId,
               timestamp: new Date().toISOString(),
               filename: file.name,
@@ -2629,14 +2709,15 @@
               uploadedBy: session.name + ' (Admin)',
               status: 'Success',
               hasSnapshot: true,
-              notes: 'Header Baris ' + (result.headerRowIndex + 1) + (newRewards ? ' · ' + newRewards.length + ' data reward' : '')
-            }, newRewards);
+              notes: 'Header Baris ' + (result.headerRowIndex + 1) + (newRewards ? ' · ' + newRewards.length + ' data reward' : '') + (newTargets ? ' · ' + newTargets.length + ' target sales' : '')
+            }, newRewards, newTargets);
+            if (!uploadResult.success) throw new Error(uploadResult.reason || 'Penyimpanan dataset gagal.');
 
             banner.className = 'rounded-xl p-4 flex flex-col gap-3 bg-status-success/10 border border-status-success/30';
             bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-success">check_circle</span><span class="text-status-success">Impor Berhasil (100% Bersih)</span>';
             bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-success text-white';
             bannerBadge.textContent = 'PASSED';
-            bannerDesc.textContent = 'Berhasil memproses ' + result.validCount + ' baris transaksi tanpa kesalahan. Data dashboard dan tabel invoice telah diperbarui.' + (newRewards ? ' ' + newRewards.length + ' catatan reward toko ikut diperbarui.' : ' Sheet Client_Reward_Tracking tidak ditemukan; data reward sebelumnya tetap digunakan.');
+            bannerDesc.textContent = 'Berhasil memproses ' + result.validCount + ' baris transaksi tanpa kesalahan. Data dashboard dan tabel invoice telah diperbarui.' + (newRewards ? ' ' + newRewards.length + ' catatan reward toko ikut diperbarui.' : ' Sheet Client_Reward_Tracking tidak ditemukan; data reward sebelumnya tetap digunakan.') + (newTargets ? ' ' + newTargets.length + ' target sales ikut diperbarui.' : ' Sheet Sales_Monthly tidak ditemukan; target sebelumnya tetap digunakan.');
             defectsContainer.classList.add('hidden');
 
             renderUploadHistory();
@@ -2678,10 +2759,13 @@
           }
         } catch (err) {
           banner.className = 'rounded-xl p-4 flex flex-col gap-3 bg-status-danger/10 border border-status-danger/30';
-          bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-danger">warning</span><span class="text-status-danger">Gagal Membaca File</span>';
+          bannerTitle.innerHTML = '<span class="material-symbols-outlined text-status-danger">warning</span><span class="text-status-danger">' + (err.backendSave ? 'Gagal Menyimpan Data' : 'Gagal Membaca File') + '</span>';
           bannerBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase bg-status-danger text-white';
           bannerBadge.textContent = 'ERROR';
-          bannerDesc.textContent = 'Error: ' + err.message;
+          bannerDesc.textContent = err.backendSave
+            ? 'Server menolak sebagian data. Tampilan sudah dimuat ulang dari data server. Periksa data sebelum mencoba kembali.'
+            : 'Error: ' + err.message;
+          if (err.backendSave) renderAll();
         }
         fileInput.value = '';
       }
@@ -2803,9 +2887,9 @@
         });
       }
       if (confirmRollbackBtn) {
-        confirmRollbackBtn.addEventListener('click', function () {
+        confirmRollbackBtn.addEventListener('click', async function () {
           if (!targetRollbackId) return;
-          var res = FADE_STORE.rollbackUpload(targetRollbackId);
+          var res = await FADE_STORE.rollbackUpload(targetRollbackId);
           closeRollbackModal();
           if (res.success) {
             renderUploadHistory();
@@ -2882,7 +2966,7 @@
           window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
           previousNavRoute = hash;
         }
-        if (session.role === 'sales' && hash === 'upload') {
+        if (session.role !== 'admin' && hash === 'upload') {
           showToast('Fitur Upload Master Excel hanya untuk Admin', 'error');
           window.location.hash = '#dashboard';
           return;
@@ -2940,7 +3024,7 @@
           currentMode = 'bulan';
           customStartDate = '2026-11-01';
           customEndDate = '2026-11-22';
-          if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
+          if (pageTitle) pageTitle.textContent = session.role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sales Manager';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
           if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
           if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
@@ -2953,7 +3037,7 @@
           currentMode = 'ytd';
           customStartDate = '2026-01-01';
           customEndDate = '2026-11-22';
-          if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
+          if (pageTitle) pageTitle.textContent = session.role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sales Manager';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
           if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
           if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
@@ -2984,7 +3068,7 @@
           viewUpload.classList.remove('hidden');
           renderUploadHistory();
         } else if (hash === 'profile') {
-          if (pageTitle) pageTitle.textContent = 'Dashboard Admin';
+          if (pageTitle) pageTitle.textContent = session.role === 'admin' ? 'Profil Admin' : 'Profil Sales Manager';
           if (headerToolbar) headerToolbar.classList.remove('hidden');
           if (headerToolbar) { headerToolbar.classList.add('grid-cols-2'); headerToolbar.classList.remove('grid-cols-1'); }
           if (exportActionContainer) exportActionContainer.classList.remove('justify-self-end');
@@ -3166,8 +3250,7 @@
         if (logoutConfirmModalBackdrop) logoutConfirmModalBackdrop.classList.add('hidden');
       }
       function confirmAdminLogout() {
-        FADE_STORE.clearSession();
-        window.location.href = './index.html';
+        FADE_AUTH.signOut().finally(function () { window.location.href = './index.html'; });
       }
       function logout() {
         openLogoutModal();
@@ -3197,9 +3280,9 @@
         document.getElementById('profileAvatarInitial').textContent = (session.name || 'U').charAt(0);
         document.getElementById('profileModalName').textContent = session.name;
         document.getElementById('profileModalRole').textContent = session.title;
-        document.getElementById('profileModalBadge').textContent = session.role.toUpperCase();
-        document.getElementById('profileModalScope').textContent = session.role === 'admin' ? 'Seluruh Transaksi & Target Tim' : ('Transaksi ' + session.salesName + ' (Own Data)');
-        document.getElementById('profileModalAccess').textContent = session.role === 'admin' ? 'Dashboard, Invoices, Upload Master Excel' : 'Dashboard Bulanan & YTD, Invoices (Read-only)';
+        document.getElementById('profileModalBadge').textContent = session.role === 'sales_manager' ? 'SALES MANAGER' : session.role.toUpperCase();
+        document.getElementById('profileModalScope').textContent = session.role === 'sales' ? ('Transaksi ' + session.salesName + ' (Own Data)') : 'Seluruh Transaksi & Target Tim';
+        document.getElementById('profileModalAccess').textContent = session.role === 'admin' ? 'Dashboard, Invoice, Upload Master Excel, dan pengelolaan transaksi' : (session.role === 'sales_manager' ? 'Dashboard dan Invoice seluruh Sales (Read-only)' : 'Dashboard dan Invoice milik sendiri (Read-only)');
         profileModalBackdrop.classList.remove('hidden');
         profileModal.classList.remove('hidden');
         setTimeout(function () { profileModal.classList.remove('translate-x-full'); }, 10);
@@ -3230,6 +3313,7 @@
       function openInvoiceRewardDrawer(invoiceId) {
         var inv = FADE_STORE.getInvoices().find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
         if (!inv) return;
+        document.getElementById('kpiStoreDirectoryBtn').classList.add('hidden');
         var store = inv.store_name || inv.storeName || '-';
         var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
         var paid = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
@@ -3263,7 +3347,7 @@
         }).join('') : '<p class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Belum ada berkas pendukung yang terlampir untuk toko/invoice ini.</p>';
 
         drawerTitle.textContent = 'Detail Invoice & Reward Toko';
-        drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · Akses sesuai izin Admin';
+        drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · ' + (session.role === 'admin' ? 'Akses Admin' : (session.role === 'sales_manager' ? 'Akses baca Sales Manager' : 'Akses baca Sales'));
         drawerBackBtn.classList.toggle('hidden', !kpiDrawerReturnState);
         drawerContent.innerHTML = '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceInfoTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">receipt_long</span><h4 id="adminInvoiceInfoTitle" class="font-semibold text-text-primary">Informasi Invoice &amp; Pengiriman</h4></div>' +
           '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">' +
@@ -3299,6 +3383,7 @@
       function openDrawer(kpiType) {
         kpiDrawerReturnState = null;
         drawerBackBtn.classList.add('hidden');
+        document.getElementById('kpiStoreDirectoryBtn').classList.toggle('hidden', kpiType !== 'invoices');
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
         setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
@@ -3409,6 +3494,37 @@
         }
       }
 
+      function openStoreDirectory() {
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var allInvoices = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, currentSalesFilter);
+        var periodInvoices = allInvoices.filter(function (invoice) {
+          var date = invoice.invoice_date || invoice.date || '';
+          return date >= pContext.dari && date <= pContext.sampai;
+        });
+        FADE_STORE_DRAWER.openDirectory({
+          periodInvoices: periodInvoices,
+          allInvoices: allInvoices,
+          rewards: FADE_STORE.getRewards ? FADE_STORE.getRewards() : [],
+          snapshot: pContext.asOf,
+          onInvoice: function (invoiceId, storeName) {
+            kpiDrawerReturnState = { kpiType: 'store', storeName: storeName, invoiceId: invoiceId, scrollTop: 0 };
+            FADE_STORE_DRAWER.close();
+            openInvoiceRewardDrawer(invoiceId);
+          }
+        });
+      }
+
+      function openStoreDetail(storeName, invoiceId) {
+        FADE_STORE_DRAWER.openStore(storeName);
+        var targetId = invoiceId || '';
+        if (!targetId) return;
+        window.setTimeout(function () {
+          var buttons = document.querySelectorAll('#storeDrawerContent [data-invoice-id]');
+          var target = Array.prototype.find.call(buttons, function (button) { return button.getAttribute('data-invoice-id') === targetId; });
+          if (target) target.focus();
+        }, 0);
+      }
+
       function openKpiInvoiceDetail(invoiceId, kpiType) {
         kpiDrawerReturnState = { kpiType: kpiType, scrollTop: drawerContent.scrollTop, invoiceId: invoiceId };
         openInvoiceRewardDrawer(invoiceId);
@@ -3417,6 +3533,12 @@
       function returnToKpiDrawer() {
         if (!kpiDrawerReturnState) return;
         var returnState = kpiDrawerReturnState;
+        if (returnState.kpiType === 'store') {
+          kpiDrawerReturnState = null;
+          closeDrawer();
+          openStoreDetail(returnState.storeName, returnState.invoiceId);
+          return;
+        }
         openDrawer(returnState.kpiType);
         drawerContent.scrollTop = returnState.scrollTop;
         var invoiceCards = drawerContent.querySelectorAll('[data-invoice-id]');
@@ -3485,6 +3607,7 @@
       }
 
       drawerBackBtn.addEventListener('click', returnToKpiDrawer);
+      document.getElementById('kpiStoreDirectoryBtn').addEventListener('click', openStoreDirectory);
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
       document.addEventListener('keydown', function (e) {

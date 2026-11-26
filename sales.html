@@ -571,8 +571,8 @@
             </select>
           </div>
 
-          <!-- Desktop Table (>= 768px) -->
-          <div class="hidden md:block overflow-x-auto border border-border-subtle rounded-lg">
+          <!-- Desktop Table (>= 1280px) -->
+          <div class="hidden xl:block overflow-x-auto border border-border-subtle rounded-lg">
             <table class="w-full text-left text-xs whitespace-nowrap">
               <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                 <tr>
@@ -588,8 +588,8 @@
             </table>
           </div>
 
-          <!-- Mobile Cards (< 768px, zero horizontal scroll) -->
-          <div id="dashInvoiceMobileList" class="md:hidden flex flex-col gap-3"></div>
+          <!-- Responsive Cards (< 1280px, zero horizontal scroll) -->
+          <div id="dashInvoiceMobileList" class="xl:hidden flex flex-col gap-3"></div>
         </div>
       </section>
 
@@ -663,6 +663,7 @@
         <div class="bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 flex flex-col gap-4 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex flex-wrap items-center gap-2 flex-1">
+              <button id="drillStoreDirectoryBtn" type="button" class="hidden min-h-11 px-3 rounded-lg bg-surface-2 border border-border-default text-xs font-medium text-text-primary hover:border-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">Cari toko</button>
               <div class="relative flex-1 min-w-[200px] sm:max-w-xs">
                 <span class="material-symbols-outlined text-[18px] text-text-muted absolute left-3 top-1/2 -translate-y-1/2">search</span>
                 <input id="drillSearchInput" type="text" placeholder="Cari no. invoice, toko..." class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent">
@@ -791,8 +792,8 @@
             </button>
           </div>
 
-          <!-- Desktop Table -->
-          <div class="hidden md:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
+          <!-- Desktop Table (>= 1280px) -->
+          <div class="hidden xl:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
             <table class="w-full text-left text-xs whitespace-nowrap">
               <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
                 <tr>
@@ -811,8 +812,8 @@
             </table>
           </div>
 
-          <!-- Mobile Card List -->
-          <div id="invoiceMobileList" class="md:hidden flex flex-col gap-3"></div>
+          <!-- Responsive Card List (< 1280px) -->
+          <div id="invoiceMobileList" class="xl:hidden flex flex-col gap-3"></div>
 
           <!-- Pagination -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-text-secondary pt-3 border-t border-border-subtle">
@@ -913,8 +914,8 @@
                   <span class="font-semibold text-text-primary">Rincian Produk Pesanan</span>
                   <span id="detProductCountBadge" class="text-text-muted">1 Item Utama</span>
                 </div>
-                <!-- Desktop Table (>= 768px) -->
-                <div class="hidden md:block overflow-x-auto border border-border-subtle rounded-lg">
+                <!-- Desktop Table (>= 1280px) -->
+                <div class="hidden xl:block overflow-x-auto border border-border-subtle rounded-lg">
                   <table class="w-full text-left text-xs">
                     <thead class="bg-surface-2 text-text-muted uppercase text-[10px] tracking-wider border-b border-border-subtle">
                       <tr>
@@ -927,8 +928,8 @@
                     <tbody id="detProductBody" class="divide-y divide-border-subtle"></tbody>
                   </table>
                 </div>
-                <!-- Mobile Product List (< 768px) -->
-                <div id="detProductMobileList" class="md:hidden flex flex-col gap-2.5"></div>
+                <!-- Responsive Product List (< 1280px) -->
+                <div id="detProductMobileList" class="xl:hidden flex flex-col gap-2.5"></div>
               </div>
             </div>
 
@@ -1156,6 +1157,19 @@
     </div>
   </nav>
 
+  <div id="storeDetailBackdrop" class="hidden fixed inset-0 z-50 bg-black/70 transition-opacity"></div>
+  <aside id="storeDetailDrawer" class="hidden fixed right-0 top-0 h-full w-full max-w-lg bg-surface-1 border-l border-border-subtle z-50 flex flex-col shadow-2xl transition-transform transform translate-x-full" role="dialog" aria-modal="true" aria-labelledby="storeDrawerTitle" aria-hidden="true" tabindex="-1">
+    <header class="p-4 sm:p-5 border-b border-border-subtle flex items-center gap-3">
+      <button id="storeDrawerBackBtn" type="button" class="hidden min-h-11 min-w-11 shrink-0 rounded-lg border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Kembali ke daftar toko"><span class="material-symbols-outlined text-[18px]">arrow_back</span></button>
+      <div class="min-w-0 flex-1">
+        <h2 id="storeDrawerTitle" class="text-base font-bold text-text-primary truncate">Detail toko</h2>
+        <p id="storeDrawerSubtitle" class="mt-0.5 text-xs text-text-muted"></p>
+      </div>
+      <button id="storeDrawerCloseBtn" type="button" class="min-h-11 min-w-11 shrink-0 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Tutup detail toko"><span class="material-symbols-outlined text-[18px]">close</span></button>
+    </header>
+    <div id="storeDrawerContent" class="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4 text-xs"></div>
+  </aside>
+
   <!-- ==================================================================== -->
   <!-- 5. ACCOUNT ACTION MODAL                                              -->
   <!-- ==================================================================== -->
@@ -1174,46 +1188,34 @@
   <!-- 7. ENGINE & SALES CONTROLLER                                         -->
   <!-- ==================================================================== -->
   <script src="./assets/js/engine/business-engine.js?v=20261122d"></script>
-  <script src="./assets/js/data/synthetic-seed.js?v=20261122d"></script>
-  <script src="./assets/js/store.js?v=20261122d"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/js/store.js?v=20261126a"></script>
+  <script src="./assets/js/supabase-auth.js?v=20261126a"></script>
+  <script src="./assets/js/components/store-drawer.js?v=20261125a"></script>
   <script src="./assets/js/components/trend-chart.js?v=20261125f"></script>
   <script>
-    (function () {
+    (async function () {
       'use strict';
 
-      FADE_STORE.init();
-
-      var urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('theme')) FADE_STORE.setTheme(urlParams.get('theme'));
-
-      var reqSales = urlParams.get('sales') || urlParams.get('user');
-      var session = FADE_STORE.getActiveSession();
-
-      if (urlParams.get('demo') === '1' && reqSales) {
-        var sName = reqSales === 'budi' ? 'Budi Santoso' : (reqSales === 'aru' ? 'Aru' : reqSales);
-        session = {
-          role: 'sales',
-          name: sName,
-          title: 'Sales Representative',
-          salesName: sName,
-          salesId: 'SLS-' + sName.toUpperCase().slice(0, 3),
-          region: 'Operasional Sales',
-          username: reqSales
-        };
-        FADE_STORE.setActiveSession(session);
-      } else if (!session) {
-        if (urlParams.get('demo') === '1' || urlParams.get('role') === 'sales') {
-          session = { role: 'sales', name: 'Aru', title: 'Sales Representative', salesName: 'Aru', salesId: 'SLS-ARU', region: 'Operasional Sales', username: 'aru' };
-          FADE_STORE.setActiveSession(session);
-        } else {
-          window.location.replace('./index.html');
-          return;
-        }
+      var session = await FADE_AUTH.restoreSession();
+      if (!session) {
+        window.location.replace('./index.html');
+        return;
       }
       if (session.role !== 'sales') {
         window.location.replace('./admin.html' + (window.location.hash || '#dashboard'));
         return;
       }
+      FADE_STORE.init();
+      try {
+        FADE_STORE.hydrateFromBackend(await FADE_AUTH.loadDataset());
+      } catch (error) {
+        window.location.replace('./index.html?error=backend');
+        return;
+      }
+
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('theme')) FADE_STORE.setTheme(urlParams.get('theme'));
 
       var DOCS_STORAGE_KEY = 'fade_sales_docs_v1';
       var currentMode = 'bulan';
@@ -1225,6 +1227,7 @@
       var activeDrillKpi = 'outstanding';
       var activeDetailInvoiceId = null;
       var detailReturnHash = '#invoices';
+      var storeDrawerReturnName = '';
       var pendingUploadFile = null;
 
       var statusBadgeText = document.getElementById('statusBadgeText');
@@ -1263,6 +1266,10 @@
           setTimeout(function () { el.remove(); }, 250);
         }, 2800);
       }
+
+      window.addEventListener('fade:backend-save-error', function () {
+        showToast('Perubahan gagal disimpan ke server. Muat ulang sebelum melanjutkan.', 'error');
+      });
 
       function formatShortIdDate(iso) {
         if (!iso) return '-';
@@ -1704,6 +1711,8 @@
         });
         var pContext = summary.period;
         var scopedAll = FADE_ENGINE.filterByScope(invoices, 'sales', session.salesName, session.salesName);
+        var storeDirectoryBtn = document.getElementById('drillStoreDirectoryBtn');
+        if (storeDirectoryBtn) storeDirectoryBtn.classList.toggle('hidden', kpiType !== 'invoices');
 
         var baseList = [];
         if (kpiType === 'outstanding') {
@@ -1832,7 +1841,7 @@
       window.addEventListener('resize', function () {
         clearTimeout(invoiceResizeTimer);
         invoiceResizeTimer = setTimeout(function () {
-          var newPageSize = window.innerWidth < 768 ? 10 : 25;
+          var newPageSize = window.innerWidth < 1280 ? 10 : 25;
           if (newPageSize !== invoicePageSize) {
             invoicePageSize = newPageSize;
             invoicePage = 1;
@@ -1843,7 +1852,7 @@
 
       // INVOICE & PEMBAYARAN RENDERER
       function renderInvoicesTable() {
-        invoicePageSize = window.innerWidth < 768 ? 10 : 25;
+        invoicePageSize = window.innerWidth < 1280 ? 10 : 25;
         var search = document.getElementById('invoiceSearchInput').value;
         var status = document.getElementById('invoiceStatusFilter').value;
         var useDate = document.getElementById('invoiceDateScopeCheckbox').checked;
@@ -2459,6 +2468,11 @@
           if (headerToolbar) headerToolbar.classList.remove('hidden');
           viewKpiDrilldown.classList.remove('hidden');
           renderKpiDrilldownPage(activeDrillKpi);
+          if (activeDrillKpi === 'invoices' && storeDrawerReturnName) {
+            var returnStoreName = storeDrawerReturnName;
+            storeDrawerReturnName = '';
+            FADE_STORE_DRAWER.openStore(returnStoreName);
+          }
           window.scrollTo(0, 0);
         } else if (hash.indexOf('invoice-') === 0) {
           activeDetailInvoiceId = decodeURIComponent(hash.slice(8));
@@ -2599,6 +2613,27 @@
       document.getElementById('dashInvStatus').addEventListener('change', renderDashboardInvoices);
       document.getElementById('drillSearchInput').addEventListener('input', function () { renderKpiDrilldownPage(activeDrillKpi); });
       document.getElementById('drillCategoryFilter').addEventListener('change', function () { renderKpiDrilldownPage(activeDrillKpi); });
+      document.getElementById('drillStoreDirectoryBtn').addEventListener('click', function () {
+        var invoices = FADE_STORE.getInvoices();
+        var scopedAll = FADE_ENGINE.filterByScope(invoices, 'sales', session.salesName, session.salesName);
+        var pContext = FADE_ENGINE.resolvePeriod(currentPeriod, currentMode, '2026-11-22', customStartDate, customEndDate);
+        var periodInvoices = scopedAll.filter(function (invoice) {
+          var date = invoice.invoice_date || invoice.date || '';
+          return date >= pContext.dari && date <= pContext.sampai;
+        });
+        FADE_STORE_DRAWER.openDirectory({
+          periodInvoices: periodInvoices,
+          allInvoices: scopedAll,
+          rewards: FADE_STORE.getRewards ? FADE_STORE.getRewards() : [],
+          snapshot: pContext.asOf,
+          onInvoice: function (invoiceId, storeName) {
+            storeDrawerReturnName = storeName;
+            detailReturnHash = '#kpi-invoices';
+            FADE_STORE_DRAWER.close();
+            openInvoiceDetailPage(invoiceId);
+          }
+        });
+      });
 
       document.getElementById('prevPageBtn').addEventListener('click', function () { if (invoicePage > 1) { invoicePage--; renderInvoicesTable(); } });
       document.getElementById('nextPageBtn').addEventListener('click', function () { invoicePage++; renderInvoicesTable(); });
@@ -2639,8 +2674,7 @@
       window.closeAccountModal = closeAccountModal;
       window.applyTheme = applyTheme;
       window.confirmSalesLogout = function () {
-        FADE_STORE.clearSession();
-        window.location.href = './index.html';
+        FADE_AUTH.signOut().finally(function () { window.location.href = './index.html'; });
       };
 
       function triggerLogoutModal() {

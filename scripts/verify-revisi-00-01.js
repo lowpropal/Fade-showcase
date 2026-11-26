@@ -40,16 +40,10 @@ assert(fs.existsSync(path.join(ROOT_DIR, 'index.html')), 'index.html exists as a
 assert(fs.existsSync(path.join(ROOT_DIR, 'admin.html')), 'admin.html exists as active admin portal', 'REV00');
 assert(fs.existsSync(path.join(ROOT_DIR, 'sales.html')), 'sales.html exists as active sales portal', 'REV00');
 
-// Task 9: Master Real Dataset Verification (Cut-off 18 Nov 2026)
-const seedRaw = fs.readFileSync(path.join(ROOT_DIR, 'assets/js/data/synthetic-seed.js'), 'utf8');
-assert(seedRaw.includes('"totalInvoices": 395'), 'Total invoices exactly 395', 'REV00');
-assert(seedRaw.includes('"cutOffDate": "2026-11-18"'), 'Cut-off date is 2026-11-18', 'REV00');
-assert(seedRaw.includes('"isSynthetic": false'), 'Zero synthetic data flag', 'REV00');
-
-// Check 7 real sales reps
-const expectedSales = ['Aru', 'Nurdin', 'Niko', 'Roland', 'Akim', 'Aldy', 'Mey'];
-const salesMatched = expectedSales.every(s => seedRaw.includes(`"name": "${s}"`));
-assert(salesMatched, 'All 7 real sales representatives present (Aru, Nurdin, Niko, Roland, Akim, Aldy, Mey)', 'REV00');
+// Master data belongs in Supabase, never in the public Pages artifact.
+assert(!fs.existsSync(path.join(ROOT_DIR, 'assets/js/data/synthetic-seed.js')), 'Public bundled master-data seed is absent', 'REV00');
+const storeRaw = fs.readFileSync(path.join(ROOT_DIR, 'assets/js/store.js'), 'utf8');
+assert(!storeRaw.includes('FADE_SYNTHETIC_SEED'), 'Client state has no public seed dependency', 'REV00');
 
 // -------------------------------------------------------------
 // REVISION 01: CRITICAL FUNCTIONALITY & ROLE HARDENING
