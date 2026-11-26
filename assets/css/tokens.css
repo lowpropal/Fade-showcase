@@ -297,6 +297,7 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   .invoice-filter-toolbar .invoice-filter-controls {
     display: flex;
     flex: 0 1 auto;
+    flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-end;
     gap: 0.75rem;
@@ -312,6 +313,7 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   .invoice-filter-toolbar .invoice-filter-selects {
     display: flex;
     flex: 0 1 auto;
+    flex-wrap: wrap;
     align-items: flex-end;
     gap: 0.625rem;
     width: auto;
