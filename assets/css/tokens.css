@@ -284,6 +284,30 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   }
 }
 
+
+/* Subtle hover and keyboard feedback for every role's table rows. */
+@media (hover: hover) and (pointer: fine) {
+  table tbody tr > td {
+    transition: background-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  table tbody tr:hover > td,
+  table tbody tr:focus-within > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 94%, var(--color-accent));
+    box-shadow: var(--shadow-interactive-table-row);
+  }
+}
+
+table tbody tr:focus-within > td {
+  background-color: color-mix(in srgb, var(--bg-surface-2) 96%, var(--color-accent));
+}
+
+@media (hover: none) {
+  table tbody tr:active > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 94%, var(--color-accent));
+  }
+}
+
 /* Keep desktop invoice filters grouped by task without stretching across empty space. */
 @media (min-width: 80rem) {
   div.invoice-filter-toolbar {
