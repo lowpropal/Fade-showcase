@@ -317,12 +317,12 @@ table tbody tr:focus-within > td {
     gap: 0.625rem;
   }
 
-  .invoice-filter-controls,
-  .invoice-filter-selects {
+  .invoice-filter-toolbar .invoice-filter-controls,
+  .invoice-filter-toolbar .invoice-filter-selects {
     display: contents;
   }
 
-  .invoice-filter-search {
+  .invoice-filter-toolbar .invoice-filter-search {
     grid-column: 1 / span 6;
     grid-row: 1;
     width: 100%;
@@ -330,39 +330,39 @@ table tbody tr:focus-within > td {
     min-width: 0;
   }
 
-  .invoice-filter-sales,
-  .invoice-filter-selects > div {
+  .invoice-filter-toolbar .invoice-filter-sales,
+  .invoice-filter-toolbar .invoice-filter-selects > div {
     grid-column: 7 / span 3;
     grid-row: 1;
     width: 100%;
     min-width: 0;
   }
 
-  .invoice-filter-status {
+  .invoice-filter-toolbar .invoice-filter-status {
     grid-column: 10 / span 3;
     grid-row: 1;
     width: 100%;
     min-width: 0;
   }
 
-  .invoice-filter-follow {
+  .invoice-filter-toolbar .invoice-filter-follow {
     grid-column: 1 / span 4;
     grid-row: 2;
     justify-content: flex-start;
     width: 100%;
   }
 
-  .invoice-filter-date-start {
+  .invoice-filter-toolbar .invoice-filter-date-start {
     grid-column: 5 / span 2;
     grid-row: 2;
   }
 
-  .invoice-filter-date-end {
+  .invoice-filter-toolbar .invoice-filter-date-end {
     grid-column: 7 / span 2;
     grid-row: 2;
   }
 
-  .invoice-filter-reset {
+  .invoice-filter-toolbar .invoice-filter-reset {
     grid-column: 10 / span 3;
     grid-row: 2;
     justify-self: end;
@@ -380,8 +380,8 @@ table tbody tr:focus-within > td {
     align-items: end;
   }
 
-  .invoice-filter-controls,
-  .invoice-filter-selects {
+  .invoice-filter-toolbar .invoice-filter-controls,
+  .invoice-filter-toolbar .invoice-filter-selects {
     display: contents;
   }
 
