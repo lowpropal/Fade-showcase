@@ -133,7 +133,8 @@ def build_payload(workbook_path):
         store_ids_by_name[name.casefold()].add(sid)
         date_value = as_date(row.get("Tanggal_Invoice"))
         month = text(row.get("Periode"))[:7] or (date_value[:7] if date_value else "")
-        sales_name = text(row.get("Sales_KPI"))
+        sales_name = text(row.get("Sales_Saat_Ini")) or text(row.get("Sales_KPI"))
+        sales_kpi = text(row.get("Sales_KPI")) or sales_name
         sales_id = SALES_IDS.get(sales_name.casefold())
         if not sales_id or not date_value or not name:
             raise ValueError("Ada baris invoice dengan sales, tanggal, atau nama toko yang tidak valid.")
@@ -171,7 +172,7 @@ def build_payload(workbook_path):
                 "salesName": sales_name,
                 "salesHistoris": text(row.get("Sales_Historis")),
                 "salesSaatIni": text(row.get("Sales_Saat_Ini")),
-                "salesKpi": sales_name,
+                "salesKpi": sales_kpi,
                 "qty": qty,
                 "qtyGratis": numeric(row.get("Qty_Gratis_PCS")),
                 "invoiceTotal": total,

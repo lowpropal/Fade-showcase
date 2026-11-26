@@ -121,18 +121,19 @@
 
   // Filter dataset by role scope
   function filterByScope(invoices, role, userSalesName, selectedSales) {
+    function currentSalesName(invoice) {
+      return invoice.salesSaatIni || invoice.sales_saat_ini || invoice.salesName || invoice.sales_name || invoice.sales || invoice.s;
+    }
     if (role === 'sales') {
       return invoices.filter(function (i) {
-        var sName = i.sales_name || i.salesName || i.sales || i.s;
-        return sName === userSalesName;
+        return currentSalesName(i) === userSalesName;
       });
     }
     if (!selectedSales || selectedSales === 'all') {
       return invoices;
     }
     return invoices.filter(function (i) {
-      var sName = i.sales_name || i.salesName || i.sales || i.s;
-      return sName === selectedSales;
+      return currentSalesName(i) === selectedSales;
     });
   }
 
@@ -268,7 +269,7 @@
 
     var salesMap = {};
     invoices.forEach(function (i) {
-      var sName = i.sales_name || i.salesName || i.sales || i.s || 'Unassigned';
+      var sName = i.salesSaatIni || i.sales_saat_ini || i.salesName || i.sales_name || i.sales || i.s || 'Unassigned';
       if (!salesMap[sName]) {
         salesMap[sName] = [];
       }

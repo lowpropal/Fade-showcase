@@ -184,7 +184,7 @@
       salesName: sName,
       salesHistoris: data.salesHistoris || data.sales_historis || data.sales_lama || sName,
       salesSaatIni: data.salesSaatIni || data.sales_saat_ini || sName,
-      salesKpi: sName,
+      salesKpi: data.salesKpi || data.sales_kpi || sName,
       productItems: Array.isArray(data.productItems) ? data.productItems : (Array.isArray(data.product_items) ? data.product_items : []),
       productName: (data.productName || data.product_name || 'FADE Products').trim(),
       qty: qty,
