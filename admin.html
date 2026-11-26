@@ -648,8 +648,8 @@
           </button>
         </div>
 
-        <!-- Invoices Table (Desktop >= 1280px) -->
-        <div class="hidden xl:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
+        <!-- Tabel invoice untuk layar desktop. -->
+        <div class="hidden lg:block table-scroll-container border border-border-subtle rounded-lg relative shadow-sm">
           <table class="w-full text-left text-xs whitespace-nowrap">
             <thead class="bg-surface-2 text-text-muted font-semibold uppercase tracking-wider border-b border-border-subtle">
               <tr>
@@ -669,8 +669,8 @@
           </table>
         </div>
 
-        <!-- Invoices Responsive Cards (< 1280px) -->
-        <div id="invoiceMobileList" class="xl:hidden flex flex-col gap-3"></div>
+        <!-- Kartu invoice untuk layar sempit. -->
+        <div id="invoiceMobileList" class="lg:hidden flex flex-col gap-3"></div>
 
         <!-- Pagination Controls -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-text-secondary pt-3 border-t border-border-subtle">
@@ -791,7 +791,7 @@
       </div>
       <div class="flex items-center gap-2">
         <button id="kpiStoreDirectoryBtn" type="button" class="hidden min-h-11 px-3 rounded-lg border border-border-subtle text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" aria-label="Cari berdasarkan toko">Cari toko</button>
-        <button id="drawerBackBtn" type="button" class="hidden shrink-0 min-h-11 cursor-pointer px-3 py-2 rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Kembali ke rincian KPI">← Kembali</button>
+        <button id="drawerBackBtn" type="button" class="shrink-0 min-h-11 cursor-pointer px-3 py-2 rounded-lg border border-border-subtle text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Kembali ke halaman">← Kembali</button>
         <button id="drawerCloseBtn" type="button" class="shrink-0 cursor-pointer w-11 h-11 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors" aria-label="Tutup rincian">
         <span class="material-symbols-outlined text-[18px]">close</span>
         </button>
@@ -3349,7 +3349,7 @@
 
         drawerTitle.textContent = 'Detail Invoice & Reward Toko';
         drawerSubtitle.textContent = invoiceId + ' · ' + store + ' · ' + (session.role === 'admin' ? 'Akses Admin' : (session.role === 'sales_manager' ? 'Akses baca Sales Manager' : 'Akses baca Sales'));
-        drawerBackBtn.classList.toggle('hidden', !kpiDrawerReturnState);
+        drawerBackBtn.setAttribute('aria-label', kpiDrawerReturnState ? 'Kembali ke rincian KPI' : 'Kembali ke halaman');
         drawerContent.innerHTML = '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceInfoTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">receipt_long</span><h4 id="adminInvoiceInfoTitle" class="font-semibold text-text-primary">Informasi Invoice &amp; Pengiriman</h4></div>' +
           '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nomor invoice</span><strong class="font-mono text-text-primary break-all">' + esc(invoiceId) + '</strong></div>' +
@@ -3383,7 +3383,7 @@
 
       function openDrawer(kpiType) {
         kpiDrawerReturnState = null;
-        drawerBackBtn.classList.add('hidden');
+        drawerBackBtn.setAttribute('aria-label', 'Kembali ke halaman');
         document.getElementById('kpiStoreDirectoryBtn').classList.toggle('hidden', kpiType !== 'invoices');
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
@@ -3551,7 +3551,7 @@
 
       function closeDrawer() {
         kpiDrawerReturnState = null;
-        drawerBackBtn.classList.add('hidden');
+        drawerBackBtn.setAttribute('aria-label', 'Kembali ke halaman');
         drawer.classList.add('translate-x-full');
         setTimeout(function () {
           drawer.classList.add('hidden');
@@ -3607,7 +3607,7 @@
         });
       }
 
-      drawerBackBtn.addEventListener('click', returnToKpiDrawer);
+      drawerBackBtn.addEventListener('click', function () { if (kpiDrawerReturnState) returnToKpiDrawer(); else closeDrawer(); });
       document.getElementById('kpiStoreDirectoryBtn').addEventListener('click', openStoreDirectory);
       drawerCloseBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
