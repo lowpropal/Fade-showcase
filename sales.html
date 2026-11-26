@@ -97,6 +97,9 @@
         <button id="mobileThemeBtn" type="button" aria-label="Ubah Tema" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary border border-border-default bg-surface-2 transition-colors cursor-pointer">
           <span id="mobileThemeIcon" class="material-symbols-outlined text-[18px]">dark_mode</span>
         </button>
+        <button id="mobileProfileBtn" type="button" aria-label="Buka profil" title="Profil Saya" class="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-accent border border-border-default bg-surface-2 transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">person</span>
+        </button>
       </div>
     </div>
   </header>
@@ -845,7 +848,7 @@
       </section>
 
       <section id="viewConsignment" class="hidden flex flex-col gap-4 bg-surface-1 border border-border-subtle rounded-xl p-4 sm:p-5 shadow-sm">
-        <div><h2 class="text-base font-bold text-text-primary">Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Saldo barang titipan per toko dan SKU.</p></div>
+        <div><h2 class="text-base font-bold text-text-primary">Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Saldo Consignment per toko dan SKU.</p></div>
         <p class="rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-[11px] text-text-secondary">Snapshot baca-saja dari Master Consignment FINAL. Data hanya berisi toko yang termasuk cakupan Sales.</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari toko, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Nama toko, SKU, produk"></label><label class="flex flex-col gap-1 text-[10px] text-text-muted">Toko<select id="consignmentStoreFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Toko</option></select></label></div>
         <div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Toko</th><th class="p-3">SKU / Produk</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3 text-right">Nilai sisa</th><th class="p-3">Status</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div><div id="consignmentMobileList" class="flex flex-col gap-2 lg:hidden"></div>
@@ -1149,7 +1152,7 @@
   <!-- 4. MOBILE BOTTOM NAVIGATION                                          -->
   <!-- ==================================================================== -->
   <nav class="shell-mobile-nav fixed bottom-0 left-0 right-0 w-full z-40 pb-safe bg-surface-1/95 backdrop-blur-xl border-t border-border-subtle">
-    <div class="grid grid-cols-5 w-full h-16" id="mobileNavContainer">
+    <div class="grid grid-cols-4 w-full h-16" id="mobileNavContainer">
       <a href="#dashboard" data-route="dashboard" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
         <span class="material-symbols-outlined text-[20px]">dashboard</span>
         <span class="text-[10px] font-medium tracking-tight">Dashboard</span>
@@ -1161,12 +1164,7 @@
         <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
       </a>
       <a href="#store-search" data-route="store-search" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none"><span class="material-symbols-outlined text-[20px]">storefront</span><span class="text-[10px] font-medium tracking-tight">Toko</span><span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span></a>
-      <a href="#consignment" data-route="consignment" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-[10px] font-medium tracking-tight">Titipan</span><span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span></a>
-      <a href="#profile" data-route="profile" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none">
-        <span class="material-symbols-outlined text-[20px]">person</span>
-        <span class="text-[10px] font-medium tracking-tight">Profil</span>
-        <span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span>
-      </a>
+      <a href="#consignment" data-route="consignment" class="mobile-nav-item relative flex flex-col items-center justify-center gap-1 w-full h-full text-text-muted hover:text-text-primary transition-colors cursor-pointer select-none"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-[10px] font-medium tracking-tight">Consignment</span><span class="mobile-nav-indicator hidden absolute bottom-0 inset-x-3 h-[2px] bg-accent rounded-full"></span></a>
     </div>
   </nav>
 
@@ -3024,6 +3022,8 @@
           window.location.hash = '#profile';
         });
       }
+      var mobileProfileBtn = document.getElementById('mobileProfileBtn');
+      if (mobileProfileBtn) mobileProfileBtn.addEventListener('click', function () { window.location.hash = '#profile'; });
 
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
