@@ -47,7 +47,10 @@
 
     setupResizeObserver: function () {
       var self = this;
-      var container = document.getElementById('chartInteractiveContainer');
+      // Observe the plot itself. On phones the selected-value card sits above
+      // the SVG in normal flow, so observing the wrapper makes tooltip height
+      // changes feed back into the chart's coordinate system.
+      var container = document.getElementById('trendChartSvg');
 
       if (container && typeof window.ResizeObserver !== 'undefined') {
         if (this._resizeObserver) {
@@ -79,7 +82,7 @@
     },
 
     calculateBounds: function () {
-      var container = document.getElementById('chartInteractiveContainer');
+      var container = document.getElementById('trendChartSvg');
       var w = 1000;
       var h = 340;
 
@@ -199,18 +202,16 @@
         overlay.addEventListener('pointerleave', function (e) {
           self.handlePointerLeave(e);
         });
+        // iOS Safari cancels the active pointer when a vertical gesture is
+        // handed to page scrolling. Clear the pinned point so its tooltip
+        // cannot remain stale over the chart after the gesture.
+        overlay.addEventListener('pointercancel', function () {
+          self.activePointIndex = null;
+          self.dismissTooltip();
+        });
         overlay.addEventListener('click', function (e) {
           self.handlePointerClick(e);
         });
-        overlay.addEventListener('touchstart', function (e) {
-          self.handlePointerMove(e);
-        }, { passive: true });
-        overlay.addEventListener('touchmove', function (e) {
-          self.handlePointerMove(e);
-        }, { passive: true });
-        overlay.addEventListener('touchend', function (e) {
-          self.handlePointerMove(e);
-        }, { passive: true });
       }
 
       var container = document.getElementById('chartInteractiveContainer');
