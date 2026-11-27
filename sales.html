@@ -1859,12 +1859,13 @@
         allRows.forEach(function (row) { var key = row.clientId || row.storeName; if (!grouped.has(key)) grouped.set(key, { storeName: row.storeName, clientId: row.clientId, salesName: row.salesName, items: [], source: row }); grouped.get(key).items.push(row); });
         var groups = Array.from(grouped.values()).map(function (group) {
           var sum = function (key) { return group.items.reduce(function (total, row) { return total + Number(row[key] || 0); }, 0); };
-          group.qtyConsigned = group.source.storeQtyConsigned != null ? Number(group.source.storeQtyConsigned) : sum('qtyConsigned');
-          group.qtyPaid = group.source.storeQtyPaid != null ? Number(group.source.storeQtyPaid) : sum('qtyPaid');
-          group.qtyRemaining = group.source.storeQtyRemaining != null ? Number(group.source.storeQtyRemaining) : sum('qtyRemaining');
+          group.summary = group.items.find(function (row) { return row.storeValueConsigned != null && row.storeValuePaid != null; }) || group.source;
+          group.qtyConsigned = group.summary.storeQtyConsigned != null ? Number(group.summary.storeQtyConsigned) : sum('qtyConsigned');
+          group.qtyPaid = group.summary.storeQtyPaid != null ? Number(group.summary.storeQtyPaid) : sum('qtyPaid');
+          group.qtyRemaining = group.summary.storeQtyRemaining != null ? Number(group.summary.storeQtyRemaining) : sum('qtyRemaining');
           group.qtyReturned = sum('qtyReturned');
-          group.valueConsigned = Number(group.source.storeValueConsigned || 0);
-          group.valuePaid = Number(group.source.storeValuePaid || 0);
+          group.valueConsigned = Number(group.summary.storeValueConsigned || 0);
+          group.valuePaid = Number(group.summary.storeValuePaid || 0);
           group.status = group.source.storePaymentStatus || group.items.map(function (row) { return row.stockStatus; }).filter(Boolean).filter(function (value, index, values) { return values.indexOf(value) === index; }).join(', ') || '—';
           group.temporaryStoreId = group.items.some(function (row) { return row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || ''); });
           group.matchesSearch = !query || [group.storeName, group.clientId].concat(group.items.map(function (row) { return row.sku + ' ' + row.productName; })).join(' ').toLocaleLowerCase('id-ID').includes(query);
@@ -1873,8 +1874,8 @@
         var fmt = function (value) { return Number(value || 0).toLocaleString('id-ID'); };
         var kpis = document.getElementById('consignmentKpis');
         if (kpis) {
-          var financialSummaryReady = allRows.length > 0 && allRows.every(function (row) { return row.storeValueConsigned != null && row.storeValuePaid != null; });
-          var moneyMetric = function (value) { return !allRows.length ? '—' : (financialSummaryReady ? 'Rp ' + fmt(value) : 'Perlu impor ulang'); };
+          var financialSummaryReady = groups.length > 0 && groups.every(function (group) { return group.summary.storeValueConsigned != null && group.summary.storeValuePaid != null; });
+          var moneyMetric = function (value) { return !groups.length ? '—' : (financialSummaryReady ? 'Rp ' + fmt(value) : 'Perlu impor ulang'); };
           var metrics = [
             ['Total Qty Consigned', groups.reduce(function (n, group) { return n + group.qtyConsigned; }, 0).toLocaleString('id-ID') + ' pcs'],
             ['Nilai Consignment', moneyMetric(groups.reduce(function (n, group) { return n + group.valueConsigned; }, 0))],
