@@ -16,6 +16,7 @@
     SESSION: 'fade_showcase_session_v021',
     THEME: 'fade_showcase_theme_v02',
     UPLOAD_LOG: 'fade_showcase_upload_history_v021',
+    ACTIVE_UPLOAD: 'fade_showcase_active_upload_v1',
     SNAPSHOTS: 'fade_showcase_upload_snapshots_v021',
     REWARD_SNAPSHOTS: 'fade_showcase_reward_snapshots_v1',
     AUDIT_LOG: 'fade_showcase_audit_log_v021',
@@ -450,6 +451,7 @@
         STORAGE_KEYS.STORES,
         STORAGE_KEYS.CONSIGNMENT,
         STORAGE_KEYS.UPLOAD_LOG,
+        STORAGE_KEYS.ACTIVE_UPLOAD,
         STORAGE_KEYS.SNAPSHOTS,
         STORAGE_KEYS.REWARD_SNAPSHOTS,
         STORAGE_KEYS.AUDIT_LOG,
@@ -509,7 +511,41 @@
   function hasSnapshot(uploadId) {
     if (!uploadId) return false;
     var sn = getSnapshots();
-    return !!(sn[uploadId] && Array.isArray(sn[uploadId]) && sn[uploadId].length > 0);
+    return Object.prototype.hasOwnProperty.call(sn, uploadId) && Array.isArray(sn[uploadId]);
+  }
+
+  function isAdminSession() {
+    var session = getActiveSession();
+    return !!(session && session.role === 'admin');
+  }
+
+  function getRollbackEntry(uploadId) {
+    return getUploadHistory().find(function (entry) {
+      return (entry.id || entry.timestamp) === uploadId;
+    }) || null;
+  }
+
+  function getRollbackCandidateId() {
+    var history = getUploadHistory();
+    var latestSuccessful = history.find(function (entry) { return entry.status === 'Success'; });
+    if (!latestSuccessful) return null;
+    var latestId = latestSuccessful.id || latestSuccessful.timestamp;
+    if (!hasSnapshot(latestId)) return null;
+
+    try {
+      var activeId = localStorage.getItem(STORAGE_KEYS.ACTIVE_UPLOAD);
+      if (activeId) return activeId === latestId ? latestId : null;
+      // Older local histories predate the active-upload marker. Only migrate
+      // the newest successful row; never make an older snapshot eligible.
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_UPLOAD, latestId);
+    } catch (e) {}
+    return latestId;
+  }
+
+  function canRollbackUpload(uploadId) {
+    if (!uploadId || !isAdminSession() || getRollbackCandidateId() !== uploadId) return false;
+    var entry = getRollbackEntry(uploadId);
+    return !!(entry && entry.status === 'Success' && entry.hasSnapshot && hasSnapshot(uploadId));
   }
 
   function addAuditLog(entry) {
@@ -528,6 +564,7 @@
       entry.id = uploadId;
       entry.previousCount = currentInvoices.length;
       entry.hasSnapshot = true;
+      entry.previousUploadId = getRollbackCandidateId();
 
       // Save previous dataset snapshot
       var snapshots = getSnapshots();
@@ -566,6 +603,7 @@
 
   function finalizeUpload(entry, newInvoices, previousCount) {
     addUploadHistory(entry);
+    try { localStorage.setItem(STORAGE_KEYS.ACTIVE_UPLOAD, entry.id); } catch (e) {}
     addAuditLog({
       action: 'UPLOAD_SUCCESS',
       uploadId: entry.id,
@@ -625,6 +663,12 @@
 
   async function rollbackUpload(uploadId) {
     try {
+      if (!isAdminSession()) {
+        return { success: false, reason: 'Pemulihan data hanya dapat dilakukan oleh Admin.' };
+      }
+      if (!canRollbackUpload(uploadId)) {
+        return { success: false, reason: 'Pemulihan hanya tersedia untuk unggahan sukses terbaru yang memiliki snapshot.' };
+      }
       var history = getUploadHistory();
       var entryIndex = history.findIndex(function (h) {
         return h.id === uploadId || h.timestamp === uploadId;
@@ -674,6 +718,13 @@
       // Remove from active upload history list
       history.splice(entryIndex, 1);
       localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
+      var previousUploadId = entry.previousUploadId;
+      var previousEntry = previousUploadId && getRollbackEntry(previousUploadId);
+      if (previousEntry && previousEntry.status === 'Success' && hasSnapshot(previousUploadId)) {
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_UPLOAD, previousUploadId);
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.ACTIVE_UPLOAD);
+      }
 
       // Remove snapshot
       delete snapshots[key];
@@ -691,8 +742,9 @@
     }
   }
 
-  function deleteFailedUpload(identifier) {
+  function deleteUploadHistory(identifier) {
     try {
+      if (!isAdminSession()) return false;
       var history = getUploadHistory();
       var entryIndex = history.findIndex(function (h) {
         return h.id === identifier || h.timestamp === identifier;
@@ -703,9 +755,11 @@
       localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
 
       addAuditLog({
-        action: 'DELETE_FAILED_UPLOAD_LOG',
+        action: 'DELETE_UPLOAD_HISTORY',
+        uploadId: entry.id || null,
         filename: entry.filename,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        dataChanged: false
       });
       return true;
     } catch (e) {
@@ -749,7 +803,9 @@
     saveUploadWithSnapshot: saveUploadWithSnapshot,
     saveUploadWithSnapshotAsync: saveUploadWithSnapshotAsync,
     rollbackUpload: rollbackUpload,
-    deleteFailedUpload: deleteFailedUpload,
+    canRollbackUpload: canRollbackUpload,
+    deleteUploadHistory: deleteUploadHistory,
+    deleteFailedUpload: deleteUploadHistory,
     hasSnapshot: hasSnapshot,
     STORAGE_KEYS: STORAGE_KEYS
   };
