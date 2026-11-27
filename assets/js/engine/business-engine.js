@@ -121,20 +121,22 @@
 
   // Filter dataset by role scope
   function filterByScope(invoices, role, userSalesName, selectedSales) {
-    function currentSalesName(invoice) {
-      return invoice.salesSaatIni || invoice.sales_saat_ini || invoice.salesName || invoice.sales_name || invoice.sales || invoice.s;
-    }
     if (role === 'sales') {
       return invoices.filter(function (i) {
-        return currentSalesName(i) === userSalesName;
+        return getCurrentSalesName(i) === userSalesName;
       });
     }
     if (!selectedSales || selectedSales === 'all') {
       return invoices;
     }
     return invoices.filter(function (i) {
-      return currentSalesName(i) === selectedSales;
+      return getCurrentSalesName(i) === selectedSales;
     });
+  }
+
+  function getCurrentSalesName(invoice) {
+    invoice = invoice || {};
+    return invoice.salesSaatIni || invoice.sales_saat_ini || invoice.salesName || invoice.sales_name || invoice.sales || invoice.s || '';
   }
 
   // Core Metric Aggregator
@@ -191,13 +193,14 @@
       }
     }
 
-    // Payments attributed to the invoice period so collected rate compares
-    // payments and revenue from the same invoice cohort.
+    // Collections belong to the period in which payment was recorded, not the
+    // invoice issue period. This keeps the KPI aligned with its payment detail.
     var totalPayments = 0;
-    inRangeInvoices.forEach(function (i) {
+    var paymentRangeEnd = pContext.sampai < pContext.asOf ? pContext.sampai : pContext.asOf;
+    scopedInvoices.forEach(function (i) {
       var lastPay = i.last_payment_date || i.lastPaymentDate || i.tglBayarTerakhir || i.lp;
       var paid = Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal != null ? i.paidTotal : (i.terbayar || i.p || 0)));
-      if (paid > 0 && lastPay && lastPay <= pContext.asOf) {
+      if (paid > 0 && lastPay && lastPay >= pContext.dari && lastPay <= paymentRangeEnd) {
         totalPayments += paid;
       }
     });
@@ -375,6 +378,7 @@
     evaluateInvoiceState: evaluateInvoiceState,
     resolvePeriod: resolvePeriod,
     filterByScope: filterByScope,
+    getCurrentSalesName: getCurrentSalesName,
     calculateSummary: calculateSummary,
     calculateComparison: calculateComparison,
     calculateMonthlyQtyBars: calculateMonthlyQtyBars

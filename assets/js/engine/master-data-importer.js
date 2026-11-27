@@ -190,9 +190,25 @@
     }).filter(Boolean);
   }
 
-  function parseConsignmentBalances(rawRows, salesList) {
+  function parseConsignmentBalances(rawRows, salesList, storeSummaryRows) {
     var rows = readSheetObjects(rawRows, ['client_id', 'nama_toko', 'sku', 'qty_sisa']);
     var salesByName = buildSalesMap(salesList);
+    var storeSummaryByClient = new Map();
+    if (Array.isArray(storeSummaryRows)) {
+      readSheetObjects(storeSummaryRows, ['client_id', 'nama_toko', 'qty_titip']).forEach(function (summaryRow) {
+        var summaryClientId = String(summaryRow.client_id || '').trim();
+        if (!summaryClientId) return;
+        storeSummaryByClient.set(summaryClientId, {
+          qtyConsigned: Number(summaryRow.qty_titip || 0),
+          qtyPaid: Number(summaryRow.qty_terbayar || 0),
+          qtyRemaining: Number(summaryRow.qty_sisa || 0),
+          valueConsigned: Number(summaryRow.subtotal_awal_idr || 0),
+          valuePaid: Number(summaryRow.nilai_terbayar_idr || 0),
+          valueRemaining: Number(summaryRow.subtotal_sisa_idr || 0),
+          status: String(summaryRow.status_bayar || '').trim()
+        });
+      });
+    }
     return rows.map(function (row, rowIndex) {
       var clientId = String(row.client_id || '').trim();
       var sku = String(row.sku || '').trim();
@@ -204,6 +220,7 @@
       if (quantities.some(function (value) { return value != null && String(value).trim() !== '' && (!Number.isFinite(Number(value)) || Number(value) < 0); })) {
         throw new Error('Qty Consignment tidak valid pada baris ' + (rowIndex + 1) + '.');
       }
+      var storeSummary = storeSummaryByClient.get(clientId) || {};
       return {
         id: clientId + ':' + sku + ':' + (rowIndex + 1),
         clientId: clientId,
@@ -218,6 +235,13 @@
         qtyReturned: Number(row.qty_retur_rusak || 0),
         qtyRemaining: Number(row.qty_sisa || 0),
         remainingValue: Number(row.subtotal_sisa_idr || 0),
+        storeQtyConsigned: storeSummary.qtyConsigned,
+        storeQtyPaid: storeSummary.qtyPaid,
+        storeQtyRemaining: storeSummary.qtyRemaining,
+        storeValueConsigned: storeSummary.valueConsigned,
+        storeValuePaid: storeSummary.valuePaid,
+        storeValueRemaining: storeSummary.valueRemaining,
+        storePaymentStatus: storeSummary.status || String(row.status_bayar || '').trim(),
         physicalQty: row.qty_hitung_fisik == null ? null : Number(row.qty_hitung_fisik),
         stockStatus: String(row.status_stok || '').trim(),
         sourceNote: String(row.catatan || '').trim(),

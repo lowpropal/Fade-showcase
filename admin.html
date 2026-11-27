@@ -284,14 +284,14 @@
             <span class="material-symbols-outlined text-[13px]" aria-hidden="true">visibility</span><span>Akses read-only</span>
           </span>
         </div>
-        <div class="grid grid-cols-1 xl:grid-cols-12 items-start gap-5">
-          <div class="xl:col-span-7 flex min-w-0 flex-col gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-start gap-4 lg:gap-5">
+          <div class="md:col-span-1 flex min-w-0 flex-col gap-4 lg:gap-5">
             <div id="adminInvoiceDetailInfoMount"></div>
             <div id="adminInvoiceDetailProductsMount"></div>
             <div id="adminInvoiceDetailRewardMount"></div>
             <div id="adminInvoiceDetailDocsMount"></div>
           </div>
-          <aside id="adminInvoiceDetailPaymentMount" class="xl:col-span-5 xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto overscroll-contain"></aside>
+          <aside id="adminInvoiceDetailPaymentMount" class="md:col-span-1 md:sticky md:top-4 md:max-h-[calc(100vh-2rem)] md:overflow-y-auto overscroll-contain"></aside>
         </div>
       </section>
 
@@ -704,6 +704,7 @@
               <tr>
                 <th class="py-3 px-3.5 text-[11px] min-w-[110px]">No. Invoice</th>
                 <th class="py-3 px-3.5 text-[11px] min-w-[100px]">Tanggal</th>
+                <th class="py-3 px-3.5 text-[11px] min-w-[130px]">Tanggal Bayar Terakhir</th>
                 <th class="py-3 px-3.5 text-[11px] min-w-[190px]">Nama Toko</th>
                 <th class="py-3 px-3.5 text-[11px] min-w-[170px]">PIC Historis → Sekarang</th>
                 <th class="py-3 px-3.5 text-[11px] text-right min-w-[70px]">QTY</th>
@@ -762,12 +763,13 @@
           </label>
         </div>
         <p class="rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-[11px] leading-relaxed text-text-secondary">Data mengikuti sheet <strong>Consignment_Saldo</strong> dari file FINAL. Tampilan ini baca-saja; ID toko TMP ditandai perlu pencocokan manual.</p>
+        <div id="consignmentKpis" class="grid grid-cols-2 xl:grid-cols-4 gap-2"></div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari toko, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Nama toko, SKU, produk"></label>
           <label class="flex flex-col gap-1 text-[10px] text-text-muted">Toko<select id="consignmentStoreFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Toko</option></select></label>
         </div>
-        <div class="hidden lg:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Toko</th><th class="p-3">Sales</th><th class="p-3">SKU / Produk</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3 text-right">Nilai sisa</th><th class="p-3">Status</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div>
-        <div id="consignmentMobileList" class="flex flex-col gap-2 lg:hidden"></div>
+        <div class="hidden md:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full min-w-[820px] text-left text-xs"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Nama toko</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3">Status</th><th class="p-3 text-right">Detail</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div>
+        <div id="consignmentMobileList" class="flex flex-col gap-2 md:hidden"></div>
       </section>
 
       <!-- ================================================================ -->
@@ -1379,6 +1381,14 @@
         };
       }
 
+      function rewardStatusClasses(status) {
+        var value = String(status || '').toLocaleLowerCase('id-ID');
+        if (value.includes('pelunasan invoice') || value.includes('menunggu pelunasan') || value.includes('potensi reward')) return 'bg-status-danger/10 text-status-danger border-status-danger/25';
+        if (value.includes('menunggu pencairan')) return 'bg-status-warning/10 text-status-warning border-status-warning/25';
+        if (value.includes('sudah cair') || value.includes('dicairkan')) return 'bg-status-success/10 text-status-success border-status-success/25';
+        return 'bg-surface-1 text-text-secondary border-border-subtle';
+      }
+
       function showToast(msg, type) {
         var container = document.getElementById('toastContainer');
         var el = document.createElement('div');
@@ -1469,13 +1479,13 @@
         var statusFilter = document.getElementById('storeSearchStatusFilter');
         var range = getIndependentPageRange('storeSearch');
         if (session.role === 'admin' || session.role === 'sales_manager') {
-          var salesOptions = Array.from(new Set(accessible.map(function (inv) { return inv.sales_name || inv.salesName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+          var salesOptions = Array.from(new Set(accessible.map(FADE_ENGINE.getCurrentSalesName).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
           if (salesFilter && salesFilter.options.length <= 1) salesOptions.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; salesFilter.appendChild(option); });
         }
         var selectedSales = salesFilter ? salesFilter.value : 'all';
         var selectedStatus = statusFilter ? statusFilter.value : 'all';
         accessible = accessible.filter(function (inv) {
-          var salesName = inv.sales_name || inv.salesName || '';
+          var salesName = FADE_ENGINE.getCurrentSalesName(inv);
           var date = inv.invoice_date || inv.date || '';
           return (selectedSales === 'all' || salesName === selectedSales) && date >= range.start && date <= range.end && pageInvoiceStatusMatches(inv, selectedStatus, range.asOf);
         });
@@ -1499,7 +1509,7 @@
         var matches = stores.filter(function (store) {
           if (!query) return true;
           var storeInvoices = accessible.filter(function (inv) { return storeIdentity(inv).key === store.key; });
-          var searchable = [store.name, store.id].concat(storeInvoices.map(function (inv) { return [inv.invoice_id || inv.id || '', inv.sales_name || inv.salesName || ''].join(' '); })).join(' ').toLocaleLowerCase('id-ID');
+          var searchable = [store.name, store.id].concat(storeInvoices.map(function (inv) { return [inv.invoice_id || inv.id || '', FADE_ENGINE.getCurrentSalesName(inv)].join(' '); })).join(' ').toLocaleLowerCase('id-ID');
           return searchable.includes(query);
         });
         var summaries = matches.map(function (store) {
@@ -1550,16 +1560,17 @@
         var invoiceRows = storeInvoices.map(function (inv) {
           var id = inv.invoice_id || inv.id;
           var state = FADE_ENGINE.evaluateInvoiceState(inv, range.asOf);
-          return '<tr><td class="p-2.5 font-mono text-text-primary">' + esc(id) + '</td><td class="p-2.5">' + esc(inv.invoice_date || inv.date || '-') + '</td><td class="p-2.5 text-right">Rp ' + state.revenue.toLocaleString('id-ID') + '</td><td class="p-2.5">' + esc(state.status) + '</td><td class="p-2.5 text-right"><button type="button" data-store-invoice="' + esc(id) + '" class="text-accent font-semibold hover:underline">Detail</button></td></tr>';
+          return '<tr><td class="p-2.5 font-mono text-text-primary">' + esc(id) + '</td><td class="p-2.5">' + esc(inv.invoice_date || inv.date || '-') + '</td><td class="p-2.5">' + esc(formatShortIdDate(inv.last_payment_date || inv.lastPaymentDate)) + '</td><td class="p-2.5 text-right">Rp ' + state.revenue.toLocaleString('id-ID') + '</td><td class="p-2.5">' + esc(state.status) + '</td><td class="p-2.5 text-right"><button type="button" data-store-invoice="' + esc(id) + '" class="text-accent font-semibold hover:underline">Detail</button></td></tr>';
         }).join('');
         var invoiceCards = storeInvoices.map(function (inv) {
           var id = inv.invoice_id || inv.id;
           var state = FADE_ENGINE.evaluateInvoiceState(inv, range.asOf);
-          return '<article class="p-3 rounded-lg border border-border-subtle bg-surface-1"><div class="flex items-start justify-between gap-2"><strong class="font-mono text-[10px] text-text-primary break-all">' + esc(id) + '</strong><span class="text-[10px] text-text-muted">' + esc(state.status) + '</span></div><p class="mt-1 text-[10px] text-text-muted">' + esc(inv.invoice_date || inv.date || '-') + '</p><div class="mt-2 flex items-center justify-between gap-2"><strong class="text-xs text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong><button type="button" data-store-invoice="' + esc(id) + '" class="min-h-10 px-3 rounded-lg border border-border-subtle text-[11px] font-semibold text-accent">Detail</button></div></article>';
+          var paymentDate = inv.last_payment_date || inv.lastPaymentDate || '';
+          return '<article class="p-3 rounded-lg border border-border-subtle bg-surface-1"><div class="flex items-start justify-between gap-2"><strong class="font-mono text-[10px] text-text-primary break-all">' + esc(id) + '</strong><span class="text-[10px] text-text-muted">' + esc(state.status) + '</span></div><p class="mt-1 text-[10px] text-text-muted">Terbit ' + esc(inv.invoice_date || inv.date || '-') + '</p><p class="text-[10px] text-text-muted">Bayar ' + esc(paymentDate ? formatShortIdDate(paymentDate) : 'Belum tercatat') + '</p><div class="mt-2 flex items-center justify-between gap-2"><strong class="text-xs text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong><button type="button" data-store-invoice="' + esc(id) + '" class="min-h-10 px-3 rounded-lg border border-border-subtle text-[11px] font-semibold text-accent">Detail</button></div></article>';
         }).join('');
         document.getElementById('storeSearchDrawerTitle').textContent = selectedStore.name;
         document.getElementById('storeSearchDrawerSubtitle').textContent = storeInvoices.length.toLocaleString('id-ID') + ' invoice dalam cakupan data yang dapat diakses';
-        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { var sourceInvoices = reward.relatedInvoiceIds || reward.primaryInvoiceId || 'Invoice sumber tidak dicantumkan'; var rewardCode = reward.rewardId || reward.Reward_ID || reward.reward_id || ''; return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="min-w-0 text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '<small class="mt-1 block text-[10px] text-text-muted">' + (rewardCode ? 'Catatan ' + esc(rewardCode) + ' · ' : '') + esc(sourceInvoices) + '</small></span><span class="shrink-0 text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
+        detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { var sourceInvoices = reward.relatedInvoiceIds || reward.primaryInvoiceId || 'Invoice sumber tidak dicantumkan'; var rewardCode = reward.rewardId || reward.Reward_ID || reward.reward_id || ''; return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="min-w-0 text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '<small class="mt-1 block text-[10px] text-text-muted">' + (rewardCode ? 'Catatan ' + esc(rewardCode) + ' · ' : '') + esc(sourceInvoices) + '</small></span><span class="shrink-0 text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ' + rewardStatusClasses(reward.salesStatus || reward.sourceStatus) + '">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5">Tanggal Bayar</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
         detail.querySelectorAll('[data-store-invoice]').forEach(function (button) {
           button.addEventListener('click', function () {
             storeSearchInvoiceReturn = { storeName: selectedStoreSearchName, storeId: selectedStoreSearchId };
@@ -1571,24 +1582,56 @@
       }
 
       function renderConsignment() {
-        var rows = FADE_STORE.getConsignmentBalances ? FADE_STORE.getConsignmentBalances() : [];
+        var allRows = FADE_STORE.getConsignmentBalances ? FADE_STORE.getConsignmentBalances() : [];
         var search = String((document.getElementById('consignmentSearch') || {}).value || '').trim().toLocaleLowerCase('id-ID');
         var storeSelect = document.getElementById('consignmentStoreFilter');
         var selectedStore = storeSelect ? storeSelect.value : 'all';
-        var stores = Array.from(new Set(rows.map(function (row) { return row.storeName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+        var stores = Array.from(new Set(allRows.map(function (row) { return row.storeName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
         if (storeSelect && storeSelect.options.length <= 1) stores.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; storeSelect.appendChild(option); });
-        rows = rows.filter(function (row) {
-          var matchSearch = !search || [row.storeName, row.sku, row.productName, row.salesName].join(' ').toLocaleLowerCase('id-ID').includes(search);
-          return matchSearch && (selectedStore === 'all' || row.storeName === selectedStore);
+        var grouped = new Map();
+        allRows.forEach(function (row) {
+          var key = row.clientId || row.storeName;
+          if (!grouped.has(key)) grouped.set(key, { storeName: row.storeName, clientId: row.clientId, salesName: row.salesName, items: [], source: row });
+          grouped.get(key).items.push(row);
         });
+        var groups = Array.from(grouped.values()).map(function (group) {
+          var sum = function (key) { return group.items.reduce(function (total, row) { return total + Number(row[key] || 0); }, 0); };
+          group.qtyConsigned = group.source.storeQtyConsigned != null ? Number(group.source.storeQtyConsigned) : sum('qtyConsigned');
+          group.qtyPaid = group.source.storeQtyPaid != null ? Number(group.source.storeQtyPaid) : sum('qtyPaid');
+          group.qtyRemaining = group.source.storeQtyRemaining != null ? Number(group.source.storeQtyRemaining) : sum('qtyRemaining');
+          group.qtyReturned = sum('qtyReturned');
+          group.valueConsigned = Number(group.source.storeValueConsigned || 0);
+          group.valuePaid = Number(group.source.storeValuePaid || 0);
+          group.status = group.source.storePaymentStatus || group.items.map(function (row) { return row.stockStatus; }).filter(Boolean).filter(function (value, index, values) { return values.indexOf(value) === index; }).join(', ') || '—';
+          group.temporaryStoreId = group.items.some(function (row) { return row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || ''); });
+          group.matchesSearch = !search || [group.storeName, group.clientId, group.salesName].concat(group.items.map(function (row) { return row.sku + ' ' + row.productName; })).join(' ').toLocaleLowerCase('id-ID').includes(search);
+          return group;
+        }).filter(function (group) { return group.matchesSearch && (selectedStore === 'all' || group.storeName === selectedStore); });
         var body = document.getElementById('consignmentTableBody');
         var mobile = document.getElementById('consignmentMobileList');
         var summary = document.getElementById('consignmentSummary');
         if (!body || !mobile) return;
-        summary.textContent = rows.length ? rows.length.toLocaleString('id-ID') + ' SKU tampil · ' + Array.from(new Set(rows.map(function (row) { return row.storeName; }))).length + ' toko · snapshot Master Consignment' : (FADE_STORE.getConsignmentBalances().length ? 'Tidak ada item yang cocok dengan filter.' : 'Belum ada snapshot Consignment di server. Admin dapat mengimpor file Master Consignment_FINAL.xlsx.');
         var fmt = function (value) { return Number(value || 0).toLocaleString('id-ID'); };
-        body.innerHTML = rows.length ? rows.map(function (row) { var warning = row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || '') ? 'Perlu cocokkan ID toko' : (row.stockStatus || ''); return '<tr><td class="p-3 text-text-primary">' + esc(row.storeName) + (row.temporaryStoreId ? '<span class="ml-1 text-[10px] text-status-warning">ID sementara</span>' : '') + '</td><td class="p-3">' + esc(row.salesName || '-') + '</td><td class="p-3"><span class="font-mono text-text-primary">' + esc(row.sku) + '</span><span class="ml-2 text-text-secondary">' + esc(row.productName || '-') + '</span></td><td class="p-3 text-right">' + fmt(row.qtyConsigned) + '</td><td class="p-3 text-right">' + fmt(row.qtyPaid) + '</td><td class="p-3 text-right">' + fmt(row.qtyReturned) + '</td><td class="p-3 text-right font-semibold text-text-primary">' + fmt(row.qtyRemaining) + '</td><td class="p-3 text-right">Rp ' + fmt(row.remainingValue) + '</td><td class="p-3 text-status-warning">' + esc(warning) + '</td></tr>'; }).join('') : '<tr><td colspan="9" class="p-6 text-center text-text-muted">' + (FADE_STORE.getConsignmentBalances().length ? 'Tidak ada item yang cocok dengan filter.' : 'Data Consignment belum dimuat dari server.') + '</td></tr>';
-        mobile.innerHTML = rows.map(function (row) { return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><div class="flex justify-between gap-2"><strong class="text-text-primary">' + esc(row.storeName) + '</strong><span class="text-[10px] text-status-warning">' + (row.temporaryStoreId ? 'ID sementara' : esc(row.stockStatus || '')) + '</span></div><p class="mt-1 text-[11px] text-text-secondary">' + esc(row.sku) + ' · ' + esc(row.productName || '-') + '</p><div class="mt-2 grid grid-cols-2 gap-1 text-[11px] text-text-muted"><span>Sales: ' + esc(row.salesName || '-') + '</span><span class="text-right">Sisa: <strong class="text-text-primary">' + fmt(row.qtyRemaining) + ' pcs</strong></span><span>Titip: ' + fmt(row.qtyConsigned) + ' · Terbayar: ' + fmt(row.qtyPaid) + '</span><span class="text-right">Rp ' + fmt(row.remainingValue) + '</span></div></article>'; }).join('');
+        var kpis = document.getElementById('consignmentKpis');
+        if (kpis) {
+          var financialSummaryReady = allRows.length > 0 && allRows.every(function (row) { return row.storeValueConsigned != null && row.storeValuePaid != null; });
+          var moneyMetric = function (value) { return !allRows.length ? '—' : (financialSummaryReady ? 'Rp ' + fmt(value) : 'Perlu impor ulang'); };
+          var metrics = [
+            ['Total Qty Consigned', groups.reduce(function (n, group) { return n + group.qtyConsigned; }, 0).toLocaleString('id-ID') + ' pcs'],
+            ['Nilai Consignment', moneyMetric(groups.reduce(function (n, group) { return n + group.valueConsigned; }, 0))],
+            ['Total Qty Lunas', groups.reduce(function (n, group) { return n + group.qtyPaid; }, 0).toLocaleString('id-ID') + ' pcs'],
+            ['Total Nilai Terbayar', moneyMetric(groups.reduce(function (n, group) { return n + group.valuePaid; }, 0))]
+          ];
+          kpis.innerHTML = metrics.map(function (metric) { return '<article class="min-w-0 rounded-lg border border-border-subtle bg-surface-2 px-3 py-3"><p class="text-[10px] text-text-muted">' + metric[0] + '</p><p class="mt-1 truncate text-sm font-semibold tabular-nums text-text-primary">' + metric[1] + '</p></article>'; }).join('');
+        }
+        summary.textContent = groups.length ? groups.length.toLocaleString('id-ID') + ' toko · ' + groups.reduce(function (n, group) { return n + group.items.length; }, 0).toLocaleString('id-ID') + ' item Consignment' : (allRows.length ? 'Tidak ada toko yang cocok dengan filter.' : 'Belum ada snapshot Consignment di server. Admin dapat mengimpor file Master Consignment_FINAL.xlsx.');
+        var detailTable = function (group) { return '<div class="mt-3 overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full min-w-[620px] text-left text-[11px]"><thead class="bg-surface-1 text-text-muted"><tr><th class="p-2">SKU / Produk</th><th class="p-2 text-right">Titip</th><th class="p-2 text-right">Terbayar</th><th class="p-2 text-right">Retur</th><th class="p-2 text-right">Sisa</th><th class="p-2 text-right">Nilai sisa</th></tr></thead><tbody class="divide-y divide-border-subtle">' + group.items.map(function (item) { return '<tr><td class="p-2"><span class="font-mono text-text-primary">' + esc(item.sku) + '</span><span class="ml-2 text-text-secondary">' + esc(item.productName || 'Produk tidak diketahui') + '</span></td><td class="p-2 text-right">' + fmt(item.qtyConsigned) + '</td><td class="p-2 text-right">' + fmt(item.qtyPaid) + '</td><td class="p-2 text-right">' + fmt(item.qtyReturned) + '</td><td class="p-2 text-right font-semibold">' + fmt(item.qtyRemaining) + '</td><td class="p-2 text-right">Rp ' + fmt(item.remainingValue) + '</td></tr>'; }).join('') + '</tbody></table></div>'; };
+        body.innerHTML = groups.length ? groups.map(function (group, index) {
+          var warning = group.temporaryStoreId ? 'Perlu cocokkan ID toko' : group.status;
+          return '<tr class="transition-colors hover:bg-accent/5"><td class="p-3 font-semibold text-text-primary">' + esc(group.storeName) + '<span class="ml-2 text-[10px] text-text-muted">' + esc(group.salesName || '-') + '</span>' + (group.temporaryStoreId ? '<span class="ml-1 text-[10px] text-status-warning">ID sementara</span>' : '') + '</td><td class="p-3 text-right tabular-nums">' + fmt(group.qtyConsigned) + '</td><td class="p-3 text-right tabular-nums">' + fmt(group.qtyPaid) + '</td><td class="p-3 text-right tabular-nums">' + fmt(group.qtyReturned) + '</td><td class="p-3 text-right font-semibold tabular-nums text-text-primary">' + fmt(group.qtyRemaining) + '</td><td class="p-3 text-text-secondary">' + esc(warning) + '</td><td class="p-3 text-right"><button type="button" data-consignment-detail="' + index + '" aria-expanded="false" class="min-h-10 min-w-20 rounded-lg border border-border-subtle px-3 font-semibold text-text-primary hover:border-accent hover:text-accent">Detail</button></td></tr><tr id="consignmentDetail' + index + '" class="hidden"><td colspan="7" class="px-3 pb-3">' + detailTable(group) + '</td></tr>';
+        }).join('') : '<tr><td colspan="7" class="p-6 text-center text-text-muted">' + (allRows.length ? 'Tidak ada toko yang cocok dengan filter.' : 'Data Consignment belum dimuat dari server.') + '</td></tr>';
+        mobile.innerHTML = groups.map(function (group, index) { return '<article class="rounded-lg border border-border-subtle bg-surface-2 p-3"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><strong class="block truncate text-sm text-text-primary">' + esc(group.storeName) + '</strong><span class="text-[10px] text-text-muted">' + esc(group.salesName || '-') + '</span></div><span class="shrink-0 text-[10px] text-text-secondary">' + esc(group.temporaryStoreId ? 'Perlu cocokkan ID toko' : group.status) + '</span></div><div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-[11px]"><span class="text-text-muted">Qty titip <strong class="ml-1 text-text-primary">' + fmt(group.qtyConsigned) + '</strong></span><span class="text-right text-text-muted">Terbayar <strong class="ml-1 text-text-primary">' + fmt(group.qtyPaid) + '</strong></span><span class="text-text-muted">Retur <strong class="ml-1 text-text-primary">' + fmt(group.qtyReturned) + '</strong></span><span class="text-right text-text-muted">Qty sisa <strong class="ml-1 text-text-primary">' + fmt(group.qtyRemaining) + '</strong></span></div><button type="button" data-consignment-detail="' + index + '" aria-expanded="false" class="mt-3 min-h-11 w-full rounded-lg border border-border-subtle bg-surface-1 text-xs font-semibold text-text-primary hover:border-accent">Lihat ' + group.items.length + ' item</button><div id="consignmentDetailMobile' + index + '" class="hidden">' + group.items.map(function (item) { return '<div class="mt-2 rounded-lg border border-border-subtle bg-surface-1 p-3"><p class="font-mono text-[10px] text-text-muted">' + esc(item.sku) + '</p><p class="mt-1 text-xs font-semibold text-text-primary">' + esc(item.productName || 'Produk tidak diketahui') + '</p><p class="mt-2 text-[10px] text-text-secondary">Titip ' + fmt(item.qtyConsigned) + ' · Terbayar ' + fmt(item.qtyPaid) + ' · Retur ' + fmt(item.qtyReturned) + ' · Sisa ' + fmt(item.qtyRemaining) + ' pcs</p><p class="mt-1 text-[10px] text-text-muted">Nilai sisa Rp ' + fmt(item.remainingValue) + '</p></div>'; }).join('') + '</div></article>'; }).join('');
+        [body, mobile].forEach(function (container) { container.querySelectorAll('[data-consignment-detail]').forEach(function (button) { button.addEventListener('click', function () { var index = button.getAttribute('data-consignment-detail'); var target = button.closest('tr') ? document.getElementById('consignmentDetail' + index) : document.getElementById('consignmentDetailMobile' + index); if (!target) return; var opening = target.classList.contains('hidden'); target.classList.toggle('hidden', !opening); button.setAttribute('aria-expanded', opening ? 'true' : 'false'); button.textContent = button.closest('article') ? (opening ? 'Sembunyikan item' : 'Lihat ' + groups[index].items.length + ' item') : (opening ? 'Tutup' : 'Detail'); }); }); });
       }
 
       var lastActiveTrigger = null;
@@ -1791,7 +1834,7 @@
         var dateRange = getInvoiceDateRange(pContext, useDateEl && useDateEl.checked);
 
         return all.filter(function (inv) {
-          var sName = inv.sales_name || inv.salesName;
+          var sName = FADE_ENGINE.getCurrentSalesName(inv);
           if (session.role === 'sales' && sName !== session.salesName) return false;
           if (invoiceSalesFilter !== 'all' && sName !== invoiceSalesFilter) return false;
           var dStr = inv.invoice_date || inv.date || '';
@@ -2187,7 +2230,7 @@
         var criticalList = [];
 
         allInvs.forEach(function (inv) {
-          var sTxt = inv.sales_name || inv.salesName || 'Sales';
+          var sTxt = FADE_ENGINE.getCurrentSalesName(inv) || 'Sales';
           if (session.role === 'sales' && sTxt !== session.salesName) return;
           if ((session.role === 'admin' || session.role === 'sales_manager') && currentSalesFilter !== 'all' && sTxt !== currentSalesFilter) return;
 
@@ -2383,7 +2426,7 @@
         if (tbody) tbody.innerHTML = '';
         if (mobileList) mobileList.innerHTML = '';
 
-        var colSpan = session.role === 'sales' ? 9 : 10;
+        var colSpan = session.role === 'sales' ? 10 : 11;
         if (pageItems.length === 0) {
           if (tbody) tbody.innerHTML = '<tr><td colspan="' + colSpan + '" class="py-8 text-center text-text-muted">Tidak ada rekaman invoice yang cocok dengan filter saat ini.</td></tr>';
           if (mobileList) {
@@ -2411,6 +2454,7 @@
             var picHandover = getInvoicePicHandover(inv);
             var store = inv.store_name || inv.storeName || '-';
             var dStr = inv.invoice_date || inv.date || '-';
+            var payDate = inv.last_payment_date || inv.lastPaymentDate || '';
             var invId = inv.invoice_id || inv.id || '-';
 
             var statusBadge = '';
@@ -2451,6 +2495,7 @@
               tr.innerHTML =
                 '<td class="py-3 px-3.5 min-w-[110px]"><span class="font-mono font-semibold text-text-primary text-[11px]">' + esc(invId) + '</span></td>' +
                 '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[100px]">' + esc(dStr) + '</td>' +
+                '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[130px]">' + esc(payDate ? formatShortIdDate(payDate) : 'Belum tercatat') + '</td>' +
                 '<td class="py-3 px-3.5 text-xs text-text-primary font-medium min-w-[190px] max-w-[220px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
                 '<td class="py-3 px-3.5 text-xs text-text-secondary min-w-[170px]"><span class="text-text-muted">' + esc(picHandover.historical) + '</span><span class="mx-1 text-accent" aria-hidden="true">→</span><span class="font-medium text-text-primary">' + esc(picHandover.current) + '</span></td>' +
                 '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-medium min-w-[70px]">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
@@ -2496,6 +2541,7 @@
                     '<div class="flex flex-col items-start gap-0.5 mt-1">' +
                       '<span class="font-mono text-xs font-semibold text-text-primary break-all">' + esc(invId) + '</span>' +
                       '<span class="text-xs text-text-secondary">' + esc(formatShortIdDate(dStr)) + '</span>' +
+                      '<span class="text-[11px] text-text-muted">Tanggal bayar: ' + esc(payDate ? formatShortIdDate(payDate) : 'Belum tercatat') + '</span>' +
                       '<span class="text-[11px] text-text-muted">PIC Historis → Sekarang · ' + esc(picHandover.historical) + ' → ' + esc(picHandover.current) + '</span>' +
                     '</div>' +
                   '</div>' +
@@ -3794,6 +3840,7 @@
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nomor invoice</span><strong class="font-mono text-text-primary break-all">' + esc(invoiceId) + '</strong></div>' +
           '<div class="flex flex-col gap-1"><span class="text-text-muted">PIC Sales</span><span class="text-xs text-text-secondary">Historis: <strong class="text-text-primary">' + esc(getInvoicePicHandover(inv).historical) + '</strong></span><span class="text-xs text-text-secondary">Sekarang: <strong class="text-text-primary">' + esc(getInvoicePicHandover(inv).current) + '</strong></span></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal terbit</span><strong class="text-text-primary">' + esc(formatShortIdDate(inv.invoice_date || inv.date)) + '</strong></div>' +
+          '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal bayar terakhir</span><strong class="text-text-primary">' + esc(formatShortIdDate(inv.last_payment_date || inv.lastPaymentDate)) + '</strong></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Tanggal jatuh tempo</span><strong class="text-text-primary">' + esc(formatShortIdDate(dueDate)) + '</strong></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Nama toko mitra</span><strong class="text-text-primary">' + esc(store) + '</strong></div>' +
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Total kuantitas pesanan</span><strong class="text-text-primary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div>' +
@@ -3804,7 +3851,7 @@
           (rewards.length ? rewards.slice(0, 12).map(function (reward) {
             var mismatch = reward.invoiceMatchCount !== '' && Number(reward.invoiceMatchCount) === 0;
             return '<article class="rounded-xl bg-surface-2 border border-border-subtle overflow-hidden">' +
-              '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><strong class="text-text-primary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</strong><span class="rounded-full px-2 py-1 bg-surface-1 border border-border-subtle text-[10px] font-semibold text-text-secondary">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum diisi') + '</span></div><p class="mt-1 text-[11px] text-text-muted">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><div class="sm:text-right"><span class="block text-[10px] text-text-muted">Total reward dari sumber</span><strong class="text-lg text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+              '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><strong class="text-text-primary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</strong><span class="rounded-full border px-2 py-1 text-[10px] font-semibold ' + rewardStatusClasses(reward.salesStatus || reward.sourceStatus) + '">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum diisi') + '</span></div><p class="mt-1 text-[11px] text-text-muted">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><div class="sm:text-right"><span class="block text-[10px] text-text-muted">Total reward dari sumber</span><strong class="text-lg text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></div></div>' +
               '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border-subtle px-4 py-3"><div><span class="block text-[10px] text-text-muted">Nilai pembelian sumber · ' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + '</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Qty sumber</span><strong class="text-xs text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Rebate toko</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.storeRebate || reward.Rebate_Toko_IDR || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Insentif vaporista</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.vaporistIncentive || reward.Insentif_Vaporista_IDR || 0).toLocaleString('id-ID') + '</strong></div></div>' +
               (reward.statusNote ? '<p class="border-t border-border-subtle px-4 py-3 text-[11px] text-text-secondary leading-relaxed">' + esc(reward.statusNote) + '</p>' : '') +
               (mismatch ? '<p class="text-[11px] text-status-warning">ID invoice pada catatan sumber belum ditemukan di daftar invoice.</p>' : '') +
@@ -3933,7 +3980,8 @@
             var d = i.invoice_date || i.date || '';
             if (kpiType === 'pembayaran') {
               var paidDate = i.last_payment_date || i.lastPaymentDate || '';
-              return paidDate >= pContext.dari && paidDate <= pContext.sampai && Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal || 0)) > 0;
+              var paymentEnd = pContext.sampai < pContext.asOf ? pContext.sampai : pContext.asOf;
+              return paidDate >= pContext.dari && paidDate <= paymentEnd && Number(i.paid_total_idr != null ? i.paid_total_idr : (i.paidTotal != null ? i.paidTotal : (i.terbayar || 0))) > 0;
             }
             return d >= pContext.dari && d <= pContext.sampai;
           });
@@ -4084,6 +4132,7 @@
           '<div><span class="block text-text-muted">PIC Historis</span><strong class="text-text-primary">' + esc(pic.historical) + '</strong></div>' +
           '<div><span class="block text-text-muted">PIC Sekarang</span><strong class="text-text-primary">' + esc(pic.current) + '</strong></div>' +
           '<div><span class="block text-text-muted">Tanggal invoice</span><strong class="text-text-primary">' + esc(formatShortIdDate(invoice.invoice_date || invoice.date)) + '</strong></div>' +
+          '<div><span class="block text-text-muted">Tanggal bayar terakhir</span><strong class="text-text-primary">' + esc(formatShortIdDate(invoice.last_payment_date || invoice.lastPaymentDate)) + '</strong></div>' +
           '<div><span class="block text-text-muted">Status</span><strong class="text-text-primary">' + esc(state.status) + '</strong></div>' +
           '<div><span class="block text-text-muted">Total invoice</span><strong class="text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div>' +
           '<div><span class="block text-text-muted">Sisa tagihan</span><strong class="text-status-danger">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong></div>' +
@@ -4239,7 +4288,7 @@
         if (session.role !== 'admin') { showToast('Impor Consignment hanya dapat dilakukan Admin.', 'error'); return; }
         try {
           var workbook = await FADE_XLSX_READER.parseXlsxWorkbook(file);
-          var rows = FADE_MASTER_IMPORTER.parseConsignmentBalances(workbook.Consignment_Saldo, FADE_STORE.getSalesList());
+          var rows = FADE_MASTER_IMPORTER.parseConsignmentBalances(workbook.Consignment_Saldo, FADE_STORE.getSalesList(), workbook.Ringkasan_Toko);
           if (!rows.length) throw new Error('Sheet Consignment_Saldo tidak memuat baris saldo.');
           if (!FADE_STORE.saveConsignmentBalances(rows)) throw new Error('Snapshot gagal disimpan.');
           await FADE_STORE.waitForPendingWrites();
