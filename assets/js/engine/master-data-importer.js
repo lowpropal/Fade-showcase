@@ -105,7 +105,28 @@
       var key = salesId + '|' + period;
       if (keys.has(key)) throw new Error('Target ganda untuk ' + name + ' pada ' + period + '.');
       keys.add(key);
-      targets.push({ key: key, target: target, salesId: salesId, period: period, data: { sourceRow: row } });
+      function metric(headerName) {
+        var index = header.indexes[headerName];
+        return index == null ? null : root.FADE_VALIDATOR.parseNumber(row[index]);
+      }
+      targets.push({
+        key: key,
+        target: target,
+        salesId: salesId,
+        salesName: name,
+        period: period,
+        data: {
+          salesName: name,
+          salesType: String(row[header.indexes.jenis_sales] || '').trim(),
+          qty: metric('qty_terjual'),
+          revenue: metric('revenue_idr'),
+          paid: metric('terbayar_idr'),
+          outstanding: metric('outstanding_idr'),
+          invoiceCount: metric('invoice_count'),
+          clientCount: metric('client_count'),
+          sourceRow: row
+        }
+      });
     }
     if (!targets.length) throw new Error('Sheet Sales_Monthly tidak memuat target yang dapat diimpor.');
     return targets;

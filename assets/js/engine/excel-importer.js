@@ -53,6 +53,26 @@
       exclude: ['id']
     },
     {
+      key: 'account_status',
+      mandatory: false,
+      aliases: ['status_akun', 'account_status']
+    },
+    {
+      key: 'partner_type',
+      mandatory: false,
+      aliases: ['jenis_partner', 'partner_type']
+    },
+    {
+      key: 'qty_free',
+      mandatory: false,
+      aliases: ['qty_gratis_pcs', 'qty_free', 'free_qty']
+    },
+    {
+      key: 'sales_performance',
+      mandatory: false,
+      aliases: ['pic_performance', 'sales_performance']
+    },
+    {
       key: 'sales_id',
       mandatory: false,
       aliases: ['sales_id', 'id_sales']
@@ -283,6 +303,10 @@
         sales_name: String(raw.sales_name || raw.sales_id || '').trim(),
         sales_historis: raw.sales_historis ? String(raw.sales_historis).trim() : null,
         sales_saat_ini: raw.sales_saat_ini ? String(raw.sales_saat_ini).trim() : String(raw.sales_name || '').trim(),
+        account_status: raw.account_status ? String(raw.account_status).trim() : null,
+        partner_type: raw.partner_type ? String(raw.partner_type).trim() : null,
+        qty_free: Validator.parseNumber(raw.qty_free) || 0,
+        sales_performance: raw.sales_performance ? String(raw.sales_performance).trim() : null,
         sales_id: raw.sales_id ? String(raw.sales_id).trim() : null,
         product_name: raw.product_name ? String(raw.product_name).trim() : null,
         qty: qty,

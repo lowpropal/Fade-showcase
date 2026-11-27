@@ -9,6 +9,7 @@
     INVOICES: 'fade_showcase_invoices_v021',
     REWARDS: 'fade_showcase_client_rewards_v1',
     TARGETS: 'fade_showcase_targets_v021',
+    SALES_MONTHLY: 'fade_showcase_sales_monthly_v1',
     SALES: 'fade_showcase_sales_v021',
     STORES: 'fade_showcase_stores_v021',
     CONSIGNMENT: 'fade_showcase_consignment_v1',
@@ -185,6 +186,7 @@
       salesHistoris: data.salesHistoris || data.sales_historis || data.sales_lama || sName,
       salesSaatIni: data.salesSaatIni || data.sales_saat_ini || sName,
       salesKpi: data.salesKpi || data.sales_kpi || sName,
+      picPerformance: data.picPerformance || data.pic_performance || data.sales_performance || data.salesKpi || data.sales_kpi || sName,
       productItems: Array.isArray(data.productItems) ? data.productItems : (Array.isArray(data.product_items) ? data.product_items : []),
       productName: (data.productName || data.product_name || 'FADE Products').trim(),
       qty: qty,
@@ -277,6 +279,14 @@
     }
   }
 
+  function getSalesMonthlyMetrics() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEYS.SALES_MONTHLY) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
   function saveTargets(records, options) {
     options = options || {};
     try {
@@ -286,6 +296,24 @@
         if (record && record.key) next[record.key] = Number(record.target || 0);
       });
       localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(next));
+      if (Array.isArray(records)) {
+        localStorage.setItem(STORAGE_KEYS.SALES_MONTHLY, JSON.stringify(records.map(function (record) {
+          var data = record.data || {};
+          var source = data.sourceRow || [];
+          return {
+            key: record.key,
+            salesId: record.salesId || String(record.key || '').split('|')[0],
+            salesName: data.salesName || record.salesName || '',
+            period: record.period || String(record.key || '').split('|').pop(),
+            qty: data.qty != null ? Number(data.qty) : Number(source[5] || 0),
+            revenue: data.revenue != null ? Number(data.revenue) : Number(source[8] || 0),
+            paid: data.paid != null ? Number(data.paid) : Number(source[9] || 0),
+            outstanding: data.outstanding != null ? Number(data.outstanding) : Number(source[10] || 0),
+            invoiceCount: data.invoiceCount != null ? Number(data.invoiceCount) : Number(source[11] || 0),
+            clientCount: data.clientCount != null ? Number(data.clientCount) : Number(source[12] || 0)
+          };
+        })));
+      }
       if (!options.skipBackend && root.FADE_AUTH && root.FADE_STORE.getActiveSession()) {
         trackBackendWrite(root.FADE_AUTH.persistTargets(records || [], Object.keys(previous)), 'target');
       }
@@ -382,12 +410,28 @@
 
   function hydrateFromBackend(dataset) {
     var targets = {};
+    var salesMonthly = [];
     (dataset.targets || []).forEach(function (target) {
       targets[target.key] = target.target;
+      var data = target.data || {};
+      var source = data.sourceRow || [];
+      salesMonthly.push({
+        key: target.key,
+        salesId: target.salesId || String(target.key || '').split('|')[0],
+        salesName: data.salesName || target.salesName || '',
+        period: String(target.key || '').split('|').pop(),
+        qty: data.qty != null ? Number(data.qty) : Number(source[5] || 0),
+        revenue: data.revenue != null ? Number(data.revenue) : Number(source[8] || 0),
+        paid: data.paid != null ? Number(data.paid) : Number(source[9] || 0),
+        outstanding: data.outstanding != null ? Number(data.outstanding) : Number(source[10] || 0),
+        invoiceCount: data.invoiceCount != null ? Number(data.invoiceCount) : Number(source[11] || 0),
+        clientCount: data.clientCount != null ? Number(data.clientCount) : Number(source[12] || 0)
+      });
     });
     localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(dataset.invoices || []));
     localStorage.setItem(STORAGE_KEYS.REWARDS, JSON.stringify(dataset.rewards || []));
     localStorage.setItem(STORAGE_KEYS.TARGETS, JSON.stringify(targets));
+    localStorage.setItem(STORAGE_KEYS.SALES_MONTHLY, JSON.stringify(salesMonthly));
     localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(dataset.sales || []));
     localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(dataset.stores || []));
     localStorage.setItem(STORAGE_KEYS.CONSIGNMENT, JSON.stringify(dataset.consignment || []));
@@ -401,6 +445,7 @@
         STORAGE_KEYS.INVOICES,
         STORAGE_KEYS.REWARDS,
         STORAGE_KEYS.TARGETS,
+        STORAGE_KEYS.SALES_MONTHLY,
         STORAGE_KEYS.SALES,
         STORAGE_KEYS.STORES,
         STORAGE_KEYS.CONSIGNMENT,
@@ -687,6 +732,7 @@
     recordPayment: recordPayment,
     generateNextInvoiceId: generateNextInvoiceId,
     getTargets: getTargets,
+    getSalesMonthlyMetrics: getSalesMonthlyMetrics,
     waitForPendingWrites: function () { return pendingBackendWrites; },
     getSalesList: getSalesList,
     getUniqueSalesNames: getUniqueSalesNames,

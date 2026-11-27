@@ -171,6 +171,26 @@
       if (store) uniqueStores.add(store);
     });
 
+    // Sales_Monthly is the source of truth for order KPIs. Invoice rows are
+    // scoped by current PIC for access and collections, so a handover must not
+    // move historical order performance to the new PIC or expose that invoice.
+    var monthlyMetrics = Array.isArray(options.salesMonthlyMetrics) ? options.salesMonthlyMetrics : [];
+    var fullCalendarRange = pContext.dari.slice(8, 10) === '01' && pContext.sampai.slice(8, 10) === String(new Date(Date.UTC(Number(pContext.sampai.slice(0, 4)), Number(pContext.sampai.slice(5, 7)), 0)).getUTCDate()).padStart(2, '0');
+    var useMonthlyMetrics = monthlyMetrics.length > 0 && (mode !== 'custom' || fullCalendarRange);
+    if (useMonthlyMetrics) {
+      var startMonthForMetrics = pContext.dari.slice(0, 7);
+      var endMonthForMetrics = pContext.sampai.slice(0, 7);
+      var selectedNameForMetrics = role === 'sales' ? String(userSales || '').trim().toLocaleLowerCase('id-ID') : (selectedSales === 'all' ? '' : String(selectedSales || '').trim().toLocaleLowerCase('id-ID'));
+      var metricRows = monthlyMetrics.filter(function (row) {
+        var rowName = String(row.salesName || '').trim().toLocaleLowerCase('id-ID');
+        return row.period >= startMonthForMetrics && row.period <= endMonthForMetrics && (!selectedNameForMetrics || rowName === selectedNameForMetrics);
+      });
+      if (metricRows.length) {
+        totalQty = metricRows.reduce(function (sum, row) { return sum + Number(row.qty || 0); }, 0);
+        totalRevenue = metricRows.reduce(function (sum, row) { return sum + Number(row.revenue || 0); }, 0);
+      }
+    }
+
     // Payments attributed to the invoice period so collected rate compares
     // payments and revenue from the same invoice cohort.
     var totalPayments = 0;
@@ -211,11 +231,13 @@
     // Target and Achievement
     var targetValue = 0;
     var activeSalesKey = role === 'sales' ? userSales : (selectedSales === 'all' ? null : selectedSales);
+    var activeSalesNameKey = String(activeSalesKey || '').trim().toLocaleLowerCase('id-ID');
 
     if (targets && typeof targets === 'object') {
       if (mode === 'bulan') {
         if (activeSalesKey) {
-          targetValue = Number(targets[activeSalesKey + '|' + periode] || 0);
+          var targetRow = monthlyMetrics.find(function (row) { return row.period === periode && String(row.salesName || '').trim().toLocaleLowerCase('id-ID') === activeSalesNameKey; });
+          targetValue = Number(targets[(targetRow && targetRow.key) || (activeSalesKey + '|' + periode)] || 0);
         } else {
           for (var k in targets) {
             if (k.endsWith('|' + periode)) {
@@ -229,7 +251,8 @@
         for (var tk in targets) {
           var parts = tk.split('|');
           var s = parts[0], m = parts[1];
-          if (!activeSalesKey || s === activeSalesKey) {
+          var targetMeta = monthlyMetrics.find(function (row) { return row.key === tk; });
+          if (!activeSalesKey || s === activeSalesKey || (targetMeta && String(targetMeta.salesName || '').trim().toLocaleLowerCase('id-ID') === activeSalesNameKey)) {
             if (m >= startMonth && m <= endMonth) {
               targetValue += Number(targets[tk] || 0);
             }
@@ -285,6 +308,7 @@
         mode: options.mode,
         periode: options.periode,
         snapshot: options.snapshot,
+        salesMonthlyMetrics: options.salesMonthlyMetrics,
         startDate: options.startDate,
         endDate: options.endDate
       });

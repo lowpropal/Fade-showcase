@@ -1828,6 +1828,7 @@
         var summary = FADE_ENGINE.calculateSummary(FADE_STORE.getInvoices(), FADE_STORE.getTargets(), {
           role: session.role,
           userSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           selectedSales: invoiceSalesFilter,
           mode: currentMode,
           periode: currentPeriod,
@@ -2054,6 +2055,7 @@
         var summary = FADE_ENGINE.calculateSummary(invoices, targets, {
           role: session.role,
           userSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           selectedSales: currentSalesFilter,
           mode: currentMode,
           periode: currentPeriod,
@@ -2242,6 +2244,7 @@
 
       function renderComparison(invoices, targets) {
         var comp = FADE_ENGINE.calculateComparison(invoices, targets, {
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           metric: activeCompMetric,
           mode: currentMode,
           periode: currentPeriod,
@@ -3011,12 +3014,16 @@
                 salesId: r.sales_id,
                 salesName: r.sales_saat_ini || r.sales_name,
                 salesKpi: r.sales_name,
+                picPerformance: r.sales_performance || r.sales_name,
                 salesHistoris: r.sales_historis,
                 salesSaatIni: r.sales_saat_ini || r.sales_name,
                 productName: r.product_name || 'FADE Pod Kit 2ml',
                 productItems: productItems,
                 rincianProduk: productText,
                 qty: r.qty,
+                qtyGratis: r.qty_free,
+                jenisPartner: r.partner_type,
+                statusAkun: r.account_status,
                 unitPrice: r.unit_price_idr,
                 invoiceTotal: r.invoice_total_idr,
                 dueDate: r.due_date,
@@ -3937,6 +3944,7 @@
         var summary = FADE_ENGINE.calculateSummary(allInvoices, FADE_STORE.getTargets(), {
           role: session.role,
           userSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           selectedSales: salesName,
           mode: currentMode,
           periode: currentPeriod,
