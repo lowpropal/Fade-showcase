@@ -1369,7 +1369,8 @@
       }
 
       function formatPaymentDate(iso) {
-        return iso ? formatShortIdDate(iso) : 'Belum tercatat';
+        var value = String(iso || '').trim();
+        return value && value !== '-' ? formatShortIdDate(value) : 'Belum tercatat';
       }
 
       function formatRpShort(val) {
