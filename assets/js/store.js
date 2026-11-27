@@ -499,6 +499,31 @@
     } catch (e) {}
   }
 
+  function replaceUploadHistory(entries) {
+    try {
+      var list = Array.isArray(entries) ? entries.slice(0, 50) : [];
+      localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(list));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function recordUploadHistoryAsync(entry) {
+    entry.id = entry.id || entry.timestamp;
+    addUploadHistory(entry);
+    if (!root.FADE_AUTH || !getActiveSession() || getActiveSession().role !== 'admin') {
+      return { success: true, persisted: false };
+    }
+    try {
+      await root.FADE_AUTH.persistUploadHistory(entry);
+      return { success: true, persisted: true };
+    } catch (error) {
+      console.warn('Upload history could not sync to Supabase', error);
+      return { success: false, persisted: false, reason: error.message };
+    }
+  }
+
   function getSnapshots() {
     try {
       var raw = localStorage.getItem(STORAGE_KEYS.SNAPSHOTS);
@@ -640,7 +665,13 @@
       var writeError = results.find(function (error) { return error; });
       if (writeError) throw writeError;
       finalizeUpload(entry, newInvoices, entry.previousCount);
-      return { success: true, uploadId: prepared.uploadId };
+      try {
+        await root.FADE_AUTH.persistUploadHistory(entry);
+        return { success: true, uploadId: prepared.uploadId, historyPersisted: true };
+      } catch (historyError) {
+        console.warn('Invoice data saved, but upload history could not sync', historyError);
+        return { success: true, uploadId: prepared.uploadId, historyPersisted: false, historyError: historyError.message };
+      }
     } catch (error) {
       try {
         hydrateFromBackend(await root.FADE_AUTH.loadDataset());
@@ -680,7 +711,7 @@
       var snapshots = getSnapshots();
       var key = entry.id || entry.timestamp;
       var snapshot = snapshots[key];
-      if (!snapshot || !Array.isArray(snapshot) || snapshot.length === 0) {
+      if (!Array.isArray(snapshot)) {
         return { success: false, reason: 'Snapshot pemulihan tidak tersedia untuk berkas ini.' };
       }
 
@@ -715,9 +746,21 @@
         revertedCount: entry.rowsIngested
       });
 
-      // Remove from active upload history list
-      history.splice(entryIndex, 1);
+      // Keep the history row so the upload and its restoration remain auditable.
+      entry.status = 'RolledBack';
+      entry.hasSnapshot = false;
+      entry.notes = [entry.notes, 'Data dipulihkan ke snapshot sebelumnya'].filter(Boolean).join(' · ');
+      history[entryIndex] = entry;
       localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
+      var historyPersisted = true;
+      if (root.FADE_AUTH && getActiveSession()) {
+        try {
+          await root.FADE_AUTH.persistUploadHistory(entry);
+        } catch (historyError) {
+          historyPersisted = false;
+          console.warn('Data restored, but rollback status could not sync', historyError);
+        }
+      }
       var previousUploadId = entry.previousUploadId;
       var previousEntry = previousUploadId && getRollbackEntry(previousUploadId);
       if (previousEntry && previousEntry.status === 'Success' && hasSnapshot(previousUploadId)) {
@@ -734,7 +777,8 @@
       return {
         success: true,
         restoredCount: snapshot.length,
-        filename: entry.filename
+        filename: entry.filename,
+        historyPersisted: historyPersisted
       };
     } catch (e) {
       console.error('Failed to rollback upload', e);
@@ -742,15 +786,16 @@
     }
   }
 
-  function deleteUploadHistory(identifier) {
+  async function deleteUploadHistory(identifier) {
     try {
-      if (!isAdminSession()) return false;
+      if (!isAdminSession()) return { success: false, reason: 'Hanya Admin yang dapat menghapus riwayat unggahan.' };
       var history = getUploadHistory();
       var entryIndex = history.findIndex(function (h) {
         return h.id === identifier || h.timestamp === identifier;
       });
-      if (entryIndex === -1) return false;
+      if (entryIndex === -1) return { success: false, reason: 'Catatan riwayat tidak ditemukan.' };
       var entry = history[entryIndex];
+      if (root.FADE_AUTH) await root.FADE_AUTH.deleteUploadHistory(entry.id || entry.timestamp);
       history.splice(entryIndex, 1);
       localStorage.setItem(STORAGE_KEYS.UPLOAD_LOG, JSON.stringify(history));
 
@@ -761,9 +806,9 @@
         timestamp: new Date().toISOString(),
         dataChanged: false
       });
-      return true;
+      return { success: true };
     } catch (e) {
-      return false;
+      return { success: false, reason: e.message || 'Gagal menghapus catatan riwayat.' };
     }
   }
 
@@ -800,6 +845,8 @@
     setTheme: setTheme,
     getUploadHistory: getUploadHistory,
     addUploadHistory: addUploadHistory,
+    replaceUploadHistory: replaceUploadHistory,
+    recordUploadHistoryAsync: recordUploadHistoryAsync,
     saveUploadWithSnapshot: saveUploadWithSnapshot,
     saveUploadWithSnapshotAsync: saveUploadWithSnapshotAsync,
     rollbackUpload: rollbackUpload,

@@ -11,6 +11,8 @@ The site is hosted on GitHub Pages, so it cannot enforce login or role checks by
 - Local login code now authenticates against Supabase, loads the role from `fade_profiles`, and rejects dashboard URLs without an authenticated profile. The Supabase publishable key is intended for browser use; no service-role key is present.
 - Local dashboard code now requests every page of rows from the RLS-protected tables. The Admin workbook upload maps invoice Sales names to canonical account IDs, syncs invoices, rewards, and monthly targets, and waits for backend writes before showing success.
 - The approved FADE master workbook has been imported to Supabase: 8 sales, 160 stores, 395 invoices, 54 targets, and 311 rewards.
+- Upload history is now defined by the `202611270001_fade_upload_history.sql` migration and is restricted to Admin with RLS. Apply this migration before deploying the upload-history sync in `admin.html`; the old browser-only entries cannot be reconstructed from invoice rows after local history has been cleared.
+- Upload history is persisted in Supabase, while recovery snapshots remain in the Admin browser storage for now. After sign-out or switching browsers, the history row remains visible but recovery is disabled when its local snapshot is unavailable.
 - The production site has not yet been deployed with the Supabase-backed changes. The prior public `synthetic-seed.js` asset is being removed from the current Pages artifact.
 - Password recovery cannot send email because the accounts use `@fade.invalid` aliases. The Admin will need to reset passwords manually in Supabase Auth until the client provides real login contacts or another recovery method.
 

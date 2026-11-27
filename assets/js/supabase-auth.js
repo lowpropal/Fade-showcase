@@ -18,7 +18,10 @@
       persistInvoices: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
       persistRewards: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
       persistTargets: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
-      persistConsignmentBalances: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); }
+      persistConsignmentBalances: async function () { throw new Error('Layanan penyimpanan belum tersedia.'); },
+      loadUploadHistory: async function () { throw new Error('Layanan riwayat unggahan belum tersedia.'); },
+      persistUploadHistory: async function () { throw new Error('Layanan riwayat unggahan belum tersedia.'); },
+      deleteUploadHistory: async function () { throw new Error('Layanan riwayat unggahan belum tersedia.'); }
     };
     return;
   }
@@ -194,6 +197,64 @@
         });
       })
     };
+  }
+
+  async function loadUploadHistory() {
+    var session = root.FADE_STORE.getActiveSession();
+    if (!session || session.role !== 'admin') return [];
+    var result = await client.from('fade_upload_history').select('*').order('uploaded_at', { ascending: false }).limit(100);
+    if (result.error) throw result.error;
+    return (result.data || []).map(function (row) {
+      return {
+        id: row.id,
+        timestamp: row.uploaded_at,
+        filename: row.filename,
+        rowsIngested: Number(row.rows_ingested || 0),
+        validCount: Number(row.valid_count || 0),
+        invalidCount: Number(row.invalid_count || 0),
+        uploadedBy: row.uploaded_by || 'Admin',
+        status: row.status,
+        hasSnapshot: Boolean(row.has_snapshot),
+        previousCount: Number(row.previous_count || 0),
+        previousUploadId: row.previous_upload_id || null,
+        notes: row.notes || ''
+      };
+    });
+  }
+
+  function serializeUploadHistory(entry) {
+    return {
+      id: String(entry.id || entry.timestamp),
+      uploaded_at: entry.timestamp || new Date().toISOString(),
+      filename: String(entry.filename || 'File tanpa nama'),
+      rows_ingested: Number(entry.rowsIngested || 0),
+      valid_count: Number(entry.validCount || 0),
+      invalid_count: Number(entry.invalidCount || 0),
+      uploaded_by: String(entry.uploadedBy || 'Admin'),
+      status: entry.status === 'RolledBack' ? 'RolledBack' : (entry.status === 'Success' ? 'Success' : 'Failed'),
+      has_snapshot: Boolean(entry.hasSnapshot),
+      previous_count: Number(entry.previousCount || 0),
+      previous_upload_id: entry.previousUploadId || null,
+      notes: String(entry.notes || '')
+    };
+  }
+
+  function persistUploadHistory(entry) {
+    var session = root.FADE_STORE.getActiveSession();
+    if (!session || session.role !== 'admin') return Promise.reject(new Error('Riwayat unggahan hanya dapat dikelola oleh Admin.'));
+    return enqueueWrite(async function () {
+      var result = await client.from('fade_upload_history').upsert(serializeUploadHistory(entry), { onConflict: 'id' });
+      if (result.error) throw result.error;
+    });
+  }
+
+  function deleteUploadHistory(uploadId) {
+    var session = root.FADE_STORE.getActiveSession();
+    if (!session || session.role !== 'admin') return Promise.reject(new Error('Riwayat unggahan hanya dapat dikelola oleh Admin.'));
+    return enqueueWrite(async function () {
+      var result = await client.from('fade_upload_history').delete().eq('id', String(uploadId));
+      if (result.error) throw result.error;
+    });
   }
 
   function serializeInvoice(invoice) {
@@ -375,6 +436,9 @@
     signOut: signOut,
     routeForRole: routeForRole,
     loadDataset: loadDataset,
+    loadUploadHistory: loadUploadHistory,
+    persistUploadHistory: persistUploadHistory,
+    deleteUploadHistory: deleteUploadHistory,
     persistInvoices: persistInvoices,
     persistRewards: persistRewards,
     persistTargets: persistTargets,
