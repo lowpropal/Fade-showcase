@@ -146,6 +146,29 @@
     return byInvoice;
   }
 
+  function parseProductSummary(rawValue) {
+    var raw = String(rawValue == null ? '' : rawValue).trim();
+    if (!raw || raw.indexOf('|') < 0) return [];
+    return raw.split(/\s*;\s*/).map(function (entry) {
+      var parts = entry.split('|').map(function (part) { return part.trim(); });
+      if (!parts[0]) return null;
+      var identity = parts[0].match(/^(\S+)\s+([A-Z])\s+(.+)$/);
+      var unitPriceLabel = (parts[3] || '').replace(/^@\s*/, '').trim();
+      var subtotalLabel = (parts[4] || '').replace(/^net\s*/i, '').trim();
+      var qtyMatch = String(parts[2] || '').match(/(-?\d[\d.,]*)/);
+      return {
+        sku: identity ? identity[1] : '',
+        name: identity ? identity[3] : parts[0],
+        status: parts[1] || 'Terjual',
+        qty: qtyMatch ? Number(root.FADE_VALIDATOR.parseNumber(qtyMatch[1]) || 0) : 0,
+        unitPrice: root.FADE_VALIDATOR.parseNumber(unitPriceLabel) || 0,
+        unitPriceLabel: unitPriceLabel,
+        subtotal: root.FADE_VALIDATOR.parseNumber(subtotalLabel) || 0,
+        subtotalLabel: subtotalLabel
+      };
+    }).filter(Boolean);
+  }
+
   function parseConsignmentBalances(rawRows, salesList) {
     var rows = readSheetObjects(rawRows, ['client_id', 'nama_toko', 'sku', 'qty_sisa']);
     var salesByName = buildSalesMap(salesList);
@@ -187,6 +210,7 @@
     prepareInvoiceRows: prepareInvoiceRows,
     parseSalesTargets: parseSalesTargets,
     parseInvoiceDetails: parseInvoiceDetails,
+    parseProductSummary: parseProductSummary,
     parseConsignmentBalances: parseConsignmentBalances
   };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

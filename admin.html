@@ -258,6 +258,36 @@
       <!-- ================================================================ -->
       <!-- VIEW 1: DASHBOARD BULANAN & YTD                                  -->
       <!-- ================================================================ -->
+      <section id="adminInvoiceDetailPage" class="hidden flex flex-col gap-5">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-3 pb-4 border-b border-border-subtle">
+          <div class="flex flex-col gap-2">
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-text-muted">WORKSPACE / SALES OPERATION</span>
+            <button id="adminInvoiceDetailBack" type="button" class="inline-flex min-h-10 items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+              <span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_back</span><span id="adminInvoiceDetailBackLabel">Kembali ke Invoice &amp; Pembayaran</span>
+            </button>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <h2 id="adminInvoiceDetailId" class="max-w-full break-all text-xl sm:text-3xl font-bold font-mono tracking-tight text-text-primary">-</h2>
+              <span class="hidden sm:inline text-text-muted text-xl">/</span>
+              <span id="adminInvoiceDetailStore" class="max-w-full break-words text-base sm:text-xl font-semibold text-text-secondary">-</span>
+              <span id="adminInvoiceDetailStatus" class="px-2.5 py-1 rounded-full bg-surface-1 border border-border-subtle text-[10px] font-semibold text-text-secondary">-</span>
+            </div>
+            <p id="adminInvoiceDetailAccess" class="text-xs text-text-muted">Rincian invoice · Akses baca saja</p>
+          </div>
+          <span class="inline-flex w-fit items-center gap-1.5 px-3 py-1 rounded-full bg-surface-1 border border-border-subtle text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+            <span class="material-symbols-outlined text-[13px]" aria-hidden="true">visibility</span><span>Akses read-only</span>
+          </span>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-12 items-start gap-5">
+          <div class="xl:col-span-7 flex min-w-0 flex-col gap-5">
+            <div id="adminInvoiceDetailInfoMount"></div>
+            <div id="adminInvoiceDetailProductsMount"></div>
+            <div id="adminInvoiceDetailRewardMount"></div>
+            <div id="adminInvoiceDetailDocsMount"></div>
+          </div>
+          <aside id="adminInvoiceDetailPaymentMount" class="xl:col-span-5 xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto overscroll-contain"></aside>
+        </div>
+      </section>
+
       <section id="viewDashboard" class="flex flex-col gap-6">
         
         <!-- KPI Grid (Hybrid Mobile Hierarchy: Card 1 Full -> QTY/Rev Pair -> Bayar/Tempo Pair -> Card 6 Full) -->
@@ -1295,6 +1325,7 @@
       var tabIndicatorBulanan = document.getElementById('tabIndicatorBulanan');
       var tabIndicatorYTD = document.getElementById('tabIndicatorYTD');
       var viewDashboard = document.getElementById('viewDashboard');
+      var viewInvoiceDetail = document.getElementById('adminInvoiceDetailPage');
       var viewInvoices = document.getElementById('viewInvoices');
       var viewUpload = document.getElementById('viewUpload');
       var viewStoreSearch = document.getElementById('viewStoreSearch');
@@ -1302,6 +1333,8 @@
       var salesComparisonSection = document.getElementById('salesComparisonSection');
       var selectedStoreSearchName = '';
       var selectedStoreSearchId = '';
+      var storeSearchInvoiceReturn = null;
+      var detailReturnHash = '#invoices';
 
       function esc(str) {
         if (str == null) return '';
@@ -1502,7 +1535,13 @@
         document.getElementById('storeSearchDrawerTitle').textContent = selectedStore.name;
         document.getElementById('storeSearchDrawerSubtitle').textContent = storeInvoices.length.toLocaleString('id-ID') + ' invoice dalam cakupan data yang dapat diakses';
         detail.innerHTML = '<div class="flex flex-col gap-4"><div><h3 class="text-sm font-bold text-text-primary">' + esc(selectedStore.name) + '</h3><p class="mt-1 text-[11px] text-text-muted">' + storeInvoices.length + ' invoice · data sesuai akses akun</p></div><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat pembelian bulanan</h4><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">Bulan</th><th class="p-2.5 text-right">Invoice</th><th class="p-2.5 text-right">Qty</th><th class="p-2.5 text-right">Nilai</th></tr></thead><tbody class="divide-y divide-border-subtle">' + monthRows + '</tbody></table></div></section><section><h4 class="mb-2 font-semibold text-text-primary">Status reward toko</h4>' + (rewards.length ? '<div class="flex flex-col gap-2">' + rewards.map(function (reward) { var sourceInvoices = reward.relatedInvoiceIds || reward.primaryInvoiceId || 'Invoice sumber tidak dicantumkan'; var rewardCode = reward.rewardId || reward.Reward_ID || reward.reward_id || ''; return '<div class="p-3 rounded-lg border border-border-subtle bg-surface-1 flex items-center justify-between gap-3"><span class="min-w-0 text-text-secondary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode sumber') + '<small class="mt-1 block text-[10px] text-text-muted">' + (rewardCode ? 'Catatan ' + esc(rewardCode) + ' · ' : '') + esc(sourceInvoices) + '</small></span><span class="shrink-0 text-right"><strong class="block text-status-success">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong><span class="text-[10px] text-text-muted">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum dicantumkan') + '</span></span></div>'; }).join('') + '</div>' : '<p class="p-3 rounded-lg border border-border-subtle bg-surface-1 text-text-muted">Belum ada catatan reward untuk toko ini.</p>') + '</section><section><h4 class="mb-2 font-semibold text-text-primary">Riwayat invoice</h4><div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full text-left"><thead class="bg-surface-1 text-[10px] uppercase text-text-muted"><tr><th class="p-2.5">No. Invoice</th><th class="p-2.5">Tanggal</th><th class="p-2.5 text-right">Nilai</th><th class="p-2.5">Status</th><th class="p-2.5 text-right">Aksi</th></tr></thead><tbody class="divide-y divide-border-subtle">' + invoiceRows + '</tbody></table></div><div class="xl:hidden flex flex-col gap-2">' + invoiceCards + '</div></section></div>';
-        detail.querySelectorAll('[data-store-invoice]').forEach(function (button) { button.addEventListener('click', function () { closeStoreSearchDrawer(); openInvoiceRewardDrawer(button.getAttribute('data-store-invoice')); }); });
+        detail.querySelectorAll('[data-store-invoice]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            storeSearchInvoiceReturn = { storeName: selectedStoreSearchName, storeId: selectedStoreSearchId };
+            closeStoreSearchDrawer();
+            openInvoiceFullPage(button.getAttribute('data-store-invoice'), '#store-search');
+          });
+        });
         if (openDetail) openStoreSearchDrawer(returnFocus);
       }
 
@@ -2479,7 +2518,7 @@
               document.querySelectorAll('.inv-more-btn').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
               var act = btn.getAttribute('data-action');
               var id = btn.getAttribute('data-id');
-              if (act === 'detail') openInvoiceRewardDrawer(id);
+              if (act === 'detail') openInvoiceFullPage(id, '#invoices');
               else if (act === 'edit') openInvoiceFormModal('edit', id, btn);
               else if (act === 'pay') openPaymentModal(id, btn);
               else if (act === 'delete') openDeleteModal(id, btn);
@@ -2958,10 +2997,12 @@
               }
             }
             var newInvoices = result.records.map(function (r) {
-              var productItems = invoiceDetails[r.invoice_id] || [];
+              var productItems = invoiceDetails[r.invoice_id] && invoiceDetails[r.invoice_id].length
+                ? invoiceDetails[r.invoice_id]
+                : FADE_MASTER_IMPORTER.parseProductSummary(r.product_name);
               var productText = productItems.map(function (item) {
-                return [item.name || item.sku, item.status, 'qty ' + item.qty, '@Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'), 'net Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID')].join(' | ');
-              }).join('; ');
+                return [item.sku ? item.sku + ' ' + (item.name || '') : item.name, item.status, 'qty ' + item.qty, '@Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'), 'net Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID')].join(' | ');
+              }).join('; ') || String(r.product_name || '');
               return {
                 id: r.invoice_id,
                 date: r.invoice_date,
@@ -3263,7 +3304,7 @@
 
         document.querySelectorAll('#desktopNavContainer .nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
-          var activeRoute = hash === 'ytd' ? 'dashboard' : hash;
+          var activeRoute = hash === 'ytd' ? 'dashboard' : (hash.indexOf('invoice-') === 0 ? (detailReturnHash === '#store-search' ? 'store-search' : 'invoices') : hash);
           var indicator = el.querySelector('.nav-indicator');
           var icon = el.querySelector('.material-symbols-outlined');
           if (route === activeRoute) {
@@ -3279,7 +3320,7 @@
 
         document.querySelectorAll('#mobileNavContainer .mobile-nav-item').forEach(function (el) {
           var route = el.getAttribute('data-route');
-          var activeRoute = hash === 'ytd' ? 'dashboard' : hash;
+          var activeRoute = hash === 'ytd' ? 'dashboard' : (hash.indexOf('invoice-') === 0 ? (detailReturnHash === '#store-search' ? 'store-search' : 'invoices') : hash);
           var indicator = el.querySelector('.mobile-nav-indicator');
           if (route === activeRoute) {
             el.classList.add('text-accent', 'font-semibold');
@@ -3294,6 +3335,7 @@
 
         viewDashboard.classList.add('hidden');
         viewInvoices.classList.add('hidden');
+        viewInvoiceDetail.classList.add('hidden');
         viewUpload.classList.add('hidden');
         viewStoreSearch.classList.add('hidden');
         viewConsignment.classList.add('hidden');
@@ -3352,6 +3394,15 @@
           var invoiceSalesSelect = document.getElementById('invoiceSalesFilter');
           if (invoiceSalesSelect) invoiceSalesSelect.value = 'all';
           renderInvoicesTable();
+        } else if (hash.indexOf('invoice-') === 0) {
+          var detailId = '';
+          try { detailId = decodeURIComponent(hash.slice('invoice-'.length)); } catch (error) { detailId = hash.slice('invoice-'.length); }
+          if (pageTitle) pageTitle.textContent = 'Detail Invoice';
+          if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
+          if (headerToolbar) headerToolbar.classList.add('hidden');
+          if (dashboardScopeControls) { dashboardScopeControls.classList.add('hidden'); dashboardScopeControls.classList.remove('contents', 'lg:flex'); }
+          viewInvoiceDetail.classList.remove('hidden');
+          renderAdminInvoiceDetail(detailId);
         } else if (hash === 'export' || hash === 'upload') {
           if (pageTitle) pageTitle.textContent = 'Export Data';
           if (statusBadgeText) statusBadgeText.textContent = 'Ekspor invoice dan kelola master data';
@@ -3364,7 +3415,11 @@
           if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
           if (headerToolbar) headerToolbar.classList.add('hidden');
           viewStoreSearch.classList.remove('hidden');
-          renderStoreSearch();
+          if (storeSearchInvoiceReturn) {
+            var storeReturn = storeSearchInvoiceReturn;
+            storeSearchInvoiceReturn = null;
+            renderStoreSearch(storeReturn.storeName, storeReturn.storeId, true);
+          } else renderStoreSearch();
         } else if (hash === 'consignment') {
           if (pageTitle) pageTitle.textContent = 'Consignment';
           if (statusBadgeContainer) statusBadgeContainer.classList.add('hidden');
@@ -3639,10 +3694,10 @@
       var kpiDrawerReturnState = null;
       var drawerOpener = null;
 
-      function openInvoiceRewardDrawer(invoiceId) {
+      function openInvoiceRewardDrawer(invoiceId, renderOnly) {
         var inv = FADE_STORE.getInvoices().find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
         if (!inv) return;
-        if (drawer.classList.contains('hidden')) drawerOpener = document.activeElement;
+        if (!renderOnly && drawer.classList.contains('hidden')) drawerOpener = document.activeElement;
         document.getElementById('kpiStoreDirectoryBtn').classList.add('hidden');
         var store = inv.store_name || inv.storeName || '-';
         var state = FADE_ENGINE.evaluateInvoiceState(inv, '2026-11-22');
@@ -3650,18 +3705,14 @@
         var qty = Number(inv.qty || 0);
         var dueDate = inv.due_date || inv.dueDate || '-';
         var paidPercent = state.revenue > 0 ? Math.min(100, Math.round((paid / state.revenue) * 100)) : 0;
-        var productItems = Array.isArray(inv.productItems) && inv.productItems.length ? inv.productItems : String(inv.rincianProduk || inv.rincian_produk || '').split(';').map(function (item) {
-          var parts = item.split('|').map(function (part) { return part.trim(); });
-          return { name: parts[0], status: parts[1] || 'Terjual', qty: Number((parts[2] || '').replace('qty ', '')) || 0, unitPriceLabel: (parts[3] || '-').replace('@', '').trim(), subtotalLabel: (parts[4] || '-').replace('net ', '').trim() };
-        }).filter(function (item) { return item.name; });
+        var productItems = Array.isArray(inv.productItems) && inv.productItems.length
+          ? inv.productItems
+          : FADE_MASTER_IMPORTER.parseProductSummary(inv.rincianProduk || inv.rincian_produk || inv.productName || '');
         var productsHtml = productItems.length ? productItems.map(function (item) {
           var productType = item.status || 'Terjual';
           var isFree = productType.toLowerCase().indexOf('gratis') >= 0;
-          return '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
-            '<div class="flex items-start justify-between gap-3"><strong class="min-w-0 text-text-primary break-words">' + esc(item.name || item.sku || 'Produk FADE') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-semibold ' + (isFree ? 'bg-status-warning/15 text-status-warning' : 'bg-surface-1 text-text-secondary') + '">' + esc(productType) + '</span></div>' +
-            '<div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">' + esc(item.unitPriceLabel || ('Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'))) + '</strong></div><div class="text-center text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + Number(item.qty || 0).toLocaleString('id-ID') + '</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">' + esc(item.subtotalLabel || ('Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID'))) + '</strong></div></div>' +
-            '</article>';
-        }).join('') : '<article class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2"><div class="flex items-start justify-between gap-3"><strong class="text-text-primary">' + esc(inv.productName || 'FADE Pods Series') + '</strong><span class="shrink-0 px-2 py-0.5 rounded-full bg-surface-1 text-text-secondary text-[10px]">Terjual</span></div><div class="grid grid-cols-3 gap-2 border-t border-border-subtle pt-2 text-[10px]"><div class="text-text-muted">Harga satuan<strong class="block mt-0.5 text-text-secondary">Rp ' + Number(inv.unitPrice || inv.unit_price_idr || (qty ? Math.round(state.revenue / qty) : 0)).toLocaleString('id-ID') + '</strong></div><div class="text-center text-text-muted">Qty<strong class="block mt-0.5 text-text-secondary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div><div class="text-text-muted">Subtotal<strong class="block mt-0.5 text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div></div></article>';
+          return '<tr class="' + (isFree ? 'bg-status-warning/5' : '') + '"><td class="px-3 py-2.5"><div class="font-medium text-text-primary">' + esc(item.name || item.sku || 'Produk FADE') + '</div><span class="mt-1 inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ' + (isFree ? 'bg-status-warning/15 text-status-warning' : 'bg-surface-1 text-text-muted') + '">' + esc(productType) + '</span></td><td class="px-3 py-2.5 text-right tabular-nums text-text-secondary">' + esc(item.unitPriceLabel || ('Rp ' + Number(item.unitPrice || 0).toLocaleString('id-ID'))) + '</td><td class="px-3 py-2.5 text-right tabular-nums text-text-secondary">' + Number(item.qty || 0).toLocaleString('id-ID') + '</td><td class="px-3 py-2.5 text-right tabular-nums font-semibold text-text-primary">' + esc(item.subtotalLabel || ('Rp ' + Number(item.subtotal || 0).toLocaleString('id-ID'))) + '</td></tr>';
+        }).join('') : '<tr><td class="px-3 py-3 text-text-primary">' + esc(inv.productName || 'FADE Pods Series') + '</td><td class="px-3 py-3 text-right tabular-nums">Rp ' + Number(inv.unitPrice || inv.unit_price_idr || (qty ? Math.round(state.revenue / qty) : 0)).toLocaleString('id-ID') + '</td><td class="px-3 py-3 text-right tabular-nums">' + qty.toLocaleString('id-ID') + '</td><td class="px-3 py-3 text-right tabular-nums font-semibold">Rp ' + state.revenue.toLocaleString('id-ID') + '</td></tr>';
         var storeKey = store.trim().toLocaleLowerCase('id-ID');
         var rewards = (FADE_STORE.getRewards ? FADE_STORE.getRewards() : []).filter(function (reward) {
           return String(reward.storeName || '').trim().toLocaleLowerCase('id-ID') === storeKey || reward.primaryInvoiceId === invoiceId || String(reward.relatedInvoiceIds || '').split(/[;,|\n]+/).map(function (id) { return id.trim(); }).indexOf(invoiceId) >= 0;
@@ -3691,25 +3742,72 @@
           '<div class="flex flex-col gap-0.5"><span class="text-text-muted">Total kuantitas pesanan</span><strong class="text-text-primary">' + qty.toLocaleString('id-ID') + ' pcs</strong></div>' +
           '<div class="sm:col-span-2 flex flex-col gap-0.5"><span class="text-text-muted">Wilayah &amp; alamat pengiriman</span><strong class="text-text-secondary">' + esc(inv.store_address || inv.address || store) + '</strong></div>' +
           (inv.logistics_note || inv.catatan_logistik ? '<div class="sm:col-span-2 flex flex-col gap-0.5 border-t border-border-subtle pt-2"><span class="text-text-muted">Catatan logistik internal</span><span class="text-text-secondary leading-relaxed">' + esc(inv.logistics_note || inv.catatan_logistik) + '</span></div>' : '') +
-          '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceProductsTitle"><div class="flex items-center justify-between gap-3"><h4 id="adminInvoiceProductsTitle" class="font-semibold text-text-primary">Rincian Produk Pesanan</h4><span class="text-[10px] text-text-muted">' + (productItems.length ? productItems.length + ' item' : qty.toLocaleString('id-ID') + ' pcs') + '</span></div><div class="flex flex-col gap-2">' + productsHtml + '</div><div class="p-3 rounded-lg bg-surface-2 border border-border-subtle flex items-center justify-between gap-3 text-[11px]"><span class="text-text-secondary">Total nilai tagihan barang</span><strong class="text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div></section>' +
+          '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceProductsTitle"><div class="flex items-center justify-between gap-3"><h4 id="adminInvoiceProductsTitle" class="font-semibold text-text-primary">Rincian Produk Pesanan</h4><span class="text-[10px] text-text-muted">' + (productItems.length ? productItems.length + ' item' : qty.toLocaleString('id-ID') + ' pcs') + '</span></div><div class="overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full min-w-[680px] text-left text-xs"><thead class="bg-surface-2 text-[10px] uppercase tracking-wider text-text-muted"><tr><th class="px-3 py-2.5">Item Produk</th><th class="px-3 py-2.5 text-right">Harga Satuan</th><th class="px-3 py-2.5 text-right">Qty</th><th class="px-3 py-2.5 text-right">Subtotal</th></tr></thead><tbody class="divide-y divide-border-subtle">' + productsHtml + '</tbody><tfoot class="border-t border-border-default bg-surface-2/50"><tr><th colspan="2" class="px-3 py-3 text-left text-text-primary">Total Nilai Tagihan Barang</th><th class="px-3 py-3 text-right tabular-nums text-text-primary">' + qty.toLocaleString('id-ID') + ' pcs</th><th class="px-3 py-3 text-right tabular-nums text-text-primary">Rp ' + state.revenue.toLocaleString('id-ID') + '</th></tr></tfoot></table></div></section>' +
           '<section class="flex flex-col gap-2" aria-labelledby="adminInvoiceRewardTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-accent">loyalty</span><h4 id="adminInvoiceRewardTitle" class="font-semibold text-text-primary">Reward Toko &amp; Cashback Favorista</h4></div><p class="text-[11px] text-text-muted">Mengikuti catatan sumber pada Client_Reward_Tracking; tidak menghitung tier baru.</p>' +
           (rewards.length ? rewards.slice(0, 12).map(function (reward) {
             var mismatch = reward.invoiceMatchCount !== '' && Number(reward.invoiceMatchCount) === 0;
-            return '<article class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-2">' +
-              '<div class="flex items-start justify-between gap-3"><div><strong class="text-text-primary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</strong><p class="text-[11px] text-text-muted">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><span class="text-right"><span class="block text-[10px] text-text-muted">Reward/cashback dari sumber</span><strong class="text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></span></div>' +
-              '<div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-2 border-t border-border-subtle"><div class="text-[10px] text-text-muted">Nilai pembelian sumber (' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + ')<strong class="block text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div class="text-[10px] text-text-muted">Qty sumber<strong class="block text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div></div>' +
-              '<span class="w-fit px-2 py-1 rounded-full bg-surface-1 border border-border-default text-[10px] font-semibold text-text-secondary">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum diisi di sumber') + '</span>' +
-              (reward.statusNote ? '<p class="text-[11px] text-text-secondary leading-relaxed">' + esc(reward.statusNote) + '</p>' : '') +
+            return '<article class="rounded-xl bg-surface-2 border border-border-subtle overflow-hidden">' +
+              '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><strong class="text-text-primary">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</strong><span class="rounded-full px-2 py-1 bg-surface-1 border border-border-subtle text-[10px] font-semibold text-text-secondary">' + esc(reward.salesStatus || reward.sourceStatus || 'Status belum diisi') + '</span></div><p class="mt-1 text-[11px] text-text-muted">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><div class="sm:text-right"><span class="block text-[10px] text-text-muted">Total reward dari sumber</span><strong class="text-lg text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+              '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border-subtle px-4 py-3"><div><span class="block text-[10px] text-text-muted">Nilai pembelian sumber · ' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + '</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Qty sumber</span><strong class="text-xs text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Rebate toko</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.storeRebate || reward.Rebate_Toko_IDR || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Insentif vaporista</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.vaporistIncentive || reward.Insentif_Vaporista_IDR || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+              (reward.statusNote ? '<p class="border-t border-border-subtle px-4 py-3 text-[11px] text-text-secondary leading-relaxed">' + esc(reward.statusNote) + '</p>' : '') +
               (mismatch ? '<p class="text-[11px] text-status-warning">ID invoice pada catatan sumber belum ditemukan di daftar invoice.</p>' : '') +
               '</article>';
           }).join('') : '<p class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Belum ada data reward toko ini. Impor workbook yang memuat sheet Client_Reward_Tracking.</p>') +
-          '</section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceDocsTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">storefront</span><h4 id="adminInvoiceDocsTitle" class="font-semibold text-text-primary">Verifikasi Gerai &amp; Dokumen Pendukung</h4></div><div class="flex flex-col gap-2">' + docsHtml + '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoicePaymentTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">payments</span><h4 id="adminInvoicePaymentTitle" class="font-semibold text-text-primary">Status &amp; Riwayat Pembayaran</h4></div>' +
+          '</section><section class="flex flex-col gap-2" aria-labelledby="adminInvoiceDocsTitle"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">storefront</span><h4 id="adminInvoiceDocsTitle" class="font-semibold text-text-primary">Verifikasi Gerai &amp; Dokumen Pendukung</h4></div><div class="flex flex-col gap-2">' + docsHtml + '</div></section><section class="flex flex-col gap-2" aria-labelledby="adminInvoicePaymentTitle"><div class="sticky top-0 z-10 -mx-1 flex items-center justify-between gap-3 rounded-t-xl border-b border-border-subtle bg-surface-1 px-1 py-2"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-text-secondary">payments</span><h4 id="adminInvoicePaymentTitle" class="font-semibold text-text-primary">Status &amp; Riwayat Pembayaran</h4></div><span class="h-2.5 w-2.5 rounded-full bg-status-warning" aria-hidden="true"></span></div>' +
           '<div class="p-3.5 rounded-lg bg-surface-2 border border-border-subtle flex flex-col gap-3"><div class="flex items-start justify-between gap-3"><span class="text-text-muted">Total nilai tagihan (gross)</span><strong class="text-lg text-text-primary tabular-nums">Rp ' + state.revenue.toLocaleString('id-ID') + '</strong></div><div class="flex items-center justify-between gap-3 text-[11px]"><span class="text-text-muted">Pembayaran diterima · ' + paidPercent + '% terealisasi</span><strong class="text-status-success tabular-nums">Rp ' + paid.toLocaleString('id-ID') + '</strong></div><div class="h-1.5 rounded-full bg-surface-1 overflow-hidden"><div class="h-full rounded-full bg-status-success" style="width:' + paidPercent + '%"></div></div><div class="border-t border-border-subtle pt-3 flex items-start justify-between gap-3"><div><span class="block text-[11px] text-status-danger">Sisa tagihan (Outstanding)</span><strong class="block mt-1 text-lg text-text-primary tabular-nums">Rp ' + state.sisa.toLocaleString('id-ID') + '</strong><span class="block mt-1 text-[10px] text-text-muted">Batas waktu pelunasan: ' + esc(formatShortIdDate(dueDate)) + '</span></div><span class="px-2 py-1 rounded-full bg-surface-1 border border-border-default text-[10px] font-semibold text-text-secondary">' + esc(state.status) + '</span></div></div>' +
           '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><div class="flex justify-between gap-3 text-[11px]"><strong class="text-text-primary">Data Pembayaran pada Master</strong><span class="text-text-muted">' + (paid > 0 ? 'Tercatat' : 'Belum tercatat') + '</span></div>' + (paid > 0 ? '<p class="mt-1 text-[10px] text-text-muted">Total pembayaran tercatat Rp ' + paid.toLocaleString('id-ID') + ' · tanggal terakhir ' + esc(formatShortIdDate(inv.lastPaymentDate || inv.last_payment_date || '-')) + '. Rincian nominal per transaksi tidak tersedia di Master Excel.</p>' : '<p class="mt-1 text-[10px] text-text-muted">Master Excel tidak memuat detail transaksi pembayaran per invoice.</p>') + '</div></section>';
+        if (renderOnly) return;
         drawerBackdrop.classList.remove('hidden');
         drawer.classList.remove('hidden');
         setTimeout(function () { drawer.classList.remove('translate-x-full'); }, 10);
         setTimeout(function () { (kpiDrawerReturnState ? drawerBackBtn : drawerCloseBtn).focus(); }, 20);
+      }
+
+      function openInvoiceFullPage(invoiceId, returnHash) {
+        var accessibleInvoices = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, 'all');
+        var invoice = accessibleInvoices.find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
+        if (!invoice) {
+          showToast('Invoice tidak ditemukan atau berada di luar cakupan akses akun.', 'error');
+          return;
+        }
+        detailReturnHash = returnHash || '#invoices';
+        window.location.hash = '#invoice-' + encodeURIComponent(invoiceId);
+      }
+
+      function renderAdminInvoiceDetail(invoiceId) {
+        var accessibleInvoices = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, 'all');
+        var invoice = accessibleInvoices.find(function (item) { return (item.id || item.invoice_id) === invoiceId; });
+        if (!invoice) {
+          showToast('Invoice tidak ditemukan atau berada di luar cakupan akses akun.', 'error');
+          window.location.hash = '#invoices';
+          return;
+        }
+        openInvoiceRewardDrawer(invoiceId, true);
+        var mounts = {
+          adminInvoiceDetailInfoMount: 'adminInvoiceInfoTitle',
+          adminInvoiceDetailProductsMount: 'adminInvoiceProductsTitle',
+          adminInvoiceDetailRewardMount: 'adminInvoiceRewardTitle',
+          adminInvoiceDetailDocsMount: 'adminInvoiceDocsTitle',
+          adminInvoiceDetailPaymentMount: 'adminInvoicePaymentTitle'
+        };
+        Object.keys(mounts).forEach(function (mountId) {
+          var mount = document.getElementById(mountId);
+          if (!mount) return;
+          mount.innerHTML = '';
+          var section = drawerContent.querySelector('[aria-labelledby="' + mounts[mountId] + '"]');
+          if (!section) return;
+          section.classList.add('rounded-xl', 'border', 'border-border-subtle', 'bg-surface-1', 'p-4', 'sm:p-5', 'shadow-sm');
+          if (mountId === 'adminInvoiceDetailPaymentMount') section.classList.add('flex', 'flex-col', 'gap-3');
+          else section.classList.add('flex', 'flex-col', 'gap-3');
+          mount.appendChild(section);
+        });
+        var state = FADE_ENGINE.evaluateInvoiceState(invoice, '2026-11-22');
+        var currentId = invoice.id || invoice.invoice_id || invoiceId;
+        document.getElementById('adminInvoiceDetailId').textContent = currentId;
+        document.getElementById('adminInvoiceDetailStore').textContent = invoice.store_name || invoice.storeName || 'Toko tidak diketahui';
+        document.getElementById('adminInvoiceDetailStatus').textContent = state.status;
+        document.getElementById('adminInvoiceDetailAccess').textContent = currentId + ' · ' + (session.role === 'admin' ? 'Akses Admin' : (session.role === 'sales_manager' ? 'Akses Sales Manager · baca saja' : 'Akses Sales · baca saja'));
+        document.getElementById('adminInvoiceDetailBackLabel').textContent = detailReturnHash === '#store-search' ? 'Kembali ke Pencarian Toko' : 'Kembali ke Invoice & Pembayaran';
       }
 
       function openDrawer(kpiType, focusBack) {
@@ -3970,6 +4068,7 @@
       function closeDrawer() {
         if (drawer.classList.contains('hidden')) return;
         kpiDrawerReturnState = null;
+        storeSearchInvoiceReturn = null;
         drawerBackBtn.setAttribute('aria-label', 'Kembali ke halaman');
         drawer.classList.add('translate-x-full');
         setTimeout(function () {
@@ -4028,9 +4127,17 @@
         });
       }
 
-      drawerBackBtn.addEventListener('click', function () { if (kpiDrawerReturnState) returnToKpiDrawer(); else closeDrawer(); });
+      drawerBackBtn.addEventListener('click', function () {
+        if (kpiDrawerReturnState) returnToKpiDrawer();
+        else if (storeSearchInvoiceReturn) {
+          var returnToStore = storeSearchInvoiceReturn;
+          closeDrawer();
+          setTimeout(function () { renderStoreSearch(returnToStore.storeName, returnToStore.storeId, true); }, 210);
+        } else closeDrawer();
+      });
       document.getElementById('kpiStoreDirectoryBtn').addEventListener('click', function () { window.location.hash = '#store-search'; });
       document.getElementById('storeSearchDrawerBack').addEventListener('click', closeStoreSearchDrawer);
+      document.getElementById('adminInvoiceDetailBack').addEventListener('click', function () { window.location.hash = detailReturnHash || '#invoices'; });
       document.getElementById('storeSearchDrawerClose').addEventListener('click', closeStoreSearchDrawer);
       document.getElementById('storeSearchDrawerBackdrop').addEventListener('click', closeStoreSearchDrawer);
       document.addEventListener('keydown', function (event) {
