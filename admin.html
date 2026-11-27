@@ -4007,21 +4007,26 @@
               var invStore2 = inv.store_name || inv.storeName || '-';
               var invNum2 = inv.invoice_id || inv.id || '-';
               var invDate2 = inv.invoice_date || inv.date || '-';
+              var paymentDate2 = inv.last_payment_date || inv.lastPaymentDate || '';
               card.dataset.invoiceId = invNum2;
               var qtyValue = Number(inv.qty || 0);
               var paidValue = Number(inv.paid_total_idr != null ? inv.paid_total_idr : (inv.paidTotal || 0));
               var contribution = kpiType === 'qty' || kpiType === 'achievement'
                 ? qtyValue.toLocaleString('id-ID') + ' pcs'
                 : (kpiType === 'pembayaran' ? 'Total tercatat Rp ' + paidValue.toLocaleString('id-ID') : 'Rp ' + st.revenue.toLocaleString('id-ID'));
+              var invoiceDateDetails = kpiType === 'pembayaran'
+                ? '<div class="grid grid-cols-2 gap-2 text-[10px] text-text-muted"><div><span class="block">Tanggal terbit</span><strong class="text-text-secondary">' + esc(invDate2) + '</strong></div><div><span class="block">Tanggal bayar</span><strong class="text-text-secondary">' + esc(formatPaymentDate(paymentDate2)) + '</strong></div></div>'
+                : '<div class="flex items-center justify-between gap-3 text-text-muted text-[11px]"><span class="min-w-0 truncate">' + esc(invNum2) + ' · ' + esc(invDate2) + '</span><span>' + esc(st.status) + '</span></div>';
               card.innerHTML =
                 '<div class="flex items-center justify-between gap-3 font-semibold text-text-primary">' +
                   '<span class="min-w-0 truncate">' + esc(invStore2) + ' · ' + qtyValue.toLocaleString('id-ID') + ' pcs</span>' +
                   '<span class="shrink-0 tabular-nums">' + contribution + '</span>' +
                 '</div>' +
                 '<div class="flex items-center justify-between gap-3 text-text-muted text-[11px]">' +
-                  '<span>' + esc(invNum2) + ' · ' + esc(invDate2) + '</span>' +
+                  '<span class="min-w-0 truncate">' + esc(invNum2) + '</span>' +
                   '<span>' + esc(st.status) + '</span>' +
                 '</div>' +
+                invoiceDateDetails +
                 '<span class="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-accent">Detail invoice <span aria-hidden="true">→</span></span>';
               card.addEventListener('click', function () { openKpiInvoiceDetail(invNum2, kpiType); });
               card.addEventListener('keydown', function (event) {
@@ -4060,14 +4065,19 @@
           var date = invoice.invoice_date || invoice.date || '';
           var state = FADE_ENGINE.evaluateInvoiceState(invoice, pContext.asOf);
           if (activeCompMetric === 'outstanding') return date <= pContext.asOf && state.sisa > 0;
-          if (date < pContext.dari || date > pContext.sampai) return false;
           if (activeCompMetric === 'pembayaran') {
-            var paid = Number(invoice.paid_total_idr != null ? invoice.paid_total_idr : (invoice.paidTotal || 0));
+            var paid = Number(invoice.paid_total_idr != null ? invoice.paid_total_idr : (invoice.paidTotal != null ? invoice.paidTotal : (invoice.terbayar || 0)));
             var lastPayment = invoice.last_payment_date || invoice.lastPaymentDate || '';
-            return paid > 0 && lastPayment && lastPayment <= pContext.asOf;
+            var paymentEnd = pContext.sampai < pContext.asOf ? pContext.sampai : pContext.asOf;
+            return paid > 0 && lastPayment >= pContext.dari && lastPayment <= paymentEnd;
           }
+          if (date < pContext.dari || date > pContext.sampai) return false;
           return true;
-        }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
+        }).sort(function (a, b) {
+          var dateA = activeCompMetric === 'pembayaran' ? (a.last_payment_date || a.lastPaymentDate || '') : (a.invoice_date || a.date || '');
+          var dateB = activeCompMetric === 'pembayaran' ? (b.last_payment_date || b.lastPaymentDate || '') : (b.invoice_date || b.date || '');
+          return String(dateB).localeCompare(String(dateA));
+        });
         var metric = activeCompMetric === 'qty' ? summary.totalQty : activeCompMetric === 'revenue' ? summary.revenue : activeCompMetric === 'pembayaran' ? summary.pembayaranMasuk : summary.totalOutstanding;
         var metricLabel = activeCompMetric === 'qty' ? 'Qty' : activeCompMetric === 'revenue' ? 'Revenue' : activeCompMetric === 'pembayaran' ? 'Pembayaran' : 'Outstanding';
         var formatMoney = function (value) { return 'Rp ' + Number(value || 0).toLocaleString('id-ID'); };
@@ -4076,8 +4086,16 @@
         var invoiceCards = invoices.length ? invoices.map(function (invoice) {
           var id = invoice.invoice_id || invoice.id || '';
           var state = FADE_ENGINE.evaluateInvoiceState(invoice, pContext.asOf);
+          var invoiceDate = invoice.invoice_date || invoice.date || '-';
+          var lastPaymentDate = invoice.last_payment_date || invoice.lastPaymentDate || '';
           var contribution = activeCompMetric === 'qty' ? Number(invoice.qty || 0).toLocaleString('id-ID') + ' pcs' : activeCompMetric === 'pembayaran' ? formatMoney(invoice.paid_total_idr != null ? invoice.paid_total_idr : invoice.paidTotal) : activeCompMetric === 'outstanding' ? formatMoney(state.sisa) : formatMoney(state.revenue);
-          return '<button type="button" data-sales-invoice="' + esc(id) + '" class="w-full p-3 rounded-lg bg-surface-2 border border-border-subtle text-left hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors"><span class="flex items-center justify-between gap-3"><strong class="min-w-0 truncate text-text-primary">' + esc(invoice.store_name || invoice.storeName || 'Toko') + '</strong><strong class="shrink-0 text-text-primary tabular-nums">' + contribution + '</strong></span><span class="mt-1 flex items-center justify-between gap-3 text-[11px] text-text-muted"><span class="truncate">' + esc(id) + ' · ' + esc(invoice.invoice_date || invoice.date || '-') + '</span><span>' + esc(state.status) + '</span></span><span class="mt-1 block text-[10px] font-semibold text-accent">Detail invoice →</span></button>';
+          var dateSummary = activeCompMetric === 'pembayaran'
+            ? '<span class="grid grid-cols-2 gap-2 text-[10px] text-text-muted"><span><span class="block">Tanggal bayar</span><strong class="text-text-secondary">' + esc(formatPaymentDate(lastPaymentDate)) + '</strong></span><span><span class="block">Tanggal terbit</span><strong class="text-text-secondary">' + esc(invoiceDate) + '</strong></span></span>'
+            : invoiceDate;
+          var invoiceMeta = activeCompMetric === 'pembayaran'
+            ? '<span class="mt-1 flex items-center justify-between gap-3 text-[11px] text-text-muted"><span class="truncate">' + esc(id) + '</span><span>' + esc(state.status) + '</span></span>' + dateSummary
+            : '<span class="mt-1 flex items-center justify-between gap-3 text-[11px] text-text-muted"><span class="truncate">' + esc(id) + ' · ' + esc(dateSummary) + '</span><span>' + esc(state.status) + '</span></span>';
+          return '<button type="button" data-sales-invoice="' + esc(id) + '" class="w-full p-3 rounded-lg bg-surface-2 border border-border-subtle text-left hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent transition-colors"><span class="flex items-center justify-between gap-3"><strong class="min-w-0 truncate text-text-primary">' + esc(invoice.store_name || invoice.storeName || 'Toko') + '</strong><strong class="shrink-0 text-text-primary tabular-nums">' + contribution + '</strong></span>' + invoiceMeta + '<span class="mt-1 block text-[10px] font-semibold text-accent">Detail invoice →</span></button>';
         }).join('') : '<p class="p-4 rounded-lg bg-surface-2 border border-border-subtle text-text-muted">Tidak ada invoice untuk Sales ini pada periode yang dipilih.</p>';
         drawerContent.innerHTML = '<section class="grid grid-cols-2 gap-2" aria-label="Ringkasan performa Sales"><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">' + metricLabel + '</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (activeCompMetric === 'qty' ? Number(metric || 0).toLocaleString('id-ID') + ' pcs' : formatMoney(metric)) + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Invoice</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + invoices.length.toLocaleString('id-ID') + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Target</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (summary.target ? Number(summary.target).toLocaleString('id-ID') + ' pcs' : '—') + '</strong></article><article class="p-3 rounded-lg bg-surface-2 border border-border-subtle"><span class="text-[10px] text-text-muted">Achievement</span><strong class="block mt-1 text-sm text-text-primary tabular-nums">' + (summary.achievement == null ? '—' : summary.achievement.toFixed(1) + '%') + '</strong></article></section><section class="flex flex-col gap-2"><h4 class="font-semibold text-text-primary">Invoice pembentuk metrik</h4>' + invoiceCards + '</section>';
         drawerBackdrop.classList.remove('hidden');
