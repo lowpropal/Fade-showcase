@@ -636,7 +636,7 @@ html.light .chart-date-panel input[type="date"] { color-scheme: light; }
 
   .chart-interactive-container {
     display: flex;
-    height: auto;
+    height: auto !important;
     flex-direction: column;
   }
 
