@@ -1493,6 +1493,7 @@
           role: 'sales',
           userSales: session.salesName,
           selectedSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           mode: currentMode,
           periode: currentPeriod,
           snapshot: '2026-11-22',
@@ -1964,6 +1965,7 @@
           role: 'sales',
           userSales: session.salesName,
           selectedSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           mode: currentMode,
           periode: currentPeriod,
           snapshot: '2026-11-22',
@@ -2552,6 +2554,7 @@
         var rows = getScopedInvoices(true, '', 'all');
         var summary = FADE_ENGINE.calculateSummary(FADE_STORE.getInvoices(), FADE_STORE.getTargets(), {
           role: 'sales', userSales: session.salesName, selectedSales: session.salesName,
+          salesMonthlyMetrics: FADE_STORE.getSalesMonthlyMetrics(),
           mode: currentMode, periode: currentPeriod, snapshot: '2026-11-22', startDate: customStartDate, endDate: customEndDate
         });
         var stamp = new Date().toISOString().slice(0, 10);
