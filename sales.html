@@ -590,6 +590,7 @@
                   <th class="py-3 px-3.5 text-[11px]">INVOICE</th>
                   <th class="py-3 px-3.5 text-[11px]">TOKO</th>
                   <th class="py-3 px-3.5 text-[11px]">TANGGAL</th>
+                  <th class="py-3 px-3.5 text-[11px]">TANGGAL BAYAR</th>
                   <th class="py-3 px-3.5 text-[11px] text-right">QTY (PCS)</th>
                   <th class="py-3 px-3.5 text-[11px] text-right">NILAI</th>
                   <th class="py-3 px-3.5 text-[11px] text-center">STATUS</th>
@@ -1930,7 +1931,7 @@
         document.getElementById('dashInvSub').textContent = 'Menampilkan ' + Math.min(6, rows.length) + ' dari ' + rows.length + ' invoice milik ' + session.salesName + ' · Klik baris untuk Detail Invoice';
 
         if (rows.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-text-muted">Tidak ada invoice pada periode atau filter ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-text-muted">Tidak ada invoice pada periode atau filter ini.</td></tr>';
           if (mList) mList.innerHTML = '<div class="py-6 text-center text-xs text-text-muted">Tidak ada invoice pada periode atau filter ini.</div>';
           return;
         }
@@ -1941,6 +1942,7 @@
           var invId = inv.invoice_id || inv.id || '-';
           var store = inv.store_name || inv.storeName || '-';
           var dStr = inv.invoice_date || inv.date;
+          var paymentDate = inv.last_payment_date || inv.lastPaymentDate;
           var badge = getStatusBadgeHtml(evalState, paid);
 
           var tr = document.createElement('tr');
@@ -1956,6 +1958,7 @@
             '<td class="py-3 px-3.5"><span class="font-mono font-semibold text-text-primary text-[11px]">' + esc(invId) + '</span></td>' +
             '<td class="py-3 px-3.5 text-xs text-text-primary font-medium max-w-[180px] truncate" title="' + esc(store) + '">' + esc(store) + '</td>' +
             '<td class="py-3 px-3.5 text-xs text-text-secondary">' + formatShortIdDate(dStr) + '</td>' +
+            '<td class="py-3 px-3.5 text-xs text-text-secondary">' + esc(formatPaymentDate(paymentDate)) + '</td>' +
             '<td class="py-3 px-3.5 text-right tabular-nums text-xs font-medium">' + (inv.qty || 0).toLocaleString('id-ID') + '</td>' +
             '<td class="py-3 px-3.5 text-right font-semibold text-text-primary tabular-nums text-xs">Rp ' + evalState.revenue.toLocaleString('id-ID') + '</td>' +
             '<td class="py-3 px-3.5 text-center">' + badge + '</td>';
@@ -1973,7 +1976,7 @@
             });
             card.innerHTML =
               '<div class="flex items-start justify-between gap-2">' +
-                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate" title="' + esc(store) + '">' + esc(store) + '</div><div class="text-[11px] text-text-muted font-mono">' + esc(invId) + ' · ' + formatShortIdDate(dStr) + '</div></div>' +
+                '<div class="min-w-0"><div class="font-semibold text-sm text-text-primary truncate" title="' + esc(store) + '">' + esc(store) + '</div><div class="text-[11px] text-text-muted font-mono">' + esc(invId) + ' · ' + formatShortIdDate(dStr) + '</div><div class="text-[11px] text-text-muted">Tanggal bayar: ' + esc(formatPaymentDate(paymentDate)) + '</div></div>' +
                 '<div class="shrink-0">' + badge + '</div>' +
               '</div>' +
               '<div class="grid grid-cols-3 gap-2 pt-2 border-t border-border-subtle text-[11px]">' +
