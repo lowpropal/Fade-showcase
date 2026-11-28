@@ -232,8 +232,14 @@ tbody.divide-y > :not([hidden]) ~ :not([hidden]) {
 .dark #dateFilterPopover input[type="date"] { color-scheme: dark; }
 html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 
-/* Desktop-only interaction cues for dashboard and invoice navigation. */
+/* Desktop-only feedback for table rows and dashboard navigation. */
 @media (min-width: 80rem) and (hover: hover) and (pointer: fine) {
+  body :is(.shell-main-content, #storeDetailDrawer, #storeSearchDrawer) table tbody tr:not(.no-table-hover):hover > td {
+    background-color: color-mix(in srgb, var(--bg-surface-2) 94%, var(--color-accent));
+    box-shadow: var(--shadow-interactive-table-row);
+    transition: background-color 160ms ease, box-shadow 160ms ease;
+  }
+
   .kpi-card {
     transition: border-color 160ms ease;
   }
