@@ -198,7 +198,7 @@
             <div id="dateFilterWrapper" class="relative col-span-3 w-full lg:w-auto shrink-0">
               <button id="dateFilterBtn" type="button" class="inline-flex w-full lg:w-auto min-h-[48px] lg:min-h-0 lg:h-9 items-center gap-2 lg:gap-1.5 px-3.5 lg:px-3 rounded-xl lg:rounded-lg bg-surface-1 border border-border-subtle text-text-primary hover:bg-surface-hover text-xs font-medium transition-colors shadow-sm shrink-0">
                 <span class="material-symbols-outlined text-[16px] text-accent">calendar_today</span>
-                <span id="filterDateLabel" class="min-w-0 flex-1 lg:flex-initial whitespace-nowrap text-left">01 Nov – 22 Nov 2026</span>
+                <span id="filterDateLabel" class="min-w-0 flex-1 lg:flex-initial whitespace-nowrap text-left">01 Nov – 30 Nov 2026</span>
                 <span class="material-symbols-outlined text-[16px] text-text-muted">expand_more</span>
               </button>
 
@@ -211,13 +211,7 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <button type="button" data-preset="bulan" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
-                    <span>Bulan Ini (Nov 2026)</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">01–22 Nov</span>
-                  </button>
-                  <button type="button" data-preset="7d" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
-                    <span>7 Hari Terakhir</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">16–22 Nov</span>
-                  </button>
-                  <button type="button" data-preset="30d" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
-                    <span>30 Hari Terakhir</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">24 Okt–22 Nov</span>
+                    <span>Bulan Ini (Nov 2026)</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">01–30 Nov</span>
                   </button>
                   <button type="button" data-preset="ytd" class="date-preset-btn w-full min-h-[42px] text-left px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between gap-4">
                     <span>YTD 2026</span><span class="text-[11px] text-text-muted whitespace-nowrap shrink-0">01 Jan–22 Nov</span>
@@ -267,10 +261,9 @@
           </div>
 
           <!-- Card 2: QTY Penjualan (Paired with Revenue) -->
-          <div data-kpi="qty" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle transition-colors cursor-pointer shadow-sm min-w-0">
+          <div data-kpi="qty" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle transition-colors shadow-sm min-w-0">
             <div class="flex items-center justify-between gap-1">
               <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">QTY Penjualan</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-[11px] sm:text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
             <div class="mt-2 flex items-baseline gap-2 min-w-0">
               <span id="kpiQtyVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">-- pcs</span>
@@ -281,10 +274,9 @@
           </div>
 
           <!-- Card 3: Revenue (Paired with QTY) -->
-          <div data-kpi="revenue" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle transition-colors cursor-pointer shadow-sm min-w-0">
+          <div data-kpi="revenue" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle transition-colors shadow-sm min-w-0">
             <div class="flex items-center justify-between gap-1">
               <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Revenue</span>
-              <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
             <div class="mt-2 flex items-baseline gap-2 min-w-0">
               <span id="kpiRevenueVal" class="text-[15px] sm:text-2xl lg:text-3xl font-bold text-text-primary tabular-nums tracking-tight whitespace-nowrap">Rp --</span>
@@ -297,7 +289,7 @@
           <!-- Card 4: Pembayaran Diterima (Paired with Outstanding) -->
           <div data-kpi="pembayaran" class="col-span-1 kpi-card group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl bg-surface-1 border border-border-subtle transition-colors cursor-pointer shadow-sm min-w-0">
             <div class="flex items-center justify-between gap-1">
-              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Pembayaran</span>
+              <span class="text-[11px] sm:text-xs font-semibold text-text-muted uppercase sm:tracking-wider whitespace-nowrap">Pembayaran Masuk</span>
               <span class="text-text-muted group-hover:text-accent transition-colors font-medium text-xs shrink-0"><span class="hidden sm:inline">↗ Detail</span><span class="sm:hidden text-xs">↗</span></span>
             </div>
             <div class="mt-2 flex items-baseline gap-2 min-w-0">
@@ -691,7 +683,7 @@
             </div>
             <span id="drillDatePill" class="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-secondary">
               <span class="material-symbols-outlined text-[15px] text-accent">calendar_today</span>
-              <span>01 Nov – 22 Nov 2026</span>
+              <span>01 Nov – 30 Nov 2026</span>
             </span>
           </div>
 
@@ -784,12 +776,10 @@
 
                 <select id="invoiceStatusFilter" aria-label="Filter status tagihan" class="invoice-filter-status min-h-[44px] flex-1 sm:flex-initial px-3 rounded-lg bg-surface-2 border border-border-default text-xs text-text-primary focus:outline-none focus:border-accent cursor-pointer">
                   <option value="all">Semua Status</option>
-                  <option value="OUTSTANDING">Semua Outstanding</option>
-                  <option value="TEMPO">Piutang Tempo Berjalan</option>
-                  <option value="PAID">Lunas</option>
+                  <option value="OVERDUE">Belum Lunas (Terlambat)</option>
                   <option value="PARTIAL">Sebagian</option>
+                  <option value="PAID">Sudah Lunas</option>
                   <option value="UNPAID">Belum Jatuh Tempo</option>
-                  <option value="OVERDUE">Terlambat (Bisa Ditagih)</option>
                 </select>
               </div>
 
@@ -853,7 +843,6 @@
         <label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari ID, nama toko, atau Sales<input id="storeSearchInput" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="ID toko/invoice, nama toko, Sales" autocomplete="off"></label>
         <div class="store-search-filters grid grid-cols-2 xl:grid-cols-5 gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3">
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sales<select id="storeSearchSalesFilter" aria-label="Cakupan Sales" disabled class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-muted"><option value="self">Sales saya</option></select></label>
-          <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Status invoice<select id="storeSearchStatusFilter" class="w-full min-w-0 min-h-[44px] px-2 sm:px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Status</option><option value="PAID">Lunas</option><option value="OUTSTANDING">Outstanding</option><option value="OVERDUE">Terlambat</option></select></label>
           <label class="col-span-2 xl:col-span-1 min-h-[44px] flex items-center gap-2 px-3 rounded-lg border border-border-subtle bg-surface-2 text-xs text-text-secondary"><input id="storeSearchFollowDashboard" type="checkbox" class="accent-[var(--accent)]" checked>Ikuti tanggal dashboard</label>
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Dari tanggal<input id="storeSearchStartDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
           <label class="min-w-0 flex flex-col gap-1 text-[10px] text-text-muted">Sampai tanggal<input id="storeSearchEndDate" type="date" class="w-full min-w-0 min-h-[44px] px-2 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary disabled:opacity-50" disabled></label>
@@ -862,7 +851,7 @@
         <p id="storeSearchSummary" class="text-xs text-text-muted" aria-live="polite"></p>
         <div class="hidden xl:block overflow-x-auto rounded-lg border border-border-subtle">
           <table class="w-full min-w-[760px] text-left text-xs">
-            <thead class="bg-surface-2 text-[10px] uppercase tracking-wide text-text-muted"><tr><th class="px-4 py-3">Nama toko</th><th class="px-4 py-3">ID toko</th><th class="px-4 py-3 text-right">Invoice</th><th class="px-4 py-3 text-right">Qty</th><th class="px-4 py-3 text-right">Total pembelian</th><th class="px-4 py-3">Invoice terakhir</th><th class="px-4 py-3 text-right">Aksi</th></tr></thead>
+            <thead class="bg-surface-2 text-[10px] uppercase tracking-wide text-text-muted"><tr><th class="px-4 py-3">Nama toko</th><th class="px-4 py-3">ID toko</th><th class="px-4 py-3">Nama Sales</th><th class="px-4 py-3 text-right">Total Invoicing</th><th class="px-4 py-3 text-right">Qty</th><th class="px-4 py-3 text-right">Total pembelian</th><th class="px-4 py-3">Invoice terakhir</th><th class="px-4 py-3 text-right">Aksi</th></tr></thead>
             <tbody id="storeSearchTableBody" class="divide-y divide-border-subtle/50"></tbody>
           </table>
         </div>
@@ -873,7 +862,7 @@
         <div><h2 class="text-base font-bold text-text-primary">Consignment</h2><p id="consignmentSummary" class="mt-1 text-xs text-text-muted">Saldo Consignment per toko dan SKU.</p></div>
         <p class="rounded-lg border border-border-subtle bg-surface-2 px-3 py-2 text-[11px] text-text-secondary">Snapshot baca-saja dari Master Consignment FINAL. Data hanya berisi toko yang termasuk cakupan Sales.</p>
         <div id="consignmentKpis" class="grid grid-cols-2 xl:grid-cols-4 gap-2"></div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari toko, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Nama toko, SKU, produk"></label><label class="flex flex-col gap-1 text-[10px] text-text-muted">Toko<select id="consignmentStoreFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Toko</option></select></label></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label class="flex flex-col gap-1 text-[10px] text-text-muted">Cari toko, SKU, atau produk<input id="consignmentSearch" type="search" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary" placeholder="Nama toko, SKU, produk"></label><label class="flex flex-col gap-1 text-[10px] text-text-muted">Nama Sales<select id="consignmentSalesFilter" class="min-h-[44px] px-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-primary"><option value="all">Semua Sales</option></select></label></div>
         <div class="hidden md:block overflow-x-auto rounded-lg border border-border-subtle"><table class="w-full min-w-[740px] text-left text-xs"><thead class="bg-surface-2 text-text-muted uppercase tracking-wide"><tr><th class="p-3">Nama toko</th><th class="p-3 text-right">Qty titip</th><th class="p-3 text-right">Terbayar</th><th class="p-3 text-right">Retur</th><th class="p-3 text-right">Qty sisa</th><th class="p-3">Status</th><th class="p-3 text-right">Detail</th></tr></thead><tbody id="consignmentTableBody" class="divide-y divide-border-subtle/50"></tbody></table></div><div id="consignmentMobileList" class="flex flex-col gap-2 md:hidden"></div>
       </section>
 
@@ -1385,13 +1374,12 @@
         var badge = '';
         if (evalState.status === 'Lunas') {
           badge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-success/15 text-status-success">Lunas</span>';
+        } else if (evalState.isPartial) {
+          badge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-warning/15 text-status-warning">Sebagian' + (evalState.hariTerlambat ? ' · ' + evalState.hariTerlambat + 'h terlambat' : '') + '</span>';
         } else if (evalState.status === 'Terlambat Bayar') {
           badge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-status-danger/15 text-status-danger">Terlambat' + (evalState.hariTerlambat ? ' (' + evalState.hariTerlambat + 'h)' : '') + '</span>';
         } else {
           badge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-2 text-text-secondary border border-border-default">Belum Jatuh Tempo</span>';
-        }
-        if (evalState.isPartial) {
-          badge += ' <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-status-warning/15 text-status-warning ml-1">Sebagian</span>';
         }
         return badge;
       }
@@ -1681,7 +1669,7 @@
             var searchInput = document.getElementById('invoiceSearchInput');
             if (searchInput) searchInput.value = item.invoiceId;
             var statusSel = document.getElementById('invoiceStatusFilter');
-            if (statusSel) statusSel.value = item.type === 'danger' ? 'OVERDUE' : 'OUTSTANDING';
+            if (statusSel) statusSel.value = item.type === 'danger' ? 'OVERDUE' : 'PARTIAL';
             invoicePage = 1;
             renderInvoicesTable();
           });
@@ -1706,12 +1694,10 @@
           var out = evalState.sisa;
           var paid = Number(inv.paidTotal != null ? inv.paidTotal : (inv.paid_total_idr || 0));
 
-          if (statusVal === 'OUTSTANDING' && out <= 0) return false;
           if (statusVal === 'PAID' && out > 0) return false;
-          if (statusVal === 'PARTIAL' && !(out > 0 && paid > 0)) return false;
-          if (statusVal === 'TEMPO' && !(out > 0 && !evalState.bisaDitagihkan)) return false;
+          if (statusVal === 'PARTIAL' && !evalState.isPartial) return false;
           if (statusVal === 'UNPAID' && !(out > 0 && evalState.status === 'Belum Jatuh Tempo')) return false;
-          if (statusVal === 'OVERDUE' && evalState.status !== 'Terlambat Bayar') return false;
+          if (statusVal === 'OVERDUE' && !(evalState.status === 'Terlambat Bayar' && !evalState.isPartial)) return false;
 
           if (search) {
             var id = (inv.id || inv.invoice_id || '').toLowerCase();
@@ -1766,8 +1752,9 @@
         if (status === 'all') return true;
         var state = FADE_ENGINE.evaluateInvoiceState(invoice, asOf);
         if (status === 'PAID') return state.sisa <= 0;
-        if (status === 'OUTSTANDING') return state.sisa > 0;
-        if (status === 'OVERDUE') return state.status === 'Terlambat Bayar';
+        if (status === 'PARTIAL') return state.isPartial;
+        if (status === 'UNPAID') return state.sisa > 0 && state.status === 'Belum Jatuh Tempo';
+        if (status === 'OVERDUE') return state.status === 'Terlambat Bayar' && !state.isPartial;
         return true;
       }
 
@@ -1776,12 +1763,11 @@
         if (selectedName) selectedStoreSearchName = selectedName;
         else selectedName = selectedStoreSearchName;
         var invoices = FADE_ENGINE.filterByScope(FADE_STORE.getInvoices(), session.role, session.salesName, 'all');
-        var statusFilter = document.getElementById('storeSearchStatusFilter');
         var range = getIndependentPageRange('storeSearch');
-        var selectedStatus = statusFilter ? statusFilter.value : 'all';
+        var historicalInvoices = invoices.slice();
         invoices = invoices.filter(function (inv) {
           var date = inv.invoice_date || inv.date || '';
-          return date >= range.start && date <= range.end && pageInvoiceStatusMatches(inv, selectedStatus, range.asOf);
+          return date >= range.start && date <= range.end;
         });
         function storeIdentity(invoice) {
           var name = String(invoice.store_name || invoice.storeName || '').trim();
@@ -1811,15 +1797,17 @@
           var total = storeInvoices.reduce(function (sum, inv) { return sum + Number(inv.invoiceTotal || inv.invoice_total_idr || 0); }, 0);
           var qty = storeInvoices.reduce(function (sum, inv) { return sum + Number(inv.qty || 0); }, 0);
           var latest = storeInvoices.map(function (inv) { return inv.invoice_date || inv.date || ''; }).sort().reverse()[0] || '—';
+          var latestInvoice = storeInvoices.slice().sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); })[0];
+          var salesName = latestInvoice ? FADE_ENGINE.getCurrentSalesName(latestInvoice) : '—';
           var selectButton = function (classes) { return '<button type="button" aria-haspopup="dialog" aria-controls="storeSearchDrawer" data-open-store="' + esc(store.id) + '" data-store-name="' + esc(store.name) + '" class="' + classes + '">Detail<span class="sr-only"> ' + esc(store.name) + '</span></button>'; };
-          return { store: store, invoices: storeInvoices, total: total, qty: qty, latest: latest, selectButton: selectButton };
+          return { store: store, invoices: storeInvoices, total: total, qty: qty, latest: latest, salesName: salesName, selectButton: selectButton };
         });
         summary.textContent = summaries.length.toLocaleString('id-ID') + ' toko · ' + summaries.reduce(function (sum, item) { return sum + item.invoices.length; }, 0).toLocaleString('id-ID') + ' invoice';
         tableBody.innerHTML = summaries.length ? summaries.map(function (item) {
-          return '<tr class="transition-colors hover:bg-accent/5"><td class="px-4 py-3 font-semibold text-text-primary">' + esc(item.store.name) + '</td><td class="px-4 py-3 font-mono text-[11px] text-text-muted">' + esc(item.store.id || '—') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.invoices.length.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.qty.toLocaleString('id-ID') + ' pcs</td><td class="px-4 py-3 text-right tabular-nums">Rp ' + item.total.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-text-secondary">' + esc(item.latest) + '</td><td class="px-4 py-3 text-right">' + item.selectButton('min-h-10 min-w-24 rounded-lg border border-border-subtle px-3 font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</td></tr>';
-        }).join('') : '<tr><td colspan="7" class="p-6 text-center text-text-muted">Tidak ada toko yang cocok dengan filter.</td></tr>';
+          return '<tr class="transition-colors hover:bg-accent/5"><td class="px-4 py-3 font-semibold text-text-primary">' + esc(item.store.name) + '</td><td class="px-4 py-3 font-mono text-[11px] text-text-muted">' + esc(item.store.id || '—') + '</td><td class="px-4 py-3 text-text-secondary">' + esc(item.salesName || '—') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.invoices.length.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-right tabular-nums">' + item.qty.toLocaleString('id-ID') + ' pcs</td><td class="px-4 py-3 text-right tabular-nums">Rp ' + item.total.toLocaleString('id-ID') + '</td><td class="px-4 py-3 text-text-secondary">' + esc(item.latest) + '</td><td class="px-4 py-3 text-right">' + item.selectButton('min-h-10 min-w-24 rounded-lg border border-border-subtle px-3 font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</td></tr>';
+        }).join('') : '<tr><td colspan="8" class="p-6 text-center text-text-muted">Tidak ada toko yang cocok dengan filter.</td></tr>';
         list.innerHTML = summaries.length ? summaries.map(function (item) {
-          return '<article class="flex min-w-0 flex-col justify-between gap-3 rounded-lg border border-border-subtle bg-surface-2 p-3 transition-colors hover:border-accent/50"><div class="min-w-0"><h3 class="truncate text-sm font-semibold text-text-primary">' + esc(item.store.name) + '</h3><p class="mt-1 font-mono text-[10px] text-text-muted">' + esc(item.store.id || 'ID toko tidak tercatat') + '</p><div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-text-secondary"><span>' + item.invoices.length.toLocaleString('id-ID') + ' invoice</span><span>' + item.qty.toLocaleString('id-ID') + ' pcs</span><strong class="col-span-2 text-text-primary">Rp ' + item.total.toLocaleString('id-ID') + '</strong><span class="col-span-2">Terakhir: ' + esc(item.latest) + '</span></div></div>' + item.selectButton('min-h-11 w-full rounded-lg border border-border-subtle px-3 text-xs font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</article>';
+          return '<article class="flex min-w-0 flex-col justify-between gap-3 rounded-lg border border-border-subtle bg-surface-2 p-3 transition-colors hover:border-accent/50"><div class="min-w-0"><h3 class="truncate text-sm font-semibold text-text-primary">' + esc(item.store.name) + '</h3><p class="mt-1 font-mono text-[10px] text-text-muted">' + esc(item.store.id || 'ID toko tidak tercatat') + '</p><p class="text-[10px] text-text-muted">Sales: ' + esc(item.salesName || '—') + '</p><div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-text-secondary"><span>' + item.invoices.length.toLocaleString('id-ID') + ' invoice</span><span>' + item.qty.toLocaleString('id-ID') + ' pcs</span><strong class="col-span-2 text-text-primary">Rp ' + item.total.toLocaleString('id-ID') + '</strong><span class="col-span-2">Terakhir: ' + esc(item.latest) + '</span></div></div>' + item.selectButton('min-h-11 w-full rounded-lg border border-border-subtle px-3 text-xs font-semibold text-text-primary hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent') + '</article>';
         }).join('') : '<p class="rounded-lg border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted sm:col-span-2">Tidak ada toko yang cocok dengan filter. Ubah pencarian atau reset filter.</p>';
         Array.prototype.forEach.call(document.querySelectorAll('[data-open-store]'), function (button) {
           button.addEventListener('click', function () { renderStoreSearch(button.getAttribute('data-store-name'), button.getAttribute('data-open-store'), true, button); });
@@ -1832,7 +1820,7 @@
           return;
         }
         selectedStoreSearchId = selectedStore.id;
-        var selectedInvoices = invoices.filter(function (inv) { return storeIdentity(inv).key === selectedStore.key; }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
+        var selectedInvoices = historicalInvoices.filter(function (inv) { return storeIdentity(inv).key === selectedStore.key; }).sort(function (a, b) { return String(b.invoice_date || b.date || '').localeCompare(String(a.invoice_date || a.date || '')); });
         var monthly = {};
         selectedInvoices.forEach(function (inv) {
           var month = String(inv.invoice_date || inv.date || '').slice(0, 7) || 'Tidak diketahui';
@@ -1857,10 +1845,10 @@
       function renderConsignment() {
         var allRows = FADE_STORE.getConsignmentBalances ? FADE_STORE.getConsignmentBalances() : [];
         var query = String(document.getElementById('consignmentSearch').value || '').trim().toLocaleLowerCase('id-ID');
-        var select = document.getElementById('consignmentStoreFilter');
+        var select = document.getElementById('consignmentSalesFilter');
         var selected = select.value;
-        var stores = Array.from(new Set(allRows.map(function (row) { return row.storeName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
-        if (select.options.length <= 1) stores.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; select.appendChild(option); });
+        var salesNames = Array.from(new Set(allRows.map(function (row) { return row.salesName; }).filter(Boolean))).sort(function (a, b) { return a.localeCompare(b, 'id'); });
+        if (select.options.length <= 1) salesNames.forEach(function (name) { var option = document.createElement('option'); option.value = name; option.textContent = name; select.appendChild(option); });
         var grouped = new Map();
         allRows.forEach(function (row) { var key = row.clientId || row.storeName; if (!grouped.has(key)) grouped.set(key, { storeName: row.storeName, clientId: row.clientId, salesName: row.salesName, items: [], source: row }); grouped.get(key).items.push(row); });
         var groups = Array.from(grouped.values()).map(function (group) {
@@ -1876,7 +1864,7 @@
           group.temporaryStoreId = group.items.some(function (row) { return row.temporaryStoreId || /^TMP[-_]/i.test(row.clientId || ''); });
           group.matchesSearch = !query || [group.storeName, group.clientId].concat(group.items.map(function (row) { return row.sku + ' ' + row.productName; })).join(' ').toLocaleLowerCase('id-ID').includes(query);
           return group;
-        }).filter(function (group) { return group.matchesSearch && (selected === 'all' || group.storeName === selected); });
+        }).filter(function (group) { return group.matchesSearch && (selected === 'all' || group.salesName === selected); });
         var fmt = function (value) { return Number(value || 0).toLocaleString('id-ID'); };
         var kpis = document.getElementById('consignmentKpis');
         if (kpis) {
@@ -2039,7 +2027,8 @@
         if (kpiType === 'outstanding') {
           baseList = scopedAll.filter(function (i) {
             var d = i.invoice_date || i.date || '';
-            return d <= pContext.asOf && FADE_ENGINE.evaluateInvoiceState(i, pContext.asOf).sisa > 0;
+            var state = FADE_ENGINE.evaluateInvoiceState(i, pContext.asOf);
+            return d <= pContext.asOf && (state.isPartial || state.status === 'Terlambat Bayar');
           });
         } else if (kpiType === 'pembayaran') {
           baseList = scopedAll.filter(function (i) {
@@ -2315,12 +2304,11 @@
         var rewardContainer = document.getElementById('detRewardHistory');
         if (rewardContainer) {
           var invoiceIdSet = [invoiceId];
-          var storeKey = store.trim().toLocaleLowerCase('id-ID');
           var rewardRecords = (FADE_STORE.getRewards ? FADE_STORE.getRewards() : []).filter(function (reward) {
-            var rewardStore = String(reward.storeName || '').trim().toLocaleLowerCase('id-ID');
             var linked = String(reward.relatedInvoiceIds || '').split(/[;,|\n]+/).map(function (id) { return id.trim(); });
-            return rewardStore === storeKey || reward.primaryInvoiceId === invoiceId || linked.some(function (id) { return invoiceIdSet.indexOf(id) >= 0; });
+            return String(reward.primaryInvoiceId || '').trim() === invoiceId || linked.some(function (id) { return invoiceIdSet.indexOf(id) >= 0; });
           }).sort(function (a, b) { return String(b.sourceInvoiceMonth || b.programMonth || '').localeCompare(String(a.sourceInvoiceMonth || a.programMonth || ''), 'id'); });
+          var rewardInvoiceMonth = String(inv.invoice_date || inv.date || '').slice(0, 7);
           if (!rewardRecords.length) {
             rewardContainer.innerHTML = '<div class="p-3 rounded-lg bg-surface-2 border border-border-subtle text-xs text-text-muted">Belum ada riwayat reward untuk toko ini di data Master Excel yang diimpor.</div>';
           } else {
@@ -2336,7 +2324,7 @@
                 ['Insentif tambahan', reward.extraIncentive]
               ].filter(function (item) { return Number(item[1]) > 0; });
               return '<article class="rounded-xl bg-surface-2 border border-border-subtle overflow-hidden">' +
-                '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><h3 class="font-semibold text-text-primary text-sm">' + esc(reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</h3><span class="px-2 py-1 rounded-full border text-[10px] font-semibold ' + rewardStatusClasses(status) + '">' + esc(status) + '</span></div><p class="text-[11px] text-text-muted mt-1">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><div class="sm:text-right"><span class="block text-[10px] uppercase tracking-wider text-text-muted">Reward / cashback</span><strong class="text-lg text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></div></div>' +
+                '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><h3 class="font-semibold text-text-primary text-sm">' + esc(rewardInvoiceMonth || reward.programMonth || reward.sourceInvoiceMonth || 'Periode tidak dicantumkan') + '</h3><span class="px-2 py-1 rounded-full border text-[10px] font-semibold ' + rewardStatusClasses(status) + '">' + esc(status) + '</span></div><p class="text-[11px] text-text-muted mt-1">' + Number(reward.invoiceCount || 0).toLocaleString('id-ID') + ' invoice terkait · ' + esc(reward.primaryInvoiceId || reward.relatedInvoiceIds || invoiceId) + '</p></div><div class="sm:text-right"><span class="block text-[10px] uppercase tracking-wider text-text-muted">Reward / cashback</span><strong class="text-lg text-status-success tabular-nums">Rp ' + Number(reward.totalReward || 0).toLocaleString('id-ID') + '</strong></div></div>' +
                 '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border-subtle px-4 py-3"><div><span class="block text-[10px] text-text-muted">Nilai pembelian sumber · ' + esc(reward.sourceInvoiceMonth || 'bulan tidak dicantumkan') + '</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(reward.sourceInvoiceValue || 0).toLocaleString('id-ID') + '</strong></div><div><span class="block text-[10px] text-text-muted">Qty sumber</span><strong class="text-xs text-text-secondary">Device ' + Number(reward.qtyDevice || 0).toLocaleString('id-ID') + ' · Liquid ' + Number(reward.qtyLiquid || 0).toLocaleString('id-ID') + ' · Cartridge ' + Number(reward.qtyCartridge || 0).toLocaleString('id-ID') + '</strong></div>' + (components.length ? components.map(function (item) { return '<div><span class="block text-[10px] text-text-muted">' + esc(item[0]) + '</span><strong class="text-xs text-text-secondary tabular-nums">Rp ' + Number(item[1]).toLocaleString('id-ID') + '</strong></div>'; }).join('') : '') + '</div>' +
                 (reward.payoutSchedule ? '<p class="border-t border-border-subtle px-4 py-3 text-[11px] text-text-muted">Jadwal pencairan: ' + esc(reward.payoutSchedule) + '</p>' : '') +
                 (reward.statusNote ? '<p class="border-t border-border-subtle px-4 py-3 text-[11px] leading-relaxed text-text-secondary">' + esc(reward.statusNote) + '</p>' : '') + matchWarning +
@@ -2528,6 +2516,14 @@
           document.getElementById('detOutstandingHint').className = 'text-[11px] text-status-success';
           document.getElementById('detOutstandingHint').textContent = 'Seluruh tagihan pada invoice ini telah dilunasi.';
           dot.className = 'w-2.5 h-2.5 rounded-full bg-status-success';
+        } else if (st.isPartial) {
+          outBox.className = 'p-4 rounded-xl bg-status-warning/10 border border-status-warning/30 flex flex-col gap-1.5';
+          document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-warning/20 text-status-warning text-[10px] font-bold uppercase';
+          document.getElementById('detOverdueTag').textContent = 'SEBAGIAN' + (st.hariTerlambat ? ' · TERLAMBAT ' + st.hariTerlambat + ' HARI' : '');
+          document.getElementById('detOutstandingAmount').className = 'text-2xl font-bold text-status-warning tabular-nums';
+          document.getElementById('detOutstandingHint').className = 'text-[11px] text-status-warning';
+          document.getElementById('detOutstandingHint').textContent = st.hariTerlambat ? 'Jatuh tempo terlewati sejak ' + formatShortIdDate(inv.dueDate || inv.due_date) + '.' : 'Batas waktu pelunasan: ' + formatShortIdDate(inv.dueDate || inv.due_date) + '.';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-status-warning';
         } else if (st.status === 'Terlambat Bayar') {
           outBox.className = 'p-4 rounded-xl bg-status-danger/10 border border-status-danger/30 flex flex-col gap-1.5';
           document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-danger/20 text-status-danger text-[10px] font-bold uppercase';
@@ -2539,7 +2535,7 @@
         } else {
           outBox.className = 'p-4 rounded-xl bg-surface-2 border border-border-default flex flex-col gap-1.5';
           document.getElementById('detOverdueTag').className = 'px-2 py-0.5 rounded bg-status-warning/20 text-status-warning text-[10px] font-bold uppercase';
-          document.getElementById('detOverdueTag').textContent = paid > 0 ? 'SEBAGIAN' : 'BELUM JATUH TEMPO';
+          document.getElementById('detOverdueTag').textContent = 'BELUM JATUH TEMPO';
           document.getElementById('detOutstandingAmount').className = 'text-2xl font-bold text-text-primary tabular-nums';
           document.getElementById('detOutstandingHint').className = 'text-[11px] text-text-muted';
           document.getElementById('detOutstandingHint').textContent = 'Batas waktu pelunasan: ' + formatShortIdDate(inv.dueDate || inv.due_date) + '.';
@@ -2679,9 +2675,7 @@
       document.querySelectorAll('.date-preset-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var preset = btn.getAttribute('data-preset');
-          if (preset === 'bulan') { currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Nov – 22 Nov 2026'; }
-          else if (preset === '7d') { currentMode = 'custom'; customStartDate = '2026-11-16'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '16 Nov – 22 Nov 2026'; }
-          else if (preset === '30d') { currentMode = 'custom'; customStartDate = '2026-10-24'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '24 Okt – 22 Nov 2026'; }
+          if (preset === 'bulan') { currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-30'; filterDateLabel.textContent = '01 Nov – 30 Nov 2026'; }
           else if (preset === 'ytd') { currentMode = 'ytd'; customStartDate = '2026-01-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Jan – 22 Nov 2026'; }
           document.getElementById('customStartDate').value = customStartDate;
           document.getElementById('customEndDate').value = customEndDate;
@@ -2714,7 +2708,7 @@
           tabModeYTD.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg text-text-secondary hover:text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorYTD.classList.add('hidden');
           statusBadgeText.textContent = 'November 2026 · Data per 22/11/2026';
-          if (filterDateLabel) filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
+          if (filterDateLabel) filterDateLabel.textContent = '01 Nov – 30 Nov 2026';
         } else if (currentMode === 'ytd') {
           tabModeYTD.className = 'relative flex-1 lg:flex-initial min-h-[44px] lg:min-h-0 h-full px-2 lg:px-3 py-1 rounded-lg bg-surface-1 md:bg-surface-2 text-text-primary font-semibold text-xs transition-colors flex items-center justify-center gap-1';
           tabIndicatorYTD.classList.remove('hidden');
@@ -2853,7 +2847,7 @@
         } else {
           if (currentMode === 'bulan') {
             customStartDate = '2026-11-01';
-            customEndDate = '2026-11-22';
+            customEndDate = '2026-11-30';
           }
           if (pageTitle) pageTitle.textContent = 'Dashboard Sales · ' + session.name;
           if (statusBadgeContainer) statusBadgeContainer.classList.remove('hidden');
@@ -2876,7 +2870,7 @@
           if (route === 'dashboard') {
             currentMode = 'bulan';
             customStartDate = '2026-11-01';
-            customEndDate = '2026-11-22';
+            customEndDate = '2026-11-30';
             updatePeriodTabs();
             if (window.location.hash === '#dashboard' || !window.location.hash) {
               renderAll();
@@ -2892,7 +2886,7 @@
           if (route === 'dashboard') {
             currentMode = 'bulan';
             customStartDate = '2026-11-01';
-            customEndDate = '2026-11-22';
+            customEndDate = '2026-11-30';
             updatePeriodTabs();
             if (window.location.hash === '#dashboard' || !window.location.hash) {
               renderAll();
@@ -2902,7 +2896,7 @@
       });
 
       tabModeBulanan.addEventListener('click', function () {
-        currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-22'; filterDateLabel.textContent = '01 Nov – 22 Nov 2026';
+        currentMode = 'bulan'; customStartDate = '2026-11-01'; customEndDate = '2026-11-30'; filterDateLabel.textContent = '01 Nov – 30 Nov 2026';
         if (window.location.hash !== '#dashboard') window.location.hash = '#dashboard';
         else { updatePeriodTabs(); renderAll(); }
       });
@@ -2913,6 +2907,7 @@
       });
 
       document.querySelectorAll('.kpi-card').forEach(function (card) {
+        if (card.getAttribute('data-kpi') === 'qty' || card.getAttribute('data-kpi') === 'revenue') { card.removeAttribute('tabindex'); card.removeAttribute('role'); return; }
         card.tabIndex = 0;
         card.classList.add('focus-visible:outline', 'focus-visible:outline-2', 'focus-visible:outline-accent', 'active:scale-[.99]', 'active:border-accent/50', 'focus-within:border-accent/50');
         card.setAttribute('role', 'button');
@@ -2943,7 +2938,7 @@
           e.stopPropagation();
           window.location.hash = '#invoices';
           var sel = document.getElementById('invoiceStatusFilter');
-        if (sel) sel.value = 'TEMPO';
+        if (sel) sel.value = 'UNPAID';
           invoicePage = 1;
           renderInvoicesTable();
         });
@@ -2952,11 +2947,7 @@
       if (elOutVal) {
         elOutVal.addEventListener('click', function (e) {
           e.stopPropagation();
-          window.location.hash = '#invoices';
-          var sel = document.getElementById('invoiceStatusFilter');
-          if (sel) sel.value = 'OUTSTANDING';
-          invoicePage = 1;
-          renderInvoicesTable();
+          openKpiDrilldownPage('outstanding');
         });
       }
 
@@ -2977,7 +2968,6 @@
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       });
       document.getElementById('storeSearchInput').addEventListener('input', function () { renderStoreSearch(selectedStoreSearchName); });
-      document.getElementById('storeSearchStatusFilter').addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); });
       document.getElementById('storeSearchFollowDashboard').addEventListener('change', function () {
         document.getElementById('storeSearchStartDate').disabled = this.checked;
         document.getElementById('storeSearchEndDate').disabled = this.checked;
@@ -2986,7 +2976,6 @@
       ['storeSearchStartDate', 'storeSearchEndDate'].forEach(function (id) { document.getElementById(id).addEventListener('change', function () { renderStoreSearch(selectedStoreSearchName); }); });
       document.getElementById('storeSearchReset').addEventListener('click', function () {
         document.getElementById('storeSearchInput').value = '';
-        document.getElementById('storeSearchStatusFilter').value = 'all';
         document.getElementById('storeSearchFollowDashboard').checked = true;
         document.getElementById('storeSearchStartDate').disabled = true;
         document.getElementById('storeSearchEndDate').disabled = true;
@@ -2994,7 +2983,7 @@
         renderStoreSearch('');
       });
       document.getElementById('consignmentSearch').addEventListener('input', renderConsignment);
-      document.getElementById('consignmentStoreFilter').addEventListener('change', renderConsignment);
+      document.getElementById('consignmentSalesFilter').addEventListener('change', renderConsignment);
       document.getElementById('drillSearchInput').addEventListener('input', function () { renderKpiDrilldownPage(activeDrillKpi); });
       document.getElementById('drillCategoryFilter').addEventListener('change', function () { renderKpiDrilldownPage(activeDrillKpi); });
       document.getElementById('drillStoreDirectoryBtn').addEventListener('click', function () {

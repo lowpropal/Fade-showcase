@@ -353,7 +353,7 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 
 /* Tablet invoice filters use a compact two-column layout. */
 @media (min-width: 48rem) and (max-width: 79.999rem) {
-  .invoice-filter-toolbar {
+  div.invoice-filter-toolbar {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: end;
@@ -364,10 +364,12 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
     display: contents;
   }
 
-  .invoice-filter-search {
+  div.invoice-filter-toolbar .invoice-filter-search {
     grid-column: 1 / -1;
     grid-row: 1;
     width: 100%;
+    max-width: none;
+    min-width: 0;
   }
 
   .invoice-filter-sales,
@@ -402,7 +404,7 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
 }
 
 /* Keep store filters aligned with invoice filters across all role shells. */
-.store-search-filters > label:nth-child(3) {
+.store-search-filters > label:nth-child(2) {
   width: fit-content;
   max-width: 100%;
   justify-self: start;
@@ -459,6 +461,10 @@ html:not(.dark) #dateFilterPopover input[type="date"] { color-scheme: light; }
   .invoice-filter-date input[type="date"] {
     width: 100%;
     min-width: 0;
+  }
+
+  .store-search-filters > button {
+    justify-self: end;
   }
 }
 
